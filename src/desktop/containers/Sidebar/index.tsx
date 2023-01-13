@@ -52,6 +52,7 @@ interface LocationProps extends RouterProps {
 export interface SidebarState {
     dataProfile: any;
     showModalComingSoon: boolean;
+    expandWallet: boolean;
 }
 
 const sidebarProfile = [
@@ -75,6 +76,7 @@ class Side extends React.Component<Props, SidebarState> {
         this.state = {
             dataProfile: [],
             showModalComingSoon: false,
+            expandWallet: false,
         };
     }
 
@@ -85,51 +87,68 @@ class Side extends React.Component<Props, SidebarState> {
                     name: 'Dashboard',
                     path: '/profile',
                     comingsoon: false,
+                    submenu: [],
                 },
                 {
                     name: 'Wallet',
-                    path: '/wallets',
+                    path: null,
                     comingsoon: false,
+                    submenu: [
+                        {
+                            name: 'Spot Wallet',
+                            path: null,
+                            comingsoon: false,
+                        },
+                        { name: 'P2P Wallet', path: null, comingsoon: false },
+                    ],
                 },
                 {
                     name: 'Market Order',
                     path: '/markets-open',
                     comingsoon: false,
+                    submenu: [],
                 },
                 {
                     name: 'Trade History',
                     path: '/trade-history',
                     comingsoon: false,
+                    submenu: [],
                 },
                 {
                     name: 'Transaction History',
                     path: '/history-transaction',
                     comingsoon: false,
+                    submenu: [],
                 },
                 {
                     name: 'Security',
                     path: '/profile/security',
                     comingsoon: false,
+                    submenu: [],
                 },
                 {
                     name: 'Referral',
                     path: '/profile/referral',
                     comingsoon: false,
+                    submenu: [],
                 },
                 {
                     name: 'API Management',
                     path: '/profile/api-key',
                     comingsoon: false,
+                    submenu: [],
                 },
                 {
                     name: 'Announcement',
                     path: '/announcement',
                     comingsoon: false,
+                    submenu: [],
                 },
                 {
                     name: 'FAQ',
                     path: '/faq',
                     comingsoon: false,
+                    submenu: [],
                 },
             ],
         });
@@ -151,75 +170,115 @@ class Side extends React.Component<Props, SidebarState> {
                             <div className="mb-36"></div>
                             <ul>
                                 {this.state.dataProfile.slice(0, 5).map((el, i) => (
-                                    <li
-                                        key={i}
-                                        onClick={() => {
-                                            if (el.comingsoon) {
-                                                this.setState({ showModalComingSoon: !this.state.showModalComingSoon });
-                                            } else {
-                                                this.props.history.push(el.path);
-                                            }
-                                        }}
-                                        className="d-flex align-items-center cursor-pointer ml-20 mt-8 mb-8">
-                                        <div className="mr-8">
-                                            {el.name === 'Dashboard' ? (
-                                                <UserIcon
-                                                    strokeColor={
-                                                        location.pathname == '/profile' ||
-                                                        location.pathname == '/profile/kyc'
-                                                            ? 'var(--text-primary-color)'
-                                                            : 'var(--text-secondary-color)'
-                                                    }
-                                                />
-                                            ) : el.name === 'Wallet' ? (
-                                                <WalletIcon
-                                                    fillColor={
-                                                        location.pathname.includes('wallets')
-                                                            ? 'var(--text-primary-color)'
-                                                            : 'var(--text-secondary-color)'
-                                                    }
-                                                />
-                                            ) : el.name === 'Market Order' ? (
-                                                <AnalysIcon
-                                                    fillColor={
-                                                        location.pathname.includes('markets-open')
-                                                            ? 'var(--text-primary-color)'
-                                                            : 'var(--text-secondary-color)'
-                                                    }
-                                                />
-                                            ) : el.name === 'Trade History' ? (
-                                                <TradeHistory
-                                                    fillColor={
-                                                        location.pathname.includes('trade-history')
-                                                            ? 'var(--text-primary-color)'
-                                                            : 'var(--text-secondary-color)'
-                                                    }
-                                                />
-                                            ) : el.name === 'Transaction History' ? (
-                                                <CalendarIcon
-                                                    fillColor={
-                                                        location.pathname.includes('history-transaction')
-                                                            ? 'var(--text-primary-color)'
-                                                            : 'var(--text-secondary-color)'
-                                                    }
-                                                />
-                                            ) : (
-                                                ''
-                                            )}
-                                        </div>
-                                        <p
-                                            className={`font-bold text-sm mb-0 ${
-                                                (location.pathname == '/profile' ||
-                                                    location.pathname == '/profile/kyc') &&
-                                                location.pathname.includes(el.path)
-                                                    ? 'white-text'
-                                                    : el.path != '/profile' && location.pathname.includes(el.path)
-                                                    ? 'white-text'
-                                                    : 'grey-text'
-                                            }`}>
-                                            {el.name}
-                                        </p>
-                                    </li>
+                                    <React.Fragment>
+                                        <li
+                                            key={i}
+                                            onClick={() => {
+                                                if (el.comingsoon) {
+                                                    this.setState({
+                                                        showModalComingSoon: !this.state.showModalComingSoon,
+                                                    });
+                                                } else if (el.submenu.length) {
+                                                    this.setState({ expandWallet: !this.state.expandWallet });
+                                                } else if (el.path !== null) {
+                                                    this.props.history.push(el.path);
+                                                }
+                                            }}
+                                            className="d-flex align-items-center cursor-pointer ml-20 mt-8 mb-8">
+                                            <div className="mr-8">
+                                                {el.name === 'Dashboard' ? (
+                                                    <UserIcon
+                                                        strokeColor={
+                                                            location.pathname == '/profile' ||
+                                                            location.pathname == '/profile/kyc'
+                                                                ? 'var(--text-primary-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'Wallet' ? (
+                                                    <WalletIcon
+                                                        fillColor={
+                                                            location.pathname.includes('wallets')
+                                                                ? 'var(--text-primary-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'Market Order' ? (
+                                                    <AnalysIcon
+                                                        fillColor={
+                                                            location.pathname.includes('markets-open')
+                                                                ? 'var(--text-primary-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'Trade History' ? (
+                                                    <TradeHistory
+                                                        fillColor={
+                                                            location.pathname.includes('trade-history')
+                                                                ? 'var(--text-primary-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'Transaction History' ? (
+                                                    <CalendarIcon
+                                                        fillColor={
+                                                            location.pathname.includes('history-transaction')
+                                                                ? 'var(--text-primary-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+                                            <p
+                                                className={`font-bold text-sm mb-0 ${
+                                                    (location.pathname == '/profile' ||
+                                                        location.pathname == '/profile/kyc') &&
+                                                    location.pathname.includes(el.path)
+                                                        ? 'white-text'
+                                                        : el.path != '/profile' && location.pathname.includes(el.path)
+                                                        ? 'white-text'
+                                                        : 'grey-text'
+                                                }`}>
+                                                {el.name}
+                                            </p>
+                                        </li>
+
+                                        {this.state.expandWallet &&
+                                            el.name === 'Wallet' &&
+                                            el.submenu.map((item, i) => (
+                                                <ul>
+                                                    <li
+                                                        key={i}
+                                                        onClick={() => {
+                                                            this.props.history.push(item.path);
+                                                        }}
+                                                        className="d-flex align-items-center cursor-pointer ml-24 mt-8 mb-8">
+                                                        <div className="mr-8">
+                                                            <WalletIcon
+                                                                fillColor={
+                                                                    location.pathname.includes('wallets')
+                                                                        ? 'var(--text-primary-color)'
+                                                                        : 'var(--text-secondary-color)'
+                                                                }
+                                                            />
+                                                        </div>
+                                                        <p
+                                                            className={`font-bold text-sm mb-0 ${
+                                                                location.pathname.includes(item.path)
+                                                                    ? 'white-text'
+                                                                    : item.path != '/profile' &&
+                                                                      location.pathname.includes(item.path)
+                                                                    ? 'white-text'
+                                                                    : 'grey-text'
+                                                            }`}>
+                                                            {item.name}
+                                                        </p>
+                                                    </li>
+                                                </ul>
+                                            ))}
+                                    </React.Fragment>
                                 ))}
                             </ul>
                             <div className="devider"></div>
