@@ -12,7 +12,7 @@ import { InfoWarningIcon } from '../../../assets/images/InfoIcon';
 import { CopyButton } from '../../../assets/images/CopyButton';
 import { HelpIcon } from 'src/mobile/assets/Help';
 
-import { ModalMobile } from 'src/mobile/components';
+import { ModalFullScreenMobile } from 'src/mobile/components';
 
 type LocationProps = {
     state: {
@@ -322,7 +322,11 @@ const WalletDepositMobileScreen: React.FC = () => {
 
             {showFAQ && (
                 <div className="modal-benericary-list-mobile">
-                    <ModalMobile show={showFAQ} header={renderHeaderFAQMobile()} content={renderContentFAQMobile()} />
+                    <ModalFullScreenMobile
+                        show={showFAQ}
+                        header={renderHeaderFAQMobile()}
+                        content={renderContentFAQMobile()}
+                    />
                 </div>
             )}
         </React.Fragment>

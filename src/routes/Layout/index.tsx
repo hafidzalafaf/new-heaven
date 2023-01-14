@@ -59,6 +59,7 @@ import {
     LostTwoFaMobileScreen,
     WalletWithdrawMobileScreen,
     KycMobileScreen,
+    SecurityMobileScreen,
 } from '../../mobile/screens';
 
 import {
@@ -323,6 +324,13 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             isLogged={isLoggedIn}
                             path="/profile/kyc"
                             component={KycMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/security"
+                            component={SecurityMobileScreen}
                         />
 
                         <PrivateRoute

@@ -8,7 +8,7 @@ import { passwordMinEntropy, captchaType, isUsernameEnabled } from '../../../api
 import { ArrowLeft } from '../../assets/Arrow';
 import { Close } from '../../assets/Closeicon';
 import { DropdownSmall } from '../../assets/Dropdown';
-import { ModalMobile } from '../../components';
+import { ModalFullScreenMobile } from '../../components';
 import { Captcha } from '../../../components';
 import {
     GeetestCaptchaResponse,
@@ -593,7 +593,7 @@ const SignUpMobileScreen: React.FC = () => {
                 </form>
             </div>
 
-            <ModalMobile content={renderTosContent()} header={renderTosHeader()} show={showTos} />
+            <ModalFullScreenMobile content={renderTosContent()} header={renderTosHeader()} show={showTos} />
         </React.Fragment>
     );
 };

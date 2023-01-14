@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { CustomInput } from 'src/desktop/components';
-import { ModalMobile } from '../../components';
+import { ModalFullScreenMobile } from '../../components';
 import { selectCurrencies, beneficiariesCreate, selectWallets, alertPush, beneficiariesError } from '../../../modules';
 import Select from 'react-select';
 import { CustomStylesSelect } from '../../components';
@@ -233,7 +233,7 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
     return (
         <>
             {showModalAddBeneficiary && (
-                <ModalMobile
+                <ModalFullScreenMobile
                     show={showModalAddBeneficiary}
                     header={renderHeaderModalBeneficiary()}
                     content={renderContentModalBeneficiary()}

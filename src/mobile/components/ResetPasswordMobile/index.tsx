@@ -159,7 +159,7 @@ export const ResetPasswordMobile = (props) => {
 
     const renderHeaderModalResendCode = () => {
         return (
-            <div className="text-center w-100">
+            <div className="text-center">
                 <h6 className="text-md white-text m-0">Resend Code</h6>
             </div>
         );
@@ -226,11 +226,13 @@ export const ResetPasswordMobile = (props) => {
                         autoSelect={true}
                         regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
                     />
-                    <p
-                        onClick={() => setShowModalResendCode(!showModalResendCode)}
-                        className="text-right text-sm grey-text cursor-pointer">
-                        Resend Code
-                    </p>
+                    <div className="w-25 ml-auto">
+                        <p
+                            onClick={() => setShowModalResendCode(!showModalResendCode)}
+                            className="text-right text-sm grey-text cursor-pointer">
+                            Resend Code
+                        </p>
+                    </div>
                     <div>
                         <CustomInput
                             type="password"

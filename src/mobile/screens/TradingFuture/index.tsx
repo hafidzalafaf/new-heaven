@@ -13,7 +13,7 @@ import {
     Market,
 } from '../../../modules';
 import { Decimal } from '../../../components';
-import { ModalMobile } from 'src/mobile/components';
+import { ModalFullScreenMobile } from 'src/mobile/components';
 
 export const TradingFutureMobileScreen: React.FC = (): React.ReactElement => {
     const { currency = '' } = useParams<{ currency?: string }>();

@@ -14,7 +14,7 @@ import {
     selectUserLoggedIn,
 } from '../../../modules';
 import { Decimal } from '../../../components';
-import { ModalMobile } from 'src/mobile/components';
+import { ModalFullScreenMobile } from 'src/mobile/components';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import {

@@ -18,7 +18,7 @@ import { ArrowLeft } from '../../assets/Arrow';
 import { CheckIcon } from '../../../assets/images/ProfileIcon';
 import { WarningIcon } from '../../assets/Nottification';
 import { CloseIcon } from '../../../assets/images/CloseIcon';
-import { ModalMobile } from '../../components';
+import { ModalFullScreenMobile } from '../../components';
 import { ModalResetPassword } from '../../assets/Modal';
 import { titleCase, dateTo12HFormat } from 'src/helpers';
 import { CustomInput } from 'src/desktop/components';
@@ -417,8 +417,8 @@ const ProfileMobileScreen: React.FC = () => {
                     </Link>
                 </div>
             </div>
-            <ModalMobile content={renderModal()} show={showModalEmail} />
-            <ModalMobile content={renderModalPhone()} show={showModalPhone} />
+            <ModalFullScreenMobile content={renderModal()} show={showModalEmail} />
+            <ModalFullScreenMobile content={renderModalPhone()} show={showModalPhone} />
 
             {/* ========= Show Modal Locked 2FA =========== */}
 

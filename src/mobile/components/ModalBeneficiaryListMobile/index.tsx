@@ -4,7 +4,7 @@ import { useHistory, useParams, Redirect } from 'react-router';
 import { useBeneficiariesFetch } from 'src/hooks';
 import { selectBeneficiaries, Beneficiary, beneficiariesDelete, beneficiariesFetch } from '../../../modules';
 import './ModalBeneficiaryListMobile.pcss';
-import { ModalMobile } from '../Modal';
+import { ModalFullScreenMobile } from '../ModalFullScreen';
 import { WalletIcon } from 'src/mobile/assets/Wallets';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 
@@ -144,7 +144,7 @@ export const ModalBeneficiaryListMobile: React.FC<ModalBeneficiaryListMobileProp
         <>
             {showModalBeneficiaryList && (
                 <div className="modal-benericary-list-mobile">
-                    <ModalMobile
+                    <ModalFullScreenMobile
                         show={showModalBeneficiaryList}
                         header={renderHeaderBeneficiaryListMobile()}
                         content={renderContentBeneficiaryListMobile()}
