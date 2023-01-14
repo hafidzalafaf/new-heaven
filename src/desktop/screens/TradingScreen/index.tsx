@@ -11,50 +11,80 @@ import {
     openOrdersCancelFetch,
     ordersCancelAllFetch,
     selectMarkets,
-    selectOpenOrdersFetching,
     selectOpenOrdersList,
-    selectMarketTickers,
-    selectCurrencies,
     userOpenOrdersFetch,
     setCurrentMarket,
     Market,
+    Ticker,
     selectDepthAsks,
     selectDepthBids,
     depthFetch,
     depthIncrementSubscribeResetLoading,
     selectDepthLoading,
+    selectUserLoggedIn,
+    selectMarketTickers,
+    selectWallets,
+    selectOrderExecuteLoading,
+    orderExecuteFetch,
 } from 'src/modules';
 import { incrementalOrderBook } from 'src/api';
-import { useMarketsFetch, useMarketsTickersFetch } from 'src/hooks';
 import { OpenOrders, OrderBook, MarketListTrade, RecentTrades, OrderForm, TradingChart } from '../../containers';
-import { OrderCommon } from '../../../modules/types';
+import { OrderCommon, OrderSide } from '../../../modules/types';
 import { getTriggerSign } from './helpers';
+import { getTotalPrice, getAmount } from '../../../helpers';
 import { CloseIconTrade } from 'src/assets/images/CloseIcon';
 
 export const TradingScreen: FC = (): ReactElement => {
+    const { currency = '' } = useParams<{ currency?: string }>();
+    const { formatMessage } = useIntl();
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const asks = useSelector(selectDepthAsks);
+    const bids = useSelector(selectDepthBids);
+    const listOrder = useSelector(selectOpenOrdersList);
+    const markets = useSelector(selectMarkets);
+    const currentMarket = useSelector(selectCurrentMarket);
+    const orderBookLoading = useSelector(selectDepthLoading);
+    const isLoggedin = useSelector(selectUserLoggedIn);
+    const tickers = useSelector(selectMarketTickers);
+    const wallets = useSelector(selectWallets);
+    const orderLoading = useSelector(selectOrderExecuteLoading);
+
     const [hideOtherPairs, setHideOtherPairs] = useState<boolean>(false);
     const [list, setList] = useState([]);
     const [filterSell, setFilterSell] = useState(false);
     const [filterBuy, setFilterBuy] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const asks = useSelector(selectDepthAsks);
-    const bids = useSelector(selectDepthBids);
-    const listOrder = useSelector(selectOpenOrdersList);
-    const fetching = useSelector(selectOpenOrdersFetching);
-    const markets = useSelector(selectMarkets);
-    const marketTickers = useSelector(selectMarketTickers);
-    const currencies = useSelector(selectCurrencies);
-    const currentMarket = useSelector(selectCurrentMarket);
-    const orderBookLoading = useSelector(selectDepthLoading);
+    // State Order Form
+    const [orderPercentageBuy, setOrderPercentageBuy] = React.useState(0);
+    const [orderPercentageSell, setOrderPercentageSell] = React.useState(0);
+    const [showModalSell, setShowModalSell] = React.useState(false);
+    const [showModalBuy, setShowModalBuy] = React.useState(false);
+    const [priceBuy, setPriceBuy] = React.useState(Decimal.format(0, currentMarket?.price_precision));
+    const [amountBuy, setAmountBuy] = React.useState('');
+    const [totalBuy, setTotalBuy] = React.useState('');
+    const [priceSell, setPriceSell] = React.useState(Decimal.format(0, currentMarket?.price_precision));
+    const [amountSell, setAmountSell] = React.useState('');
+    const [totalSell, setTotalSell] = React.useState('');
+    const [orderType, setOrderType] = React.useState('limit');
+    const [side, setSide] = React.useState<OrderSide>('buy');
+    // End Order Form
 
     useOpenOrdersFetch(currentMarket, hideOtherPairs);
     useDepthFetch();
 
-    const { currency = '' } = useParams<{ currency?: string }>();
-    const { formatMessage } = useIntl();
-    const dispatch = useDispatch();
-    const history = useHistory();
+    const tickerItem: Ticker = tickers[currency];
+    const wallet =
+        wallets.length &&
+        wallets.find((item) => item.currency.toLowerCase() === currentMarket?.base_unit?.toLowerCase());
+    const balance = wallet && wallet.balance ? wallet.balance.toString() : '0';
+
+    const usd =
+        wallets.length &&
+        wallets.find((item) => item.currency.toLowerCase() === currentMarket?.quote_unit?.toLowerCase());
+    const usdt = usd && usd.balance ? usd.balance.toString() : '0';
 
     const translate = React.useCallback((id: string) => formatMessage({ id: id }), [formatMessage]);
 
@@ -96,6 +126,7 @@ export const TradingScreen: FC = (): ReactElement => {
         }
     }, [listOrder, filterBuy, filterSell, hideOtherPairs]);
 
+    // Function Market List
     const handleRedirectToTrading = (id: string) => {
         const currentMarket: Market | undefined = markets.find((item) => item.id === id);
 
@@ -110,28 +141,189 @@ export const TradingScreen: FC = (): ReactElement => {
             );
         }
     };
+    // End Function Market List
 
-    const handleCancel = (order: OrderCommon) => {
-        dispatch(openOrdersCancelFetch({ order, list }));
-        setTimeout(() => {
-            if (current) {
-                dispatch(userOpenOrdersFetch({ market: current }));
-            }
-        }, 1000);
+    // Function Order Form
+    const totalPrice = getTotalPrice(
+        side === 'buy' ? amountBuy : amountSell,
+        +tickerItem?.last,
+        side === 'buy' ? bids : asks
+    );
+
+    const totalAmount = getAmount(
+        side === 'buy' ? +usdt : +balance,
+        side === 'buy' ? bids : asks,
+        side === 'buy' ? orderPercentageBuy : orderPercentageSell
+    );
+
+    React.useEffect(() => {
+        const safePrice = +totalPrice / +totalAmount || priceSell;
+
+        const market =
+            orderPercentageSell !== 0
+                ? Decimal.format((+balance * orderPercentageSell) / 100, currentMarket?.amount_precision)
+                : Decimal.format(amountSell, currentMarket?.amount_precision);
+
+        const limit =
+            orderPercentageSell !== 0
+                ? Decimal.format(+totalSell / +priceSell, currentMarket?.amount_precision)
+                : Decimal.format(amountSell, currentMarket?.amount_precision);
+
+        setAmountSell(orderType === 'market' ? market : limit);
+    }, [orderPercentageSell, totalSell, priceSell]);
+
+    React.useEffect(() => {
+        const safePrice = totalPrice / +amountSell || priceSell;
+        // const market =
+        //     orderPercentageSell !== 0
+        //         ? Decimal.format((+balance * +orderPercentageSell) / 100, currentMarket?.price_precision)
+        //         : Decimal.format(+amountSell * +safePrice, currentMarket?.price_precision);
+
+        const market = Decimal.format(+amountSell * +safePrice, currentMarket?.price_precision);
+
+        const limit =
+            orderPercentageSell !== 0
+                ? Decimal.format((+balance * +orderPercentageSell) / 100, currentMarket?.price_precision)
+                : Decimal.format(+priceSell * +amountSell, currentMarket?.price_precision);
+
+        setTotalSell(orderType === 'market' ? market : limit);
+    }, [priceSell, amountSell, orderPercentageSell]);
+
+    React.useEffect(() => {
+        // const safePrice = +totalPrice / +totalAmount || priceBuy;
+        const market =
+            orderPercentageBuy !== 0
+                ? Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.amount_precision)
+                : Decimal.format(amountBuy, currentMarket?.amount_precision);
+
+        const limit =
+            orderPercentageBuy !== 0
+                ? Decimal.format(+totalBuy / +priceBuy, currentMarket?.amount_precision)
+                : Decimal.format(amountBuy, currentMarket?.amount_precision);
+
+        setAmountBuy(orderType === 'market' ? market : limit);
+    }, [orderPercentageBuy, totalBuy, priceBuy]);
+
+    React.useEffect(() => {
+        const safePrice = totalPrice / +amountBuy || priceBuy;
+        // const market =
+        //     orderPercentageBuy !== 0
+        //         ? Decimal.format((+usdt * +orderPercentageBuy) / 100, currentMarket?.price_precision)
+        //         : Decimal.format(+amountBuy * +safePrice, currentMarket?.price_precision);
+
+        const market = Decimal.format(+amountBuy * +safePrice, currentMarket?.price_precision);
+
+        const limit =
+            orderPercentageBuy !== 0
+                ? Decimal.format((+usdt * +orderPercentageBuy) / 100, currentMarket?.price_precision)
+                : Decimal.format(+priceBuy * +amountBuy, currentMarket?.price_precision);
+
+        setTotalBuy(orderType === 'market' ? market : limit);
+    }, [priceBuy, amountBuy, orderPercentageBuy]);
+
+    const resetForm = () => {
+        setShowModalSell(false);
+        setShowModalBuy(false);
+        setAmountBuy('');
+        setAmountSell('');
+        setPriceBuy(Decimal.format('0', currentMarket?.price_precision));
+        setPriceSell(Decimal.format('0', currentMarket?.price_precision));
+        setTotalBuy('');
+        setTotalSell('');
+        setOrderPercentageSell(0);
+        setOrderPercentageBuy(0);
     };
 
-    const handleCancelAll = () => {
-        if (currency) {
-            dispatch(ordersCancelAllFetch({ market: currency }));
-        }
+    const handleSubmit = () => {
+        const payloadLimit = {
+            market: currentMarket?.id,
+            side: side,
+            volume: side === 'sell' ? amountSell : amountBuy,
+            price: side === 'sell' ? priceSell : priceBuy,
+            ord_type: orderType,
+        };
 
-        setTimeout(() => {
-            if (currency) {
-                dispatch(userOpenOrdersFetch({ market: current }));
-            }
-        }, 1000);
+        const payloadMarket = {
+            market: currentMarket?.id,
+            side: side,
+            volume: side === 'sell' ? amountSell : amountBuy,
+            ord_type: orderType,
+        };
+
+        dispatch(orderExecuteFetch(orderType === 'limit' ? payloadLimit : payloadMarket));
+
+        resetForm();
     };
 
+    const handleSide = (value: OrderSide) => {
+        setSide(value);
+    };
+
+    const handleChangePriceBuy = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setPriceBuy(value);
+    };
+
+    const handleChangePriceSell = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setPriceSell(value);
+    };
+
+    const handleChangeAmountBuy = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setAmountBuy(value);
+        setOrderPercentageBuy(0);
+    };
+
+    const handleChangeAmounSell = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setAmountSell(value);
+        setOrderPercentageSell(0);
+    };
+
+    const handleSelectPercentageSell = (e: number) => {
+        setOrderPercentageSell(e);
+    };
+
+    const handleSelectPercentageBuy = (e: number) => {
+        setOrderPercentageBuy(e);
+    };
+
+    const handleCancelModalSell = () => {
+        setShowModalSell(false);
+    };
+
+    const handleCancelModalBuy = () => {
+        setShowModalBuy(false);
+    };
+
+    const handleSubmitSell = () => {
+        setShowModalSell(true);
+    };
+
+    const handleSubmitBuy = () => {
+        setShowModalBuy(true);
+    };
+
+    const handleSelectOrderType = (e: string) => {
+        setOrderType(e);
+        resetForm();
+    };
+    // End Order Form
+
+    // Function Order Book
+    const handleSelectPriceAsks = (e: string) => {
+        setPriceSell(e);
+        setPriceBuy(e);
+    };
+
+    const handleSelectPriceBids = (e: string) => {
+        setPriceBuy(e);
+        setPriceSell(e);
+    };
+    // End Function Order Book
+
+    // Function Open Orders
     const headersKeys = useMemo(
         () => [
             'Date',
@@ -254,14 +446,26 @@ export const TradingScreen: FC = (): ReactElement => {
         [markets]
     );
 
-    const classNames = useMemo(
-        () =>
-            classnames('pg-open-orders', {
-                'pg-open-orders--empty': !list.length,
-                'pg-open-orders--loading': fetching,
-            }),
-        [list, fetching]
-    );
+    const handleCancel = (order: OrderCommon) => {
+        dispatch(openOrdersCancelFetch({ order, list }));
+        setTimeout(() => {
+            if (current) {
+                dispatch(userOpenOrdersFetch({ market: current }));
+            }
+        }, 1000);
+    };
+
+    const handleCancelAll = () => {
+        if (currency) {
+            dispatch(ordersCancelAllFetch({ market: currency }));
+        }
+
+        setTimeout(() => {
+            if (currency) {
+                dispatch(userOpenOrdersFetch({ market: current }));
+            }
+        }, 1000);
+    };
 
     const handleToggleCheckbox = React.useCallback(
         (event) => {
@@ -278,6 +482,7 @@ export const TradingScreen: FC = (): ReactElement => {
     const handleFilterBuy = () => {
         setFilterBuy(!filterBuy);
     };
+    // End Function Open Orders
 
     return (
         <React.Fragment>
@@ -286,7 +491,13 @@ export const TradingScreen: FC = (): ReactElement => {
                     <div className="px-24 pt-1">
                         <div className="grid-wrapper">
                             <div className="grid-item order-book">
-                                <OrderBook asks={asks} bids={bids} loading={loading} />
+                                <OrderBook
+                                    asks={asks}
+                                    bids={bids}
+                                    loading={loading}
+                                    handleSelectPriceAsks={handleSelectPriceAsks}
+                                    handleSelectPriceBids={handleSelectPriceBids}
+                                />
                             </div>
                             <div className="grid-item chart">
                                 <TradingChart />
@@ -295,7 +506,36 @@ export const TradingScreen: FC = (): ReactElement => {
                                 <MarketListTrade handleRedirectToTrading={handleRedirectToTrading} />
                             </div>
                             <div className="grid-item order-form">
-                                <OrderForm />
+                                <OrderForm
+                                    amountSell={amountSell}
+                                    priceSell={priceSell}
+                                    totalSell={totalSell}
+                                    orderPercentageSell={orderPercentageSell}
+                                    handleChangeAmountSell={handleChangeAmounSell}
+                                    totalPriceSell={getTotalPrice(amountSell, +tickerItem?.last, asks)}
+                                    handleChangePriceSell={handleChangePriceSell}
+                                    handleSelectPercentageSell={handleSelectPercentageSell}
+                                    showModalSell={showModalSell}
+                                    handleCancelModalSell={handleCancelModalSell}
+                                    handleSubmitSell={handleSubmitSell}
+                                    amountBuy={amountBuy}
+                                    priceBuy={priceBuy}
+                                    totalBuy={totalBuy}
+                                    orderPercentageBuy={orderPercentageBuy}
+                                    handleChangeAmountBuy={handleChangeAmountBuy}
+                                    totalPriceBuy={getTotalPrice(amountBuy, +tickerItem?.last, bids)}
+                                    handleChangePriceBuy={handleChangePriceBuy}
+                                    handleSelectPercentageBuy={handleSelectPercentageBuy}
+                                    showModalBuy={showModalBuy}
+                                    handleCancelModalBuy={handleCancelModalBuy}
+                                    handleSubmitBuy={handleSubmitBuy}
+                                    handleSubmit={handleSubmit}
+                                    resetForm={resetForm}
+                                    orderType={orderType}
+                                    orderLoading={orderLoading}
+                                    handleSide={handleSide}
+                                    handleSelectOrderType={handleSelectOrderType}
+                                />
                             </div>
                             <div className="grid-item recent-trades">
                                 <RecentTrades />

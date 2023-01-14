@@ -27,6 +27,7 @@ export interface OrderFormProps {
     handleChangePrice: (e: string) => void;
     handleSide: (e: string) => void;
     handleSubmit: () => void;
+    disabledButton: any;
 }
 
 export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (props) => {
@@ -52,6 +53,7 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
         handleChangePrice,
         handleSide,
         handleSubmit,
+        disabledButton,
     } = props;
 
     const isLoggedIn = useSelector(selectUserLoggedIn);
@@ -76,23 +78,37 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
     const handleSetValue = (value: string | number | undefined, defaultValue: string) => value || defaultValue;
     const safePrice = totalPrice / Number(amount) || price;
 
-    React.useEffect(() => {
-        if (!isLoggedIn) {
-            setDisabled(true);
-        }
+    // React.useEffect(() => {
+    //     if (!isLoggedIn) {
+    //         setDisabled(true);
+    //     }
 
-        if (loading) {
-            setDisabled(true);
-        }
+    //     if (loading) {
+    //         setDisabled(true);
+    //     }
 
-        if (currentMarket) {
-            if (amount < currentMarket?.min_amount) {
-                setDisabled(true);
-            } else {
-                setDisabled(false);
-            }
-        }
-    }, [amount, total, loading, isLoggedIn]);
+    //     if (currentMarket) {
+    //         if (amount < currentMarket?.min_amount) {
+    //             setDisabled(true);
+    //         } else {
+    //             setDisabled(false);
+    //         }
+    //     }
+    // }, [amount, total, loading, isLoggedIn]);
+
+    // const disabledButton = () => {
+    //     if (!isLoggedIn) {
+    //         return true;
+    //     }
+
+    //     if (loading) {
+    //         return true;
+    //     }
+
+    //     if (amount < currentMarket?.min_amount) {
+    //         return true;
+    //     }
+    // };
 
     return (
         <React.Fragment>
@@ -198,7 +214,7 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
                     type="button"
                     className={`btn btn-block ${side === 'Buy' ? 'btn-success' : 'btn-danger'}`}
                     onClick={handleSubmit}
-                    disabled={disabled}>
+                    disabled={disabledButton()}>
                     {side} {currentMarket?.base_unit?.toUpperCase()}
                 </button>
             </form>

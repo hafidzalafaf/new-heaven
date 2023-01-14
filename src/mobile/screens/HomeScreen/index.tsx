@@ -8,7 +8,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-
+import { SplashScreenMobile } from '../SplashScreen';
 import { BgCardSmall } from '../../assets/BackgroundCard';
 import { Table } from '../../../components';
 import { ArrowRight } from '../../assets/Arrow';
@@ -31,13 +31,20 @@ const HomeMobileScreen: React.FC = () => {
     useMarketsFetch();
     useMarketsTickersFetch();
 
+    const [loading, setLoading] = React.useState(true);
+
     const currencies = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
     const marketTickers = useSelector(selectMarketTickers);
+    //console.log(markets);
 
     const [key, setKey] = React.useState('tranding');
 
     const shouldRenderHeader = !noHeaderRoutes.some((r) => location.pathname.includes(r));
+
+    React.useEffect(() => {
+        setTimeout(() => setLoading(false), 1000);
+    }, []);
 
     if (shouldRenderHeader) {
         return <React.Fragment />;
@@ -111,9 +118,9 @@ const HomeMobileScreen: React.FC = () => {
                     {item && item.currency && item.currency.id && item.currency.id.toUpperCase()}
                 </p>
             </div>,
-            <div>
-                <img src="img-mobile/grap-up.png" alt="grap" />
-            </div>,
+            // <div>
+            //     <img src="img-mobile/grap-up.png" alt="grap" />
+            // </div>,
             <p className={`badge white-text font-bold ${item.change.includes('-') ? 'badge-danger' : 'badge-success'}`}>
                 {item && item.price_change_percent}
             </p>,
@@ -122,68 +129,78 @@ const HomeMobileScreen: React.FC = () => {
 
     return (
         <React.Fragment>
-            <div className="mobile-container home-screen dark-bg-main">
-                <div>
-                    <div id="heros" className="content-container w-100 mb-3">
-                        <Slider {...settings}>
-                            {banner &&
-                                banner.map((item, key) => (
-                                    <div className="heroid" key={key}>
-                                        <div
-                                            className="hero one w-100 d-flex align-items-center justify-content-start position-relative"
-                                            style={{
-                                                backgroundImage: `url(${item.background})`,
-                                            }}></div>
-                                    </div>
-                                ))}
-                        </Slider>
-                    </div>
-                    <div className="beginner-wrapper mb-3">
-                        <h5 className="text-ms font-bold grey-text-accent">For Beginners</h5>
-                        <h6 className="mb-3 text-xs grey-text font-normal">
-                            Most popular and widely known coin for early investment
-                        </h6>
-                        <Slider {...settings2}>
-                            {bannerSmall &&
-                                bannerSmall.map((item, key) => (
-                                    <div key={key} className="p-2">
-                                        <div className="card-item position-relative">
-                                            <BgCardSmall className={'bg-card'} />
-                                            <div className="w-100 d-flex justify-content-center align-items-center mb-8">
-                                                <img src="img-mobile/img-card.png" alt="card" className="text-center" />
-                                            </div>
-                                            <div className=" d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <p className="text-xxs grey-text mb-0">{item.date}</p>
-                                                    <h4 className="text-xs white-text font-bold mb-0">{item.title}</h4>
-                                                    <p className="text-xxs grey-text mb-0">{item.desc}</p>
+            {loading === false ? (
+                <div className="mobile-container home-screen dark-bg-main">
+                    <div>
+                        <div id="heros" className="content-container w-100 mb-3">
+                            <Slider {...settings}>
+                                {banner &&
+                                    banner.map((item, key) => (
+                                        <div className="heroid" key={key}>
+                                            <div
+                                                className="hero one w-100 d-flex align-items-center justify-content-start position-relative"
+                                                style={{
+                                                    backgroundImage: `url(${item.background})`,
+                                                }}></div>
+                                        </div>
+                                    ))}
+                            </Slider>
+                        </div>
+                        <div className="beginner-wrapper mb-3">
+                            <h5 className="text-ms font-bold grey-text-accent">For Beginners</h5>
+                            <h6 className="mb-3 text-xs grey-text font-normal">
+                                Most popular and widely known coin for early investment
+                            </h6>
+                            <Slider {...settings2}>
+                                {bannerSmall &&
+                                    bannerSmall.map((item, key) => (
+                                        <div key={key} className="p-2">
+                                            <div className="card-item position-relative">
+                                                <BgCardSmall className={'bg-card'} />
+                                                <div className="w-100 d-flex justify-content-center align-items-center mb-8">
+                                                    <img
+                                                        src="img-mobile/img-card.png"
+                                                        alt="card"
+                                                        className="text-center"
+                                                    />
                                                 </div>
-                                                <ArrowRight className={''} />
+                                                <div className=" d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <p className="text-xxs grey-text mb-0">{item.date}</p>
+                                                        <h4 className="text-xs white-text font-bold mb-0">
+                                                            {item.title}
+                                                        </h4>
+                                                        <p className="text-xxs grey-text mb-0">{item.desc}</p>
+                                                    </div>
+                                                    <ArrowRight className={''} />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                        </Slider>
-                    </div>
-                    <Tabs id="controlled-tab-example" activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
-                        <Tab eventKey="tranding" title="Tranding">
-                            <Table data={renderDataTable(dataTranding)} />
-                        </Tab>
-                        <Tab eventKey="new-volume" title="New Volume">
-                            <Table data={renderDataTable(dataVolume)} />
-                        </Tab>
-                        <Tab eventKey="gainers" title="Gainers">
-                            <Table data={renderDataTable(dataGainers)} />
-                        </Tab>
+                                    ))}
+                            </Slider>
+                        </div>
+                        <Tabs id="controlled-tab-example" activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
+                            <Tab eventKey="tranding" title="Tranding">
+                                <Table data={renderDataTable(dataTranding)} />
+                            </Tab>
+                            <Tab eventKey="new-volume" title="New Volume">
+                                <Table data={renderDataTable(dataVolume)} />
+                            </Tab>
+                            <Tab eventKey="gainers" title="Gainers">
+                                <Table data={renderDataTable(dataGainers)} />
+                            </Tab>
 
-                        <Tab eventKey="loser" title="Loser">
-                            <div className="table-mobile-wrapper">
-                                <Table data={renderDataTable(dataLosers)} />
-                            </div>
-                        </Tab>
-                    </Tabs>
+                            <Tab eventKey="loser" title="Loser">
+                                <div className="table-mobile-wrapper">
+                                    <Table data={renderDataTable(dataLosers)} />
+                                </div>
+                            </Tab>
+                        </Tabs>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <SplashScreenMobile />
+            )}
         </React.Fragment>
     );
 };

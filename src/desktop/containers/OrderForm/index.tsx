@@ -1,200 +1,117 @@
 import * as React from 'react';
 import { Modal, OrderFormComponent } from '../../components';
-import { Decimal } from '../../../components';
-import {
-    selectUserLoggedIn,
-    selectMarketTickers,
-    selectCurrentMarket,
-    Ticker,
-    selectWallets,
-    orderExecuteFetch,
-    selectOrderExecuteLoading,
-    selectDepthAsks,
-    selectDepthBids,
-    selectOrderError,
-    selectConfigUpdateData,
-} from '../../../modules';
+import { selectUserLoggedIn, selectCurrentMarket } from '../../../modules';
 import { OrderSide } from 'src/modules/types';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router';
-import { getTotalPrice, numberFormat, getAmount } from '../../../helpers';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { LockIcon } from 'src/assets/images/LockIcon';
 
-export const OrderForm: React.FunctionComponent = () => {
-    const dispatch = useDispatch();
+export interface OrderFormProps {
+    amountSell: string;
+    priceSell: string;
+    totalSell: string;
+    orderPercentageSell: number;
+    totalPriceSell: any;
+    handleChangeAmountSell: (e: string) => void;
+    handleChangePriceSell: (e: string) => void;
+    handleSelectPercentageSell: (e: number) => void;
+    showModalSell: boolean;
+    handleCancelModalSell: () => void;
+    handleSubmitSell: () => void;
+    amountBuy: string;
+    priceBuy: string;
+    totalBuy: string;
+    orderPercentageBuy: number;
+    totalPriceBuy: any;
+    handleChangeAmountBuy: (e: string) => void;
+    handleChangePriceBuy: (e: string) => void;
+    handleSelectPercentageBuy: (e: number) => void;
+    showModalBuy: boolean;
+    handleCancelModalBuy: () => void;
+    handleSubmitBuy: () => void;
+    handleSubmit: () => void;
+    resetForm: () => void;
+    orderType: string;
+    orderLoading: boolean;
+    handleSide: (e: OrderSide) => void;
+    handleSelectOrderType: (e: string) => void;
+}
+
+export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
+    const {
+        amountSell,
+        priceSell,
+        totalSell,
+        orderPercentageSell,
+        totalPriceSell,
+        handleChangeAmountSell,
+        handleChangePriceSell,
+        handleSelectPercentageSell,
+        showModalSell,
+        handleCancelModalSell,
+        handleSubmitSell,
+        amountBuy,
+        priceBuy,
+        totalBuy,
+        orderPercentageBuy,
+        totalPriceBuy,
+        handleChangeAmountBuy,
+        handleChangePriceBuy,
+        handleSelectPercentageBuy,
+        showModalBuy,
+        handleCancelModalBuy,
+        handleSubmitBuy,
+        handleSubmit,
+        resetForm,
+        orderType,
+        orderLoading,
+        handleSide,
+        handleSelectOrderType,
+    } = props;
     const isLoggedin = useSelector(selectUserLoggedIn);
-    const tickers = useSelector(selectMarketTickers);
     const currentMarket = useSelector(selectCurrentMarket);
-    const wallets = useSelector(selectWallets);
-    const orderLoading = useSelector(selectOrderExecuteLoading);
-    const bids = useSelector(selectDepthBids);
-    const asks = useSelector(selectDepthAsks);
-    const error = useSelector(selectOrderError);
 
-    const { currency = '' } = useParams<{ currency?: string }>();
-    const tickerItem: Ticker = tickers[currency];
-    const wallet =
-        wallets.length &&
-        wallets.find((item) => item.currency.toLowerCase() === currentMarket?.base_unit?.toLowerCase());
-    const balance = wallet && wallet.balance ? wallet.balance.toString() : '0';
+    const disabledButtonSell = () => {
+        if (!isLoggedin) {
+            return true;
+        }
 
-    const usd =
-        wallets.length &&
-        wallets.find((item) => item.currency.toLowerCase() === currentMarket?.quote_unit?.toLowerCase());
-    const usdt = usd && usd.balance ? usd.balance.toString() : '0';
+        if (orderLoading) {
+            return true;
+        }
 
-    const [orderPercentageBuy, setOrderPercentageBuy] = React.useState(0);
-    const [orderPercentageSell, setOrderPercentageSell] = React.useState(0);
+        if (amountSell < currentMarket?.min_amount) {
+            return true;
+        }
 
-    const [showModalSell, setShowModalSell] = React.useState(false);
-    const [showModalBuy, setShowModalBuy] = React.useState(false);
-    const [priceBuy, setPriceBuy] = React.useState(Decimal.format(0, currentMarket?.price_precision));
-    const [amountBuy, setAmountBuy] = React.useState('');
-    const [totalBuy, setTotalBuy] = React.useState('');
+        if (amountSell === '0') {
+            return true;
+        }
 
-    const [priceSell, setPriceSell] = React.useState(Decimal.format(0, currentMarket?.price_precision));
-    const [amountSell, setAmountSell] = React.useState('');
-    const [totalSell, setTotalSell] = React.useState('');
-
-    const [orderType, setOrderType] = React.useState('limit');
-    const [side, setSide] = React.useState<OrderSide>('buy');
-
-    const totalPrice = getTotalPrice(
-        side === 'buy' ? amountBuy : amountSell,
-        +tickerItem?.last,
-        side === 'buy' ? bids : asks
-    );
-
-    const totalAmount = getAmount(
-        side === 'buy' ? +usdt : +balance,
-        side === 'buy' ? bids : asks,
-        side === 'buy' ? orderPercentageBuy : orderPercentageSell
-    );
-
-    React.useEffect(() => {
-        const safePrice = +totalPrice / +totalAmount || priceSell;
-
-        const market =
-            orderPercentageSell !== 0
-                ? Decimal.format((+balance * orderPercentageSell) / 100, currentMarket?.amount_precision)
-                : Decimal.format(amountSell, currentMarket?.amount_precision);
-
-        const limit =
-            orderPercentageSell !== 0
-                ? Decimal.format(+totalSell / +priceSell, currentMarket?.amount_precision)
-                : Decimal.format(amountSell, currentMarket?.amount_precision);
-
-        setAmountSell(orderType === 'market' ? market : limit);
-    }, [orderPercentageSell, totalSell, priceSell]);
-
-    React.useEffect(() => {
-        const safePrice = totalPrice / +amountSell || priceSell;
-        // const market =
-        //     orderPercentageSell !== 0
-        //         ? Decimal.format((+balance * +orderPercentageSell) / 100, currentMarket?.price_precision)
-        //         : Decimal.format(+amountSell * +safePrice, currentMarket?.price_precision);
-
-        const market = Decimal.format(+amountSell * +safePrice, currentMarket?.price_precision);
-
-        const limit =
-            orderPercentageSell !== 0
-                ? Decimal.format((+balance * +orderPercentageSell) / 100, currentMarket?.price_precision)
-                : Decimal.format(+priceSell * +amountSell, currentMarket?.price_precision);
-
-        setTotalSell(orderType === 'market' ? market : limit);
-    }, [priceSell, amountSell, orderPercentageSell]);
-
-    React.useEffect(() => {
-        // const safePrice = +totalPrice / +totalAmount || priceBuy;
-        const market =
-            orderPercentageBuy !== 0
-                ? Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.amount_precision)
-                : Decimal.format(amountBuy, currentMarket?.amount_precision);
-
-        const limit =
-            orderPercentageBuy !== 0
-                ? Decimal.format(+totalBuy / +priceBuy, currentMarket?.amount_precision)
-                : Decimal.format(amountBuy, currentMarket?.amount_precision);
-
-        setAmountBuy(orderType === 'market' ? market : limit);
-    }, [orderPercentageBuy, totalBuy, priceBuy]);
-
-    React.useEffect(() => {
-        const safePrice = totalPrice / +amountBuy || priceBuy;
-        // const market =
-        //     orderPercentageBuy !== 0
-        //         ? Decimal.format((+usdt * +orderPercentageBuy) / 100, currentMarket?.price_precision)
-        //         : Decimal.format(+amountBuy * +safePrice, currentMarket?.price_precision);
-
-        const market = Decimal.format(+amountBuy * +safePrice, currentMarket?.price_precision);
-
-        const limit =
-            orderPercentageBuy !== 0
-                ? Decimal.format((+usdt * +orderPercentageBuy) / 100, currentMarket?.price_precision)
-                : Decimal.format(+priceBuy * +amountBuy, currentMarket?.price_precision);
-
-        setTotalBuy(orderType === 'market' ? market : limit);
-    }, [priceBuy, amountBuy, orderPercentageBuy]);
-
-    const resetForm = () => {
-        setShowModalSell(false);
-        setShowModalBuy(false);
-        setAmountBuy('');
-        setAmountSell('');
-        setPriceBuy(Decimal.format('0', currentMarket?.price_precision));
-        setPriceSell(Decimal.format('0', currentMarket?.price_precision));
-        setTotalBuy('');
-        setTotalSell('');
-        setOrderPercentageSell(0);
-        setOrderPercentageBuy(0);
+        if (priceSell === '0') {
+            return true;
+        }
     };
 
-    const handleSubmit = () => {
-        const payloadLimit = {
-            market: currentMarket?.id,
-            side: side,
-            volume: side === 'sell' ? amountSell : amountBuy,
-            price: side === 'sell' ? priceSell : priceBuy,
-            ord_type: orderType,
-        };
+    const disabledButtonBuy = () => {
+        if (!isLoggedin) {
+            return true;
+        }
 
-        const payloadMarket = {
-            market: currentMarket?.id,
-            side: side,
-            volume: side === 'sell' ? amountSell : amountBuy,
-            ord_type: orderType,
-        };
+        if (orderLoading) {
+            return true;
+        }
 
-        dispatch(orderExecuteFetch(orderType === 'limit' ? payloadLimit : payloadMarket));
+        if (amountBuy < currentMarket?.min_amount) {
+            return true;
+        }
 
-        resetForm();
-    };
+        if (amountBuy === '0') {
+            return true;
+        }
 
-    const handleSide = (value: OrderSide) => {
-        setSide(value);
-    };
-
-    const handleChangePriceBuy = (e: string) => {
-        const value = e.replace(/[^0-9\.]/g, '');
-        setPriceBuy(value);
-    };
-
-    const handleChangePriceSell = (e: string) => {
-        const value = e.replace(/[^0-9\.]/g, '');
-        setPriceSell(value);
-    };
-
-    const handleChangeAmountBuy = (e: string) => {
-        const value = e.replace(/[^0-9\.]/g, '');
-        setAmountBuy(value);
-        setOrderPercentageBuy(0);
-    };
-
-    const handleChangeAmounSell = (e: string) => {
-        const value = e.replace(/[^0-9\.]/g, '');
-        setAmountSell(value);
-        setOrderPercentageSell(0);
+        if (priceBuy === '0') {
+            return true;
+        }
     };
 
     const renderModalContentSell = () => (
@@ -209,7 +126,7 @@ export const OrderForm: React.FunctionComponent = () => {
                 <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalSell}</li>
             </ul>
             <div className="d-flex">
-                <button className="btn btn-danger sm px-5 mr-3" onClick={() => setShowModalSell(false)}>
+                <button className="btn btn-danger sm px-5 mr-3" onClick={handleCancelModalSell}>
                     Cancel
                 </button>
                 <button onClick={handleSubmit} type="button" className="btn btn-success sm px-5">
@@ -231,7 +148,7 @@ export const OrderForm: React.FunctionComponent = () => {
                 <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalBuy}</li>
             </ul>
             <div className="d-flex">
-                <button className="btn btn-danger sm px-5 mr-3" onClick={() => setShowModalBuy(false)}>
+                <button className="btn btn-danger sm px-5 mr-3" onClick={handleCancelModalBuy}>
                     Cancel
                 </button>
                 <button onClick={handleSubmit} type="button" className="btn btn-success sm px-5">
@@ -273,10 +190,7 @@ export const OrderForm: React.FunctionComponent = () => {
                         />
                         <label
                             htmlFor="limit-order-sell"
-                            onClick={() => {
-                                setOrderType('limit');
-                                resetForm();
-                            }}
+                            onClick={() => handleSelectOrderType('limit')}
                             className={`btn btn-transparent w-auto text-xs font-bold cursor-pointer px-0 mr-4 ${
                                 orderType === 'limit' ? 'green-text' : 'white-text'
                             }`}>
@@ -290,10 +204,7 @@ export const OrderForm: React.FunctionComponent = () => {
                             defaultValue="market"
                         />
                         <label
-                            onClick={() => {
-                                setOrderType('market');
-                                resetForm();
-                            }}
+                            onClick={() => handleSelectOrderType('market')}
                             htmlFor="market-order-sell"
                             className={`btn btn-transparent w-auto text-xs font-bold cursor-pointer px-0 mr-4 ${
                                 orderType === 'market' ? 'green-text' : 'white-text'
@@ -309,7 +220,7 @@ export const OrderForm: React.FunctionComponent = () => {
                                 handleSide={handleSide}
                                 orderType={orderType}
                                 orderPercentage={orderPercentageBuy}
-                                handleSelectPercentage={(e) => setOrderPercentageBuy(e)}
+                                handleSelectPercentage={handleSelectPercentageBuy}
                                 labelAmount={'label-amount-buy'}
                                 labelPrice={'label-price-buy'}
                                 labelTotal={'label-total-buy'}
@@ -322,9 +233,10 @@ export const OrderForm: React.FunctionComponent = () => {
                                 handleChangeAmount={handleChangeAmountBuy}
                                 total={totalBuy}
                                 price={priceBuy}
-                                totalPrice={getTotalPrice(amountBuy, +tickerItem?.last, bids)}
+                                totalPrice={totalPriceBuy}
                                 handleChangePrice={handleChangePriceBuy}
-                                handleSubmit={() => setShowModalBuy(true)}
+                                handleSubmit={handleSubmitBuy}
+                                disabledButton={disabledButtonBuy}
                             />
                         </div>
                         <div className="col-6">
@@ -334,7 +246,7 @@ export const OrderForm: React.FunctionComponent = () => {
                                 handleSide={handleSide}
                                 orderType={orderType}
                                 orderPercentage={orderPercentageSell}
-                                handleSelectPercentage={(e) => setOrderPercentageSell(e)}
+                                handleSelectPercentage={handleSelectPercentageSell}
                                 labelAmount={'label-amount-sell'}
                                 labelPrice={'label-price-sell'}
                                 labelTotal={'label-total-sell'}
@@ -344,12 +256,13 @@ export const OrderForm: React.FunctionComponent = () => {
                                 labelPercent75={'label-sell-75'}
                                 labelPercent100={'label-sell-100'}
                                 amount={amountSell}
-                                handleChangeAmount={handleChangeAmounSell}
+                                handleChangeAmount={handleChangeAmountSell}
                                 total={totalSell}
                                 price={priceSell}
-                                totalPrice={getTotalPrice(amountSell, +tickerItem?.last, asks)}
+                                totalPrice={totalPriceSell}
                                 handleChangePrice={handleChangePriceSell}
-                                handleSubmit={() => setShowModalSell(true)}
+                                handleSubmit={handleSubmitSell}
+                                disabledButton={disabledButtonSell}
                             />
                         </div>
                     </div>

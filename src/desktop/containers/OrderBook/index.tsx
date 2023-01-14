@@ -20,7 +20,7 @@ import { numberFormat, accumulateVolume, calcMaxVolume } from '../../../helpers'
 import { Decimal, Loading } from '../../../components';
 import { NoData } from '../../../desktop/components';
 
-const OrderBookComponent = ({ asks, bids, loading }) => {
+const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handleSelectPriceBids }) => {
     useOpenOrdersFetch();
     useDepthFetch();
 
@@ -93,7 +93,14 @@ const OrderBookComponent = ({ asks, bids, loading }) => {
                                     <tbody>
                                         {asks &&
                                             asks.map((item, i) => (
-                                                <tr key={i} className="m-0 p-0">
+                                                <tr
+                                                    key={i}
+                                                    onClick={() =>
+                                                        handleSelectPriceAsks(
+                                                            Decimal.format(+item[0], currentMarket?.price_precision)
+                                                        )
+                                                    }
+                                                    className="m-0 p-0 cursor-pointer">
                                                     <td>
                                                         <p className="text-sm danger-text font-bold m-0 p-0 text-left">
                                                             {Decimal.format(+item[0], currentMarket?.price_precision)}
@@ -150,7 +157,14 @@ const OrderBookComponent = ({ asks, bids, loading }) => {
                                 ) : (
                                     <tbody>
                                         {bid.map((item, i) => (
-                                            <tr key={i} className="m-0 p-0">
+                                            <tr
+                                                key={i}
+                                                onClick={() =>
+                                                    handleSelectPriceBids(
+                                                        Decimal.format(+item[0], currentMarket?.price_precision)
+                                                    )
+                                                }
+                                                className="m-0 p-0 cursor-pointer">
                                                 <td>
                                                     <p className="text-sm green-text font-bold m-0 p-0 text-left">
                                                         {Decimal.format(+item[0], currentMarket?.price_precision)}

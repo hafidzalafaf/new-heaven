@@ -219,6 +219,7 @@ const SignUpMobileScreen: React.FC = () => {
 
     const handleSubmitForm = React.useCallback(() => {
         handleSignUp();
+        setShowTos(false);
     }, [handleSignUp]);
 
     const clearFields = () => {
