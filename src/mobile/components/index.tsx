@@ -8,3 +8,4 @@ export * from './CustomStyleSelect';
 export * from './PaginationMobile';
 export * from './ModalBeneficiaryMobile';
 export * from './ModalBeneficiaryListMobile';
+export * from './ChartLanding';

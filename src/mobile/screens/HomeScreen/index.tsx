@@ -12,6 +12,7 @@ import { SplashScreenMobile } from '../SplashScreen';
 import { BgCardSmall } from '../../assets/BackgroundCard';
 import { Table } from '../../../components';
 import { ArrowRight } from '../../assets/Arrow';
+import { ChartLandingMobile } from 'src/mobile/components';
 
 const noHeaderRoutes = ['/'];
 
@@ -68,6 +69,8 @@ const HomeMobileScreen: React.FC = () => {
             ),
         }));
 
+    // console.log(marketList);
+
     const dataTranding = marketList && marketList.sort((a, b) => +b.last - +a.last);
     const dataGainers = marketList && marketList.sort((a, b) => +b.price_change_percent - +a.price_change_percent);
     const dataLosers = marketList && marketList.sort((a, b) => +a.price_change_percent - +b.price_change_percent);
@@ -118,9 +121,9 @@ const HomeMobileScreen: React.FC = () => {
                     {item && item.currency && item.currency.id && item.currency.id.toUpperCase()}
                 </p>
             </div>,
-            // <div>
-            //     <img src="img-mobile/grap-up.png" alt="grap" />
-            // </div>,
+            <div className="">
+                <ChartLandingMobile label={item.kline[0]} data={item.kline[2]} width={80} height={20} />
+            </div>,
             <p className={`badge white-text font-bold ${item.change.includes('-') ? 'badge-danger' : 'badge-success'}`}>
                 {item && item.price_change_percent}
             </p>,
