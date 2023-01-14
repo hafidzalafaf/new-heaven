@@ -27,6 +27,7 @@ import {
     SettingIcon,
     UserIcon,
     WalletIcon,
+    DropdownIcon,
 } from '../../../assets/images/sidebar';
 import { TradeHistory } from '../../../assets/images/sidebar/TradeHistory';
 import './Sidebar.pcss';
@@ -91,15 +92,15 @@ class Side extends React.Component<Props, SidebarState> {
                 },
                 {
                     name: 'Wallet',
-                    path: null,
+                    path: '/wallets',
                     comingsoon: false,
                     submenu: [
                         {
                             name: 'Spot Wallet',
-                            path: null,
+                            path: '/wallets',
                             comingsoon: false,
                         },
-                        { name: 'P2P Wallet', path: null, comingsoon: false },
+                        { name: 'P2P Wallet', path: '/p2p/wallets', comingsoon: false },
                     ],
                 },
                 {
@@ -180,7 +181,8 @@ class Side extends React.Component<Props, SidebarState> {
                                                     });
                                                 } else if (el.submenu.length) {
                                                     this.setState({ expandWallet: !this.state.expandWallet });
-                                                } else if (el.path !== null) {
+                                                    this.props.history.push(el.path);
+                                                } else {
                                                     this.props.history.push(el.path);
                                                 }
                                             }}
@@ -239,10 +241,18 @@ class Side extends React.Component<Props, SidebarState> {
                                                         ? 'white-text'
                                                         : el.path != '/profile' && location.pathname.includes(el.path)
                                                         ? 'white-text'
+                                                        : el.name === 'Wallet' && location.pathname.includes(el.path)
+                                                        ? 'white-text'
                                                         : 'grey-text'
                                                 }`}>
                                                 {el.name}
                                             </p>
+
+                                            {el.name === 'Wallet' && (
+                                                <div className="ml-auto mr-3">
+                                                    <DropdownIcon fillColor={'var(--text-secondary-color)'} />
+                                                </div>
+                                            )}
                                         </li>
 
                                         {this.state.expandWallet &&
@@ -254,7 +264,7 @@ class Side extends React.Component<Props, SidebarState> {
                                                         onClick={() => {
                                                             this.props.history.push(item.path);
                                                         }}
-                                                        className="d-flex align-items-center cursor-pointer ml-24 mt-8 mb-8">
+                                                        className="d-flex align-items-center cursor-pointer ml-5 mt-8 mb-8">
                                                         <div className="mr-8">
                                                             <WalletIcon
                                                                 fillColor={
