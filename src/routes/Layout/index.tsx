@@ -653,9 +653,24 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         component={ChangeEmail}
                     />
 
-                    <PublicRoute loading={userLoading} path="/p2p/order" component={P2POrderScreen} />
-                    <PublicRoute loading={userLoading} path="/p2p/wallets" component={P2PWalletScreen} />
-                    <PublicRoute loading={userLoading} path="/p2p/profile" component={P2PProfileScreen} />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/order"
+                        component={P2POrderScreen}
+                    />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/wallets"
+                        component={P2PWalletScreen}
+                    />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/profile"
+                        component={P2PProfileScreen}
+                    />
                     <PublicRoute loading={userLoading} path="/p2p" component={P2PScreen} />
                     <Route exact={true} path="/" component={LandingScreen} />
                     <Route path="**">

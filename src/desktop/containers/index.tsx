@@ -31,3 +31,6 @@ export * from './TradingFutureRecentTrades';
 export * from './KycDocument';
 export * from './KycProfile';
 export * from './TradingChart';
+export * from './HeaderP2P';
+export * from './BannerP2P';
+export * from './TableListP2P';
