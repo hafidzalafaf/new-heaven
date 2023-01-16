@@ -1,10 +1,8 @@
 import classnames from 'classnames';
 import * as React from 'react';
 import { CellData, Table } from '../../../components';
-import { CloseIcon } from '../../../assets/images/CloseIcon';
 import { Sell, Buy } from '../../../assets/images/TradeIcon';
-import { Form, Spinner } from 'react-bootstrap';
-import { OrderCommon } from 'src/modules/types';
+import { Form } from 'react-bootstrap';
 
 export interface OpenOrdersProps {
     /**

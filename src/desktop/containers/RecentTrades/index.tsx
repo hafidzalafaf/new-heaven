@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectRecentTrades, recentTradesFetch, selectCurrentMarket } from '../../../modules';
 import { Decimal } from '../../../components';
-import moment from 'moment';
-import { localeDate, numberFormat } from '../../../helpers';
+import { localeDate } from '../../../helpers';
 import { NoData } from '../../../desktop/components';
 
 const RecentTradesComponent = (props) => {

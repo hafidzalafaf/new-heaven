@@ -11,6 +11,7 @@ import {
     selectNextPageExists,
     RootState,
     alertPush,
+    selectHistoryLoading,
 } from '../../../modules';
 import { Table } from '../../../components';
 import { Pagination } from '../../../desktop/components';
@@ -19,7 +20,7 @@ import { Tabs, Tab } from 'react-bootstrap';
 import Select from 'react-select';
 import moment from 'moment';
 import { NoData } from '../../components';
-import { copy } from '../../../components';
+import { copy, Loading } from '../../../components';
 import { CopyableTextField } from '../../../components';
 import './HistoryTransactionScreen.pcss';
 
@@ -29,6 +30,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const dispatch = useDispatch();
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
+    const historyLoading = useSelector(selectHistoryLoading);
 
     const [historys, setHistorys] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(0);
@@ -37,6 +39,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const [status, setStatus] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
     const [endDate, setEndDate] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
 
     const firstElemIndex = useSelector((state: RootState) => selectFirstElemIndex(state, DEFAULT_LIMIT));
     const lastElemIndex = useSelector((state: RootState) => selectLastElemIndex(state, DEFAULT_LIMIT));
@@ -73,6 +76,13 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
             return ['Date', 'Type', 'Asset', 'Ammount', `Receiver ID`, 'Sender ID', 'Status'];
         }
     };
+
+    React.useEffect(() => {
+        setLoading(true);
+        if (!historyLoading) {
+            setLoading(false);
+        }
+    }, [historyLoading, list]);
 
     React.useEffect(() => {
         setHistorys(list);
@@ -283,7 +293,8 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                                             onClickNextPage={onClickNextPage}
                                         />
                                     )}
-                                    {historys.length < 1 && <NoData text="No Data Yet" />}
+                                    {loading && <Loading />}
+                                    {historys.length < 1 && !loading && <NoData text="No Data Yet" />}
                                 </div>
                             </Tab>
                             <Tab eventKey="deposits" title="Deposit" className="mb-24">
@@ -300,8 +311,8 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                                             onClickNextPage={onClickNextPage}
                                         />
                                     )}
-
-                                    {historys.length < 1 && <NoData text="No Data Yet" />}
+                                    {loading && <Loading />}
+                                    {historys.length < 1 && !loading && <NoData text="No Data Yet" />}
                                 </div>
                             </Tab>
                             <Tab eventKey="transfers" title="Internal Transfer" className="mb-24">
@@ -318,7 +329,8 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                                             onClickNextPage={onClickNextPage}
                                         />
                                     )}
-                                    {historys.length < 1 && <NoData text="No Data Yet" />}
+                                    {loading && <Loading />}
+                                    {historys.length < 1 && !loading && <NoData text="No Data Yet" />}
                                 </div>
                             </Tab>
                         </Tabs>

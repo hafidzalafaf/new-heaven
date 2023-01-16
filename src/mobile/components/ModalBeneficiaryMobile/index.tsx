@@ -3,11 +3,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { CustomInput } from 'src/desktop/components';
 import { ModalFullScreenMobile } from '../../components';
-import { selectCurrencies, beneficiariesCreate, selectWallets, alertPush, beneficiariesError } from '../../../modules';
 import Select from 'react-select';
+
+import { DEFAULT_WALLET } from '../../../constants';
 import { CustomStylesSelect } from '../../components';
 import { validateBeneficiaryAddress } from '../../../helpers/validateBeneficiaryAddress';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
+import WAValidator from 'multicoin-address-validator';
+import {
+    beneficiariesCreate,
+    selectCurrencies,
+    selectWallets,
+    Wallet,
+    selectBeneficiariesCreateError,
+    selectBeneficiariesCreate,
+    selectBeneficiariesCreateLoading,
+    alertPush,
+} from '../../../modules';
 
 export interface ModalBeneficiaryMobileProps {
     showModalAddBeneficiary: boolean;
@@ -17,23 +29,28 @@ export interface ModalBeneficiaryMobileProps {
     handleAddAddress: () => void;
 }
 
+
+const defaultSelected = {
+    blockchainKey: '',
+    protocol: '',
+    name: '',
+    id: '',
+    fee: '',
+    minWithdraw: '',
+};
+
 export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = (props) => {
     const { currency = '' } = useParams<{ currency?: string }>();
     const dispatch = useDispatch();
 
     const currencies = useSelector(selectCurrencies);
     const wallets = useSelector(selectWallets);
+    const errorCreate = useSelector(selectBeneficiariesCreateError);
+    const createLoading = useSelector(selectBeneficiariesCreateLoading);
     const currencyItem = currencies.find((item) => item.id === currency);
     const isRipple = React.useMemo(() => currency === 'xrp', [currency]);
 
-    const defaultSelected = {
-        blockchainKey: '',
-        protocol: '',
-        name: '',
-        id: '',
-        fee: '',
-        minWithdraw: '',
-    };
+
 
     const [showModalAddBeneficiary, setShowModalAddBeneficiary] = React.useState(props.showModalAddBeneficiary);
 
@@ -43,15 +60,11 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
     const [coinBeneficiaryName, setCoinBeneficiaryName] = React.useState('');
     const [coinDescription, setCoinDescription] = React.useState('');
     const [coinDestinationTag, setCoinDestinationTag] = React.useState('');
+    const [currencyID, setCurrencyID] = React.useState('');
 
-    const validateCoinAddressFormat = React.useCallback(
-        (value: string) => {
-            const coinAddressValidator = validateBeneficiaryAddress.cryptocurrency(currency, true);
-
-            setCoinAddressValid(coinAddressValidator.test(value.trim()));
-        },
-        [currency]
-    );
+    const wallet: Wallet = wallets.find((item) => item.currency === currency) || DEFAULT_WALLET;
+    const balance = wallet && wallet.balance ? wallet.balance.toString() : '0';
+    const selectedFixed = (wallet || { fixed: 0 }).fixed;
 
     const handleClearModalsInputs = React.useCallback(() => {
         setCoinAddress('');
@@ -60,6 +73,27 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
         setCoinDescription('');
         setCoinDestinationTag('');
     }, []);
+
+    React.useEffect(() => {
+        currencyItem.networks.map((item) => {
+            if (item.blockchain_key == coinBlockchainName.blockchainKey) {
+                if (item.parent_id) {
+                    setCurrencyID(item.parent_id);
+                } else {
+                    setCurrencyID(item.currency_id);
+                }
+            }
+        });
+    }, [coinBlockchainName]);
+
+    const validateCoinAddressFormat = React.useCallback(
+        (value: string) => {
+            const valid = WAValidator.validate(value, currencyID);
+            setCoinAddressValid(valid);
+        },
+        [currencyID]
+    );
+
 
     const handleChangeCoinAddress = (value: string) => {
         setCoinAddress(value);
@@ -75,7 +109,6 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
     };
 
     const handleSubmitAddAddressCoinModal = React.useCallback(async () => {
-        console.log(beneficiariesError);
         const filterCurrency = wallets.find((curr) => curr.currency == currency);
         const addressExist =
             filterCurrency && filterCurrency.deposit_addresses.find((item) => item.address == coinAddress);
@@ -139,6 +172,17 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
             <>
                 <form>
                     <div className="align-items-start">
+                    <div className="align-items-start">
+                        <p className="text-sm white-text mb-8">Select Networks</p>
+                        <Select
+                            styles={CustomStylesSelect}
+                            options={optionNetworks}
+                            value={optionNetworks.filter(function (option) {
+                                return option.value === coinBlockchainName.blockchainKey;
+                            })}
+                            onChange={(e) => setCoinBlockchainName({ ...coinBlockchainName, blockchainKey: e.value })}
+                        />
+                    </div>
                         <label className="text-sm white-text">Blockchain Address</label>
                         <div className="input-amount">
                             <div>
@@ -165,17 +209,6 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
                                 </p>
                             </div>
                         </div>
-                    </div>
-                    <div className="align-items-start">
-                        <p className="text-sm white-text mb-8">Select Networks</p>
-                        <Select
-                            styles={CustomStylesSelect}
-                            options={optionNetworks}
-                            value={optionNetworks.filter(function (option) {
-                                return option.value === coinBlockchainName.blockchainKey;
-                            })}
-                            onChange={(e) => setCoinBlockchainName({ ...coinBlockchainName, blockchainKey: e.value })}
-                        />
                     </div>
                     <div className="align-items-start">
                         <label className="text-sm white-text">Beneficiary Name</label>

@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 import { useSelector } from 'react-redux';
-import { useDocumentTitle, useHistoryFetch, useMarketsFetch } from 'src/hooks';
+import { useDocumentTitle, useHistoryFetch, useMarketsFetch } from '../../../hooks';
 import {
     selectCurrencies,
     Currency,
@@ -12,13 +12,14 @@ import {
     selectNextPageExists,
     RootState,
     selectMarkets,
-} from 'src/modules';
+} from '../../../modules';
 import { localeDate } from '../../../helpers';
-import { Table } from 'src/components';
-import { Pagination, CustomStylesSelect } from 'src/desktop/components';
+import { Table } from '../../../components';
+import { Pagination, CustomStylesSelect } from '../../../desktop/components';
 import Select from 'react-select';
 import moment from 'moment';
 import { NoData } from '../../components';
+import { Loading } from '../../../components';
 
 const DEFAULT_LIMIT = 7;
 
@@ -27,7 +28,7 @@ export const HistoryTrade: FC = (): ReactElement => {
     const markets = useSelector(selectMarkets);
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
-    const loading = useSelector(selectHistoryLoading);
+    const historyLoading = useSelector(selectHistoryLoading);
 
     const [historys, setHistorys] = React.useState(list);
     const [currentPage, setCurrentPage] = React.useState(0);
@@ -35,6 +36,7 @@ export const HistoryTrade: FC = (): ReactElement => {
     const [startDate, setStartDate] = React.useState('');
     const [endDate, setEndDate] = React.useState('');
     const [idFilterAsset, setIdFilterAsset] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
 
     const firstElemIndex = useSelector((state: RootState) => selectFirstElemIndex(state, DEFAULT_LIMIT));
     const lastElemIndex = useSelector((state: RootState) => selectLastElemIndex(state, DEFAULT_LIMIT));
@@ -51,12 +53,6 @@ export const HistoryTrade: FC = (): ReactElement => {
         setCurrentPage(Number(page) + 1);
     };
 
-    // React.useEffect(() => {
-    //     if (!loading) {
-    //         setHistorys(list);
-    //     }
-    // }, [loading]);
-
     React.useEffect(() => {
         if (startDate != '' && endDate != '') {
             const filterredList = list.filter(
@@ -67,6 +63,13 @@ export const HistoryTrade: FC = (): ReactElement => {
             setHistorys(filterredList);
         }
     }, [startDate, endDate]);
+
+    React.useEffect(() => {
+        setLoading(true);
+        if (!historyLoading) {
+            setLoading(false);
+        }
+    }, [historyLoading]);
 
     let currentBidUnitMarkets = markets;
     const formattedMarkets = currentBidUnitMarkets.length
@@ -101,7 +104,7 @@ export const HistoryTrade: FC = (): ReactElement => {
             <p className={`m-0 text-sm ${item.side == 'buy' ? 'green-text' : 'danger-text'}`}>
                 {item.side === 'buy' ? 'Buy' : 'Sell'}
             </p>,
-            <p className="m-0 text-sm white-text">{item.market.toUpperCase()}</p>,
+            <p className="m-0 text-sm white-text">{item.market?.toUpperCase()}</p>,
             <p className="m-0 text-sm white-text">{item.market_type}</p>,
             <p className="m-0 text-sm white-text">{item.amount}</p>,
             <p className="m-0 text-sm white-text">{item.price}</p>,
@@ -187,7 +190,9 @@ export const HistoryTrade: FC = (): ReactElement => {
                             onClickNextPage={onClickNextPage}
                         />
                     )}
-                    {historys.length < 1 && <NoData text="No Data Yet" />}
+
+                    {loading && <Loading />}
+                    {list.length < 1 && !loading && <NoData text="No Data Yet" />}
                 </div>
             </div>
         </React.Fragment>

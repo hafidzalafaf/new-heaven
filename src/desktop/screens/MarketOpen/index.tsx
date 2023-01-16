@@ -15,8 +15,9 @@ import {
     selectOrdersNextPageExists,
     selectShouldFetchCancelAll,
     selectShouldFetchCancelSingle,
+    selectOrdersHistoryLoading,
 } from '../../../modules';
-import { Table } from '../../../components';
+import { Table, Loading } from '../../../components';
 import { CustomStylesSelect } from '../../../desktop/components';
 import { Tabs, Tab } from 'react-bootstrap';
 import { ModalCloseIcon } from '../../../assets/images/CloseIcon';
@@ -36,6 +37,7 @@ export const MarketOpen: FC = (): ReactElement => {
     const [data, setData] = React.useState([]);
     const [status, setStatus] = React.useState('');
     const [asset, setAsset] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
 
     const orders = useSelector(selectOrdersHistory);
     const shouldFetchCancelAll = useSelector(selectShouldFetchCancelAll);
@@ -45,6 +47,7 @@ export const MarketOpen: FC = (): ReactElement => {
     const ordersNextPageExists = useSelector(selectOrdersNextPageExists);
     const markets = useSelector(selectMarkets);
     const currencies: Currency[] = useSelector(selectCurrencies);
+    const historyLoading = useSelector(selectOrdersHistoryLoading);
 
     useUserOrdersHistoryFetch(currentPageIndex, tab, 20);
     useDocumentTitle('Market Order');
@@ -64,6 +67,13 @@ export const MarketOpen: FC = (): ReactElement => {
             }
         }
     }, [orders, tab]);
+
+    React.useEffect(() => {
+        setLoading(true);
+        if (!historyLoading) {
+            setLoading(false);
+        }
+    }, [historyLoading]);
 
     const handleCancelAllOrders = () => {
         if (shouldFetchCancelAll) {
@@ -264,7 +274,7 @@ export const MarketOpen: FC = (): ReactElement => {
                 <div className="pg-history-transaction-screen__content-wrapper dark-bg-accent">
                     <div className="position-relative">
                         {renderFilter()}
-                        {tab === 'open' && data.length && (
+                        {tab === 'open' && data && data[0] && (
                             <div className="ml-3 cancel-all-order">
                                 <button type="button" onClick={handleCancelAllOrders} className="btn btn-secondary">
                                     Cancel All Orders <ModalCloseIcon className="small-icon" />
@@ -285,10 +295,11 @@ export const MarketOpen: FC = (): ReactElement => {
                         <Tab eventKey="open" title="Open Order" className="mb-24">
                             <div className="mt-24">
                                 <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {data.length < 1 && <NoData text="No Data Yet" />}
+                                {data.length < 1 && !loading && <NoData text="No Data Yet" />}
+                                {loading && <Loading />}
                             </div>
 
-                            {data.length && (
+                            {data && data[0] && (
                                 <Pagination
                                     firstElemIndex={firstElemIndex}
                                     lastElemIndex={lastElemIndex}
@@ -302,10 +313,11 @@ export const MarketOpen: FC = (): ReactElement => {
                         <Tab eventKey="close" title="Close Order" className="mb-24">
                             <div className="mt-24">
                                 <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {data.length < 1 && <NoData text="No Data Yet" />}
+                                {data.length < 1 && !loading && <NoData text="No Data Yet" />}
+                                {loading && <Loading />}
                             </div>
 
-                            {data.length && (
+                            {data && data[0] && (
                                 <Pagination
                                     firstElemIndex={firstElemIndex}
                                     lastElemIndex={lastElemIndex}

@@ -1,4 +1,3 @@
-import classnames from 'classnames';
 import React, { FC, ReactElement, useMemo, useCallback, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';

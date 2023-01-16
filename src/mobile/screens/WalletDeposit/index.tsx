@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow';
 import { InfoWarningIcon } from '../../../assets/images/InfoIcon';
 import { CopyButton } from '../../../assets/images/CopyButton';
 import { HelpIcon } from 'src/mobile/assets/Help';
+import { ModalMobile } from 'src/mobile/components';
 
 import { ModalFullScreenMobile } from 'src/mobile/components';
 
@@ -35,6 +36,7 @@ const WalletDepositMobileScreen: React.FC = () => {
     const protocol = location.state?.protocol;
     const [address, setAddress] = React.useState('');
     const [showFAQ, setShowFAQ] = React.useState(false);
+    const [showFAQDetail, setShowFAQDetail] = React.useState(false);
 
     const wallet: Wallet = wallets.find((item) => item.currency === currency) || DEFAULT_WALLET;
     const currencies: Currency[] = useSelector(selectCurrencies);
@@ -102,7 +104,7 @@ const WalletDepositMobileScreen: React.FC = () => {
         return (
             <>
                 <div className="list-faq grey-text-accent">
-                    <div className="d-flex justify-content-between cursor-pointer mb-3 align-items-start pb-1 text-sm">
+                    <div onClick={() => setShowFAQDetail(!showFAQDetail)} className="d-flex justify-content-between cursor-pointer mb-3 align-items-start pb-1 text-sm">
                         <span>How To Deposit</span>
                         <span>
                             <ArrowRight className={''} />
@@ -150,6 +152,83 @@ const WalletDepositMobileScreen: React.FC = () => {
             </>
         );
     };
+
+    const renderFAQDetailHeader = () => {
+        return (
+            <div className="mt-3 px-12">
+                <div onClick={() => setShowFAQDetail(!showFAQDetail)} className="cursor-pointer">
+                    <ArrowLeft className={''} />
+                </div>
+                <h1 className="font-semibold navbar-brand grey-text-accent mt-3">How to Deposit</h1>
+            </div>
+        );
+    };
+
+    const renderFAQDetailContent = ()=> {
+        return (
+            <div className="w-100">
+                <div className="mb-3 d-flex flex-row align-top justify-content-around">
+                    <img
+                    className='align-top'
+                    height={34}
+                    width={34}
+                    src='/img-mobile/faq/no1.svg'
+                    />
+                    <div className='w-80'>
+                    <h5 className="font-semibold white-text">Copy Address</h5>
+                    <p className="text-sm grey-text-accent">
+                    Choose the crypto and its network on this page, and copy the deposit address
+                    </p>
+                    </div>
+                </div>
+                <div className="mb-3 d-flex flex-row align-top justify-content-around">
+                    <img
+                    className='align-top'
+                    height={34}
+                    width={34}
+                    src='/img-mobile/faq/no2.svg'
+                    />
+                    <div className='w-80'>
+                    <h5 className="font-semibold white-text">Initiate a Withdrawal</h5>
+                    <p className="text-sm grey-text-accent">
+                    Initiate a withdrawal on the withdrawal platform.
+                    </p>
+                    </div>
+                </div>
+                <div className="mb-3 d-flex flex-row align-top justify-content-around">
+                    <img
+                    className='align-top'
+                    height={34}
+                    width={34}
+                    src='/img-mobile/faq/no3.svg'
+                    />
+                    <div className='w-80'>
+                    <h5 className="font-semibold white-text">
+                    Network Confirmation
+                    </h5>
+                    <p className="text-sm grey-text-accent">
+                    Wait for the blockchain network to confirm your transfer.
+                    </p>
+                    </div>
+                </div>
+                <div className="mb-3 d-flex flex-row align-top justify-content-around">
+                    <img
+                    className='align-top'
+                    height={34}
+                    width={34}
+                    src='/img-mobile/faq/no4.svg'
+                    />
+                    <div className='w-80'>
+                    <h5 className="font-semibold white-text">
+                        Deposit Success
+                    </h5>
+                    <p className="text-sm grey-text-accent">
+                        After the network confirmation,we will credit the crypto for you.
+                    </p>
+                    </div>
+                </div>
+            </div> 
+        )};
 
     return (
         <React.Fragment>
@@ -327,6 +406,12 @@ const WalletDepositMobileScreen: React.FC = () => {
                         header={renderHeaderFAQMobile()}
                         content={renderContentFAQMobile()}
                     />
+                </div>
+            )}
+
+            {showFAQDetail && (
+                <div className="modal-benericary-list-mobile">
+                    <ModalMobile show={showFAQDetail} header={renderFAQDetailHeader()} content={renderFAQDetailContent()} />
                 </div>
             )}
         </React.Fragment>

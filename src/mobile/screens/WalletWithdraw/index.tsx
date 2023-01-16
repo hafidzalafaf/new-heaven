@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
-import { useParams, Link, useHistory } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { CustomInput } from 'src/desktop/components';
 import moment from 'moment';
@@ -23,6 +23,8 @@ import { ModalBeneficiaryListMobile } from 'src/mobile/components/ModalBeneficia
 import { Modal } from 'react-bootstrap';
 import PinInput from 'react-pin-input';
 import { KeyConfirmation } from 'src/mobile/assets/KeyConfirmation';
+import { selectWallets } from '../../../modules';
+import { useHistory } from 'react-router-dom';
 
 export const WalletWithdrawMobileScreen: React.FC = () => {
     useBeneficiariesFetch();
@@ -30,7 +32,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
     const intl = useIntl();
     const { formatMessage } = useIntl();
     const dispatch = useDispatch();
-
+    const history = useHistory();
     const TIME_RESEND = 30000;
 
     const [amount, setAmount] = React.useState('');
@@ -57,11 +59,13 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
     const beneficiariesList = beneficiaries.filter((item) => item.currency === currency);
     const currencies: Currency[] = useSelector(selectCurrencies);
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
+    const wallets = useSelector(selectWallets);
+    const wallet = wallets.find((item) => item.currency === currency);
 
     const blockchainKeyValue =
         currencyItem && currencyItem.networks.find((item) => item.blockchain_key === blockchainKey);
     const fee = blockchainKeyValue && blockchainKeyValue.withdraw_fee;
-    console.log(beneficiariesError, '1')
+
     React.useEffect(() => {
         let timer = null;
         if (timerActive) {
@@ -78,7 +82,6 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
             clearInterval(timer);
         };
     });
-
     const handleChangeBeneficiaryId = (id: number, address: string, blockchainKey: string) => {
         setBeneficiaryId(id);
         setAddress(address);
@@ -125,9 +128,10 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
         setBeneficiaryCode(value);
     };
 
-    const handleSubmitWithdraw = () => {
+    const handleSubmitWithdraw = async () => {
         dispatch(walletsWithdrawCcyFetch({ amount, beneficiary_id: beneficiaryId.toString(), currency, otp }));
         setShowModalConfirmation(false);
+        history.push('/history-transaction');
     };
 
     const isValidForm = () => {
@@ -312,6 +316,15 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                     $ {fee !== undefined ? fee : '0'}
                                 </p>
                             </div>
+                            { wallet !== undefined &&                            
+                            <div className="my-3">
+                                <p className='mb-0 text-sm grey-text-accent'>
+                                Balance
+                                </p>
+                                <p className='mb-0 text-base grey-text-accent font-bold'>
+                                    {wallet.balance} {currency.toUpperCase()}
+                                </p>
+                            </div>}
                             <div className="">
                                 <p className="mb-0 text-sm grey-text-accent">
                                     {formatMessage({
@@ -364,7 +377,6 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                     handleAddAddress={() => {
                         setShowModalModalAddBeneficiary(true);
                         setShowModalBeneficiaryList(false);
-                        console.log(beneficiariesError, '2')
                     }}
                     handlePendingStatus={(id) => handlePendingStatus(id)}
                     handleChangeBeneficiaryId={handleChangeBeneficiaryId}

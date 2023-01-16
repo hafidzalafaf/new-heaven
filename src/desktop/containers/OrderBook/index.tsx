@@ -1,18 +1,6 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-    selectCurrentMarket,
-    selectDepthBids,
-    selectDepthAsks,
-    selectDepthLoading,
-    selectLastRecentTrade,
-    setCurrentMarket,
-    Market,
-    selectMarkets,
-    depthFetch,
-    selectOrderBookId,
-    depthIncrementSubscribeResetLoading,
-} from '../../../modules';
+import { selectCurrentMarket, selectLastRecentTrade, selectUserLoggedIn } from '../../../modules';
 import { useParams } from 'react-router-dom';
 import { useOpenOrdersFetch, useDepthFetch, usePrevious } from '../../../hooks';
 import { TradeDown, TradeUp } from '../../../assets/images/TradeIcon';
@@ -31,6 +19,7 @@ const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handle
 
     const currentMarket = useSelector(selectCurrentMarket);
     const lastTrade = useSelector(selectLastRecentTrade);
+    const isLoggedIn = useSelector(selectUserLoggedIn);
 
     React.useEffect(() => {
         setAsk([...asks].sort((a, b) => Number(b[0]) - Number(a[0])));
@@ -96,11 +85,12 @@ const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handle
                                                 <tr
                                                     key={i}
                                                     onClick={() =>
+                                                        isLoggedIn &&
                                                         handleSelectPriceAsks(
                                                             Decimal.format(+item[0], currentMarket?.price_precision)
                                                         )
                                                     }
-                                                    className="m-0 p-0 cursor-pointer">
+                                                    className={`m-0 p-0 ${isLoggedIn && 'cursor-pointer'}`}>
                                                     <td>
                                                         <p className="text-sm danger-text font-bold m-0 p-0 text-left">
                                                             {Decimal.format(+item[0], currentMarket?.price_precision)}
@@ -160,11 +150,12 @@ const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handle
                                             <tr
                                                 key={i}
                                                 onClick={() =>
+                                                    isLoggedIn &&
                                                     handleSelectPriceBids(
                                                         Decimal.format(+item[0], currentMarket?.price_precision)
                                                     )
                                                 }
-                                                className="m-0 p-0 cursor-pointer">
+                                                className={`m-0 p-0 ${isLoggedIn && 'cursor-pointer'}`}>
                                                 <td>
                                                     <p className="text-sm green-text font-bold m-0 p-0 text-left">
                                                         {Decimal.format(+item[0], currentMarket?.price_precision)}
