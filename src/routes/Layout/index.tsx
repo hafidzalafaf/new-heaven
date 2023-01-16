@@ -482,12 +482,12 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={HistoryTransactionMobileScreen}
                         />
 
-                        <PublicRoute loading={userLoading} path="/trading" component={TradingMobileScreen} />
+                        {/* <PublicRoute loading={userLoading} path="/trading" component={TradingMobileScreen} />    */}
 
                         <PublicRoute loading={userLoading} path="/" component={HomeMobileScreen} />
 
                         <Route path="**">
-                            <Redirect to="/trading/" />
+                            <Redirect to="/markets" />
                         </Route>
                     </Switch>
                     {isLoggedIn && <WalletsFetch />}

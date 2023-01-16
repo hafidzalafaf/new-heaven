@@ -11,25 +11,58 @@ import {
     selectCurrentPage,
     selectLastElemIndex,
     selectNextPageExists,
+    selectWallets,
+    selectMarkets,
+    selectMarketTickers,
+    Wallet,
+    User,
+    selectUserInfo,
     RootState,
 } from '../../../modules';
 import { useHistoryFetch, useDocumentTitle, useWalletsFetch } from '../../../hooks';
 import Select from 'react-select';
 import moment from 'moment';
+import { PaginationMobile } from 'src/mobile/components';
+import { Decimal } from '../../../components';
+import { estimateUnitValue } from 'src/helpers/estimateValue';
+import { VALUATION_PRIMARY_CURRENCY } from 'src/constants';
 import { CustomStylesSelect } from '../../../desktop/components';
 import { ArrowLeft } from '../../assets/Arrow';
 import { WithdrawlIcon, DepositIcon, TransferIcon, FilterIcon, DocIcon } from '../../assets/Wallet';
 import { Table } from '../../../components';
 import { CircleCloseModalNetworkIcon } from '../../../assets/images/CircleCloseIcon';
 import { InfoModalNetworkIcon } from '../../../assets/images/InfoIcon';
+import { estimateValue } from 'src/helpers/estimateValue';
+
+interface Props {
+    isP2PEnabled?: boolean;
+}
+interface ExtendedWalletMobile extends Wallet {
+    spotBalance?: string;
+    spotLocked?: string;
+    p2pBalance?: string;
+    p2pLocked?: string;
+}
 
 const DEFAULT_LIMIT = 5;
-const WalletDetailMobileScreen: React.FC = () => {
+const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
+    useWalletsFetch();
+
+    const { isP2PEnabled } = props;
+
     const history = useHistory();
     const { formatMessage } = useIntl();
     const { currency = '' } = useParams<{ currency?: string }>();
+    const user: User = useSelector(selectUserInfo);
     const currencies: Currency[] = useSelector(selectCurrencies);
+    const markets = useSelector(selectMarkets);
+    const tickers = useSelector(selectMarketTickers);
+
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
+    const [unitValue, setUnitValue] = React.useState<string>();
+
+    const [filteredWallets, setFilteredWallets] = React.useState([]);
+    const wallets = useSelector(selectWallets);
 
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
@@ -42,8 +75,33 @@ const WalletDetailMobileScreen: React.FC = () => {
     const [endDate, setEndDate] = React.useState('');
     const [showNetwork, setShowNetwork] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
+    const [estimatedValue, setEstimatedValue] = React.useState<string>();
 
-    useHistoryFetch({ type: type, limit: 15, currency: currency, page: currentPage });
+    // Handle get item pagination
+    const firstElementIndex = useSelector((state: RootState) => selectFirstElemIndex(state, 5));
+    const lastElementIndex = useSelector((state: RootState) => selectLastElemIndex(state, 5));
+    const nextPageExists = useSelector((state: RootState) => selectNextPageExists(state, 5));
+
+    React.useEffect(() => {
+        if (wallets.length && currencies.length) {
+            const extendedWallets: ExtendedWalletMobile[] = currencies.map((cur) => {
+                if (cur.status === 'hidden' && user.role !== 'admin' && user.role !== 'superadmin') {
+                    return null;
+                }
+                const spotWallet = wallets.find((i) => i.currency === cur.id);
+                return {
+                    ...spotWallet,
+                    spotBalance: spotWallet ? spotWallet.balance : '0',
+                    spotLocked: spotWallet ? spotWallet.locked : '0',
+                };
+            });
+
+            const extendedWalletsFilter = extendedWallets.filter((item) => item && item.currency);
+            setFilteredWallets(extendedWalletsFilter);
+        }
+    }, [wallets, currencies, isP2PEnabled]);
+
+    useHistoryFetch({ type: type, limit: 7, currency: currency, page: currentPage });
 
     const handleSelectNetwork = (blockchain_key, protocol) => {
         history.push(`/wallets/${currency}/deposit`, { blockchain_key: blockchain_key, protocol: protocol });
@@ -78,6 +136,8 @@ const WalletDetailMobileScreen: React.FC = () => {
         }
     }, [startDate, endDate]);
 
+    let filteredList = filteredWallets.filter((i) => i.currency === currencyItem.id);
+
     const filterredStatus = (status) => {
         let filterredList;
         let temp;
@@ -99,10 +159,10 @@ const WalletDetailMobileScreen: React.FC = () => {
                         </h4>
                     </div>
                 </div>,
-                <div className="td-id-status-type d-flex flex-column justify-content-start align-items-start">
-                    <h3 className="p-0 m-0 grey-text-accent text-sm font-bold">ID</h3>
-                    <h4 className="p-0 m-0 grey-text text-sm font-bold">{item.receiver_uid.slice(0, 5)}..</h4>
-                </div>,
+                // <div className="td-id-status-type d-flex flex-column justify-content-start align-items-start">
+                //     <h3 className="p-0 m-0 grey-text-accent text-sm font-bold">ID</h3>
+                //     <h4 className="p-0 m-0 grey-text text-sm font-bold">{item.receiver_uid}</h4>
+                // </div>,
                 <div className="td-id-status-type d-flex flex-column justify-content-start align-items-start">
                     <h3 className="p-0 m-0 grey-text-accent text-sm font-bold">Status</h3>
                     <h4 className="p-0 m-0 grey-text text-sm font-bold">
@@ -146,6 +206,28 @@ const WalletDetailMobileScreen: React.FC = () => {
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
     ];
 
+    const totalBalance =
+        Number(filteredList.map((item) => item.spotBalance)) + Number(filteredList.map((item) => item.spotLocked));
+
+    const fixed = filteredList.map((item) => item.fixed);
+
+    React.useEffect(() => {
+        if (Number(totalBalance) && currency) {
+            return setEstimatedValue(
+                estimateUnitValue(
+                    currency.toUpperCase(),
+                    VALUATION_PRIMARY_CURRENCY,
+                    +totalBalance,
+                    currencies,
+                    markets,
+                    tickers
+                )
+            );
+        } else {
+            return setEstimatedValue(Decimal.format(0, 8));
+        }
+    }, [totalBalance, currency, currencies, markets, tickers]);
+
     return (
         <React.Fragment>
             <div className="mobile-container wallet-detail dark-bg-main position-relative pg-mobile-wallet-detail">
@@ -157,29 +239,35 @@ const WalletDetailMobileScreen: React.FC = () => {
                         {currencyItem && currencyItem.name}
                     </p>
                 </div>
-
                 <div className="detail-assets-container w-100 mb-4">
                     <div className="d-flex justify-content-between align-items-center w-100">
                         <div className="d-flex flex-column justify-content-center align-items-center">
                             <h3 className="text-sm grey-text">
                                 {formatMessage({ id: 'page.mobile.wallets.banner.available' })}
                             </h3>
-                            <h2 className="text-sm grey-text font-extrabold">0</h2>
+                            <h2 className="text-sm grey-text font-extrabold">
+                                <Decimal fixed={Number(filteredList.map((item) => item.fixed))}>
+                                    {Number(filteredList.map((item) => item.spotBalance))}
+                                </Decimal>
+                            </h2>
                         </div>
                         <div className="d-flex flex-column justify-content-center align-items-center">
                             <h3 className="text-sm grey-text">
-                                {formatMessage({ id: 'page.mobile.wallets.banner.available' })}
+                                {formatMessage({ id: 'page.mobile.wallets.banner.locked' })}
                             </h3>
-                            <h2 className="text-sm grey-text font-extrabold">0</h2>
+                            <h2 className="text-sm grey-text font-extrabold">
+                                {Number(filteredList.map((item) => item.spotLocked))}
+                            </h2>
                         </div>
 
                         <div className="d-flex flex-column justify-content-center align-items-center">
                             <h3 className="text-sm grey-text">
                                 {formatMessage({ id: 'page.mobile.wallets.banner.estimated' })}
                             </h3>
-                            <h2 className="text-sm grey-text font-extrabold">0</h2>
+                            <h2 className="text-sm grey-text font-extrabold">{estimatedValue}</h2>
                         </div>
                     </div>
+                    ;
                 </div>
 
                 <div className="btn-action-container d-flex justify-content-center flex-wrap pb-4">
@@ -224,6 +312,19 @@ const WalletDetailMobileScreen: React.FC = () => {
                             ) : (
                                 <Table data={getTableData(historys)} />
                             )}
+
+                            <div>
+                                {historys[0] && (
+                                    <PaginationMobile
+                                        firstElementIndex={firstElementIndex}
+                                        lastElementIndex={lastElementIndex}
+                                        page={page}
+                                        nextPageExists={nextPageExists}
+                                        onClickPrevPage={onClickPrevPage}
+                                        onClickNextPage={onClickNextPage}
+                                    />
+                                )}
+                            </div>
                         </div>
                     </Tab>
                     <Tab eventKey="withdraws" title="Withdraw">
@@ -236,6 +337,16 @@ const WalletDetailMobileScreen: React.FC = () => {
                         ) : (
                             <Table data={getTableData(historys)} />
                         )}
+                        {historys[0] && (
+                            <PaginationMobile
+                                firstElementIndex={firstElementIndex}
+                                lastElementIndex={lastElementIndex}
+                                page={page}
+                                nextPageExists={nextPageExists}
+                                onClickPrevPage={onClickPrevPage}
+                                onClickNextPage={onClickNextPage}
+                            />
+                        )}
                     </Tab>
                     <Tab eventKey="transfers" title="Internal Transfer">
                         {renderFilter()}
@@ -247,8 +358,22 @@ const WalletDetailMobileScreen: React.FC = () => {
                         ) : (
                             <Table data={getTableData(historys)} />
                         )}
+                        <div className="mt-3">
+                            {historys[0] && (
+                                <PaginationMobile
+                                    firstElementIndex={firstElementIndex}
+                                    lastElementIndex={lastElementIndex}
+                                    page={page}
+                                    nextPageExists={nextPageExists}
+                                    onClickPrevPage={onClickPrevPage}
+                                    onClickNextPage={onClickNextPage}
+                                />
+                            )}
+                        </div>
                     </Tab>
                 </Tabs>
+
+                {/* ================== Modal Add Deposit ============================= */}
 
                 <div id="off-canvas" className={`position-fixed off-canvas ${showNetwork ? 'show' : ''}`}>
                     <div className="fixed-bottom off-canvas-content-container overflow-auto">
@@ -283,6 +408,8 @@ const WalletDetailMobileScreen: React.FC = () => {
                             ))}
                     </div>
                 </div>
+
+                {/* =================================== Modal filter Date ========================= */}
 
                 <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${showFilter ? 'show' : ''}`}>
                     <div className="fixed-bottom off-canvas-content-container-filter overflow-auto">

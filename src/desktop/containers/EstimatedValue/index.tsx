@@ -32,9 +32,9 @@ const EstimatedValue: React.FC<Props> = (props: Props): React.ReactElement => {
         return estimateValue(VALUATION_PRIMARY_CURRENCY, currencies, wallets, markets, tickers);
     }, [currencies, wallets, markets, tickers]);
 
-    const estimatedLockedValue = React.useMemo(() => {
-        return estimateLokcedValue(VALUATION_PRIMARY_CURRENCY, currencies, wallets, markets, tickers);
-    }, [currencies, wallets, markets, tickers]);
+    // const estimatedLockedValue = React.useMemo(() => {
+    //     return estimateLokcedValue(VALUATION_PRIMARY_CURRENCY, currencies, wallets, markets, tickers);
+    // }, [currencies, wallets, markets, tickers]);
 
     return (
         <div className="d-flex mb-24">
@@ -47,7 +47,7 @@ const EstimatedValue: React.FC<Props> = (props: Props): React.ReactElement => {
                     </span>
                 </div>
             </div>
-            <div>
+            {/* <div>
                 <p className="text-ms grey-text-accent font-extrabold mb-12">Locked Estimated Balance</p>
                 <div className="d-flex align-items-center">
                     <span className="value-container text-md white-text">
@@ -55,7 +55,7 @@ const EstimatedValue: React.FC<Props> = (props: Props): React.ReactElement => {
                         <span className="value-sign mr-24">{VALUATION_PRIMARY_CURRENCY.toUpperCase()}</span>
                     </span>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

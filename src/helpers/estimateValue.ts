@@ -1,4 +1,3 @@
-// eslint-disable
 import { Decimal } from '../components/Decimal';
 import { DEFAULT_CCY_PRECISION } from '../constants';
 import { Currency, Market, Ticker, Wallet } from '../modules';

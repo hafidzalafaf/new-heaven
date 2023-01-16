@@ -40,6 +40,28 @@
         height: 18px;
     }
 
+    .badge-success {
+        border-radius: 8px;
+        padding: 1px 4px;
+        font-weight: 600;
+        font-size: 10px;
+        line-height: 16px;
+        color: var(--text-primary-color);
+        height: 18px;
+        background: var(--button-success-color);
+    }
+
+    .badge-danger {
+        border-radius: 8px;
+        padding: 1px 4px;
+        font-weight: 600;
+        font-size: 10px;
+        line-height: 16px;
+        color: var(--text-primary-color);
+        height: 18px;
+        background: var(--button-danger-color);
+    }
+
     .menu-expand .more {
         margin-right: 8px;
     }
@@ -50,8 +72,6 @@
 
     .expand-container p {
         font-weight: 600;
-        font-size: 10px;
-        line-height: 16px;
         color: var(--text-grey-color);
         margin-right: 2px;
     }
@@ -73,7 +93,7 @@
     }
 
     .trading-view-container {
-        width: 40%;
+        width: 100%;
     }
 
     .row-container {
@@ -304,7 +324,10 @@
     }
 
     .table-background {
-        top: 32px;
+        top: 32px !important;
+        &.no-top {
+            top: 0 !important;
+        }
     }
 
     .table-background-row {
@@ -520,14 +543,12 @@
         font-weight: 400;
         font-size: 14px;
         line-height: 16px;
-        color: var(--text-danger-color);
     }
 
     .td-price h5 {
         font-weight: 400;
         font-size: 10px;
         line-height: 16px;
-        color: var(--text-danger-color);
     }
 
     /* Sidebar End */
@@ -803,5 +824,11 @@
         &.active {
             transform: translateX(0);
         }
+    }
+
+    .max-h-160 {
+        max-height: 180px;
+        height: 180px;
+        overflow-y: auto;
     }
 }

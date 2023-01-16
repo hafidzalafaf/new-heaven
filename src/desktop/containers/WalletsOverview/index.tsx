@@ -10,6 +10,7 @@ import {
     selectMarkets,
     selectMarketTickers,
     selectWallets,
+    selectP2PWallets,
     Wallet,
     User,
     selectUserInfo,
@@ -37,6 +38,7 @@ interface ExtendedWallet extends Wallet {
 const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
     const [filterValue, setFilterValue] = React.useState<string>('');
     const [filteredWallets, setFilteredWallets] = React.useState<ExtendedWallet[]>([]);
+    const [mergedWallets, setMergedWallets] = React.useState<ExtendedWallet[]>([]);
     const [nonZeroSelected, setNonZeroSelected] = React.useState<boolean>(false);
     const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
     const [loading, setLoading] = React.useState<boolean>(false);
@@ -49,8 +51,9 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
     ]);
     const wallets = useSelector(selectWallets);
     const walletsLoading = useSelector(selectWalletsLoading);
+    const p2pWallets = useSelector(selectP2PWallets);
     const abilities = useSelector(selectAbilities);
-    const currencies: Currency[] = useSelector(selectCurrencies);
+    const currencies = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
     const tickers = useSelector(selectMarketTickers);
     const user: User = useSelector(selectUserInfo);
@@ -60,27 +63,30 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
     useMarketsFetch();
 
     useEffect(() => {
-        if (wallets.length && currencies.length) {
+        if (wallets.length && (isP2PEnabled ? p2pWallets.length : true) && currencies.length) {
             const extendedWallets: ExtendedWallet[] = currencies.map((cur) => {
                 if (cur.status === 'hidden' && user.role !== 'admin' && user.role !== 'superadmin') {
                     return null;
                 }
 
                 const spotWallet = wallets.find((i) => i.currency === cur.id);
+                const p2pWallet = isP2PEnabled ? p2pWallets.find((i) => i.currency === cur.id) : null;
 
                 return {
-                    ...spotWallet,
+                    ...(spotWallet || p2pWallet),
                     spotBalance: spotWallet ? spotWallet.balance : '0',
                     spotLocked: spotWallet ? spotWallet.locked : '0',
-                    status: cur.status,
-                    network: cur.networks,
+                    p2pBalance: p2pWallet ? p2pWallet.balance : '0',
+                    p2pLocked: p2pWallet ? p2pWallet.locked : '0',
                 };
             });
 
             const extendedWalletsFilter = extendedWallets.filter((item) => item && item.currency);
+
             setFilteredWallets(extendedWalletsFilter);
+            setMergedWallets(extendedWalletsFilter);
         }
-    }, [wallets, currencies, isP2PEnabled]);
+    }, [wallets, p2pWallets, currencies, isP2PEnabled]);
 
     React.useEffect(() => {
         setLoading(true);
@@ -131,8 +137,9 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
             : !filteredList.length && !loading
             ? [[]]
             : filteredList.map((item, index) => {
-                  const { currency, iconUrl, name, fixed, spotBalance, spotLocked } = item;
-                  const totalBalance = Number(spotBalance) + Number(spotLocked);
+                  const { currency, iconUrl, name, fixed, spotBalance, spotLocked, p2pBalance, p2pLocked } = item;
+                  const totalBalance =
+                      Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
                   const estimatedValue =
                       Number(totalBalance) && currency
                           ? estimateUnitValue(

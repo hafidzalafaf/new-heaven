@@ -40,7 +40,7 @@ const FooterComponent: React.FC = () => {
             ),
             url: '/trading',
             name: 'trading',
-            path: '/trading',
+            path: '/trading/ethusdt',
         },
         {
             icon: (

@@ -53,7 +53,7 @@ export const en = {
     'page.mobile.wallets.banner.total': 'Total',
     'page.mobile.wallets.banner.available': 'Available',
     'page.mobile.wallets.banner.locked': 'Locked',
-    'page.mobile.wallets.banner.estimated': 'Estimated IDR',
+    'page.mobile.wallets.banner.estimated': 'Estimated',
 
     'page.mobile.copy.text': 'Copy Address',
     'page.mobile.wallet.deposit.generate': 'Generate deposit address',

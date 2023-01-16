@@ -212,7 +212,7 @@ const MarketListlMobileScreen: React.FC = () => {
                 <Link to={`/markets/detail/${item.base_unit}`} className="gradient-text text-sm">
                     Detail
                 </Link>
-                <Link to={`/trading/${item.base_unit}`} className="gradient-text text-sm ml-2">
+                <Link to={`/trading/${item.id}`} className="gradient-text text-sm ml-2">
                     Trade
                 </Link>
             </div>,

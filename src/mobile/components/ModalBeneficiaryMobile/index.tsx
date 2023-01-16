@@ -11,14 +11,14 @@ import { validateBeneficiaryAddress } from '../../../helpers/validateBeneficiary
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import WAValidator from 'multicoin-address-validator';
 import {
-    beneficiariesCreate,
-    selectCurrencies,
-    selectWallets,
+    //beneficiariesCreate,
+    // selectCurrencies,
+    //selectWallets,
     Wallet,
     selectBeneficiariesCreateError,
     selectBeneficiariesCreate,
     selectBeneficiariesCreateLoading,
-    alertPush,
+    //alertPush,
 } from '../../../modules';
 
 export interface ModalBeneficiaryMobileProps {
@@ -28,7 +28,6 @@ export interface ModalBeneficiaryMobileProps {
     onCloseList: () => void;
     handleAddAddress: () => void;
 }
-
 
 const defaultSelected = {
     blockchainKey: '',
@@ -49,8 +48,6 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
     const createLoading = useSelector(selectBeneficiariesCreateLoading);
     const currencyItem = currencies.find((item) => item.id === currency);
     const isRipple = React.useMemo(() => currency === 'xrp', [currency]);
-
-
 
     const [showModalAddBeneficiary, setShowModalAddBeneficiary] = React.useState(props.showModalAddBeneficiary);
 
@@ -93,7 +90,6 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
         },
         [currencyID]
     );
-
 
     const handleChangeCoinAddress = (value: string) => {
         setCoinAddress(value);
@@ -172,17 +168,19 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
             <>
                 <form>
                     <div className="align-items-start">
-                    <div className="align-items-start">
-                        <p className="text-sm white-text mb-8">Select Networks</p>
-                        <Select
-                            styles={CustomStylesSelect}
-                            options={optionNetworks}
-                            value={optionNetworks.filter(function (option) {
-                                return option.value === coinBlockchainName.blockchainKey;
-                            })}
-                            onChange={(e) => setCoinBlockchainName({ ...coinBlockchainName, blockchainKey: e.value })}
-                        />
-                    </div>
+                        <div className="align-items-start">
+                            <p className="text-sm white-text mb-8">Select Networks</p>
+                            <Select
+                                styles={CustomStylesSelect}
+                                options={optionNetworks}
+                                value={optionNetworks.filter(function (option) {
+                                    return option.value === coinBlockchainName.blockchainKey;
+                                })}
+                                onChange={(e) =>
+                                    setCoinBlockchainName({ ...coinBlockchainName, blockchainKey: e.value })
+                                }
+                            />
+                        </div>
                         <label className="text-sm white-text">Blockchain Address</label>
                         <div className="input-amount">
                             <div>

@@ -1,11 +1,19 @@
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useDocumentTitle, useWalletsFetch, useMarketsFetch, useMarketsTickersFetch } from 'src/hooks';
-import { selectCurrencies, selectMarkets, selectMarketTickers } from 'src/modules';
+import {
+    selectCurrencies,
+    selectCurrentMarket,
+    selectMarkets,
+    selectMarketTickers,
+    setCurrentMarket,
+} from 'src/modules';
 import { TradingViewEmbed, widgetType } from 'react-tradingview-embed';
 import { WarningIcon } from '../../assets/Warning';
 import { Decimal } from 'src/components';
+import { ArrowLeft } from 'src/mobile/assets/Arrow';
+import { TradingChart } from 'src/desktop/containers';
 
 const defaultTicker = {
     amount: '0.0',
@@ -22,10 +30,13 @@ const MarketDetailMobileScreen: React.FC = () => {
     useWalletsFetch();
     useMarketsFetch();
     useMarketsTickersFetch();
+
     const currencies = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
     const marketTickers = useSelector(selectMarketTickers);
+    const marketInfo = useSelector(selectCurrentMarket);
     const { currency } = useParams<{ currency?: string }>();
+    const dispatch = useDispatch();
 
     const marketList = markets
         .map((market) => ({
@@ -49,10 +60,27 @@ const MarketDetailMobileScreen: React.FC = () => {
         return obj.base_unit === currency;
     });
 
+    const current = markets.find((item) => item.base_unit === currency);
+    console.log(markets);
+
+    console.log(currency);
+
+    React.useEffect(() => {
+        dispatch(setCurrentMarket(current));
+    }, [current]);
+
     const optionStatus = [{ label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' }];
     return (
         <React.Fragment>
             <div className="mobile-container no-header market-detail dark-bg-main">
+                <div className="mb-3">
+                    <Link to={'/markets'} className="cursor-pointer position-absolute">
+                        <ArrowLeft className={'back'} />
+                    </Link>
+                    <h5 className="text-center m-0  grey-text-accent font-bold">
+                        {detail && detail.base_unit && detail.base_unit.toUpperCase()}
+                    </h5>
+                </div>
                 <div className="d-flex flex-column align-items-center justify-content-center detail-card-coin w-100 mb-3">
                     <div className="d-flex justify-content-between align-items-center card-coin-head w-100">
                         <div className="d-flex align-items-center justify-content-start card-coin-price">
@@ -83,15 +111,9 @@ const MarketDetailMobileScreen: React.FC = () => {
                         <p className="p-0 m-0">1D</p>
                     </div>
                 </div>
-                <TradingViewEmbed
-                    widgetType={widgetType.ADVANCED_CHART}
-                    widgetConfig={{
-                        colorTheme: 'dark',
-                        symbol: currency,
-                        width: '100%',
-                        height: '100%',
-                    }}
-                />
+                <div className="chart-trading-mobile">
+                    <TradingChart />
+                </div>
                 <>
                     <div className="info-coin-container d-flex flex-column mt-5">
                         <h4>{detail && detail.base_unit && detail.base_unit.toUpperCase()} Information</h4>

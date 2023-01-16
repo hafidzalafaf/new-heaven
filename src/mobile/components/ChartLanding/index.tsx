@@ -1,5 +1,4 @@
 import React, { ReactElement, FC } from 'react';
-import { Line } from 'react-chartjs-2';
 import {
     Chart,
     LineController,
@@ -9,42 +8,11 @@ import {
     LinearScale,
     TimeScale,
     Tooltip,
+    ScriptableContext,
     CategoryScale,
 } from 'chart.js';
 
 Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip, CategoryScale);
-
-// interface ChartLandingProps {
-//     id: string;
-//     theme: Theme;
-//     className?: string;
-//     labels?: number[];
-//     data?: number[];
-// }
-
-// interface ChartData {
-//     labels: string[];
-//     datasets: {
-//         label: string;
-//         data: number[];
-//         backgroundColor?: string;
-//         borderColor?: string;
-//         borderWidth?: number;
-//         pointRadius?: number;
-//     }[];
-// }
-
-// interface ChartOptions {
-//     title: {
-//         display: boolean;
-//         text: string;
-//         fontSize: number;
-//     };
-//     legend: {
-//         display: boolean;
-//         position: string;
-//     };
-// }
 
 const ChartLandingMobile = ({ data, label, width, height }) => {
     const canvas = React.useRef(null);
@@ -65,33 +33,39 @@ const ChartLandingMobile = ({ data, label, width, height }) => {
                         pointRadius: 0,
                         borderColor: 'rgb(2,195,189)',
                         pointBackgroundColor: 'rgb(22, 22, 22)',
+                        // backgroundColor: (context: ScriptableContext<'line'>) => {
+                        //     const ctx = context.chart.ctx;
+                        //     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                        //     gradient.addColorStop(0, 'rgba(2,195,189, 0.5)');
+                        //     gradient.addColorStop(0.15, 'rgba(0,0,0, 1)');
+                        //     return gradient;
+                        // },
+
                         pointHoverRadius: 3,
                         clip: 20,
                     },
                 ],
             },
             options: {
-                chartArea: {
-                    backgroundColor: '',
-                },
                 layout: {
                     padding: 1,
                 },
                 scales: {
                     x: {
                         display: false,
+                        beginAtZero: true,
                     },
                     y: {
                         display: false,
                     },
                 },
+                interaction: {
+                    intersect: false,
+                    mode: 'nearest',
+                },
+                maintainAspectRatio: false,
+                resizeDelay: 200,
             },
-            interaction: {
-                intersect: false,
-                mode: 'nearest',
-            },
-            maintainAspectRatio: false,
-            resizeDelay: 200,
         });
         return () => chart.destroy();
     });
