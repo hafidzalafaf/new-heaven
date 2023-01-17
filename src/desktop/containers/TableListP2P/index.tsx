@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { InputGroup, DropdownButton, Dropdown, Form } from 'react-bootstrap';
-import { RefreshIcon, CheckIcon } from 'src/assets/images/P2PIcon';
-import { CustomStylesSelect } from '../../../desktop/components';
+import { RefreshIcon, CheckIcon, CloseIcon } from 'src/assets/images/P2PIcon';
+import { CustomStylesSelect, Modal } from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
 
 export const TableListP2P = () => {
     const [side, setSide] = React.useState('buy');
+    const [expandBuy, setExpandBuy] = React.useState('');
+    const [expandSell, setExpandSell] = React.useState('');
 
     const optionQuote = [
         { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
@@ -19,6 +21,42 @@ export const TableListP2P = () => {
         { label: <p className="m-0 text-sm grey-text-accent">All Payment</p>, value: 'all' },
         { label: <p className="m-0 text-sm grey-text-accent">Dana</p>, value: 'dana' },
         { label: <p className="m-0 text-sm grey-text-accent">Bank BCA</p>, value: 'bca' },
+    ];
+
+    const dummySell = [
+        {
+            id: '1',
+        },
+        {
+            id: '2',
+        },
+        {
+            id: '3',
+        },
+        {
+            id: '4',
+        },
+        {
+            id: '5',
+        },
+    ];
+
+    const dummyBuy = [
+        {
+            id: '1',
+        },
+        {
+            id: '2',
+        },
+        {
+            id: '3',
+        },
+        {
+            id: '4',
+        },
+        {
+            id: '5',
+        },
     ];
 
     return (
@@ -84,7 +122,7 @@ export const TableListP2P = () => {
                     </div>
 
                     <div className="d-flex align-items-center">
-                        <button className="grey-text btn-refresh mr-16">
+                        <button className="grey-text btn-secondary mr-16">
                             <RefreshIcon fillColor={'var(--text-grey-color)'} /> Refresh
                         </button>
 
@@ -106,221 +144,187 @@ export const TableListP2P = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="white-text border-table">
-                                <td>
-                                    <div className="d-flex align-items-center table-row">
-                                        <img src="/img/coin.png" alt="coin" className="mr-16" />
-                                        <div>
-                                            <div className="d-flex align-items-center">
-                                                <p className="p-0 m-0 mr-12 text-sm font-bold">USDT - Trader</p>
-                                                <span className="check">
-                                                    <CheckIcon />
+                            {dummyBuy?.map((buy, i) => (
+                                <tr
+                                    key={i}
+                                    onClick={() => {
+                                        !expandBuy && setExpandBuy(buy.id);
+                                    }}
+                                    className="white-text border-table cursor-pointer">
+                                    {expandBuy === buy.id ? (
+                                        <td colSpan={5} className="row-description dark-bg-main radius-lg">
+                                            <div className="d-flex align-items-center justify-content-between mb-24">
+                                                <div className="d-flex align-items-center">
+                                                    <img src="/img/bigcoin.png" alt="coin" className="mr-24" />
+                                                    <div>
+                                                        <h2 className="m-0 p-0 white-text mb-12 text-ms fontbold">
+                                                            USDT CRYPTO
+                                                        </h2>
+                                                        <div className="d-flex">
+                                                            <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
+                                                            <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span
+                                                    className="btn-close"
+                                                    onClick={() => {
+                                                        setExpandBuy('');
+                                                    }}>
+                                                    <CloseIcon />
                                                 </span>
                                             </div>
-                                            <div className="d-flex">
-                                                <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
-                                                <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
+
+                                            <div className="d-flex align-items-center justify-content-between mb-24 py-12">
+                                                <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
+                                                    <p className="m-0 p-0 mr-16">Price</p>
+                                                    <p className="m-0 p-0 mr-4">16,749.00 IDR</p>
+                                                </div>
+
+                                                <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
+                                                    <p className="m-0 p-0 mr-16">Available</p>
+                                                    <p className="m-0 p-0 mr-4">29,710.54 USDT</p>
+                                                </div>
+
+                                                <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
+                                                    <p className="m-0 p-0 mr-16">Payment Time Limit</p>
+                                                    <p className="m-0 p-0 mr-16">15 Minutes</p>
+                                                </div>
+
+                                                <div className="padding-4 d-flex align-items-center white-text text-xs font-bold">
+                                                    <p className="m-0 p-0 mr-16">Seller's Payment Methods</p>
+                                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
+                                                        <div className="label-bank">
+                                                            <img src="/img/logo-jago.png" alt="logo" />
+                                                        </div>
+
+                                                        <div className="label-bank">
+                                                            <img src="/img/logo-shopee.png" alt="logo" />
+                                                        </div>
+
+                                                        <div className="label-bank">
+                                                            <img src="/img/logo-bca.png" alt="logo" />
+                                                        </div>
+
+                                                        <div className="label-bank">
+                                                            <img src="/img/logo-dana.png" alt="logo" />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="text-xs font-bold">16,749.00 IDR</td>
-                                <td>
-                                    <div className="d-flex text-xs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Available</p>
-                                        <p className="m-0 p-0">1,000 USDT</p>
-                                    </div>
 
-                                    <div className="d-flex text-xxs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Limit</p>
-                                        <p className="m-0 p-0">200.00-4,080.00 AED</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                        <div className="label-bank">
-                                            <img src="/img/logo-jago.png" alt="logo" />
-                                        </div>
+                                            <div className="d-flex align-items-center justify-content-between w-100">
+                                                <form className="dark-bg-accent w-50 form-buy">
+                                                    <h1 className="white-text text-lg mb-44">Buy USDT Crypto</h1>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                        </div>
+                                                    <div className="position-relative mb-24">
+                                                        <label className="white-text text-xs font-semibold mb-8">
+                                                            I Want To Pay
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            placeholder={'00.00'}
+                                                            className="form-control input-p2p-form white-text"
+                                                        />
+                                                        <label className="input-label-right text-sm grey-text position-absolute">
+                                                            All IDR
+                                                        </label>
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-bca.png" alt="logo" />
-                                        </div>
+                                                    <div className="position-relative mb-44">
+                                                        <label className="white-text text-xs font-semibold mb-8">
+                                                            I Will Recieve
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            placeholder={'00.00'}
+                                                            className="form-control input-p2p-form white-text"
+                                                        />
+                                                        <label className="input-label-right text-sm grey-text position-absolute">
+                                                            USDT
+                                                        </label>
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-dana.png" alt="logo" />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className="btn-success">Buy USDT</button>
-                                </td>
-                            </tr>
+                                                    <div className="d-flex align-items-center justify-content-between w-100 btn-container">
+                                                        <button className="w-50 btn-secondary grey-text">Cancel</button>
+                                                        <button className="w-50 btn-primary">Buy USDT</button>
+                                                    </div>
+                                                </form>
 
-                            <tr className="white-text border-table">
-                                <td>
-                                    <div className="d-flex align-items-center table-row">
-                                        <img src="/img/coin.png" alt="coin" className="mr-16" />
-                                        <div>
-                                            <div className="d-flex align-items-center">
-                                                <p className="p-0 m-0 mr-12 text-sm font-bold">USDT - Trader</p>
-                                                <span className="check">
-                                                    <CheckIcon />
-                                                </span>
+                                                <div className="w-40">
+                                                    <h1 className="white-text text-md mb-16">Term and Conditions :</h1>
+                                                    <p className="text-xs font-extrabold grey-text mb-16">
+                                                        Fast Trade. <br /> Rek Bank Harus Sama Dengan Nama Di
+                                                        Binance,jika Rek Bank Berbeda Mana Akan Di Refund. Kolom Berita
+                                                        Harap Di Kosongkan,jangan Diisi Dengan Kata2 Mengandung Crypto
+                                                        Seperti Binance,bitcoin,usdt,crypto Iklan Online Berarti Saya
+                                                        Standby,silahkan Lgsg Trf Lgsg Proses.
+                                                    </p>
+                                                    <p className="text-xs font-extrabold grey-text ">
+                                                        Name In Binance Must Be Same With Bank Account.
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="d-flex">
-                                                <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
-                                                <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="text-xs font-bold">16,749.00 IDR</td>
-                                <td>
-                                    <div className="d-flex text-xs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Available</p>
-                                        <p className="m-0 p-0">1,000 USDT</p>
-                                    </div>
+                                        </td>
+                                    ) : (
+                                        <>
+                                            <td>
+                                                <div className="d-flex align-items-center table-row">
+                                                    <img src="/img/coin.png" alt="coin" className="mr-16" />
+                                                    <div>
+                                                        <div className="d-flex align-items-center">
+                                                            <p className="p-0 m-0 mr-12 text-sm font-bold">
+                                                                USDT - Trader
+                                                            </p>
+                                                            <span className="check">
+                                                                <CheckIcon />
+                                                            </span>
+                                                        </div>
+                                                        <div className="d-flex">
+                                                            <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
+                                                            <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="text-xs font-bold">16,749.00 IDR</td>
+                                            <td>
+                                                <div className="d-flex text-xs font-bold mb-6">
+                                                    <p className="m-0 p-0 mr-8">Available</p>
+                                                    <p className="m-0 p-0">1,000 USDT</p>
+                                                </div>
 
-                                    <div className="d-flex text-xxs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Limit</p>
-                                        <p className="m-0 p-0">200.00-4,080.00 AED</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                        <div className="label-bank">
-                                            <img src="/img/logo-jago.png" alt="logo" />
-                                        </div>
+                                                <div className="d-flex text-xxs font-bold mb-6">
+                                                    <p className="m-0 p-0 mr-8">Limit</p>
+                                                    <p className="m-0 p-0">200.00-4,080.00 AED</p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="d-flex flex-wrap align-items-center label-bank-container">
+                                                    <div className="label-bank">
+                                                        <img src="/img/logo-jago.png" alt="logo" />
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                        </div>
+                                                    <div className="label-bank">
+                                                        <img src="/img/logo-shopee.png" alt="logo" />
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-bca.png" alt="logo" />
-                                        </div>
+                                                    <div className="label-bank">
+                                                        <img src="/img/logo-bca.png" alt="logo" />
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-dana.png" alt="logo" />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className="btn-success">Buy USDT</button>
-                                </td>
-                            </tr>
-
-                            <tr className="white-text border-table">
-                                <td>
-                                    <div className="d-flex align-items-center table-row">
-                                        <img src="/img/coin.png" alt="coin" className="mr-16" />
-                                        <div>
-                                            <div className="d-flex align-items-center">
-                                                <p className="p-0 m-0 mr-12 text-sm font-bold">USDT - Trader</p>
-                                                <span className="check">
-                                                    <CheckIcon />
-                                                </span>
-                                            </div>
-                                            <div className="d-flex">
-                                                <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
-                                                <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="text-xs font-bold">16,749.00 IDR</td>
-                                <td>
-                                    <div className="d-flex text-xs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Available</p>
-                                        <p className="m-0 p-0">1,000 USDT</p>
-                                    </div>
-
-                                    <div className="d-flex text-xxs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Limit</p>
-                                        <p className="m-0 p-0">200.00-4,080.00 AED</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                        <div className="label-bank">
-                                            <img src="/img/logo-jago.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-bca.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-dana.png" alt="logo" />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className="btn-success">Buy USDT</button>
-                                </td>
-                            </tr>
-
-                            <tr className="white-text border-table">
-                                <td>
-                                    <div className="d-flex align-items-center table-row">
-                                        <img src="/img/coin.png" alt="coin" className="mr-16" />
-                                        <div>
-                                            <div className="d-flex align-items-center">
-                                                <p className="p-0 m-0 mr-12 text-sm font-bold">USDT - Trader</p>
-                                                <span className="check">
-                                                    <CheckIcon />
-                                                </span>
-                                            </div>
-                                            <div className="d-flex">
-                                                <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
-                                                <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="text-xs font-bold">16,749.00 IDR</td>
-                                <td>
-                                    <div className="d-flex text-xs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Available</p>
-                                        <p className="m-0 p-0">1,000 USDT</p>
-                                    </div>
-
-                                    <div className="d-flex text-xxs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Limit</p>
-                                        <p className="m-0 p-0">200.00-4,080.00 AED</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                        <div className="label-bank">
-                                            <img src="/img/logo-jago.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-bca.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-dana.png" alt="logo" />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className="btn-success">Buy USDT</button>
-                                </td>
-                            </tr>
+                                                    <div className="label-bank">
+                                                        <img src="/img/logo-dana.png" alt="logo" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button className="btn-success">Buy USDT</button>
+                                            </td>
+                                        </>
+                                    )}
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 )}
@@ -339,221 +343,187 @@ export const TableListP2P = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="white-text border-table">
-                                <td>
-                                    <div className="d-flex align-items-center table-row">
-                                        <img src="/img/coin.png" alt="coin" className="mr-16" />
-                                        <div>
-                                            <div className="d-flex align-items-center">
-                                                <p className="p-0 m-0 mr-12 text-sm font-bold">USDT - Trader</p>
-                                                <span className="check">
-                                                    <CheckIcon />
+                            {dummySell?.map((sell, i) => (
+                                <tr
+                                    key={i}
+                                    onClick={() => {
+                                        !expandSell && setExpandSell(sell.id);
+                                    }}
+                                    className="white-text border-table cursor-pointer">
+                                    {expandSell === sell.id ? (
+                                        <td colSpan={5} className="row-description dark-bg-main radius-lg">
+                                            <div className="d-flex align-items-center justify-content-between mb-24">
+                                                <div className="d-flex align-items-center">
+                                                    <img src="/img/bigcoin.png" alt="coin" className="mr-24" />
+                                                    <div>
+                                                        <h2 className="m-0 p-0 white-text mb-12 text-ms fontbold">
+                                                            USDT CRYPTO
+                                                        </h2>
+                                                        <div className="d-flex">
+                                                            <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
+                                                            <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span
+                                                    className="btn-close"
+                                                    onClick={() => {
+                                                        setExpandSell('');
+                                                    }}>
+                                                    <CloseIcon />
                                                 </span>
                                             </div>
-                                            <div className="d-flex">
-                                                <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
-                                                <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
+
+                                            <div className="d-flex align-items-center justify-content-between mb-24 py-12">
+                                                <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
+                                                    <p className="m-0 p-0 mr-16">Price</p>
+                                                    <p className="m-0 p-0 mr-4">16,749.00 IDR</p>
+                                                </div>
+
+                                                <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
+                                                    <p className="m-0 p-0 mr-16">Available</p>
+                                                    <p className="m-0 p-0 mr-4">29,710.54 USDT</p>
+                                                </div>
+
+                                                <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
+                                                    <p className="m-0 p-0 mr-16">Payment Time Limit</p>
+                                                    <p className="m-0 p-0 mr-16">15 Minutes</p>
+                                                </div>
+
+                                                <div className="padding-4 d-flex align-items-center white-text text-xs font-bold">
+                                                    <p className="m-0 p-0 mr-16">Seller's Payment Methods</p>
+                                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
+                                                        <div className="label-bank">
+                                                            <img src="/img/logo-jago.png" alt="logo" />
+                                                        </div>
+
+                                                        <div className="label-bank">
+                                                            <img src="/img/logo-shopee.png" alt="logo" />
+                                                        </div>
+
+                                                        <div className="label-bank">
+                                                            <img src="/img/logo-bca.png" alt="logo" />
+                                                        </div>
+
+                                                        <div className="label-bank">
+                                                            <img src="/img/logo-dana.png" alt="logo" />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="text-xs font-bold">16,749.00 IDR</td>
-                                <td>
-                                    <div className="d-flex text-xs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Available</p>
-                                        <p className="m-0 p-0">1,000 USDT</p>
-                                    </div>
 
-                                    <div className="d-flex text-xxs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Limit</p>
-                                        <p className="m-0 p-0">200.00-4,080.00 AED</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                        <div className="label-bank">
-                                            <img src="/img/logo-jago.png" alt="logo" />
-                                        </div>
+                                            <div className="d-flex align-items-center justify-content-between w-100">
+                                                <form className="dark-bg-accent w-50 form-buy">
+                                                    <h1 className="white-text text-lg mb-44">Sell USDT Crypto</h1>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                        </div>
+                                                    <div className="position-relative mb-24">
+                                                        <label className="white-text text-xs font-semibold mb-8">
+                                                            I Want To Pay
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            placeholder={'00.00'}
+                                                            className="form-control input-p2p-form white-text"
+                                                        />
+                                                        <label className="input-label-right text-sm grey-text position-absolute">
+                                                            All IDR
+                                                        </label>
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-bca.png" alt="logo" />
-                                        </div>
+                                                    <div className="position-relative mb-44">
+                                                        <label className="white-text text-xs font-semibold mb-8">
+                                                            I Will Recieve
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            placeholder={'00.00'}
+                                                            className="form-control input-p2p-form white-text"
+                                                        />
+                                                        <label className="input-label-right text-sm grey-text position-absolute">
+                                                            USDT
+                                                        </label>
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-dana.png" alt="logo" />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className="btn-danger">Sell USDT</button>
-                                </td>
-                            </tr>
+                                                    <div className="d-flex align-items-center justify-content-between w-100 btn-container">
+                                                        <button className="w-50 btn-secondary grey-text">Cancel</button>
+                                                        <button className="w-50 btn-primary">Sell USDT</button>
+                                                    </div>
+                                                </form>
 
-                            <tr className="white-text border-table">
-                                <td>
-                                    <div className="d-flex align-items-center table-row">
-                                        <img src="/img/coin.png" alt="coin" className="mr-16" />
-                                        <div>
-                                            <div className="d-flex align-items-center">
-                                                <p className="p-0 m-0 mr-12 text-sm font-bold">USDT - Trader</p>
-                                                <span className="check">
-                                                    <CheckIcon />
-                                                </span>
+                                                <div className="w-40">
+                                                    <h1 className="white-text text-md mb-16">Term and Conditions :</h1>
+                                                    <p className="text-xs font-extrabold grey-text mb-16">
+                                                        Fast Trade. <br /> Rek Bank Harus Sama Dengan Nama Di
+                                                        Binance,jika Rek Bank Berbeda Mana Akan Di Refund. Kolom Berita
+                                                        Harap Di Kosongkan,jangan Diisi Dengan Kata2 Mengandung Crypto
+                                                        Seperti Binance,bitcoin,usdt,crypto Iklan Online Berarti Saya
+                                                        Standby,silahkan Lgsg Trf Lgsg Proses.
+                                                    </p>
+                                                    <p className="text-xs font-extrabold grey-text ">
+                                                        Name In Binance Must Be Same With Bank Account.
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="d-flex">
-                                                <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
-                                                <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="text-xs font-bold">16,749.00 IDR</td>
-                                <td>
-                                    <div className="d-flex text-xs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Available</p>
-                                        <p className="m-0 p-0">1,000 USDT</p>
-                                    </div>
+                                        </td>
+                                    ) : (
+                                        <>
+                                            <td>
+                                                <div className="d-flex align-items-center table-row">
+                                                    <img src="/img/coin.png" alt="coin" className="mr-16" />
+                                                    <div>
+                                                        <div className="d-flex align-items-center">
+                                                            <p className="p-0 m-0 mr-12 text-sm font-bold">
+                                                                USDT - Trader
+                                                            </p>
+                                                            <span className="check">
+                                                                <CheckIcon />
+                                                            </span>
+                                                        </div>
+                                                        <div className="d-flex">
+                                                            <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
+                                                            <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="text-xs font-bold">16,749.00 IDR</td>
+                                            <td>
+                                                <div className="d-flex text-xs font-bold mb-6">
+                                                    <p className="m-0 p-0 mr-8">Available</p>
+                                                    <p className="m-0 p-0">1,000 USDT</p>
+                                                </div>
 
-                                    <div className="d-flex text-xxs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Limit</p>
-                                        <p className="m-0 p-0">200.00-4,080.00 AED</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                        <div className="label-bank">
-                                            <img src="/img/logo-jago.png" alt="logo" />
-                                        </div>
+                                                <div className="d-flex text-xxs font-bold mb-6">
+                                                    <p className="m-0 p-0 mr-8">Limit</p>
+                                                    <p className="m-0 p-0">200.00-4,080.00 AED</p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="d-flex flex-wrap align-items-center label-bank-container">
+                                                    <div className="label-bank">
+                                                        <img src="/img/logo-jago.png" alt="logo" />
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                        </div>
+                                                    <div className="label-bank">
+                                                        <img src="/img/logo-shopee.png" alt="logo" />
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-bca.png" alt="logo" />
-                                        </div>
+                                                    <div className="label-bank">
+                                                        <img src="/img/logo-bca.png" alt="logo" />
+                                                    </div>
 
-                                        <div className="label-bank">
-                                            <img src="/img/logo-dana.png" alt="logo" />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className="btn-danger">Sell USDT</button>
-                                </td>
-                            </tr>
-
-                            <tr className="white-text border-table">
-                                <td>
-                                    <div className="d-flex align-items-center table-row">
-                                        <img src="/img/coin.png" alt="coin" className="mr-16" />
-                                        <div>
-                                            <div className="d-flex align-items-center">
-                                                <p className="p-0 m-0 mr-12 text-sm font-bold">USDT - Trader</p>
-                                                <span className="check">
-                                                    <CheckIcon />
-                                                </span>
-                                            </div>
-                                            <div className="d-flex">
-                                                <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
-                                                <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="text-xs font-bold">16,749.00 IDR</td>
-                                <td>
-                                    <div className="d-flex text-xs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Available</p>
-                                        <p className="m-0 p-0">1,000 USDT</p>
-                                    </div>
-
-                                    <div className="d-flex text-xxs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Limit</p>
-                                        <p className="m-0 p-0">200.00-4,080.00 AED</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                        <div className="label-bank">
-                                            <img src="/img/logo-jago.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-bca.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-dana.png" alt="logo" />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className="btn-danger">Sell USDT</button>
-                                </td>
-                            </tr>
-
-                            <tr className="white-text border-table">
-                                <td>
-                                    <div className="d-flex align-items-center table-row">
-                                        <img src="/img/coin.png" alt="coin" className="mr-16" />
-                                        <div>
-                                            <div className="d-flex align-items-center">
-                                                <p className="p-0 m-0 mr-12 text-sm font-bold">USDT - Trader</p>
-                                                <span className="check">
-                                                    <CheckIcon />
-                                                </span>
-                                            </div>
-                                            <div className="d-flex">
-                                                <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
-                                                <p className="p-0 m-0 text-xs ">90,1 % Complete</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="text-xs font-bold">16,749.00 IDR</td>
-                                <td>
-                                    <div className="d-flex text-xs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Available</p>
-                                        <p className="m-0 p-0">1,000 USDT</p>
-                                    </div>
-
-                                    <div className="d-flex text-xxs font-bold mb-6">
-                                        <p className="m-0 p-0 mr-8">Limit</p>
-                                        <p className="m-0 p-0">200.00-4,080.00 AED</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                        <div className="label-bank">
-                                            <img src="/img/logo-jago.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-bca.png" alt="logo" />
-                                        </div>
-
-                                        <div className="label-bank">
-                                            <img src="/img/logo-dana.png" alt="logo" />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className="btn-danger">Sell USDT</button>
-                                </td>
-                            </tr>
+                                                    <div className="label-bank">
+                                                        <img src="/img/logo-dana.png" alt="logo" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button className="btn-danger">Sell USDT</button>
+                                            </td>
+                                        </>
+                                    )}
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 )}
