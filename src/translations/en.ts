@@ -896,7 +896,7 @@ export const en = {
     'success.otp.enabled': '2FA was enabled',
     'success.otp.disabled': '2FA was disabled',
     'success.password.changed': 'Password was changed',
-    'success.password.forgot': 'Password reset link has been sent to your email',
+    'success.password.forgot': 'Password reset code has been sent to your email',
     'success.password.changed.successfuly': 'Password was changed',
     'success.order.cancelling': 'Order is being cancelled',
     'success.order.canceled': 'Order was cancelled',

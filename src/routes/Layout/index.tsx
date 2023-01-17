@@ -537,7 +537,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         component={ForgotPasswordScreen}
                     />
 
-                    <PrivateRoute
+                    <PublicRoute
                         loading={userLoading}
                         isLogged={isLoggedIn}
                         path="/accounts/password_reset"
