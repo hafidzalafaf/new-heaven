@@ -2,7 +2,7 @@ import { History } from 'history';
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
-import { RouteProps, withRouter } from 'react-router-dom';
+import { RouteProps, withRouter, Link } from 'react-router-dom';
 import { compose } from 'redux';
 import { IntlProps } from '../../../';
 import {
@@ -51,14 +51,16 @@ class FooterContainer extends React.Component<Props, State> {
 
     public render() {
         const { isLoggedIn, lang } = this.props;
+        const date = new Date();
+        let year = date.getFullYear();
         return (
             <React.Fragment>
                 <footer className=" pt-5">
                     <div className="container pb-5">
                         <div className="d-flex justify-content-between flex-wrap">
-                            <div className="name px-3">
+                            <Link to={`/`} className="name px-3">
                                 <Logo className="mb-3" />
-                            </div>
+                            </Link>
                             <div className="link px-3">
                                 <p className="text-lg gradient-text mb-36">
                                     {this.translate('page.body.landing.footer.links').toUpperCase()}
@@ -127,7 +129,7 @@ class FooterContainer extends React.Component<Props, State> {
                                     Contact
                                 </a>
                             </div>
-                            <p className="text-sm font-normal white-text mb-0">Copyright @ 2022 Heaven Exchange</p>
+                            <p className="text-sm font-normal white-text mb-0">Copyright @ {year} Heaven Exchange</p>
                             <div className="d-flex">
                                 <a href="">
                                     <div className="mx-1">
