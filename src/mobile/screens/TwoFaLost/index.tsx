@@ -13,7 +13,7 @@ const LostTwoFaMobileScreen: React.FC = () => {
                     <h1 className=" font-extrabold text-md grey-text-accent text-center ml-4">Security Verification</h1>
                 </div>
                 <div className="main-content">
-                    <img src="img-mobile/contact-support.svg" alt="contact support icon" />
+                    <img src="img-mobile/contact-support.png" alt="contact support icon" />
                     <p className="text-sm white-text text-center mt-2">
                         Please Contact Our Admin To Get New Code 2FA Verification
                     </p>

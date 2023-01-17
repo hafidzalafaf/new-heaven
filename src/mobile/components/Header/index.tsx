@@ -55,9 +55,9 @@ const HeaderComponent: React.FC = () => {
         <div>
             <div className="px-24 dark-bg-main">
                 <nav className="navbar-mobile fixed-top px-24 py-3 dark-bg-main">
-                    <a className="navbar-brand">
+                    <Link to="/" className="navbar-brand">
                         <LogoIcon className={''} />
-                    </a>
+                    </Link>
                     <div className="d-flex align-items-center">
                         <ScanIcon className={'mr-2'} />
                         <div className="cursor-pointer" onClick={() => setShowSidebar(true)}>

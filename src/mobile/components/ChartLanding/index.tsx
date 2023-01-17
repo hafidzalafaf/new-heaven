@@ -14,7 +14,7 @@ import {
 
 Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip, CategoryScale);
 
-const ChartLandingMobile = ({ data, label, width, height }) => {
+const ChartLandingMobile = ({ data, label, width, height, gradient1, statusBd }) => {
     const canvas = React.useRef(null);
 
     React.useEffect(() => {
@@ -31,8 +31,15 @@ const ChartLandingMobile = ({ data, label, width, height }) => {
                         borderWidth: 2,
                         tension: 0,
                         pointRadius: 0,
-                        borderColor: 'rgb(2,195,189)',
+                        borderColor: statusBd,
                         pointBackgroundColor: 'rgb(22, 22, 22)',
+                        backgroundColor: (context: ScriptableContext<'line'>) => {
+                            const ctx = context.chart.ctx;
+                            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                            gradient.addColorStop(0, `${gradient1}`);
+                            gradient.addColorStop(0.15, 'rgba(0,0,0, 1)');
+                            return gradient;
+                        },
                         // backgroundColor: (context: ScriptableContext<'line'>) => {
                         //     const ctx = context.chart.ctx;
                         //     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -40,9 +47,6 @@ const ChartLandingMobile = ({ data, label, width, height }) => {
                         //     gradient.addColorStop(0.15, 'rgba(0,0,0, 1)');
                         //     return gradient;
                         // },
-
-                        pointHoverRadius: 3,
-                        clip: 20,
                     },
                 ],
             },
@@ -64,7 +68,11 @@ const ChartLandingMobile = ({ data, label, width, height }) => {
                     mode: 'nearest',
                 },
                 maintainAspectRatio: false,
-                resizeDelay: 200,
+                plugins: {
+                    tooltip: {
+                        displayColors: false,
+                    },
+                },
             },
         });
         return () => chart.destroy();

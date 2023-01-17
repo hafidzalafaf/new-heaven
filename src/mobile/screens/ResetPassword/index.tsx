@@ -2,11 +2,9 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect, MapDispatchToPropsFunction, MapStateToProps } from 'react-redux';
 import { RouterProps, withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import { compose } from 'redux';
 import { IntlProps } from '../../../';
 import { ChangePasswordMobile } from 'src/mobile/components/ResetPasswordMobile';
-import { setDocumentTitle } from '../../../helpers';
 import {
     changeForgotPasswordFetch,
     changeLanguage,

@@ -1,19 +1,20 @@
-import * as React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
+import { OrderCommon, OrderSide } from '../../../modules/types';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { TradingViewEmbed, widgetType } from 'react-tradingview-embed';
-import { useMarketsFetch, useMarketsTickersFetch, useDocumentTitle } from '../../../hooks';
+import { useMarketsFetch, useMarketsTickersFetch, useOpenOrdersFetch, useDocumentTitle } from '../../../hooks';
 import {
-    selectCurrencies,
+    ordersCancelAllFetch,
+    userOpenOrdersFetch,
     selectMarketTickers,
-    MarketsTickersData,
+    openOrdersCancelFetch,
     setCurrentMarket,
     selectCurrentMarket,
     depthIncrementSubscribeResetLoading,
-    Currency,
     selectMarkets,
-    Market,
+    selectOpenOrdersList,
     selectDepthLoading,
     selectUserLoggedIn,
     selectDepthAsks,
@@ -22,47 +23,50 @@ import {
 } from '../../../modules';
 import { Decimal } from '../../../components';
 import { ModalFullScreenMobile } from 'src/mobile/components';
+import { RecentTrades, OpenOrders } from '../../../desktop/containers';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import {
-    ArrowDownIcon,
-    BuyIcon,
-    DotsIcon,
-    HistoryIcon,
-    InformationIcon,
-    MinusIcon,
-    PlusIcon,
-    SellIcon,
-    SidebarMenuIcon,
-} from '../../assets/Trading';
-import { FilterInput } from 'src/desktop/components';
+import { ArrowDownIcon, MinusIcon, PlusIcon, SidebarMenuIcon } from '../../assets/Trading';
 import Select from 'react-select';
 import { CustomStylesSelect } from 'src/desktop/components';
 import { Table } from '../../../components';
 import { TradingChart } from '../../containers';
 import { OrderBook } from '../../../desktop/containers';
+import { CloseIconTrade } from 'src/assets/images/CloseIcon';
+import { localeDate, setTradeColor } from '../../../helpers';
+import { getTriggerSign } from './helpers';
 
 export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     const { currency } = useParams<{ currency?: string }>();
+    const { formatMessage } = useIntl();
     const dispatch = useDispatch();
     const history = useHistory();
     const markets = useSelector(selectMarkets);
+    const [list, setList] = React.useState([]);
     const currentMarket = useSelector(selectCurrentMarket);
     const marketTickers = useSelector(selectMarketTickers);
     const orderBookLoading = useSelector(selectDepthLoading);
+    const listOrder = useSelector(selectOpenOrdersList);
     const asks = useSelector(selectDepthAsks);
     const bids = useSelector(selectDepthBids);
     const isMobileDevice = useSelector(selectMobileDeviceState);
     const [loading, setLoading] = React.useState(false);
     const [marketType, setMerketType] = React.useState('buy');
+    const [filterSell, setFilterSell] = React.useState(false);
+    const [filterBuy, setFilterBuy] = React.useState(false);
+    const [hideOtherPairs, setHideOtherPairs] = React.useState<boolean>(false);
     const [showTrading, setShowTrading] = React.useState(false);
     const [showSidebar, setShowSidebar] = React.useState(false);
     const [priceSell, setPriceSell] = React.useState(Decimal.format(0, currentMarket?.price_precision));
     const [priceBuy, setPriceBuy] = React.useState(Decimal.format(0, currentMarket?.price_precision));
     const [key, setKey] = React.useState('USDT');
     const isLoggedin = useSelector(selectUserLoggedIn);
+
     useDocumentTitle('Trading');
+    useOpenOrdersFetch(currentMarket, hideOtherPairs);
     useMarketsFetch();
+
+    const translate = React.useCallback((id: string) => formatMessage({ id: id }), [formatMessage]);
 
     const defaultTicker = {
         amount: '0.0',
@@ -94,6 +98,14 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
         setPriceBuy(e);
         setPriceSell(e);
     };
+
+    const handleToggleCheckbox = React.useCallback(
+        (event) => {
+            event.preventDefault();
+            setHideOtherPairs(!hideOtherPairs);
+        },
+        [hideOtherPairs]
+    );
 
     const current = markets.find((item) => item.id === currency);
     React.useEffect(() => {
@@ -147,6 +159,153 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
         ]);
     };
 
+    // Function Open Orders
+    const handleCancelAll = () => {
+        if (currency) {
+            dispatch(ordersCancelAllFetch({ market: currency }));
+        }
+
+        setTimeout(() => {
+            if (currency) {
+                dispatch(userOpenOrdersFetch({ market: current }));
+            }
+        }, 1000);
+    };
+
+    const handleCancel = (order: OrderCommon) => {
+        dispatch(openOrdersCancelFetch({ order, list }));
+        setTimeout(() => {
+            if (current) {
+                dispatch(userOpenOrdersFetch({ market: current }));
+            }
+        }, 1000);
+    };
+
+    React.useEffect(() => {
+        if (listOrder) {
+            const data =
+                listOrder.length && listOrder.filter((item) => item.market.toLowerCase() === currency.toLowerCase());
+            setList(data);
+        }
+        if (list && list[0] && filterSell) {
+            const sell = list.filter((item) => item.side === 'sell');
+            setList(sell);
+        }
+
+        if (list && list[0] && filterBuy) {
+            const buy = list.filter((item) => item.side === 'buy');
+            setList(buy);
+        }
+
+        if (hideOtherPairs) {
+            setList([]);
+        }
+    }, [listOrder, filterBuy, filterSell, hideOtherPairs]);
+
+    const handleFilterSell = () => {
+        setFilterSell(!filterSell);
+    };
+
+    const handleFilterBuy = () => {
+        setFilterBuy(!filterBuy);
+    };
+
+    const headersKeys = useMemo(
+        () => [
+            'Date',
+            'Market',
+            'Type',
+            'Price',
+            'Total',
+            'Amount',
+            'Side',
+            <p className="text-sm danger-text font-bold mb-0 ml-2 cursor-pointer" onClick={() => handleCancelAll()}>
+                Cancel All{' '}
+                <span className="ml-2">
+                    <CloseIconTrade />
+                </span>
+            </p>,
+        ],
+        []
+    );
+
+    const renderHeaders = useMemo(() => ['Date', 'Market', 'Type', 'Price', 'Total', 'Amount', 'Side', 'Action'], []);
+
+    const renderData = useCallback(
+        (data) => {
+            if (!data.length) {
+                return [
+                    [
+                        [''],
+                        [''],
+                        [''],
+                        <span className="text-nowrap">{translate('page.noDataToShow')}</span>,
+                        [''],
+                        [''],
+                        [''],
+                        [''],
+                    ],
+                ];
+            }
+
+            return data.map((item: OrderCommon) => {
+                const {
+                    id,
+                    price,
+                    created_at,
+                    remaining_volume,
+                    origin_volume,
+                    side,
+                    ord_type,
+                    market,
+                    trigger_price,
+                    volume,
+                } = item;
+                console.log(side);
+
+                const executedVolume = Number(origin_volume) - Number(remaining_volume);
+                const filled = ((executedVolume / Number(origin_volume)) * 100).toFixed(2);
+                const curMarket = markets.find((i) => i.id === market);
+                const priceFixed = curMarket?.price_precision || 0;
+                const amountFixed = curMarket?.amount_precision || 0;
+
+                return [
+                    <span key={id} className="split-lines">
+                        <span className="secondary">{localeDate(created_at, 'date')}</span>&nbsp;
+                        <span>{localeDate(created_at, 'time')}</span>
+                    </span>,
+                    <span key={id} className="bold">
+                        {curMarket?.name.toUpperCase()}
+                    </span>,
+                    <span key={id}>
+                        {ord_type ? translate(`page.body.trade.header.openOrders.content.type.${ord_type}`) : '-'}
+                    </span>,
+                    <span style={{ color: setTradeColor(side).color }} key={id}>
+                        <Decimal fixed={priceFixed} thousSep=",">
+                            {price}
+                        </Decimal>
+                    </span>,
+                    <span key={id}>
+                        <Decimal fixed={amountFixed} thousSep=",">
+                            {+remaining_volume * +price}
+                        </Decimal>
+                        <span className="cr-text__opacity">{curMarket?.quote_unit?.toUpperCase()}</span>
+                    </span>,
+                    <span key={id}>
+                        <Decimal fixed={2} thousSep=",">
+                            {volume}
+                        </Decimal>
+                    </span>,
+                    <span className={`${side == 'sell' ? 'danger-text' : 'green-text'}`}>{side}</span>,
+                    <button className="btn btn-danger" type="button" onClick={() => handleCancel(item)}>
+                        Cancel
+                    </button>,
+                ];
+            });
+        },
+        [markets]
+    );
+
     return (
         <React.Fragment>
             <div className="mobile-container trading-screen no-header position-relative dark-bg-main">
@@ -179,14 +338,12 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                         </div>
                     </div>
                 </div>
-
                 {/* TRADING */}
                 {showTrading && (
                     <div className="mb-3" style={{ height: 400 }}>
                         {<TradingChart />}
                     </div>
                 )}
-
                 <div className="d-flex justify-content-between align-items-start trade-container w-100 ">
                     {/* ORDER FORM */}
                     <div className={`buy-sell-container  w-60 ${isLoggedin ? '' : 'blur-effect blur-mobile'}`}>
@@ -289,7 +446,7 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                     </div>
 
                     {/* ORDER BOOK */}
-                    <div className="w-40">
+                    <div className={`w-40 ${isMobileDevice && 'mobile-device'}`}>
                         <OrderBook
                             asks={asks}
                             bids={bids}
@@ -297,200 +454,34 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                             handleSelectPriceAsks={handleSelectPriceAsks}
                             handleSelectPriceBids={handleSelectPriceBids}
                         />
-                        {/* <div className=" trading-view-container position-relative max-h-160">
-                            <div className="table-background position-absolute w-100">
-                                <div className="table-background-row row-danger" style={{ width: '70%' }} />
-                                <div className="table-background-row row-danger" style={{ width: '30%' }} />
-                                <div className="table-background-row row-danger" style={{ width: '50%' }} />
-                                <div className="table-background-row row-danger" style={{ width: '40%' }} />
-                                <div className="table-background-row row-danger" style={{ width: '80%' }} />
-                                <div className="table-background-row row-danger" style={{ width: '40%' }} />
-                                <div className="table-background-row row-danger" style={{ width: '100%' }} />
-                                <div className="table-background-row row-danger" style={{ width: '30%' }} />
-                            </div>
-                            <table className="table table-borderless w-100">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Price</th>
-                                        <th scope="col" className="text-right">
-                                            Quantity
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td className="td-price danger">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price danger">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price danger">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price danger">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price danger">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price danger">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price danger">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price danger">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="price-deal">
-                            <p className="mb-0 text-xxs font-bold danger-text pt-2 pb-1 text-center">0.0123 USDT</p>
-                        </div>
-                        <div className=" trading-view-container position-relative max-h-160">
-                            <div className="table-background position-absolute w-100 no-top">
-                                <div className="table-background-row row-primary" style={{ width: '90%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '50%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '60%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '30%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '80%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '100%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '30%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '60%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '90%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '50%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '60%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '30%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '80%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '100%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '30%' }} />
-                                <div className="table-background-row row-primary" style={{ width: '60%' }} />
-                            </div>
-                            <table className="table table-borderless w-100">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" className="d-none"></th>
-                                        <th scope="col" className="d-none"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="td-price primary">323,451,889</td>
-                                        <td className="td-qty">0.092390</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div> */}
-                    </div>
-                </div>
-
-                {/* OPEN ORDER */}
-                <div className="d-flex justify-content-between align-items-center sorting-container w-100 mb-16">
-                    <div className="d-flex justify-content-between align-items-center sorting-left-container">
-                        <p className="sorting-by m-0">Sorting by:</p>
-                        <div className="d-flex align-items-center sort-buy">
-                            <p className="m-0">Buy</p>
-                            <BuyIcon />
-                        </div>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center sorting-right-container">
-                        <div className="d-flex align-items-center sort-sell">
-                            <p className="m-0">Sell</p>
-                            <SellIcon />
-                        </div>
-                        <div className="d-flex align-items-center hide-pairs">
-                            <img src="../../assets/icons/checkbox.svg" alt="pairs" width={10} height={10} />
-                            <p className="mb-0">Hide all pairs</p>
-                        </div>
                     </div>
                 </div>
                 {/* OPEN ORDER */}
-                <div className="d-flex justify-content-between align-items-center table-container w-100 mb-16">
-                    <div className="d-flex align-items-center table-head-container">
-                        <p>Date</p>
-                        <p>Pair</p>
-                        <p>Type</p>
-                        <p>Price</p>
-                        <p>Filled</p>
-                        <p>Total</p>
-                    </div>
-                    <Link to="/history-transaction">
-                        <div className="d-flex align-items-center all-order">
-                            <p className="mb-0">All Order</p>
-                            <HistoryIcon />
-                        </div>
-                    </Link>
+                <div className="trading-tabs mt-2">
+                    <Tabs defaultActiveKey="open-order" id="justify-tab-example" className="" justify>
+                        <Tab eventKey="open-order" title="Open Order">
+                            <div className="mobile-open-order">
+                                <OpenOrders
+                                    headersKeys={headersKeys}
+                                    headers={renderHeaders}
+                                    data={renderData(list)}
+                                    // onCancel={handleCancel}
+                                    handleCancelAll={handleCancelAll}
+                                    handleToggle={handleToggleCheckbox}
+                                    hideOtherPair={hideOtherPairs}
+                                    handleFilterBuy={handleFilterBuy}
+                                    handleFilterSell={handleFilterSell}
+                                    isMobileDevices={isMobileDevice}
+                                />
+                            </div>
+                        </Tab>
+                        <Tab eventKey="recent-trade" title="Recent Trade">
+                            <div className="mobile-trades">
+                                <RecentTrades />
+                            </div>
+                        </Tab>
+                    </Tabs>
                 </div>
-                <div className="no-order text-center"> You have no order</div>
 
                 {/* OFF CANVAS SIDEBAR */}
                 <div

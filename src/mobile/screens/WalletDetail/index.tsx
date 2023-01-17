@@ -19,7 +19,13 @@ import {
     selectUserInfo,
     RootState,
 } from '../../../modules';
-import { useHistoryFetch, useDocumentTitle, useWalletsFetch } from '../../../hooks';
+import {
+    useHistoryFetch,
+    useDocumentTitle,
+    useWalletsFetch,
+    useMarketsFetch,
+    useMarketsTickersFetch,
+} from '../../../hooks';
 import Select from 'react-select';
 import moment from 'moment';
 import { PaginationMobile } from 'src/mobile/components';
@@ -44,11 +50,14 @@ interface ExtendedWalletMobile extends Wallet {
     p2pLocked?: string;
 }
 
-const DEFAULT_LIMIT = 5;
 const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     useWalletsFetch();
+    useMarketsTickersFetch();
+    useMarketsFetch();
 
     const { isP2PEnabled } = props;
+
+    const DEFAULT_LIMIT = 7;
 
     const history = useHistory();
     const { formatMessage } = useIntl();
@@ -59,7 +68,6 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const tickers = useSelector(selectMarketTickers);
 
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
-    const [unitValue, setUnitValue] = React.useState<string>();
 
     const [filteredWallets, setFilteredWallets] = React.useState([]);
     const wallets = useSelector(selectWallets);
@@ -101,7 +109,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
         }
     }, [wallets, currencies, isP2PEnabled]);
 
-    useHistoryFetch({ type: type, limit: 7, currency: currency, page: currentPage });
+    useHistoryFetch({ type: type, limit: DEFAULT_LIMIT, currency: currency, page: currentPage });
 
     const handleSelectNetwork = (blockchain_key, protocol) => {
         history.push(`/wallets/${currency}/deposit`, { blockchain_key: blockchain_key, protocol: protocol });
@@ -159,10 +167,6 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                         </h4>
                     </div>
                 </div>,
-                // <div className="td-id-status-type d-flex flex-column justify-content-start align-items-start">
-                //     <h3 className="p-0 m-0 grey-text-accent text-sm font-bold">ID</h3>
-                //     <h4 className="p-0 m-0 grey-text text-sm font-bold">{item.receiver_uid}</h4>
-                // </div>,
                 <div className="td-id-status-type d-flex flex-column justify-content-start align-items-start">
                     <h3 className="p-0 m-0 grey-text-accent text-sm font-bold">Status</h3>
                     <h4 className="p-0 m-0 grey-text text-sm font-bold">
@@ -209,7 +213,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const totalBalance =
         Number(filteredList.map((item) => item.spotBalance)) + Number(filteredList.map((item) => item.spotLocked));
 
-    const fixed = filteredList.map((item) => item.fixed);
+    const fixed = Number(filteredList.map((item) => item.fixed));
 
     React.useEffect(() => {
         if (Number(totalBalance) && currency) {
@@ -224,7 +228,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                 )
             );
         } else {
-            return setEstimatedValue(Decimal.format(0, 8));
+            return setEstimatedValue(Decimal.format(0, fixed));
         }
     }, [totalBalance, currency, currencies, markets, tickers]);
 
@@ -313,7 +317,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                                 <Table data={getTableData(historys)} />
                             )}
 
-                            <div>
+                            <div className="mt-3">
                                 {historys[0] && (
                                     <PaginationMobile
                                         firstElementIndex={firstElementIndex}
@@ -337,16 +341,18 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                         ) : (
                             <Table data={getTableData(historys)} />
                         )}
-                        {historys[0] && (
-                            <PaginationMobile
-                                firstElementIndex={firstElementIndex}
-                                lastElementIndex={lastElementIndex}
-                                page={page}
-                                nextPageExists={nextPageExists}
-                                onClickPrevPage={onClickPrevPage}
-                                onClickNextPage={onClickNextPage}
-                            />
-                        )}
+                        <div className="mt-3">
+                            {historys[0] && (
+                                <PaginationMobile
+                                    firstElementIndex={firstElementIndex}
+                                    lastElementIndex={lastElementIndex}
+                                    page={page}
+                                    nextPageExists={nextPageExists}
+                                    onClickPrevPage={onClickPrevPage}
+                                    onClickNextPage={onClickNextPage}
+                                />
+                            )}
+                        </div>
                     </Tab>
                     <Tab eventKey="transfers" title="Internal Transfer">
                         {renderFilter()}

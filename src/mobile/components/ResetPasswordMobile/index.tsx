@@ -182,7 +182,7 @@ export const ResetPasswordMobile = (props) => {
                     </button>
                     <button
                         type="button"
-                        className="btn-danger btn btn-block mr-24"
+                        className="btn btn-success btn-mobile btn-outline w-100 mt-3"
                         onClick={() => setShowModalResendCode(!showModalResendCode)}>
                         Close
                     </button>
@@ -336,7 +336,7 @@ export const ResetPasswordMobile = (props) => {
                                 </Button>
                                 <button
                                     type="button"
-                                    className="btn btn-danger btn-block"
+                                    className="btn btn-success btn-mobile mt-2 btn-outline w-100"
                                     onClick={() => setShowModalConfirmation(false)}>
                                     Close
                                 </button>

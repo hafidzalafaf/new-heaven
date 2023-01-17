@@ -130,7 +130,7 @@ const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handle
                             </p>
                         </div>
                         <div className="max-400 position-relative">
-                            <div className="table-background top-30">
+                            <div className="table-background top-30 bottom-table">
                                 {bid &&
                                     bid.map((item, i) => (
                                         <div

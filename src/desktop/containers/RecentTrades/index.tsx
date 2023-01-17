@@ -20,8 +20,8 @@ const RecentTradesComponent = (props) => {
         <React.Fragment>
             <div className="p-3">
                 <div className="d-flex justify-content-between">
-                    <p className="white-text font-bold text-sm">Recent Trades</p>
-                    <p className="white-text font-bold text-sm">Market Depth</p>
+                    <p className="white-text font-bold text-sm labels">Recent Trades</p>
+                    <p className="white-text font-bold text-sm labels">Market Depth</p>
                 </div>
                 <div className="max-400 position-relative">
                     <table id="example" className="table hidden-filter table-small" style={{ width: '100%' }}>

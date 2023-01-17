@@ -38,7 +38,7 @@ const HomeMobileScreen: React.FC = () => {
     const markets = useSelector(selectMarkets);
     const marketTickers = useSelector(selectMarketTickers);
 
-    const [key, setKey] = React.useState('tranding');
+    const [type, setType] = React.useState('all');
 
     const shouldRenderHeader = !noHeaderRoutes.some((r) => location.pathname.includes(r));
 
@@ -68,10 +68,15 @@ const HomeMobileScreen: React.FC = () => {
             ),
         }));
 
-    const dataTranding = marketList && marketList.sort((a, b) => +b.last - +a.last);
-    const dataGainers = marketList && marketList.sort((a, b) => +b.price_change_percent - +a.price_change_percent);
-    const dataLosers = marketList && marketList.sort((a, b) => +a.price_change_percent - +b.price_change_percent);
-    const dataVolume = marketList && marketList.sort((a, b) => +a.volume - +b.volume);
+    const dataTranding = [...marketList].sort((a, b) => Number(+b.volume) - Number(+a.volume));
+    const dataAll = [...marketList];
+    const dataGainers = [...marketList]
+        .filter((data) => data.price_change_percent.includes('+'))
+        .sort((a, b) => Number(b.price_change_percent.slice(1, -1)) - Number(a.price_change_percent.slice(1, -1)));
+
+    const dataLosers = [...marketList]
+        .filter((data) => data.price_change_percent.includes('-'))
+        .sort((a, b) => Number(b.price_change_percent.slice(1, -1)) - Number(a.price_change_percent.slice(1, -1)));
 
     const banner = [
         { background: 'img-mobile/background-1.png' },
@@ -88,6 +93,10 @@ const HomeMobileScreen: React.FC = () => {
         { title: 'Menu Card Image', date: '20-12-2022', desc: 'body card image' },
         { title: 'Menu Card Image', date: '20-12-2022', desc: 'body card image' },
     ];
+
+    const handleChangeType = (type) => {
+        setType(type);
+    };
 
     const settings = {
         dots: true,
@@ -119,9 +128,25 @@ const HomeMobileScreen: React.FC = () => {
                 </p>
             </div>,
             <div className="">
-                <ChartLandingMobile label={item.kline} data={item.kline} width={120} height={60} />
+                <ChartLandingMobile
+                    statusBd={
+                        parseFloat(item && item.price_change_percent) <= 0 ? 'rgba(255,68,69, 1)' : 'rgba(2,195,189, 1)'
+                    }
+                    gradient1={
+                        parseFloat(item && item.price_change_percent) <= 0
+                            ? 'rgba(255,68,69, 0.5)'
+                            : 'rgba(2,195,189, 0.5)'
+                    }
+                    label={item.kline}
+                    data={item.kline}
+                    width={120}
+                    height={60}
+                />
             </div>,
-            <p className={`badge white-text font-bold ${item.change.includes('-') ? 'badge-danger' : 'badge-success'}`}>
+            <p
+                className={`badge white-text font-bold ${
+                    item.price_change_percent.includes('-') ? 'badge-danger' : 'badge-plus'
+                }`}>
                 {item && item.price_change_percent}
             </p>,
         ]);
@@ -179,18 +204,22 @@ const HomeMobileScreen: React.FC = () => {
                                     ))}
                             </Slider>
                         </div>
-                        <Tabs id="controlled-tab-example" activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
-                            <Tab eventKey="tranding" title="Tranding">
+                        <Tabs
+                            defaultActiveKey="all"
+                            id="controlled-tab-example"
+                            onSelect={(e) => handleChangeType(e)}
+                            className="mb-3">
+                            <Tab eventKey="all" title="All" className="mb-3">
+                                <Table data={renderDataTable(dataAll)} />
+                            </Tab>
+                            <Tab eventKey="tranding" title="Tranding" className="mb-3">
                                 <Table data={renderDataTable(dataTranding)} />
                             </Tab>
-                            <Tab eventKey="new-volume" title="New Volume">
-                                <Table data={renderDataTable(dataVolume)} />
-                            </Tab>
-                            <Tab eventKey="gainers" title="Gainers">
+                            <Tab eventKey="gainers" title="Gainers" className="mb-3">
                                 <Table data={renderDataTable(dataGainers)} />
                             </Tab>
 
-                            <Tab eventKey="loser" title="Loser">
+                            <Tab eventKey="loser" title="Loser" className="mb-3">
                                 <div className="table-mobile-wrapper">
                                     <Table data={renderDataTable(dataLosers)} />
                                 </div>

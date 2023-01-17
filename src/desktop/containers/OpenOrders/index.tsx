@@ -10,10 +10,6 @@ export interface OpenOrdersProps {
      */
     data: CellData[][];
     /**
-     * Callback that is called when cancel button of order row is clicked
-     */
-    // onCancel: (order: OrderCommon) => void;
-    /**
      * List of headers for open orders table
      */
     headers?: React.ReactNode[];
@@ -35,6 +31,7 @@ export interface OpenOrdersProps {
     handleFilterSell?: () => void;
 
     handleFilterBuy?: () => void;
+    isMobileDevices?: boolean;
 }
 
 export class OpenOrders extends React.Component<OpenOrdersProps> {
@@ -54,7 +51,8 @@ export class OpenOrders extends React.Component<OpenOrdersProps> {
         return (
             <div className="max-400">
                 <div className="d-flex justify-content-between dark-bg-accent sort-filter">
-                    <p className="white-text font-bold text-sm">Open orders</p>
+                    {!this.props.isMobileDevices && <p className="white-text font-bold text-sm">Open orders</p>}
+
                     <div className="filter">
                         <div className="d-flex align-items-center">
                             <p className="text-sm grey-text font-bold mb-0 mr-2">Sort by: </p>
@@ -87,6 +85,11 @@ export class OpenOrders extends React.Component<OpenOrdersProps> {
                             </div>
                         </div>
                     </div>
+                    <p
+                        className="text-sm danger-text font-bold mb-0 ml-2 cursor-pointer"
+                        onClick={() => this.props.handleCancelAll()}>
+                        Cancel All{' '}
+                    </p>
                 </div>
                 <Table header={headers} data={tableData as CellData[][]} />
             </div>
@@ -103,8 +106,7 @@ export class OpenOrders extends React.Component<OpenOrdersProps> {
                 return this.renderAction(row[actionIndex] as string, row[buySellIndex] as string);
             case orderIndex:
                 return this.renderOrder(row[buySellIndex] as string);
-            // case buySellIndex:
-            //     return this.renderCancelButton(row);
+
             default:
                 return cell;
         }
@@ -134,12 +136,4 @@ export class OpenOrders extends React.Component<OpenOrdersProps> {
 
         return <span className={classNames}>{orderType}</span>;
     }
-
-    // public renderCancelButton = (order) => {
-    //     return <CloseIcon onClick={this.handleCancel(order)} />;
-    // };
-
-    // private handleCancel = (order: OrderCommon) => () => {
-    //     this.props.onCancel(order);
-    // };
 }

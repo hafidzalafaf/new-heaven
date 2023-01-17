@@ -4,54 +4,6 @@
     padding-bottom: 68px !important;
     max-height: 100vh;
     overflow-y: auto;
-    .navbar-mobile {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .sidebar-offcanvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        z-index: 99999;
-        overflow-y: auto;
-
-        &.hide {
-            transform: translateX(100%);
-            transition: 0.1s;
-        }
-
-        &.show {
-            transform: translateX(0);
-            transition: 0.1s;
-        }
-
-        .badge-warning {
-            background: var(--text-warning-color);
-        }
-
-        .avatar-image {
-            width: 54px;
-            height: 54px;
-            object-fit: cover;
-            border-radius: 100px;
-        }
-
-        .user-id {
-            .cr-copyable-text-field .custom-input {
-                display: flex;
-                align-items: center;
-            }
-            .cr-copyable-text-field .custom-input .form-control {
-                padding: 0;
-                height: unset !important;
-                width: 100px;
-            }
-        }
-    }
 
     .heroid {
         transition: all 1s ease-in;
@@ -110,5 +62,9 @@
     }
     .tab-content {
         overflow-y: auto;
+    }
+
+    .badge-plus {
+        background-color: #02c3bd;
     }
 }
