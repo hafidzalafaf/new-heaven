@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { InputGroup, DropdownButton, Dropdown, Form } from 'react-bootstrap';
 import { RefreshIcon, CheckIcon, CloseIcon } from 'src/assets/images/P2PIcon';
-import { CustomStylesSelect, Modal } from '../../../desktop/components';
+import { CustomStylesSelect, ModalCreateOffer } from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
 
@@ -9,6 +9,7 @@ export const TableListP2P = () => {
     const [side, setSide] = React.useState('buy');
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
+    const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
 
     const optionQuote = [
         { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
@@ -126,7 +127,12 @@ export const TableListP2P = () => {
                             <RefreshIcon fillColor={'var(--text-grey-color)'} /> Refresh
                         </button>
 
-                        <button className="btn-primary">+ Create Offers</button>
+                        <button
+                            type="button"
+                            onClick={() => setShowModalCreateOffer(!showModalCreateOffer)}
+                            className="btn-primary">
+                            + Create Offers
+                        </button>
                     </div>
                 </div>
                 {/* ========= TOOLBAR END ========= */}
@@ -529,6 +535,8 @@ export const TableListP2P = () => {
                 )}
                 {/* ========= TABLE SELL END ========= */}
             </div>
+
+            {showModalCreateOffer && <ModalCreateOffer showModalCreateOffer={showModalCreateOffer} />}
         </React.Fragment>
     );
 };

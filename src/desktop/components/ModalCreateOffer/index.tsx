@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal } from '..';
+import { Modal, OfferForm } from '..';
 import { Tabs, Tab } from 'react-bootstrap';
 
 export interface ModalCreateOfferPost {
@@ -9,18 +9,17 @@ export interface ModalCreateOfferPost {
 export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (props) => {
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(props.showModalCreateOffer);
 
-    const renderHeaderModalAddBeneficiary = () => {
+    const renderContentModalCreateOffer = () => {
         return (
             <React.Fragment>
-                <h1>Header</h1>
-            </React.Fragment>
-        );
-    };
-
-    const renderContentModalAddBeneficiary = () => {
-        return (
-            <React.Fragment>
-                <h1>Content</h1>
+                <Tabs defaultActiveKey="buy" id="justify-tab-example" className="mb-3 " justify>
+                    <Tab eventKey="buy" title="Buy" className="mb-32">
+                        <OfferForm />
+                    </Tab>
+                    <Tab eventKey="sell" title="Sell" className="mb-32">
+                        <OfferForm />
+                    </Tab>
+                </Tabs>
             </React.Fragment>
         );
     };
@@ -29,9 +28,9 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
         <React.Fragment>
             {showModalCreateOffer && (
                 <Modal
+                    className="com-modal-create-offer-p2p"
                     show={showModalCreateOffer}
-                    header={renderHeaderModalAddBeneficiary()}
-                    content={renderContentModalAddBeneficiary()}
+                    content={renderContentModalCreateOffer()}
                 />
             )}
         </React.Fragment>
