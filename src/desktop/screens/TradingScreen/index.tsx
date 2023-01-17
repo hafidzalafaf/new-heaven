@@ -74,6 +74,9 @@ export const TradingScreen: FC = (): ReactElement => {
     useOpenOrdersFetch(currentMarket, hideOtherPairs);
     useDepthFetch();
 
+    const ask = [...asks].sort((a, b) => +b[0] - +a[0]);
+    const bid = [...bids].sort((a, b) => +b[0] - +a[0]);
+
     const tickerItem: Ticker = tickers[currency];
     const wallet =
         wallets.length &&
@@ -491,8 +494,8 @@ export const TradingScreen: FC = (): ReactElement => {
                         <div className="grid-wrapper">
                             <div className="grid-item order-book">
                                 <OrderBook
-                                    asks={asks}
-                                    bids={bids}
+                                    asks={ask}
+                                    bids={bid}
                                     loading={loading}
                                     handleSelectPriceAsks={handleSelectPriceAsks}
                                     handleSelectPriceBids={handleSelectPriceBids}

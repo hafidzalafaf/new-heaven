@@ -57,6 +57,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     const handleChangeType = (e) => {
         setType(e);
         setCurrency('');
+        handleReset();
     };
 
     // Handle click next page table
@@ -380,7 +381,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
         let filterredList;
         let temp;
         temp = list;
-        filterredList = temp.filter((item) => item.status === status);
+        filterredList = temp.filter((item) => item.state === status);
         setHistorys(filterredList);
     };
 
@@ -393,10 +394,12 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     };
 
     const optionStatus = [
-        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'pending' },
-        { label: <p className="m-0 text-sm grey-text-accent">Completed</p>, value: 'completed' },
+        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'processing' },
+        { label: <p className="m-0 text-sm grey-text-accent">Completed</p>, value: 'collected' },
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
     ];
+
+    console.log('historys', historys);
 
     return (
         <section className="mobile-container pg-history-transaction no-header dark-bg-main">

@@ -360,7 +360,7 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
                 />
             )}
 
-            <div className="mt-4 mb-4">{renderCaptcha}</div>
+            <div className="mt-4 mb-24">{renderCaptcha}</div>
 
             <Button
                 block={true}

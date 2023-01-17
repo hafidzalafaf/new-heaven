@@ -22,9 +22,8 @@ const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handle
     const isLoggedIn = useSelector(selectUserLoggedIn);
 
     React.useEffect(() => {
-        setAsk([...asks].sort((a, b) => Number(b[0]) - Number(a[0])));
-        setBid([...bids].sort((a, b) => Number(b[0]) - Number(a[0])));
-        // }
+        setAsk(asks);
+        setBid(bids);
     }, [asks, bids, currentMarket]);
 
     const mapValues = (maxVolume?: number, data?: number[]) => {
@@ -51,7 +50,7 @@ const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handle
                     </div>
                 ) : (
                     <React.Fragment>
-                        <div className="max-400 position-relative">
+                        <div className="max-400 position-relative table-ask">
                             <div className="table-background">
                                 {ask &&
                                     ask.map((item, i) => (
@@ -79,7 +78,7 @@ const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handle
                                         </tr>
                                     </tbody>
                                 ) : (
-                                    <tbody>
+                                    <tbody className="">
                                         {asks &&
                                             asks.map((item, i) => (
                                                 <tr
