@@ -35,3 +35,4 @@ export * from './SearchDropdown';
 export * from './NoData';
 export * from './OrderPercentage';
 export * from './OrderFormComponent';
+export * from './ModalCreateOffer';
