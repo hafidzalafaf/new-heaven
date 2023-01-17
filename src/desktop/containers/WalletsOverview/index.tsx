@@ -76,6 +76,8 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                     ...(spotWallet || p2pWallet),
                     spotBalance: spotWallet ? spotWallet.balance : '0',
                     spotLocked: spotWallet ? spotWallet.locked : '0',
+                    status: cur.status,
+                    network: cur.networks,
                     p2pBalance: p2pWallet ? p2pWallet.balance : '0',
                     p2pLocked: p2pWallet ? p2pWallet.locked : '0',
                 };
