@@ -78,38 +78,6 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
     const handleSetValue = (value: string | number | undefined, defaultValue: string) => value || defaultValue;
     const safePrice = totalPrice / Number(amount) || price;
 
-    // React.useEffect(() => {
-    //     if (!isLoggedIn) {
-    //         setDisabled(true);
-    //     }
-
-    //     if (loading) {
-    //         setDisabled(true);
-    //     }
-
-    //     if (currentMarket) {
-    //         if (amount < currentMarket?.min_amount) {
-    //             setDisabled(true);
-    //         } else {
-    //             setDisabled(false);
-    //         }
-    //     }
-    // }, [amount, total, loading, isLoggedIn]);
-
-    // const disabledButton = () => {
-    //     if (!isLoggedIn) {
-    //         return true;
-    //     }
-
-    //     if (loading) {
-    //         return true;
-    //     }
-
-    //     if (amount < currentMarket?.min_amount) {
-    //         return true;
-    //     }
-    // };
-
     return (
         <React.Fragment>
             <form action="">

@@ -23,15 +23,14 @@ import {
 } from '../../../modules';
 import { Decimal } from '../../../components';
 import { ModalFullScreenMobile } from 'src/mobile/components';
-import { RecentTrades, OpenOrders } from '../../../desktop/containers';
+import { RecentTrades, OpenOrders, OrderBook } from '../../../desktop/containers';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { ArrowDownIcon, MinusIcon, PlusIcon, SidebarMenuIcon } from '../../assets/Trading';
 import Select from 'react-select';
 import { CustomStylesSelect } from 'src/desktop/components';
 import { Table } from '../../../components';
-import { TradingChart } from '../../containers';
-import { OrderBook } from '../../../desktop/containers';
+import { TradingChart, OrderForm } from '../../containers';
 import { CloseIconTrade } from 'src/assets/images/CloseIcon';
 import { localeDate, setTradeColor } from '../../../helpers';
 import { getTriggerSign } from './helpers';
@@ -309,7 +308,6 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     return (
         <React.Fragment>
             <div className="mobile-container trading-screen no-header position-relative dark-bg-main">
-                {/* TOP TRADING SCREEN */}
                 <div className="d-flex justify-content-between align-items-center mb-3 ">
                     <div className="d-flex align-items-center menu-title">
                         <div className="cursor-pointer d-flex align-items-center" onClick={() => setShowSidebar(true)}>
@@ -326,9 +324,6 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                         </div>
                     </div>
                     <div className="d-flex align-items-center menu-expand">
-                        {/* <div className="cursor-pointer more">
-                            <DotsIcon />
-                        </div> */}
                         <div
                             id="expand-trade-view"
                             className="d-flex expand-container align-items-center cursor-pointer"
@@ -338,114 +333,14 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                         </div>
                     </div>
                 </div>
-                {/* TRADING */}
                 {showTrading && (
                     <div className="mb-3" style={{ height: 400 }}>
                         {<TradingChart />}
                     </div>
                 )}
                 <div className="d-flex justify-content-between align-items-start trade-container w-100 ">
-                    {/* ORDER FORM */}
-                    <div className={`buy-sell-container  w-60 ${isLoggedin ? '' : 'blur-effect blur-mobile'}`}>
-                        <ul className="nav nav-pills w-100" id="pills-tab" role="tablist">
-                            <li
-                                className={`nav-item buy ${marketType == 'buy' && 'active'}`}
-                                id="buy-tab"
-                                onClick={() => setMerketType('buy')}>
-                                <a className={`nav-link buy ${marketType == 'buy' && 'active'}`}>Buy</a>
-                            </li>
-                            <li
-                                className={`nav-item sell ${marketType == 'sell' && 'active'}`}
-                                id="sell-tab"
-                                onClick={() => setMerketType('sell')}>
-                                <a className={`nav-link sell ${marketType == 'sell' && 'active'}`}>Sell</a>
-                            </li>
-                        </ul>
-                        <div className="tab-content" id="pills-tabContent">
-                            <form
-                                className="tab-pane fade show active"
-                                id="pills-buy"
-                                role="tabpanel"
-                                aria-labelledby="pills-buy-tab">
-                                <div className="dropdown w-100 mb-8">
-                                    <Select
-                                        value={optionStatus.filter(function (option) {
-                                            return option.value === 'limit-order';
-                                        })}
-                                        styles={CustomStylesSelect}
-                                        options={optionStatus}
-                                    />
-                                </div>
-                                <div className="input-group mb-8">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text">
-                                            <PlusIcon />
-                                        </span>
-                                    </div>
-                                    <input type="text" className="form-control" placeholder="1518.72" />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text">
-                                            <MinusIcon />
-                                        </span>
-                                    </div>
-                                </div>
-                                <p className="m-0 mb-8 amount">= Rp 234,009,833</p>
-                                <div className="input-group mb-8">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text">
-                                            <PlusIcon />
-                                        </span>
-                                    </div>
-                                    <input type="text" className="form-control" placeholder="Amount BTC" />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text">
-                                            <MinusIcon />
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="badge-container d-flex justify-content-between align-items-center flex-wrap mb-8">
-                                    <div className="badge">25%</div>
-                                    <div className="badge">50%</div>
-                                    <div className="badge">75%</div>
-                                    <div className="badge">100%</div>
-                                </div>
-                                <div className="input-group mb-8">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text">
-                                            <PlusIcon />
-                                        </span>
-                                    </div>
-                                    <input type="text" className="form-control" placeholder="Total BIDR" />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text">
-                                            <MinusIcon />
-                                        </span>
-                                    </div>
-                                </div>
-                                {marketType == 'buy' ? (
-                                    <button
-                                        type="button"
-                                        className="btn-primary btn-buy btn-block"
-                                        data-toggle="modal"
-                                        disabled={!isLoggedin}
-                                        data-target="#modal-confirm-buy">
-                                        Buy
-                                    </button>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        className="btn-danger btn-sell btn-block"
-                                        data-toggle="modal"
-                                        disabled={!isLoggedin}
-                                        data-target="#modal-confirm-buy">
-                                        Buy
-                                    </button>
-                                )}
-                            </form>
-                        </div>
-                    </div>
+                    <OrderForm />
 
-                    {/* ORDER BOOK */}
                     <div className={`w-40 ${isMobileDevice && 'mobile-device'}`}>
                         <OrderBook
                             asks={asks}
@@ -456,9 +351,13 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                         />
                     </div>
                 </div>
-                {/* OPEN ORDER */}
                 <div className="trading-tabs mt-2">
-                    <Tabs defaultActiveKey="open-order" id="justify-tab-example" className="" justify>
+                    <Tabs defaultActiveKey="recent-trade" id="justify-tab-example" className="" justify>
+                        <Tab eventKey="recent-trade" title="Recent Trade">
+                            <div className="mobile-trades">
+                                <RecentTrades />
+                            </div>
+                        </Tab>
                         <Tab eventKey="open-order" title="Open Order">
                             <div className="mobile-open-order">
                                 <OpenOrders
@@ -475,15 +374,9 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                                 />
                             </div>
                         </Tab>
-                        <Tab eventKey="recent-trade" title="Recent Trade">
-                            <div className="mobile-trades">
-                                <RecentTrades />
-                            </div>
-                        </Tab>
                     </Tabs>
                 </div>
 
-                {/* OFF CANVAS SIDEBAR */}
                 <div
                     id="sidebar"
                     className={`position-absolute w-100 overflow-auto sidebar-wrapper ${showSidebar && 'active'}`}>
@@ -513,38 +406,6 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                                 </div>
                             </div>
                             <Table data={renderSidebarData(marketList)} header={renderHeaderData} />
-                            {/* <Tabs
-                                id="controlled-tab-example"
-                                defaultActiveKey="all-crypto"
-                                activeKey={key}
-                                onSelect={(k) => setKey(k)}
-                                className="">
-                                <Tab eventKey="USDT" title="USDT">
-                                    <div className="table-mobile-wrapper">
-                                        <Table data={renderSidebarData(SidebarData)} header={renderHeaderData} />
-                                    </div>
-                                </Tab>
-                                <Tab eventKey="FIAT" title="FIAT">
-                                    <div className="table-mobile-wrapper">
-                                        <Table data={renderSidebarData(SidebarData)} header={renderHeaderData} />
-                                    </div>
-                                </Tab>
-                                <Tab eventKey="BNB" title="BNB">
-                                    <div className="table-mobile-wrapper">
-                                        <Table data={renderSidebarData(SidebarData)} header={renderHeaderData} />
-                                    </div>
-                                </Tab>
-                                <Tab eventKey="BTC" title="BTC">
-                                    <div className="table-mobile-wrapper">
-                                        <Table data={renderSidebarData(SidebarData)} header={renderHeaderData} />
-                                    </div>
-                                </Tab>
-                                <Tab eventKey="ALTS" title="ALTS">
-                                    <div className="table-mobile-wrapper">
-                                        <Table data={renderSidebarData(SidebarData)} header={renderHeaderData} />
-                                    </div>
-                                </Tab>
-                            </Tabs> */}
                         </div>
                         <div
                             id="close-sidebar"
