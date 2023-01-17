@@ -268,7 +268,12 @@ class Side extends React.Component<Props, SidebarState> {
                                                         <div className="mr-8">
                                                             <WalletIcon
                                                                 fillColor={
-                                                                    location.pathname.includes('wallets')
+                                                                    location.pathname.includes('/wallets') &&
+                                                                    item.path == '/wallets' &&
+                                                                    !location.pathname.includes('p2p/')
+                                                                        ? 'var(--text-primary-color)'
+                                                                        : location.pathname.includes('/p2p/wallets') &&
+                                                                          item.path == '/p2p/wallets'
                                                                         ? 'var(--text-primary-color)'
                                                                         : 'var(--text-secondary-color)'
                                                                 }
@@ -276,10 +281,12 @@ class Side extends React.Component<Props, SidebarState> {
                                                         </div>
                                                         <p
                                                             className={`font-bold text-sm mb-0 ${
-                                                                location.pathname.includes(item.path)
+                                                                location.pathname.includes('/wallets') &&
+                                                                item.path == '/wallets' &&
+                                                                !location.pathname.includes('p2p/')
                                                                     ? 'white-text'
-                                                                    : item.path != '/profile' &&
-                                                                      location.pathname.includes(item.path)
+                                                                    : location.pathname.includes('/p2p/wallets') &&
+                                                                      item.path == '/p2p/wallets'
                                                                     ? 'white-text'
                                                                     : 'grey-text'
                                                             }`}>
