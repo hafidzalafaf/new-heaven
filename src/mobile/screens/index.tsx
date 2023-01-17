@@ -28,3 +28,4 @@ export * from './TwoFaLost';
 export * from './SettingProfile';
 export * from './KycScreen';
 export * from './Security';
+export * from './DeviceManagementMobileScreen';

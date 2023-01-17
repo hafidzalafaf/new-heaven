@@ -15,6 +15,7 @@ import {
     openOrdersCancelFetch,
     ordersCancelAllFetch,
     RootState,
+    selectCurrentPageIndex,
     selectOrdersFirstElemIndex,
     selectOrdersHistory,
     selectOrdersLastElemIndex,
@@ -23,11 +24,14 @@ import {
     selectShouldFetchCancelSingle,
 } from '../../../modules';
 import Select from 'react-select';
+import { PaginationMobile } from 'src/mobile/components';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { OrderCommon } from 'src/modules/types';
+import { NoData } from 'src/desktop/components';
+
 
 
 
@@ -69,6 +73,12 @@ const MarketOrderMobileScreen: React.FC = () => {
     const [asset, setAsset] = React.useState('');
     const [detailData, setDetailData] = React.useState<MarketOrderMobileScreenProps>({} as MarketOrderMobileScreenProps);
 
+        // Handle get item pagination
+    const firstElementIndex = useSelector((state: RootState) => selectOrdersFirstElemIndex(state, 5));
+    const lastElementIndex = useSelector((state: RootState) => selectOrdersLastElemIndex(state, 5));
+    const nextPageExists = useSelector((state: RootState) => selectOrdersNextPageExists(state));
+
+    const page = useSelector(selectCurrentPageIndex);
     const orders = useSelector(selectOrdersHistory);
     const shouldFetchCancelAll = useSelector(selectShouldFetchCancelAll);
     const shouldFetchCancelSingle = useSelector(selectShouldFetchCancelSingle);
@@ -78,12 +88,10 @@ const MarketOrderMobileScreen: React.FC = () => {
     const markets = useSelector(selectMarkets);
     const currencies: Currency[] = useSelector(selectCurrencies);
 
-    useUserOrdersHistoryFetch(currentPageIndex, tab, 20);
+    useUserOrdersHistoryFetch({pageIndex: currentPageIndex, type: tab, limit:5});
     useDocumentTitle('Market Order');
     useWalletsFetch();
     useMarketsFetch();
-
-    console.log(markets, 'markets');
 
     React.useEffect(() => {
         if (orders) {
@@ -167,19 +175,19 @@ const MarketOrderMobileScreen: React.FC = () => {
 
     const onClickPrevPage = () => {
         setPageIndex(currentPageIndex - 1);
+        console.log(currentPageIndex);
     };
 
     const onClickNextPage = () => {
         setPageIndex(currentPageIndex + 1);
+        console.log(currentPageIndex);
+        
     };
 
     const handleItemDetail = (item) => {
         setShowDetail(true);
         setDetailData(item);
     };
-    console.log(dataListWithIcon, 'dataListWithIcon');
-    console.log(data, 'data')
-    console.log(detailData, 'detailData');
     const renderTableHeader = [
         <p className="mb-0 text-sm grey-text">Coins</p>,
         <p className="mb-0 text-sm grey-text">Amount</p>,
@@ -202,7 +210,7 @@ const MarketOrderMobileScreen: React.FC = () => {
             <div className="d-flex align-items-center text-sm">
                 <div className="">
                     <p className="mb-0 grey-text-accent font-bold text-sm">{item.price} {item.market.toUpperCase()}</p>
-                    <p className="mb-0 grey-text text-xxs text-nowrap">{moment(item.created_at).format('D MMM YYYY - HH:mm')}</p>
+                    <p className="mb-0 grey-text text-xxs text-nowrap">{moment(item.created_at).format('D MMM YYYY')}</p>
                 </div>
             </div>,
             <p className={`badge grey-text text-sm mb-0`}>{item.price}</p>,
@@ -213,9 +221,6 @@ const MarketOrderMobileScreen: React.FC = () => {
             </p>,
         ]);
     };
-
-    console.log('data', data);
-    console.log(data[0])
 
     const optionStatus = [
         { label: <p className="m-0 text-sm grey-text-accent">All</p>, value: '' },
@@ -327,13 +332,34 @@ const MarketOrderMobileScreen: React.FC = () => {
                         <div className="table-mobile-wrapper">
                             <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
                         </div>
+                        {dataListWithIcon[0] && (
+                        <PaginationMobile
+                            firstElementIndex={firstElementIndex}
+                            lastElementIndex={lastElementIndex}
+                            page={page}
+                            nextPageExists={nextPageExists}
+                            onClickPrevPage={onClickPrevPage}
+                            onClickNextPage={onClickNextPage}
+                        />
+                    )}
+                    {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
                     </Tab>
                     <Tab eventKey="close" title="Close Order">
                         <div className="table-mobile-wrapper">
                             <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
                         </div>
+                        {dataListWithIcon[0] && (
+                        <PaginationMobile
+                            firstElementIndex={firstElementIndex}
+                            lastElementIndex={lastElementIndex}
+                            page={page}
+                            nextPageExists={nextPageExists}
+                            onClickPrevPage={onClickPrevPage}
+                            onClickNextPage={onClickNextPage}
+                        />
+                        )}
+                    {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
                     </Tab>
-
                     <div className="ml-auto">
                         <div className="d-flex justify-content-start align-items-center cancel-all-container">
                             <p className="p-0 m-0">Close All</p>

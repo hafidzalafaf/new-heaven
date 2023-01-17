@@ -199,6 +199,7 @@ export const en = {
     'page.mobile.historyTransaction.internalTransfer.header.type' : 'Type',
     'page.mobile.historyTransaction.internalTransfer.header.receiver' : 'Receiver UID',
     'page.mobile.historyTransaction.internalTransfer.header.status' : 'Status',
+    'page.mobile.historyTransaction.internalTransfer.header.action' : 'Action',
     
     'page.mobile.historyTransaction.internalTransfer.type.deposits' : 'Deposits',
     'page.mobile.historyTransaction.internalTransfer.type.withdrawal' : 'Withdrawal',
@@ -216,6 +217,7 @@ export const en = {
     'page.mobile.historyTransaction.deposit.header.txid' : 'TXID',
     'page.mobile.historyTransaction.deposit.header.tid' : 'TID',
     'page.mobile.historyTransaction.deposit.header.status' : 'Status',
+    'page.mobile.historyTransaction.deposit.header.action' : 'Action',
 
     //History trasaction Withdraw
     'page.mobile.historyTransaction.withdraw.header.date' : 'Date',
@@ -224,4 +226,5 @@ export const en = {
     'page.mobile.historyTransaction.withdraw.header.amount' : 'Amount',
     'page.mobile.historyTransaction.withdraw.header.rid' : 'RID',
     'page.mobile.historyTransaction.withdraw.header.status' : 'Status',
+    'page.mobile.historyTransaction.withdraw.header.action' : 'Action',
 };

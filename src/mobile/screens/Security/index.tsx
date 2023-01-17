@@ -31,7 +31,7 @@ import { CheckIcon, GoogleIcon, KeyIcon, MailIcon, PhoneIcon } from '../../../as
 import { Notification } from '../../../assets/images/Notification';
 import { CloseIcon, ModalCloseIcon, CloseIconSecurity } from '../../../assets/images/CloseIcon';
 import moment from 'moment';
-import { ArrowLeft } from 'src/mobile/assets/Arrow';
+import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow';
 import './Security.pcss';
 import { ModalTwoFaMobile } from 'src/mobile/components/ModalTwoFaMobile';
 import { ModalFullScreenMobile } from 'src/mobile/components';
@@ -320,6 +320,20 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
                                         Change
                                     </button>
                                 </div>
+                            </div>
+                        </div>
+                        <div className='mt-4'>
+                            <Link to='/device-management' className="d-flex align-items-center justify-content-between mt-4">
+                            <p className="d-flex mb-1 text-base white-text font-bold my-auto">
+                            Account Activity
+                            </p>
+                            <ArrowRight className={''}/>
+                            </Link>
+                            <div className="d-flex align-items-center justify-content-between mt-4">
+                            <p className="d-flex mb-1 text-base white-text font-bold my-auto">
+                            Manage Account
+                            </p>
+                            <ArrowRight className={''}/>
                             </div>
                         </div>
                     </div>

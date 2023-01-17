@@ -2,7 +2,7 @@ import * as React from 'react';
 import { injectIntl, useIntl } from 'react-intl';
 import Tab from 'react-bootstrap/Tab';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistoryFetch, useWalletsFetch } from '../../../hooks';
 import { CustomStylesSelect } from 'src/desktop/components';
 import Select from 'react-select';
@@ -15,11 +15,12 @@ import {
     selectLastElemIndex,
     selectNextPageExists,
     RootState,
+    alertPush,
 } from '../../../modules';
 import { FilterIcon } from 'src/mobile/assets/Wallet';
 import Tabs from 'react-bootstrap/Tabs';
 import { useDocumentTitle } from 'src/hooks';
-import { CopyableTextField, Table } from '../../../components';
+import { copy, CopyableTextField, Table } from '../../../components';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import { BtcIcon } from '../../../assets/images/CoinIcon';
 import { NoData } from 'src/desktop/components';
@@ -27,18 +28,47 @@ import { PaginationMobile } from 'src/mobile/components';
 import { Link } from 'react-router-dom';
 import { CopyButton } from 'src/assets/images/CopyButton';
 
+
+
+
+
+interface TransactionHistoryMobileScreenProps {
+    sender_uid: string;
+    receiver_uid: string
+    market: string;
+    created_at: string;
+    type: string;
+    price: string;
+    amount: string;
+    total: string;
+    market_type: string;
+    fee: string;
+    state: string;
+    rid: string;
+    txid: string;
+    status: string;
+    dataCurrency: {
+        id: any;
+        currency: string;
+        name: string;
+        icon_url: string;
+    };
+}
+
 const HistoryTransactionMobileScreen: React.FC = () => {
     const intl = useIntl();
     const { formatMessage } = useIntl();
     const currencies = useSelector(selectCurrencies);
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
+    const dispatch = useDispatch();
 
     const [historys, setHistorys] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [currency, setCurrency] = React.useState('');
     const [type, setType] = React.useState('deposits');
-
+    const [showDetail, setShowDetail] = React.useState(false);
+    const [detailData, setDetailData] = React.useState<TransactionHistoryMobileScreenProps>({} as TransactionHistoryMobileScreenProps);
     const [status, setStatus] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
     const [endDate, setEndDate] = React.useState('');
@@ -147,6 +177,16 @@ const HistoryTransactionMobileScreen: React.FC = () => {
         dataCurrency: currencies.find(({ id }) => id == history.currency),
     }));
 
+    const handleItemDetail = (item) => {
+        setShowDetail(true);
+        setDetailData(item);
+    };
+
+    const doCopy = (text: string) => {
+        copy(text);
+        dispatch(alertPush({ message: ['Address has been copied'], type: 'success' }));
+    };
+    
     /**
      *
      * Internal history transaction
@@ -162,19 +202,16 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             {formatMessage({ id: 'page.mobile.historyTransaction.internalTransfer.header.amount' })}
         </p>,
         <p className="mb-0 text-sm grey-text">
-            {formatMessage({ id: 'page.mobile.historyTransaction.internalTransfer.header.type' })}
-        </p>,
-        <p className="mb-0 text-sm grey-text">
-            {formatMessage({ id: 'page.mobile.historyTransaction.internalTransfer.header.receiver' })}
-        </p>,
-        <p className="mb-0 text-sm grey-text">
             {formatMessage({ id: 'page.mobile.historyTransaction.internalTransfer.header.status' })}
+        </p>,
+        <p className="mb-0 text-sm grey-text">
+            {formatMessage({ id: 'page.mobile.historyTransaction.internalTransfer.header.action' })}
         </p>,
     ];
     
     // Render data table for internal transaction history
     const getTableDataInternalTransaction = (data) => {
-        return data.map((item) => [
+        return data.map((item, index) => [
         <div className="d-flex justify-content-center align-items-stretch">
                 <img
                     className="icon-history mr-3 rounded-full"
@@ -188,18 +225,17 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                     {item.amount} {getAmmountCode(item.currency)}
                 </p>
                 <p className="text-secondary text-sm">
-                    <small>{moment(item.created_at).format('D MMM YYYY - HH:mm')}</small>
+                    <small>{moment(item.created_at).format('D MMM YYYY')}</small>
                 </p>
-            </div>,
-            <div>
-                <p className={`m-0 text-xs font-bold text-nowrap ${getTypeClassnameHistoryTransaction(type)}`}>
-                    {getTypeHistoryTransaction(type)}
-                </p>
-            </div>,
-            <p className="m-0 white-text text-xs">{item.receiver_uid}</p>,
+            </div>,,
             <p className={`m-0 text-sm ${getStatusClassTransaction(item.status)}`}>
                 {getStatusTransaction(item.status)}
             </p>,
+            <div className='cursor-pointer' onClick={()=> handleItemDetail(data[index])}>
+                <p className={`m-0 text-xs font-bold text-nowrap`}>
+                    Detail
+                </p>
+            </div>
         ]);
     };
 
@@ -217,18 +253,15 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             {formatMessage({ id: 'page.mobile.historyTransaction.deposit.header.type' })}
         </p>,
         <p className="mb-0 text-sm grey-text">
-            {formatMessage({ id: 'page.mobile.historyTransaction.deposit.header.txid' })}
-        </p>,
-        <p className="mb-0 text-sm grey-text">
-            {formatMessage({ id: 'page.mobile.historyTransaction.deposit.header.tid' })}
-        </p>,
-        <p className="mb-0 text-sm grey-text">
             {formatMessage({ id: 'page.mobile.historyTransaction.deposit.header.status' })}
         </p>,
+                <p className="mb-0 text-sm grey-text">
+                {formatMessage({ id: 'page.mobile.historyTransaction.deposit.header.action' })}
+            </p>,
     ];
         // Render data table for DEPOSIT history
         const getTableDataDeposit = (data) => {
-            return data.map((item) => [
+            return data.map((item, index) => [
                 <div className="d-flex justify-content-center align-items-stretch">
                         <img
                             className="icon-history mr-3 rounded-full"
@@ -241,7 +274,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                             {item.amount} {getAmmountCode(item.currency)}
                         </p>
                         <p className="text-secondary text-sm">
-                            <small>{moment(item.created_at).format('D MMM YYYY - HH:mm')}</small>
+                            <small>{moment(item.created_at).format('D MMM YYYY')}</small>
                         </p>
                     </div>,
                     <div>
@@ -249,19 +282,19 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                             {getTypeHistoryTransaction(type)}
                         </p>
                     </div>,
-                    <div className='d-flex flex-row w-1/2'>
-                        <fieldset className={`m-0 text-xs font-bold text-nowrap text-truncate ${getTypeClassnameHistoryTransaction(type)}`}>
-                           {item?.txid?.length > 10 ? item.txid.slice(0, 10) + '...' : item.txid} 
-                        </fieldset>
-                        <div className='cursor-pointer' onClick={()=> navigator.clipboard.writeText(item.txid)}>
-                            <CopyButton className="copy-icon" />
-                        </div>
-                    </div>,
-                    <div>
-                        <p className={`m-0 text-xs font-bold text-nowrap`}>
-                        {item.tid}
-                        </p>
-                </div>,
+                    // <div className='d-flex flex-row w-1/2'>
+                    //     <fieldset className={`m-0 text-xs font-bold text-nowrap text-truncate ${getTypeClassnameHistoryTransaction(type)}`}>
+                    //        {item?.txid?.length > 10 ? item.txid.slice(0, 10) + '...' : item.txid} 
+                    //     </fieldset>
+                    //     <div className='cursor-pointer' onClick={()=> navigator.clipboard.writeText(item.txid)}>
+                    //         <CopyButton className="copy-icon" />
+                    //     </div>
+                    // </div>,
+                //     <div>
+                //         <p className={`m-0 text-xs font-bold text-nowrap`}>
+                //         {item.tid}
+                //         </p>
+                // </div>,
                     <p className={`m-0 text-sm ${getStatusClassTransaction(item.state)}`}>
                         {item.status === 'pending'
                     ? 'Pending'
@@ -283,6 +316,11 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                     ? 'Failed'
                     : ''}
                     </p>,
+                    <div className='cursor-pointer' onClick={()=> handleItemDetail(data[index])}>
+                    <p className={`m-0 text-xs font-bold text-nowrap`}>
+                        Detail
+                    </p>
+                </div>,
                 ]);
         };
     
@@ -299,7 +337,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                 {formatMessage({ id: 'page.mobile.historyTransaction.withdraw.header.type' })}
             </p>,
             <p className="mb-0 text-sm grey-text">
-                {formatMessage({ id: 'page.mobile.historyTransaction.withdraw.header.rid' })}
+                {formatMessage({ id: 'page.mobile.historyTransaction.withdraw.header.status' })}
             </p>,
             <p className="mb-0 text-sm grey-text">
                 {formatMessage({ id: 'page.mobile.historyTransaction.withdraw.header.status' })}
@@ -309,7 +347,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
 
         // Render data table for WITHDRAWAL history
         const getTableDataWithdrawal = (data) => {
-            return data.map((item) => [
+            return data.map((item, index) => [
                 <div className="d-flex justify-content-center align-items-stretch">
                         <img
                             className="icon-history mr-3 rounded-full"
@@ -322,7 +360,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                             {item.amount} {getAmmountCode(item.currency)}
                         </p>
                         <p className="text-secondary text-sm">
-                            <small>{moment(item.created_at).format('D MMM YYYY - HH:mm')}</small>
+                            <small>{moment(item.created_at).format('D MMM YYYY')}</small>
                         </p>
                     </div>,
                     <div>
@@ -330,14 +368,14 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                             {getTypeHistoryTransaction(type)}
                         </p>
                     </div>,
-                    <div className='d-flex flex-row w-1/2'>
-                        <fieldset className={`m-0 text-xs font-bold text-nowrap text-truncate ${getTypeClassnameHistoryTransaction(type)}`}>
-                           {item?.rid?.length > 10 ? item.rid.slice(0, 10) + '...' : item.rid} 
-                        </fieldset>
-                        <div className='cursor-pointer' onClick={()=> navigator.clipboard.writeText(item.rid)}>
-                            <CopyButton className="copy-icon" />
-                        </div>
-                    </div>,
+                    // <div className='d-flex flex-row w-1/2'>
+                    //     <fieldset className={`m-0 text-xs font-bold text-nowrap text-truncate ${getTypeClassnameHistoryTransaction(type)}`}>
+                    //        {item?.rid?.length > 10 ? item.rid.slice(0, 10) + '...' : item.rid} 
+                    //     </fieldset>
+                    //     <div className='cursor-pointer' onClick={()=> navigator.clipboard.writeText(item.rid)}>
+                    //         <CopyButton className="copy-icon" />
+                    //     </div>
+                    // </div>,
                     <p className={`m-0 text-sm ${getStatusClassTransaction(item.state)}`}>
                         {item.status === 'pending'
                     ? 'Pending'
@@ -359,6 +397,11 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                     ? 'Failed'
                     : ''}
                     </p>,
+                    <div className='cursor-pointer' onClick={()=> handleItemDetail(data[index])}>
+                        <p className={`m-0 text-xs font-bold text-nowrap`}>
+                            Detail
+                        </p>
+                    </div>,
                 ]);
         };
 
@@ -398,8 +441,6 @@ const HistoryTransactionMobileScreen: React.FC = () => {
         { label: <p className="m-0 text-sm grey-text-accent">Completed</p>, value: 'collected' },
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
     ];
-
-    console.log('historys', historys);
 
     return (
         <section className="mobile-container pg-history-transaction no-header dark-bg-main">
@@ -495,7 +536,133 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                 </Tab>
             </Tabs>
             {/* =================== End Tab navigation history transaction =========== */}
-
+            <div id="off-canvas" className={`position-fixed off-canvas ${showDetail === true ? ' show' : ''}`}>
+                    <div className="fixed-bottom off-canvas-content-container overflow-auto text-white">
+                        <div className="d-flex align-items-center off-canvas-content-head">
+                        <img
+                            height={30}
+                            width={30}
+                            className="icon-history mr-3 rounded-full"
+                            src={detailData.dataCurrency?.icon_url}
+                            alt="icon"
+                        />
+                            <h3>
+                                {detailData?.dataCurrency?.id?.toUpperCase()}
+                            </h3>
+                        </div>
+                        <table className="w-100 table-canvas">
+                            <tbody>
+                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                    <td className="td-title">Date</td>
+                                    <td className="td-value">{moment(detailData.created_at).format('D MMM YYYY')}</td>
+                                </tr>
+                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                    <td className="td-title">Status</td>
+                                    <td className="td-value">
+                                        {type === 'transfers' ? detailData.status?.charAt(0).toUpperCase() + detailData.status?.slice(1) :
+                                        detailData.state?.charAt(0).toUpperCase() + detailData.state?.slice(1)}
+                                    </td>
+                                </tr>
+                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                    <td className="td-title">Type</td>
+                                    <td className="td-value">
+                                        {
+                                        type === 'withdraws' ? 'Withdrawal' 
+                                        : type === 'deposits' ? 'Deposit' 
+                                        : 'Internal Transfer'
+                                        }
+                                    </td>
+                                </tr>
+                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                    <td className="td-title">Amount</td>
+                                    <td className="td-value">
+                                    {detailData.amount} {detailData?.dataCurrency?.id?.toUpperCase()}    
+                                    </td>
+                                </tr>
+                                {
+                                    type !== 'transfers' ? 
+                                    <tr className="w-100 d-flex justify-content-between align-items0center">
+                                    <td className="td-title">Fee</td>
+                                    <td className="td-value">
+                                    {detailData.fee} {detailData?.dataCurrency?.id?.toUpperCase()}    
+                                    </td>
+                                </tr> : null
+                                }
+                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                    <td className="td-title">{type === 'withdraws' ? 'RID' : type === 'deposits' ? 'TXID' : 'Receiver UID'}</td>
+                                </tr>
+                                {
+                                    type === 'transfers' ?
+                                    <>
+                                    <tr className="w-100 d-flex justify-content-between align-items0center">
+                                        <td className="w-100">
+                                            <input
+                                            className="p-0 m-0 text-sm grey-text-accent font-bold address w-100 bg-transparent"
+                                            id='address'
+                                            defaultValue={detailData.receiver_uid}
+                                            /></td>
+                                        <td>
+                                            <button
+                                            className="btn-transparent w-10"
+                                            type="button"
+                                            onClick={() => doCopy('address')}>
+                                                <CopyButton />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr className="w-100 d-flex justify-content-between align-items0center">
+                                        <td className="td-title"> Sender UID</td>
+                                    </tr>
+                                    <tr className="w-100 d-flex justify-content-between align-items0center">
+                                        <td className="w-100">
+                                            <input
+                                            className="p-0 m-0 text-sm grey-text-accent font-bold address w-100 bg-transparent"
+                                            id='address'
+                                            defaultValue={detailData.sender_uid}
+                                            /></td>
+                                        <td>
+                                            <button
+                                            className="btn-transparent w-10"
+                                            type="button"
+                                            onClick={() => doCopy('address')}>
+                                                <CopyButton />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </>
+                                    :
+                                    <tr className="w-100 d-flex justify-content-between align-items0center">
+                                    <td className="w-100">
+                                        <input
+                                        className="p-0 m-0 text-sm grey-text-accent font-bold address w-100 bg-transparent"
+                                        id='address'
+                                        defaultValue={
+                                            type === 'deposits' ?
+                                            detailData.txid : 
+                                            type === 'withdraws' ?
+                                            detailData.rid :
+                                            detailData.txid
+                                        }
+                                        /></td>
+                                    <td>
+                                    <button
+                                    className="btn-transparent w-10"
+                                    type="button"
+                                    onClick={() => doCopy('address')}>
+                                    <CopyButton />
+                                </button></td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <button
+                            id="close-canvas"
+                            className="btn btn-secondary btn-outline btn-mobile btn-block my-5"
+                            onClick={() => setShowDetail(false)}>
+                            Close
+                        </button>
+                    </div>
+                </div>
             <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${showFilter ? 'show' : ''}`}>
                 <div className="fixed-bottom off-canvas-content-container-filter overflow-auto">
                     <div>

@@ -2,7 +2,12 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { getUserActivity } from '../modules';
 
-export const useUserActivityFetch = ({ page = 0, limit = 25 }) => {
+interface UserActivityProps {
+    page?: number;
+    limit?: number;
+}
+
+export const useUserActivityFetch = ({ page = 0, limit = 25 }:UserActivityProps) => {
     const dispatch = useDispatch();
 
     React.useEffect(() => {

@@ -11,14 +11,14 @@ import { validateBeneficiaryAddress } from '../../../helpers/validateBeneficiary
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import WAValidator from 'multicoin-address-validator';
 import {
-    //beneficiariesCreate,
-    // selectCurrencies,
-    //selectWallets,
+    beneficiariesCreate,
+    selectCurrencies,
+    selectWallets,
     Wallet,
     selectBeneficiariesCreateError,
     selectBeneficiariesCreate,
     selectBeneficiariesCreateLoading,
-    //alertPush,
+    alertPush,
 } from '../../../modules';
 
 export interface ModalBeneficiaryMobileProps {

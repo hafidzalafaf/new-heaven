@@ -60,6 +60,7 @@ import {
     WalletWithdrawMobileScreen,
     KycMobileScreen,
     SecurityMobileScreen,
+    DeviceManagementMobileScreen
 } from '../../mobile/screens';
 
 import {
@@ -398,6 +399,13 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             isLogged={isLoggedIn}
                             path="/referral"
                             component={ReferralMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/device-management"
+                            component={DeviceManagementMobileScreen}
                         />
 
                         <PrivateRoute
