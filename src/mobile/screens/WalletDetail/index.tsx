@@ -52,8 +52,11 @@ interface ExtendedWalletMobile extends Wallet {
 
 const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     useWalletsFetch();
-    useMarketsTickersFetch();
-    useMarketsFetch();
+    //useMarketsTickersFetch();
+    //useMarketsFetch();
+
+    const { currency = '' } = useParams<{ currency?: string }>();
+    useDocumentTitle(`Detail ${currency.toUpperCase()}`);
 
     const { isP2PEnabled } = props;
 
@@ -61,7 +64,6 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
 
     const history = useHistory();
     const { formatMessage } = useIntl();
-    const { currency = '' } = useParams<{ currency?: string }>();
     const user: User = useSelector(selectUserInfo);
     const currencies: Currency[] = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
@@ -115,13 +117,11 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
         history.push(`/wallets/${currency}/deposit`, { blockchain_key: blockchain_key, protocol: protocol });
     };
 
-    useDocumentTitle(`Detail ${currency.toUpperCase()}`);
-    useWalletsFetch();
-
     const handleChangeType = (e) => {
         setType(e);
     };
 
+    // ====== Handle paginate hsitory =========
     const onClickPrevPage = () => {
         setCurrentPage(Number(page) - 1);
     };
@@ -133,6 +133,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
         setHistorys(list);
     }, [list]);
 
+    // ====== Filter history by date ================
     React.useEffect(() => {
         if (startDate != '' && endDate != '') {
             const filterredList = list.filter(
@@ -154,6 +155,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
         setHistorys(filterredList);
     };
 
+    // =========== Render Data history into table ===============
     const getTableData = (data) => {
         return (
             data &&

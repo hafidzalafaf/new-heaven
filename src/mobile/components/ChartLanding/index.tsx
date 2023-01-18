@@ -1,4 +1,4 @@
-import React, { ReactElement, FC } from 'react';
+import React, { useEffect } from 'react';
 import {
     Chart,
     LineController,
@@ -14,10 +14,34 @@ import {
 
 Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip, CategoryScale);
 
-const ChartLandingMobile = ({ data, label, width, height, gradient1, statusBd }) => {
-    const canvas = React.useRef(null);
+interface ChartLandingMobileProps {
+    data: number[];
+    label: string[];
+    width: number;
+    height: number;
+    bgGradient: string;
+    statusBd: string;
+}
 
-    React.useEffect(() => {
+const formatValue = (value: number) =>
+    Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumSignificantDigits: 3,
+    }).format(value);
+
+const ChartLandingMobile: React.FC<ChartLandingMobileProps> = ({
+    data,
+    label,
+    width,
+    height,
+    bgGradient,
+    statusBd,
+}) => {
+    // Init canvas for chart
+    const canvas = React.useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
         const ctx = canvas.current;
 
         const chart = new Chart(ctx, {
@@ -27,7 +51,7 @@ const ChartLandingMobile = ({ data, label, width, height, gradient1, statusBd })
                 datasets: [
                     {
                         data: data,
-                        fill: true,
+                        fill: 'start',
                         borderWidth: 2,
                         tension: 0,
                         pointRadius: 0,
@@ -36,17 +60,10 @@ const ChartLandingMobile = ({ data, label, width, height, gradient1, statusBd })
                         backgroundColor: (context: ScriptableContext<'line'>) => {
                             const ctx = context.chart.ctx;
                             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                            gradient.addColorStop(0, `${gradient1}`);
-                            gradient.addColorStop(0.15, 'rgba(0,0,0, 1)');
+                            gradient.addColorStop(0, `${bgGradient}`);
+                            gradient.addColorStop(0.19, 'rgba(0,0,0, 0)');
                             return gradient;
                         },
-                        // backgroundColor: (context: ScriptableContext<'line'>) => {
-                        //     const ctx = context.chart.ctx;
-                        //     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                        //     gradient.addColorStop(0, 'rgba(2,195,189, 0.5)');
-                        //     gradient.addColorStop(0.15, 'rgba(0,0,0, 1)');
-                        //     return gradient;
-                        // },
                     },
                 ],
             },
@@ -71,6 +88,11 @@ const ChartLandingMobile = ({ data, label, width, height, gradient1, statusBd })
                 plugins: {
                     tooltip: {
                         displayColors: false,
+                        callbacks: {
+                            beforeTitle: () => '',
+                            title: () => '',
+                            label: (ctx) => formatValue(ctx.parsed.y).toString(),
+                        },
                     },
                 },
             },

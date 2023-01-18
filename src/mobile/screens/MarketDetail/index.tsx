@@ -9,7 +9,6 @@ import {
     selectMarketTickers,
     setCurrentMarket,
 } from 'src/modules';
-import { TradingViewEmbed, widgetType } from 'react-tradingview-embed';
 import { WarningIcon } from '../../assets/Warning';
 import { Decimal } from 'src/components';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';

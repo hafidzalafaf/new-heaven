@@ -1,7 +1,15 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { selectMarkets, selectMarketTickers, selectCurrencies } from '../../../modules';
-import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch, useDocumentTitle } from '../../../hooks';
+import { Link } from 'react-router-dom';
+import { useIntl } from 'react-intl';
+import { selectMarkets, selectMarketTickers, selectCurrencies, selectBlogs } from '../../../modules';
+import {
+    useMarketsFetch,
+    useMarketsTickersFetch,
+    useWalletsFetch,
+    useDocumentTitle,
+    useBlogsFetch,
+} from '../../../hooks';
 import { Decimal } from '../../../components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -13,6 +21,9 @@ import { BgCardSmall } from '../../assets/BackgroundCard';
 import { Table } from '../../../components';
 import { ArrowRight } from '../../assets/Arrow';
 import { ChartLandingMobile } from 'src/mobile/components';
+import { DocIcon } from 'src/mobile/assets/Wallet';
+import moment from 'moment';
+ 
 
 const noHeaderRoutes = ['/'];
 
@@ -33,10 +44,17 @@ const HomeMobileScreen: React.FC = () => {
     useMarketsTickersFetch();
 
     const [loading, setLoading] = React.useState(true);
-
+    const { formatMessage } = useIntl();
     const currencies = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
     const marketTickers = useSelector(selectMarketTickers);
+
+    const [news, setNews] = React.useState([]);
+    const [blog, setBlog] = React.useState([]);
+
+    useBlogsFetch('news');
+
+    const blogs = useSelector(selectBlogs);
 
     const [type, setType] = React.useState('all');
 
@@ -45,6 +63,13 @@ const HomeMobileScreen: React.FC = () => {
     React.useEffect(() => {
         setTimeout(() => setLoading(false), 1000);
     }, []);
+
+    React.useEffect(() => {
+        if (blogs) {
+            setBlog(blogs);
+            setNews(blogs);
+        }
+    }, [blogs]);
 
     if (shouldRenderHeader) {
         return <React.Fragment />;
@@ -68,7 +93,7 @@ const HomeMobileScreen: React.FC = () => {
             ),
         }));
 
-    const dataTranding = [...marketList].sort((a, b) => Number(+b.volume) - Number(+a.volume));
+    const dataTranding = [...marketList].sort((a, b) => Number(b.volume) - Number(a.volume));
     const dataAll = [...marketList];
     const dataGainers = [...marketList]
         .filter((data) => data.price_change_percent.includes('+'))
@@ -78,21 +103,9 @@ const HomeMobileScreen: React.FC = () => {
         .filter((data) => data.price_change_percent.includes('-'))
         .sort((a, b) => Number(b.price_change_percent.slice(1, -1)) - Number(a.price_change_percent.slice(1, -1)));
 
-    const banner = [
-        { background: 'img-mobile/background-1.png' },
-        { background: 'img-mobile/background-2.png' },
-        { background: 'img-mobile/background-3.png' },
-        { background: 'img-mobile/background-4.png' },
-    ];
-
-    const bannerSmall = [
-        { title: 'Menu Card Image', date: '20-12-2022', desc: 'body card image' },
-        { title: 'Menu Card Image', date: '20-12-2022', desc: 'body card image' },
-        { title: 'Menu Card Image', date: '20-12-2022', desc: 'body card image' },
-        { title: 'Menu Card Image', date: '20-12-2022', desc: 'body card image' },
-        { title: 'Menu Card Image', date: '20-12-2022', desc: 'body card image' },
-        { title: 'Menu Card Image', date: '20-12-2022', desc: 'body card image' },
-    ];
+    blog.sort(function (a, b) {
+        return new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
+    });
 
     const handleChangeType = (type) => {
         setType(type);
@@ -120,25 +133,25 @@ const HomeMobileScreen: React.FC = () => {
 
     const renderDataTable = (data) => {
         return data.map((item) => [
-            <div className="d-flex align-items-center text-sm">
+            <Link
+                to={item && item.type == 'spot' ? `/trading/${item && item.id}` : `/trading-future/${item && item.id}`}
+                className="d-flex align-items-center text-sm">
                 <img src={item && item.currency && item.currency.icon_url} alt="coin" className="small-coin-icon" />
                 <p className="mb-0 white-text text-sm ml-2">{item && item.currency && item.currency.name}</p>
                 <p className="mb-0 grey-text text-xs ml-2">
                     {item && item.currency && item.currency.id && item.currency.id.toUpperCase()}
                 </p>
-            </div>,
+            </Link>,
             <div className="">
                 <ChartLandingMobile
                     statusBd={
                         parseFloat(item && item.price_change_percent) <= 0 ? 'rgba(255,68,69, 1)' : 'rgba(2,195,189, 1)'
                     }
-                    gradient1={
-                        parseFloat(item && item.price_change_percent) <= 0
-                            ? 'rgba(255,68,69, 0.5)'
-                            : 'rgba(2,195,189, 0.5)'
+                    bgGradient={
+                        parseFloat(item && item.price_change_percent) <= 0 ? 'rgba(255,68,69, 1)' : 'rgba(2,195,189, 1)'
                     }
-                    label={item.kline}
-                    data={item.kline}
+                    label={item.kline.map((e) => e[0])}
+                    data={item.kline.map((e) => e[2])}
                     width={120}
                     height={60}
                 />
@@ -159,14 +172,26 @@ const HomeMobileScreen: React.FC = () => {
                     <div>
                         <div id="heros" className="content-container w-100 mb-3">
                             <Slider {...settings}>
-                                {banner &&
-                                    banner.map((item, key) => (
+                                {news &&
+                                    news.map((item, key) => (
                                         <div className="heroid" key={key}>
                                             <div
                                                 className="hero one w-100 d-flex align-items-center justify-content-start position-relative"
                                                 style={{
                                                     backgroundImage: `url(${item.background})`,
-                                                }}></div>
+                                                }}>
+                                                <a
+                                                    href={item.url}
+                                                    target="__blank"
+                                                    rel="noopener noreferrer"
+                                                    className="slider-ite">
+                                                    <img
+                                                        src={item.feature_image}
+                                                        alt={item.title}
+                                                        className="w-100 h-100 rounded-lg"
+                                                    />
+                                                </a>
+                                            </div>
                                         </div>
                                     ))}
                             </Slider>
@@ -177,30 +202,37 @@ const HomeMobileScreen: React.FC = () => {
                                 Most popular and widely known coin for early investment
                             </h6>
                             <Slider {...settings2}>
-                                {bannerSmall &&
-                                    bannerSmall.map((item, key) => (
-                                        <div key={key} className="p-2">
+                                {blog &&
+                                    blog.map((item, key) => (
+                                        <a
+                                            href={item.url}
+                                            target="__blank"
+                                            rel="noopener noreferrer"
+                                            className="slider-ite"
+                                            key={key}>
                                             <div className="card-item position-relative">
                                                 <BgCardSmall className={'bg-card'} />
                                                 <div className="w-100 d-flex justify-content-center align-items-center mb-8">
                                                     <img
-                                                        src="img-mobile/img-card.png"
+                                                        src={item.feature_image}
                                                         alt="card"
-                                                        className="text-center"
+                                                        className="text-center small-thumbnail"
                                                     />
                                                 </div>
                                                 <div className=" d-flex justify-content-between align-items-center">
                                                     <div>
-                                                        <p className="text-xxs grey-text mb-0">{item.date}</p>
-                                                        <h4 className="text-xs white-text font-bold mb-0">
+                                                        <p className="text-xxs grey-text mb-0">
+                                                            {moment(item.published_at).startOf('day').fromNow()}
+                                                        </p>
+                                                        <h5 className="text-xxs white-text font-bold mb-0">
                                                             {item.title}
-                                                        </h4>
-                                                        <p className="text-xxs grey-text mb-0">{item.desc}</p>
+                                                        </h5>
+                                                        {/* <p className="text-xxs grey-text mb-0">{item.desc}</p> */}
                                                     </div>
                                                     <ArrowRight className={''} />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     ))}
                             </Slider>
                         </div>
@@ -221,7 +253,14 @@ const HomeMobileScreen: React.FC = () => {
 
                             <Tab eventKey="loser" title="Loser" className="mb-3">
                                 <div className="table-mobile-wrapper">
-                                    <Table data={renderDataTable(dataLosers)} />
+                                    {!dataLosers[0] || dataLosers === null ? (
+                                        <div className="empty-chart-data">
+                                            <DocIcon className="icon-empty mb-2" />
+                                            <h6 className="text-secondary">No data show</h6>
+                                        </div>
+                                    ) : (
+                                        <Table data={renderDataTable(dataLosers)} />
+                                    )}
                                 </div>
                             </Tab>
                         </Tabs>

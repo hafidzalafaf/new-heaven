@@ -165,7 +165,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                     </h3>
                     <div className="total-value d-flex justify-content-between align-items-center">
                         <h4 className="text-sm grey-text-accent font-bold">
-                            0BTC = {formatWithSeparators(estimatedValueSecondary, ',')}{' '}
+                            {formatWithSeparators(estimatedValueSecondary, ',')}{' '}
                             {VALUATION_SECONDARY_CURRENCY.toUpperCase()}
                         </h4>
                     </div>
@@ -210,13 +210,12 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                         </h3>
                         <div className="total-value d-flex justify-content-between align-items-center">
                             <h4 className="text-sm grey-text-accent font-bold">
-                                0BTC = {formatWithSeparators(estimatedValue, ',')}{' '}
-                                {VALUATION_PRIMARY_CURRENCY.toUpperCase()}
+                                {formatWithSeparators(estimatedValue, ',')} {VALUATION_PRIMARY_CURRENCY.toUpperCase()}
                             </h4>
                         </div>
                     </div>
 
-                    <div>{VALUATION_SECONDARY_CURRENCY && renderSecondaryCurrencyValuation(estimatedValue)}</div>
+                    {/* <div>{VALUATION_SECONDARY_CURRENCY && renderSecondaryCurrencyValuation(estimatedValue)}</div> */}
 
                     <div className="action-container w-100 d-flex flex-wrap justify-content-center align-items-center">
                         <button

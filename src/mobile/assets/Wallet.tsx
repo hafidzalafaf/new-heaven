@@ -84,7 +84,13 @@ export const FilterIcon = ({ className }) => {
 
 export const DocIcon = ({ className }) => {
     return (
-        <svg width={116} height={116} viewBox="0 0 116 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+            className={className}
+            width={116}
+            height={116}
+            viewBox="0 0 116 116"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
             <path
                 fillRule="evenodd"
                 clipRule="evenodd"
