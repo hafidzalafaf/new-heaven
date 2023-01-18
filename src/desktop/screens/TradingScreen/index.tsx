@@ -141,6 +141,7 @@ export const TradingScreen: FC = (): ReactElement => {
             history.push(
                 `/markets/${currentMarket.type == 'spot' ? 'trading/' : '/trading-future/'}${currentMarket.id}`
             );
+            resetForm();
         }
     };
     // End Function Market List
@@ -546,6 +547,8 @@ export const TradingScreen: FC = (): ReactElement => {
                                     orderLoading={orderLoading}
                                     handleSide={handleSide}
                                     handleSelectOrderType={handleSelectOrderType}
+                                    balanceCoin={balance}
+                                    balanceQuote={usdt}
                                 />
                             </div>
                             <div className="grid-item recent-trades">

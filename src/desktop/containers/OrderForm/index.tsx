@@ -34,6 +34,8 @@ export interface OrderFormProps {
     orderLoading: boolean;
     handleSide: (e: OrderSide) => void;
     handleSelectOrderType: (e: string) => void;
+    balanceCoin: string;
+    balanceQuote: string;
 }
 
 export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
@@ -66,6 +68,8 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
         orderLoading,
         handleSide,
         handleSelectOrderType,
+        balanceCoin,
+        balanceQuote,
     } = props;
     const isLoggedin = useSelector(selectUserLoggedIn);
     const currentMarket = useSelector(selectCurrentMarket);
@@ -80,6 +84,10 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
         }
 
         if (amountSell < currentMarket?.min_amount) {
+            return true;
+        }
+
+        if (amountSell > balanceCoin) {
             return true;
         }
 

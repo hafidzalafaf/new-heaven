@@ -103,7 +103,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                               ? estimateUnitValue(
                                     currency.toUpperCase(),
                                     VALUATION_PRIMARY_CURRENCY,
-                                    +totalBalance,
+                                    Number(totalBalance),
                                     currencies,
                                     markets,
                                     tickers
@@ -111,7 +111,9 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                               : Decimal.format(0, fixed);
 
                       return [
-                          <div className="d-flex justify-content-start align-items-center td-coin">
+                          <Link
+                              to={`/wallets/${currency}/detail`}
+                              className="d-flex justify-content-start align-items-center td-coin">
                               <img
                                   alt={currency?.toUpperCase()}
                                   src={iconUrl}
@@ -121,7 +123,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                                   <h3 className="p-0 m-0 text-one">{name}</h3>
                                   <h4 className="p-0 m-0 text-two">{currency.toUpperCase()}</h4>
                               </div>
-                          </div>,
+                          </Link>,
                           <div className="td-available-order d-flex flex-column justify-content-start align-items-start">
                               <h3 className="p-0 m-0 text-one">Total Balance</h3>
                               <h4 className="p-0 m-0 text-two">

@@ -23,7 +23,6 @@ import { ArrowRight } from '../../assets/Arrow';
 import { ChartLandingMobile } from 'src/mobile/components';
 import { DocIcon } from 'src/mobile/assets/Wallet';
 import moment from 'moment';
- 
 
 const noHeaderRoutes = ['/'];
 
@@ -129,6 +128,23 @@ const HomeMobileScreen: React.FC = () => {
         autoplay: true,
         autoplaySpeed: 3000,
         pauseOnHover: true,
+        responsive: [
+            {
+                breakpoint: 375,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                    initialSlide: 3,
+                },
+            },
+            {
+                breakpoint: 320,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                },
+            },
+        ],
     };
 
     const renderDataTable = (data) => {
@@ -208,15 +224,15 @@ const HomeMobileScreen: React.FC = () => {
                                             href={item.url}
                                             target="__blank"
                                             rel="noopener noreferrer"
-                                            className="slider-ite p-2"
+                                            className="slider-ite"
                                             key={key}>
                                             <div className="card-item position-relative">
-                                                <BgCardSmall className={'bg-card'} />
-                                                <div className="d-flex justify-content-center align-items-center mb-8">
+                                                {/* <BgCardSmall className={'bg-card'} /> */}
+                                                <div className="small-thumbnail-cover mb-8">
                                                     <img
                                                         src={item.feature_image}
                                                         alt="card"
-                                                        className="text-center small-thumbnail"
+                                                        className="small-thumbnail"
                                                     />
                                                 </div>
                                                 <div className="cover-thumbnail d-flex justify-content-between align-items-center">

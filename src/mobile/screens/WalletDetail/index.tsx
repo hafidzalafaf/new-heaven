@@ -52,8 +52,8 @@ interface ExtendedWalletMobile extends Wallet {
 
 const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     useWalletsFetch();
-    //useMarketsTickersFetch();
-    //useMarketsFetch();
+    useMarketsTickersFetch();
+    useMarketsFetch();
 
     const { currency = '' } = useParams<{ currency?: string }>();
     useDocumentTitle(`Detail ${currency.toUpperCase()}`);
@@ -270,7 +270,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                             <h3 className="text-sm grey-text">
                                 {formatMessage({ id: 'page.mobile.wallets.banner.estimated' })}
                             </h3>
-                            <h2 className="text-sm grey-text font-extrabold">{estimatedValue}</h2>
+                            <h2 className="text-sm grey-text estimated-value font-extrabold">{estimatedValue}</h2>
                         </div>
                     </div>
                     ;

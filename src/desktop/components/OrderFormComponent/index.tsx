@@ -90,9 +90,9 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
                         disabled={orderType === 'market'}
                         defaultValue={
                             orderType === 'market'
-                                ? amount
+                                ? amount != '0'
                                     ? handleSetValue(
-                                          +Decimal.format(safePrice, currentMarket?.price_precision, ','),
+                                          Decimal.format(+safePrice, currentMarket?.price_precision, ','),
                                           tickerItem.last
                                       )
                                     : tickerItem.last
@@ -100,9 +100,9 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
                         }
                         value={
                             orderType === 'market'
-                                ? amount
+                                ? amount != '0'
                                     ? handleSetValue(
-                                          +Decimal.format(safePrice, currentMarket?.price_precision, ','),
+                                          Decimal.format(+safePrice, currentMarket?.price_precision, ','),
                                           tickerItem.last
                                       )
                                     : tickerItem.last
