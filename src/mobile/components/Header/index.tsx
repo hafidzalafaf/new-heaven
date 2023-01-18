@@ -36,7 +36,7 @@ const HeaderComponent: React.FC = () => {
     const sidebarMenu = [
         { icon: <Dashboard />, name: 'Dashboard', path: '/profile', showNotLoggedin: false },
         { icon: <Wallet />, name: 'Wallet', path: '/wallets', showNotLoggedin: false },
-        { icon: <TradeHistory />, name: 'Trade History', path: '/history-trade', showNotLoggedin: false },
+        { icon: <TradeHistory />, name: 'Trade History', path: '/trade-history', showNotLoggedin: false },
         {
             icon: <CalendarIcon />,
             name: 'Transaction History',

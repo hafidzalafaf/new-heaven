@@ -61,11 +61,11 @@ export const TradingScreen: FC = (): ReactElement => {
     const [orderPercentageSell, setOrderPercentageSell] = React.useState(0);
     const [showModalSell, setShowModalSell] = React.useState(false);
     const [showModalBuy, setShowModalBuy] = React.useState(false);
-    const [priceBuy, setPriceBuy] = React.useState(Decimal.format(0, currentMarket?.price_precision));
-    const [amountBuy, setAmountBuy] = React.useState('');
+    const [priceBuy, setPriceBuy] = React.useState('0');
+    const [amountBuy, setAmountBuy] = React.useState('0');
     const [totalBuy, setTotalBuy] = React.useState('');
-    const [priceSell, setPriceSell] = React.useState(Decimal.format(0, currentMarket?.price_precision));
-    const [amountSell, setAmountSell] = React.useState('');
+    const [priceSell, setPriceSell] = React.useState('0');
+    const [amountSell, setAmountSell] = React.useState('0');
     const [totalSell, setTotalSell] = React.useState('');
     const [orderType, setOrderType] = React.useState('limit');
     const [side, setSide] = React.useState<OrderSide>('buy');
@@ -145,35 +145,34 @@ export const TradingScreen: FC = (): ReactElement => {
     };
     // End Function Market List
 
-    // Function Order Form
+    // =================== Function Order Form =======================
+
+    // buat yang type market
     const totalPrice = getTotalPrice(
         side === 'buy' ? amountBuy : amountSell,
         +tickerItem?.last,
         side === 'buy' ? bids : asks
     );
 
+    // belum kepakai
     const totalAmount = getAmount(
         side === 'buy' ? +usdt : +balance,
         side === 'buy' ? bids : asks,
         side === 'buy' ? orderPercentageBuy : orderPercentageSell
     );
 
+    // buat set amount sell
     React.useEffect(() => {
         const safePrice = +totalPrice / +totalAmount || priceSell;
 
-        const market =
-            orderPercentageSell !== 0
-                ? Decimal.format((+balance * orderPercentageSell) / 100, currentMarket?.amount_precision)
-                : Decimal.format(amountSell, currentMarket?.amount_precision);
+        const market = orderPercentageSell !== 0 ? (+balance * orderPercentageSell) / 100 : amountSell;
 
-        const limit =
-            orderPercentageSell !== 0
-                ? Decimal.format(+totalSell / +priceSell, currentMarket?.amount_precision)
-                : Decimal.format(amountSell, currentMarket?.amount_precision);
+        const limit = orderPercentageSell !== 0 ? +totalSell / +priceSell : amountSell;
 
-        setAmountSell(orderType === 'market' ? market : limit);
+        setAmountSell(orderType === 'market' ? market.toString() : limit.toString());
     }, [orderPercentageSell, totalSell, priceSell]);
 
+    // buat ngeset total sel
     React.useEffect(() => {
         const safePrice = totalPrice / +amountSell || priceSell;
         // const market =
@@ -191,21 +190,17 @@ export const TradingScreen: FC = (): ReactElement => {
         setTotalSell(orderType === 'market' ? market : limit);
     }, [priceSell, amountSell, orderPercentageSell]);
 
+    // buat order amout buy
     React.useEffect(() => {
         // const safePrice = +totalPrice / +totalAmount || priceBuy;
-        const market =
-            orderPercentageBuy !== 0
-                ? Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.amount_precision)
-                : Decimal.format(amountBuy, currentMarket?.amount_precision);
+        const market = orderPercentageBuy !== 0 ? (+usdt * orderPercentageBuy) / 100 : amountBuy;
 
-        const limit =
-            orderPercentageBuy !== 0
-                ? Decimal.format(+totalBuy / +priceBuy, currentMarket?.amount_precision)
-                : Decimal.format(amountBuy, currentMarket?.amount_precision);
+        const limit = orderPercentageBuy !== 0 ? +totalBuy / +priceBuy : amountBuy;
 
-        setAmountBuy(orderType === 'market' ? market : limit);
+        setAmountBuy(orderType === 'market' ? market.toString() : limit.toString());
     }, [orderPercentageBuy, totalBuy, priceBuy]);
 
+    // buat total buy
     React.useEffect(() => {
         const safePrice = totalPrice / +amountBuy || priceBuy;
         // const market =
@@ -223,19 +218,21 @@ export const TradingScreen: FC = (): ReactElement => {
         setTotalBuy(orderType === 'market' ? market : limit);
     }, [priceBuy, amountBuy, orderPercentageBuy]);
 
+    // ketika pindah dari limit dan market dan setelah dispatch
     const resetForm = () => {
         setShowModalSell(false);
         setShowModalBuy(false);
-        setAmountBuy('');
-        setAmountSell('');
-        setPriceBuy(Decimal.format('0', currentMarket?.price_precision));
-        setPriceSell(Decimal.format('0', currentMarket?.price_precision));
+        setAmountBuy('0');
+        setAmountSell('0');
+        setPriceBuy('0');
+        setPriceSell('0');
         setTotalBuy('');
         setTotalSell('');
         setOrderPercentageSell(0);
         setOrderPercentageBuy(0);
     };
 
+    // ini ngepush data nya
     const handleSubmit = () => {
         const payloadLimit = {
             market: currentMarket?.id,
@@ -257,56 +254,68 @@ export const TradingScreen: FC = (): ReactElement => {
         resetForm();
     };
 
+    // buy sell
     const handleSide = (value: OrderSide) => {
         setSide(value);
     };
 
+    // ganti harga buy
     const handleChangePriceBuy = (e: string) => {
         const value = e.replace(/[^0-9\.]/g, '');
         setPriceBuy(value);
     };
 
+    // ganti harga sell
     const handleChangePriceSell = (e: string) => {
         const value = e.replace(/[^0-9\.]/g, '');
         setPriceSell(value);
     };
 
+    // ganti amount buy
     const handleChangeAmountBuy = (e: string) => {
         const value = e.replace(/[^0-9\.]/g, '');
         setAmountBuy(value);
         setOrderPercentageBuy(0);
     };
 
+    // ganti amout sell
     const handleChangeAmounSell = (e: string) => {
         const value = e.replace(/[^0-9\.]/g, '');
         setAmountSell(value);
         setOrderPercentageSell(0);
     };
 
+    // ganti select persenan
     const handleSelectPercentageSell = (e: number) => {
         setOrderPercentageSell(e);
     };
 
+    // ganti select persenan
     const handleSelectPercentageBuy = (e: number) => {
         setOrderPercentageBuy(e);
     };
 
+    // close modal sell
     const handleCancelModalSell = () => {
         setShowModalSell(false);
     };
 
+    // close modal buy
     const handleCancelModalBuy = () => {
         setShowModalBuy(false);
     };
 
+    // submit sell
     const handleSubmitSell = () => {
         setShowModalSell(true);
     };
 
+    // submit buy
     const handleSubmitBuy = () => {
         setShowModalBuy(true);
     };
 
+    // order type
     const handleSelectOrderType = (e: string) => {
         setOrderType(e);
         resetForm();

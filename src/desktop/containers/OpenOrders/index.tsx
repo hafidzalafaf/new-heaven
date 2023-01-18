@@ -51,7 +51,7 @@ export class OpenOrders extends React.Component<OpenOrdersProps> {
         return (
             <div className="max-400">
                 <div className="d-flex justify-content-between dark-bg-accent sort-filter">
-                    {!this.props.isMobileDevices && <p className="white-text font-bold text-sm">Open orders</p>}
+                    {!this.props.isMobileDevices && <p className="white-text font-bold text-sm">Open Orders</p>}
 
                     <div className="filter">
                         <div className="d-flex align-items-center">
@@ -85,11 +85,13 @@ export class OpenOrders extends React.Component<OpenOrdersProps> {
                             </div>
                         </div>
                     </div>
-                    <p
-                        className="text-sm danger-text font-bold mb-0 ml-2 cursor-pointer"
-                        onClick={() => this.props.handleCancelAll()}>
-                        Cancel All{' '}
-                    </p>
+                    {this.props.isMobileDevices && (
+                        <p
+                            className="text-sm danger-text font-bold mb-0 ml-2 cursor-pointer"
+                            onClick={() => this.props.handleCancelAll()}>
+                            Cancel All{' '}
+                        </p>
+                    )}
                 </div>
                 <Table header={headers} data={tableData as CellData[][]} />
             </div>

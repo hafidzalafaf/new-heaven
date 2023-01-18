@@ -208,18 +208,18 @@ const HomeMobileScreen: React.FC = () => {
                                             href={item.url}
                                             target="__blank"
                                             rel="noopener noreferrer"
-                                            className="slider-ite"
+                                            className="slider-ite p-2"
                                             key={key}>
                                             <div className="card-item position-relative">
                                                 <BgCardSmall className={'bg-card'} />
-                                                <div className="w-100 d-flex justify-content-center align-items-center mb-8">
+                                                <div className="d-flex justify-content-center align-items-center mb-8">
                                                     <img
                                                         src={item.feature_image}
                                                         alt="card"
                                                         className="text-center small-thumbnail"
                                                     />
                                                 </div>
-                                                <div className=" d-flex justify-content-between align-items-center">
+                                                <div className="cover-thumbnail d-flex justify-content-between align-items-center">
                                                     <div>
                                                         <p className="text-xxs grey-text mb-0">
                                                             {moment(item.published_at).startOf('day').fromNow()}

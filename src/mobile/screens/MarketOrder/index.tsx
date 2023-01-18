@@ -32,9 +32,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { OrderCommon } from 'src/modules/types';
 import { NoData } from 'src/desktop/components';
 
-
-
-
 interface MarketOrderMobileScreenProps {
     market: string;
     created_at: string;
@@ -57,7 +54,6 @@ interface MarketOrderMobileScreenProps {
     };
 }
 
-
 const MarketOrderMobileScreen: React.FC = () => {
     const dispatch = useDispatch();
     const intl = useIntl();
@@ -71,9 +67,11 @@ const MarketOrderMobileScreen: React.FC = () => {
     const [data, setData] = React.useState([]);
     const [status, setStatus] = React.useState('');
     const [asset, setAsset] = React.useState('');
-    const [detailData, setDetailData] = React.useState<MarketOrderMobileScreenProps>({} as MarketOrderMobileScreenProps);
+    const [detailData, setDetailData] = React.useState<MarketOrderMobileScreenProps>(
+        {} as MarketOrderMobileScreenProps
+    );
 
-        // Handle get item pagination
+    // Handle get item pagination
     const firstElementIndex = useSelector((state: RootState) => selectOrdersFirstElemIndex(state, 5));
     const lastElementIndex = useSelector((state: RootState) => selectOrdersLastElemIndex(state, 5));
     const nextPageExists = useSelector((state: RootState) => selectOrdersNextPageExists(state));
@@ -88,7 +86,7 @@ const MarketOrderMobileScreen: React.FC = () => {
     const markets = useSelector(selectMarkets);
     const currencies: Currency[] = useSelector(selectCurrencies);
 
-    useUserOrdersHistoryFetch({pageIndex: currentPageIndex, type: tab, limit:5});
+    useUserOrdersHistoryFetch({ pageIndex: currentPageIndex, type: tab, limit: 5 });
     useDocumentTitle('Market Order');
     useWalletsFetch();
     useMarketsFetch();
@@ -109,7 +107,9 @@ const MarketOrderMobileScreen: React.FC = () => {
 
     const dataListWithIcon = data.map((item) => ({
         ...item,
-        dataCurrency: currencies.find(({ id }) => id == item.market.replace('usdt','')|| id == item.market.replace('trx', '')),
+        dataCurrency: currencies.find(
+            ({ id }) => id == item.market.replace('usdt', '') || id == item.market.replace('trx', '')
+        ),
     }));
 
     const handleCancelAllOrders = () => {
@@ -175,13 +175,10 @@ const MarketOrderMobileScreen: React.FC = () => {
 
     const onClickPrevPage = () => {
         setPageIndex(currentPageIndex - 1);
-        console.log(currentPageIndex);
     };
 
     const onClickNextPage = () => {
         setPageIndex(currentPageIndex + 1);
-        console.log(currentPageIndex);
-        
     };
 
     const handleItemDetail = (item) => {
@@ -199,24 +196,35 @@ const MarketOrderMobileScreen: React.FC = () => {
     const renderDataTable = (data) => {
         return data.map((item, index) => [
             <div className="d-flex justify-content-center align-items-stretch">
-            <img
-                height={30}
-                width={30}
-                className="icon-history mr-3 rounded-full"
-                src={item.dataCurrency && item.dataCurrency.icon_url}
-                alt="icon"
-            />
-        </div>,
+                <img
+                    height={30}
+                    width={30}
+                    className="icon-history mr-3 rounded-full"
+                    src={item.dataCurrency && item.dataCurrency.icon_url}
+                    alt="icon"
+                />
+            </div>,
             <div className="d-flex align-items-center text-sm">
                 <div className="">
-                    <p className="mb-0 grey-text-accent font-bold text-sm">{item.price} {item.market.toUpperCase()}</p>
-                    <p className="mb-0 grey-text text-xxs text-nowrap">{moment(item.created_at).format('D MMM YYYY')}</p>
+                    <p className="mb-0 grey-text-accent font-bold text-sm">
+                        {item.price} {item.market.toUpperCase()}
+                    </p>
+                    <p className="mb-0 grey-text text-xxs text-nowrap">
+                        {moment(item.created_at).format('D MMM YYYY')}
+                    </p>
                 </div>
             </div>,
             <p className={`badge grey-text text-sm mb-0`}>{item.price}</p>,
-            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>{item.side.charAt(0).toUpperCase() + item.side.slice(1)}</p>,
-            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>{item.state.charAt(0).toUpperCase() + item.state.slice(1)}</p>,
-            <p key={index} className={`badge text-sm mb-0 cursor-pointer danger-text`} onClick={()=> handleItemDetail(data[index])}>
+            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>
+                {item.side.charAt(0).toUpperCase() + item.side.slice(1)}
+            </p>,
+            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>
+                {item.state.charAt(0).toUpperCase() + item.state.slice(1)}
+            </p>,
+            <p
+                key={index}
+                className={`badge text-sm mb-0 cursor-pointer danger-text`}
+                onClick={() => handleItemDetail(data[index])}>
                 Detail
             </p>,
         ]);
@@ -321,7 +329,7 @@ const MarketOrderMobileScreen: React.FC = () => {
                 <Tabs
                     id="controlled-tab-example"
                     defaultActiveKey={tab}
-                    onSelect={(e)=> {
+                    onSelect={(e) => {
                         setTab(e);
                         setStartDate('');
                         setEndDate('');
@@ -333,32 +341,32 @@ const MarketOrderMobileScreen: React.FC = () => {
                             <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
                         </div>
                         {dataListWithIcon[0] && (
-                        <PaginationMobile
-                            firstElementIndex={firstElementIndex}
-                            lastElementIndex={lastElementIndex}
-                            page={page}
-                            nextPageExists={nextPageExists}
-                            onClickPrevPage={onClickPrevPage}
-                            onClickNextPage={onClickNextPage}
-                        />
-                    )}
-                    {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
+                            <PaginationMobile
+                                firstElementIndex={firstElementIndex}
+                                lastElementIndex={lastElementIndex}
+                                page={page}
+                                nextPageExists={nextPageExists}
+                                onClickPrevPage={onClickPrevPage}
+                                onClickNextPage={onClickNextPage}
+                            />
+                        )}
+                        {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
                     </Tab>
                     <Tab eventKey="close" title="Close Order">
                         <div className="table-mobile-wrapper">
                             <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
                         </div>
                         {dataListWithIcon[0] && (
-                        <PaginationMobile
-                            firstElementIndex={firstElementIndex}
-                            lastElementIndex={lastElementIndex}
-                            page={page}
-                            nextPageExists={nextPageExists}
-                            onClickPrevPage={onClickPrevPage}
-                            onClickNextPage={onClickNextPage}
-                        />
+                            <PaginationMobile
+                                firstElementIndex={firstElementIndex}
+                                lastElementIndex={lastElementIndex}
+                                page={page}
+                                nextPageExists={nextPageExists}
+                                onClickPrevPage={onClickPrevPage}
+                                onClickNextPage={onClickNextPage}
+                            />
                         )}
-                    {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
+                        {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
                     </Tab>
                     <div className="ml-auto">
                         <div className="d-flex justify-content-start align-items-center cancel-all-container">
@@ -370,22 +378,22 @@ const MarketOrderMobileScreen: React.FC = () => {
                 <div id="off-canvas" className={`position-fixed off-canvas ${showDetail ? ' show' : ''}`}>
                     <div className="fixed-bottom off-canvas-content-container overflow-auto">
                         <div className="d-flex align-items-center off-canvas-content-head">
-                        <img
-                            height={30}
-                            width={30}
-                            className="icon-history mr-3 rounded-full"
-                            src={detailData.dataCurrency?.icon_url}
-                            alt="icon"
-            />
-                            <h3>
-                                {detailData?.market?.toUpperCase()}
-                            </h3>
+                            <img
+                                height={30}
+                                width={30}
+                                className="icon-history mr-3 rounded-full"
+                                src={detailData.dataCurrency?.icon_url}
+                                alt="icon"
+                            />
+                            <h3>{detailData?.market?.toUpperCase()}</h3>
                         </div>
                         <table className="w-100 table-canvas">
                             <tbody>
                                 <tr className="w-100 d-flex justify-content-between align-items0center">
                                     <td className="td-title">Date</td>
-                                    <td className="td-value">{moment(detailData.created_at).format('D MMM YYYY - HH:mm')}</td>
+                                    <td className="td-value">
+                                        {moment(detailData.created_at).format('D MMM YYYY - HH:mm')}
+                                    </td>
                                 </tr>
                                 <tr className="w-100 d-flex justify-content-between align-items0center">
                                     <td className="td-title">Market</td>

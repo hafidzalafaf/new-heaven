@@ -47,6 +47,7 @@ interface TransactionHistoryMobileScreenProps {
     rid: string;
     txid: string;
     status: string;
+    blockchain_txid: string;
     dataCurrency: {
         id: any;
         currency: string;
@@ -652,6 +653,32 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                                     <CopyButton />
                                 </button></td>
                                 </tr>
+                                }
+                                {
+                                    type === 'withdraws' ?
+                                    <>
+
+                                    <tr className="w-100 d-flex justify-content-between align-items0center">
+                                        <td className="td-title">TXID</td>
+                                    </tr>
+                                    <tr className="w-100 d-flex justify-content-between align-items0center">
+                                        <td className="w-100">
+                                            <input
+                                            className="p-0 m-0 text-sm grey-text-accent font-bold address w-100 bg-transparent"
+                                            id='address'
+                                            defaultValue={detailData?.blockchain_txid}
+                                            /></td>
+                                        <td className={`${detailData?.blockchain_txid ? ``: `d-none`}`}>
+                                            <button
+                                            className="btn-transparent w-10"
+                                            type="button"
+                                            onClick={() => doCopy('address')}>
+                                                <CopyButton />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </>
+                                    : null
                                 }
                             </tbody>
                         </table>

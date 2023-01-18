@@ -49,6 +49,10 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     const asks = useSelector(selectDepthAsks);
     const bids = useSelector(selectDepthBids);
     const isMobileDevice = useSelector(selectMobileDeviceState);
+    const [orderPercentageBuy, setOrderPercentageBuy] = React.useState(0);
+    const [orderPercentageSell, setOrderPercentageSell] = React.useState(0);
+    const [amountBuy, setAmountBuy] = React.useState('');
+    const [amountSell, setAmountSell] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const [marketType, setMerketType] = React.useState('buy');
     const [filterSell, setFilterSell] = React.useState(false);
@@ -201,6 +205,32 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
         }
     }, [listOrder, filterBuy, filterSell, hideOtherPairs]);
 
+    // ganti harga buy
+    const handleChangePriceBuy = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setPriceBuy(value);
+    };
+
+    // ganti harga sell
+    const handleChangePriceSell = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setPriceSell(value);
+    };
+
+    // ganti amount buy
+    const handleChangeAmountBuy = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setAmountBuy(value);
+        setOrderPercentageBuy(0);
+    };
+
+    // ganti amout sell
+    const handleChangeAmounSell = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setAmountSell(value);
+        setOrderPercentageSell(0);
+    };
+
     const handleFilterSell = () => {
         setFilterSell(!filterSell);
     };
@@ -260,7 +290,6 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                     trigger_price,
                     volume,
                 } = item;
-                console.log(side);
 
                 const executedVolume = Number(origin_volume) - Number(remaining_volume);
                 const filled = ((executedVolume / Number(origin_volume)) * 100).toFixed(2);
@@ -341,7 +370,7 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                 <div className="d-flex justify-content-between align-items-start trade-container w-100 ">
                     <OrderForm />
 
-                    <div className={`w-40 ${isMobileDevice && 'mobile-device'}`}>
+                    <div className={`w-40 ${isMobileDevice && 'mobile-device order-book-mobile'}`}>
                         <OrderBook
                             asks={asks}
                             bids={bids}

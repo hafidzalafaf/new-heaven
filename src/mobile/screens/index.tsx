@@ -29,3 +29,4 @@ export * from './SettingProfile';
 export * from './KycScreen';
 export * from './Security';
 export * from './DeviceManagementMobileScreen';
+export * from './OrderHistoryMobileScreen';
