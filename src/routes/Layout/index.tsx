@@ -60,7 +60,7 @@ import {
     WalletWithdrawMobileScreen,
     KycMobileScreen,
     SecurityMobileScreen,
-    DeviceManagementMobileScreen
+    DeviceManagementMobileScreen,
 } from '../../mobile/screens';
 
 import {
@@ -661,9 +661,9 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         component={ChangeEmail}
                     />
 
-                    <PrivateRoute
+                    <PublicRoute
                         loading={userLoading}
-                        isLogged={isLoggedIn}
+                        // isLogged={isLoggedIn}
                         path="/p2p/order"
                         component={P2POrderScreen}
                     />

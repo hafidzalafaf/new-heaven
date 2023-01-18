@@ -12,12 +12,6 @@ export const BannerP2P = () => {
                         Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet
                     </p>
                 </div>
-
-                <div className="d-flex justify-content-between align-items-center overflow-x-scroll">
-                    <img src="/img/landing-card.png" alt="adsense" className="px-6" />
-                    <img src="/img/landing-card.png" alt="adsense" className="px-6" />
-                    <img src="/img/landing-card.png" alt="adsense" className="px-6" />
-                </div>
             </div>
         </React.Fragment>
     );

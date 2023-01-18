@@ -34,3 +34,4 @@ export * from './TradingChart';
 export * from './HeaderP2P';
 export * from './BannerP2P';
 export * from './TableListP2P';
+export * from './OrderP2PTable';
