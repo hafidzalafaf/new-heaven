@@ -32,13 +32,13 @@ export interface ModalProps {
 }
 
 export const Modal: React.FunctionComponent<ModalProps> = (props) => {
-    const { footer, wideView } = props;
+    const { footer, wideView, className } = props;
     if (!props.show) {
         return null;
     }
     return (
         <React.Fragment>
-            <div className={`custom-modal fade ${wideView ? 'wide-modal' : ''}`}>
+            <div className={`custom-modal fade ${className} ${wideView ? 'wide-modal' : ''}`}>
                 <div className="custom-modal-dialog" role="document">
                     <div className="custom-modal-content">
                         <div className="header d-flex justify-content-between mb-24">{props.header}</div>

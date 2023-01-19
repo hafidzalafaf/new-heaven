@@ -1,0 +1,51 @@
+.com-modal-create-offer-p2p {
+    &.custom-modal {
+        .custom-modal-dialog {
+            max-width: 768px !important;
+            width: 100%;
+
+            .custom-modal-content {
+                width: 100%;
+                height: 99%;
+                overflow-y: scroll;
+            }
+        }
+    }
+
+    .nav-tabs {
+        border-bottom: none;
+        gap: 16px;
+    }
+
+    a.nav-link,
+    .nav-tabs {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 16px;
+        color: var(--text-grey-color);
+        background: transparent;
+        border: none;
+        padding: 8px 0;
+    }
+
+    .nav-tabs .nav-link:hover {
+        border-color: transparent;
+    }
+
+    .nav-tabs .nav-item.show .nav-link,
+    .nav-tabs .nav-link.active {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 16px;
+        text-align: center;
+        background: var(--text-gradient-color) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--text-contrast-color) !important;
+    }
+
+    .tab-content {
+        width: 100%;
+    }
+}

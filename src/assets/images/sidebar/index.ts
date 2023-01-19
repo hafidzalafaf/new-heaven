@@ -12,3 +12,4 @@ export * from './DepositIcon';
 export * from './InternalTransferIcon';
 export * from './Withdrawlcon';
 export * from './OverviewIcon';
+export * from './DropdownIcon';
