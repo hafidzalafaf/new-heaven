@@ -26,7 +26,7 @@ const defaultTicker = {
 
 const MarketDetailMobileScreen: React.FC = () => {
     useDocumentTitle('Market Detail');
-    useWalletsFetch();
+    //useWalletsFetch();
     useMarketsFetch();
     useMarketsTickersFetch();
 

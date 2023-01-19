@@ -53,12 +53,14 @@ const HeaderComponent: React.FC = () => {
     return (
         <div>
             <div className="px-24 dark-bg-main">
-                <nav className="navbar-mobile fixed-top px-24 py-3 dark-bg-main">
+                <nav className="navbar-mobile fixed-top container py-3 dark-bg-main">
                     <Link to="/" className="navbar-brand">
                         <LogoIcon className={''} />
                     </Link>
                     <div className="d-flex align-items-center">
-                        <ScanIcon className={'mr-2'} />
+                        <div className="mr-2">
+                            <ScanIcon className={''} />
+                        </div>
                         <div className="cursor-pointer" onClick={() => setShowSidebar(true)}>
                             <UserIcon className={'cursor-pointer'} />
                         </div>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrencies, selectMarkets, selectMarketTickers } from 'src/modules';
 import { useMarketsFetch, useMarketsTickersFetch } from 'src/hooks';
 import { EditIcon, SearchIcon } from '../../assets/Market';
@@ -9,6 +9,8 @@ import { Table, Decimal } from '../../../components';
 import { Link } from 'react-router-dom';
 import { Favorite } from '../../../assets/images/Favorite';
 import { FilterInput } from 'src/desktop/components';
+import { DocIcon } from 'src/mobile/assets/Wallet';
+import { alertPush } from 'src/modules';
 
 const defaultTicker = {
     amount: '0.0',
@@ -26,6 +28,7 @@ const MarketListlMobileScreen: React.FC = () => {
 
     useMarketsFetch();
     useMarketsTickersFetch();
+    const dispatch = useDispatch();
     const currencies = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
     const marketTickers = useSelector(selectMarketTickers);
@@ -79,7 +82,7 @@ const MarketListlMobileScreen: React.FC = () => {
 
     useEffect(() => {
         setFavoriteMarket(JSON.parse(localStorage.getItem('favourites') || '[]'));
-    }, [localStorage.getItem('favourites')]);
+    }, [localStorage.getItem('favourites'), dispatch]);
 
     const handleFavorite = (data) => {
         const isFavorite = favoriteMarket.includes(data);
@@ -88,10 +91,12 @@ const MarketListlMobileScreen: React.FC = () => {
             const newStorageItem = [...favoriteMarket, data];
             setFavoriteMarket(newStorageItem);
             localStorage.setItem('favourites', JSON.stringify(newStorageItem));
+            //dispatch(alertPush({ message: [`Item added to your favorites`], type: 'success' }));
         } else {
             const newStorageItem = favoriteMarket.filter((savedId) => savedId !== data);
             setFavoriteMarket(newStorageItem);
             localStorage.setItem('favourites', JSON.stringify(newStorageItem));
+            //dispatch(alertPush({ message: [`Item remove from your favorites`], type: 'success' }));
         }
     };
 
@@ -224,9 +229,6 @@ const MarketListlMobileScreen: React.FC = () => {
                 <nav className="d-flex justify-content-between navbar-dark p-0 mb-16">
                     <h1 className="navbar-brand p-0 m-0">Market</h1>
                     <div className="menu">
-                        <div className="mr-2 d-inline">
-                            <EditIcon />
-                        </div>
                         <div className="d-inline" onClick={() => setShowSearch(!showSearch)}>
                             <SearchIcon />
                         </div>
@@ -238,8 +240,8 @@ const MarketListlMobileScreen: React.FC = () => {
                             data={filterData}
                             onFilter={handleFilter}
                             filter={searchFilter}
-                            placeholder={'Search by assets'}
-                            className="w-100"
+                            placeholder={'Enter the currency you are looking for.'}
+                            className="w-100 text-sm"
                         />
                     </div>
                 )}
@@ -251,7 +253,14 @@ const MarketListlMobileScreen: React.FC = () => {
                     className="">
                     <Tab eventKey="favorite" title="Favorite">
                         <div className="table-mobile-wrapper">
-                            <Table data={renderDataTable(tableData(), true)} header={renderTableHeader} />
+                            {!favoriteList[0] ? (
+                                <div className="empty-data d-flex flex-column align-items-center mb-5 w-100">
+                                    <DocIcon className={'w-20'} />
+                                    <p className="text-secondary">You haven't added any items to your favorites</p>
+                                </div>
+                            ) : (
+                                <Table data={renderDataTable(tableData(), true)} header={renderTableHeader} />
+                            )}
                         </div>
                     </Tab>
                     <Tab eventKey="all-crypto" title="All crypto">

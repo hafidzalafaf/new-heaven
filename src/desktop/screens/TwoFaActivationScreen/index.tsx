@@ -59,7 +59,7 @@ export const TwoFaActivationScreen: React.FC = () => {
                             </Link>
                         </div>
                         <div className="main-content mt-5">
-                            <h6 className="mb-4 white-text text-md font-semibold">Google Authencticator Activation</h6>
+                            <h6 className="mb-24 white-text text-md font-semibold">Google Authencticator Activation</h6>
                             <p className=" white-text text-ms mb-8">
                                 1. Download and install Google Authenticator application from
                                 <a href="https://www.apple.com/app-store/" target="_blank">
@@ -85,10 +85,10 @@ export const TwoFaActivationScreen: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="form mt-3">
-                                    <p className="text-ms white-text mb-4">
+                                    <p className="text-ms white-text mb-24">
                                         Scan The QR Code to get 2FA or Copy Keys below :
                                     </p>
-                                    <div className="d-flex align-items-center mb-4">
+                                    <div className="d-flex align-items-center mb-24">
                                         <label className="input-label font-bold" htmlFor="">
                                             MVA CODE
                                         </label>
@@ -102,7 +102,7 @@ export const TwoFaActivationScreen: React.FC = () => {
                                             )}
                                         </fieldset>
                                     </div>
-                                    <div className="d-flex align-items-center mb-4">
+                                    <div className="d-flex align-items-center mb-24">
                                         <label className="input-label font-bold" htmlFor="">
                                             2FA Code
                                         </label>

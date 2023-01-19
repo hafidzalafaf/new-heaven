@@ -30,35 +30,12 @@ export const AnnouncementScreen: FC = (): ReactElement => {
     const settings = {
         dots: true,
         infinite: true,
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
         pauseOnHover: true,
     };
-
-    const bannerAnnouncement = [
-        {
-            label: '21 Hours Ago',
-            name: 'Banner Announcement',
-            desc: 'deskripsi',
-        },
-        {
-            label: '21 Hours Ago',
-            name: 'Banner Announcement',
-            desc: 'deskripsi',
-        },
-        {
-            label: '21 Hours Ago',
-            name: 'Banner Announcement',
-            desc: 'deskripsi',
-        },
-        {
-            label: '21 Hours Ago',
-            name: 'Banner Announcement',
-            desc: 'deskripsi',
-        },
-    ];
 
     return (
         <React.Fragment>
@@ -74,9 +51,13 @@ export const AnnouncementScreen: FC = (): ReactElement => {
                                         rel="noopener noreferrer"
                                         className="slider-item p-3">
                                         <img
-                                            src={item.feature_image}
+                                            src={
+                                                item.feature_image !== null
+                                                    ? item.feature_image
+                                                    : '/img/landing-card.png'
+                                            }
                                             alt={item.title}
-                                            className="w-100 h-100 rounded-lg"
+                                            className="w-100 h-100 rounded-lg announcement-slider-img"
                                         />
                                     </a>
                                 </div>
@@ -92,7 +73,15 @@ export const AnnouncementScreen: FC = (): ReactElement => {
                                         news.map((item, key) => (
                                             <div key={key} className="col-md-4 col-sm-6 col-12 mb-4">
                                                 <div className="article-item">
-                                                    <img src={item.feature_image} className="w-100" alt={item.title} />
+                                                    <img
+                                                        src={
+                                                            item.feature_image !== null
+                                                                ? item.feature_image
+                                                                : '/img/landing-card.png'
+                                                        }
+                                                        className="w-100 rounded-lg announcement-img"
+                                                        alt={item.title}
+                                                    />
                                                     <p className="blue-text mb-12">Heaven Exchange</p>
                                                     <h6 className="title mb-24">
                                                         <a

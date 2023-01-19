@@ -123,7 +123,7 @@ class FooterContainer extends React.Component<Props, State> {
                         <div className="d-flex justify-content-between align-items-center">
                             <div className="mr-2">
                                 <a href="" className="text-sm font-normal white-text">
-                                    Privacy &amp; Terms
+                                    Privacy &amp; Terms{' '}
                                 </a>
                                 <a href="" className="text-sm font-normal white-text">
                                     Contact

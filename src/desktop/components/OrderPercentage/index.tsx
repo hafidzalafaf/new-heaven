@@ -9,6 +9,7 @@ export interface OrderPercentageProps {
     label75: string;
     label100: string;
     side: string;
+    amount: string;
     handleSide: (e: string) => void;
 }
 
@@ -23,6 +24,7 @@ export const OrderPercentage: React.FunctionComponent<OrderPercentageProps> = (p
         label100,
         handleSide,
         side,
+        amount,
     } = props;
 
     return (

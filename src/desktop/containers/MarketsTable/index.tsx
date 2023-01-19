@@ -6,7 +6,7 @@ import { TickerTable } from '../../components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { useMarketsFetch, useMarketsTickersFetch } from '../../../hooks';
+import { useMarketsFetch, useMarketsTickersFetch, useBlogsFetch } from '../../../hooks';
 import {
     Market,
     selectMarkets,
@@ -14,6 +14,7 @@ import {
     setCurrentMarket,
     selectUserInfo,
     selectCurrencies,
+    selectBlogs,
 } from '../../../modules';
 
 const defaultTicker = {
@@ -47,13 +48,23 @@ const cardBanner = [
 const MarketsTableComponent = (props) => {
     useMarketsFetch();
     useMarketsTickersFetch();
+    useBlogsFetch('news');
+
     const history = useHistory();
     const dispatch = useDispatch();
     const markets = useSelector(selectMarkets);
     const marketTickers = useSelector(selectMarketTickers);
     const currencies = useSelector(selectCurrencies);
     const userData = useSelector(selectUserInfo);
+    const blogs = useSelector(selectBlogs);
     const [currentBidUnit, setCurrentBidUnit] = React.useState('');
+    const [blog, setBlog] = React.useState<any[]>([]);
+
+    React.useEffect(() => {
+        if (blogs) {
+            setBlog(blogs);
+        }
+    }, [blogs]);
 
     const handleRedirectToTrading = (id: string) => {
         const currentMarket: Market | undefined = markets.find((item) => item.id === id);
@@ -167,11 +178,23 @@ const MarketsTableComponent = (props) => {
                 <div className="container index-2 mt-5">
                     <div className="mb-12">
                         <Slider {...settings}>
-                            {cardBanner &&
-                                cardBanner.map((item, key) => (
-                                    <div className="d-flex justify-content-between align-items-center p-2">
-                                        <img src="img/landing-card.png" alt="card" className="w-100" />
-                                    </div>
+                            {blog &&
+                                blog.slice(0, 5).map((item, key) => (
+                                    <a
+                                        href={item.url}
+                                        target="__blank"
+                                        rel="noopener noreferrer"
+                                        className="d-flex justify-content-between align-items-center p-2">
+                                        <img
+                                            src={
+                                                item.feature_image !== null
+                                                    ? item.feature_image
+                                                    : '/img/landing-card.png'
+                                            }
+                                            alt={item.title}
+                                            className="w-100 radius-lg slider-landing-img"
+                                        />
+                                    </a>
                                 ))}
                         </Slider>
                     </div>

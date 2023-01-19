@@ -1,29 +1,35 @@
 import { LandingBlock } from '@openware/react-components';
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToPropsFunction, MapStateToProps } from 'react-redux';
 import { Link, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
 import { IntlProps } from '../../../';
 import { MarketsTable } from '../../containers';
 import { toggleColorTheme } from '../../../helpers';
-import { RootState, selectCurrentColorTheme, selectUserLoggedIn } from '../../../modules';
+import { RootState, selectCurrentColorTheme, selectUserLoggedIn, selectBlogs, blogsFetch } from '../../../modules';
 import { BnbIcon, BtcIcon, DogeIcon, TronIcon } from '../../../assets/images/CoinIcon';
 import { AndroidIcon, AppleStoreIcon, GooglePlayIcon, MacOsIcon, WindowsIcon } from '../../../assets/images/DeviceIcon';
 
 interface ReduxProps {
     isLoggedIn: boolean;
     colorTheme: string;
+    blogs: any;
 }
 
-type Props = ReduxProps & RouteProps & IntlProps;
+interface DispatchProps {
+    blogsFetch: typeof blogsFetch;
+}
+
+type Props = ReduxProps & RouteProps & IntlProps & DispatchProps;
 
 class Landing extends React.Component<Props> {
     public componentDidMount() {
         if (this.props.colorTheme === 'light') {
             toggleColorTheme('dark');
         }
+        this.props.blogsFetch({ tag: 'news' });
     }
 
     public componentWillReceiveProps(next: Props) {
@@ -229,76 +235,40 @@ class Landing extends React.Component<Props> {
                                 Analysis news about crypto market
                             </p>
                             <div className="row mt-5">
-                                <div className="col-lg-6 mb-4">
-                                    <div className="d-flex align-items-start">
-                                        <img src="img/image-blog.png" className="image-analysis" alt="image" />
-                                        <div className="ml-4">
-                                            <p className="mb-8 text-lg white-text font-bold">
-                                                New Exchange Website Heaven Its Coming!
-                                            </p>
-                                            <p className="mb-36 text-sm grey-text-accent">
-                                                Lest trade and get rich with heaven exchange
-                                            </p>
-                                            <a href="#" className="gradient-text text-ms ">
-                                                Learn more
-                                            </a>
+                                {this.props.blogs &&
+                                    this.props.blogs.slice(0, 4).map((blog, i) => (
+                                        <div key={i} className="col-lg-6 mb-24">
+                                            <div className="d-flex align-items-start">
+                                                <img
+                                                    src={
+                                                        blog.feature_image !== null
+                                                            ? blog.feature_image
+                                                            : '/img/image-blog.png'
+                                                    }
+                                                    className="image-analysis radius-md"
+                                                    alt="image"
+                                                />
+                                                <div className="ml-4">
+                                                    <p className="mb-8 text-lg white-text font-bold">{blog.title}</p>
+                                                    <p className="mb-36 text-sm grey-text-accent">
+                                                        {blog.excerpt?.slice(0, 50)}
+                                                    </p>
+                                                    <a
+                                                        href={blog.url}
+                                                        target="__blank"
+                                                        rel="noopener noreferrer"
+                                                        className="gradient-text text-ms ">
+                                                        Learn more
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6 mb-4">
-                                    <div className="d-flex align-items-start">
-                                        <img src="img/image-blog.png" className="image-analysis" alt="image" />
-                                        <div className="ml-4">
-                                            <p className="mb-8 text-lg white-text font-bold">
-                                                Tips for Cut Loss in Crypto Trading
-                                            </p>
-                                            <p className="mb-36 text-sm grey-text-accent">
-                                                HEX Exchange members who are beginners in the crypto world, at least
-                                                they have heard of the term cut loss.
-                                            </p>
-                                            <a href="#" className="gradient-text text-ms ">
-                                                Learn more
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6 mb-4">
-                                    <div className="d-flex align-items-start">
-                                        <img src={'img/image-blog2.png'} className="image-analysis" alt="image" />
-                                        <div className="ml-4">
-                                            <p className="mb-8 text-lg white-text font-bold">
-                                                Bitcoin Price Crosses $20K as US Dollar Strength Falls
-                                            </p>
-                                            <p className="mb-36 text-sm grey-text-accent">
-                                                Lest trade and get rich with heaven exchange
-                                            </p>
-                                            <a href="#" className="gradient-text text-ms ">
-                                                Learn more
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6 mb-4">
-                                    <div className="d-flex align-items-start">
-                                        <img src={'img/image-blog2.png'} className="image-analysis" alt="image" />
-                                        <div className="ml-4">
-                                            <p className="mb-8 text-lg white-text font-bold">
-                                                New Exchange Website Heaven Its Coming!
-                                            </p>
-                                            <p className="mb-36 text-sm grey-text-accent">
-                                                Lest trade and get rich with heaven exchange
-                                            </p>
-                                            <a href="#" className="gradient-text text-ms ">
-                                                Learn more
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                    ))}
                             </div>
                             <div className="d-flex justify-content-center mt-3">
-                                <a href="" className="btn btn-primary lg">
+                                <Link to={`/announcement`} className="btn btn-primary lg">
                                     Show More
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </section>
@@ -314,13 +284,18 @@ class Landing extends React.Component<Props> {
     private translate = (key: string) => this.props.intl.formatMessage({ id: key });
 }
 
-const mapStateToProps = (state: RootState): ReduxProps => ({
+const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> = (state) => ({
     isLoggedIn: selectUserLoggedIn(state),
     colorTheme: selectCurrentColorTheme(state),
+    blogs: selectBlogs(state),
+});
+
+const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, {}> = (dispatch) => ({
+    blogsFetch: (payload) => dispatch(blogsFetch(payload)),
 });
 
 export const LandingScreen = compose(
     injectIntl,
     withRouter,
-    connect(mapStateToProps, null)
+    connect(mapStateToProps, mapDispatchToProps)
 )(Landing) as React.ComponentClass;

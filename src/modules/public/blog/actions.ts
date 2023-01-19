@@ -18,7 +18,7 @@ export interface BlogsFetch {
     type: typeof BLOGS_FETCH;
     payload: {
         // type: string;
-        limit: string;
+        limit?: string;
         tag: string;
     };
 }

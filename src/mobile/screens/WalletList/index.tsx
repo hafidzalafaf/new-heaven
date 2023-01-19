@@ -36,7 +36,6 @@ interface ExtendedWallet extends Wallet {
 
 const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
     useWalletsFetch();
-    useMarketsTickersFetch();
     useMarketsFetch();
     useDocumentTitle('Wallets');
 
@@ -81,6 +80,10 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
         }
     }, [wallets, currencies, isP2PEnabled]);
 
+    /**
+     * Render data wallet into table include currency, total balance and estimated value
+     * and filtering data wallet by balance
+     */
     const renderTableData = React.useCallback(
         (data) => {
             const list = nonZeroSelected
@@ -276,18 +279,19 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                         />
                     </div>
                 </div>
-                {
-                    !filteredWallets.length ? (
-                        <div className='w-100 h-100 grey-text-accent'>
+                {!filteredWallets.length ? (
+                    <div className="w-100 h-100 grey-text-accent">
                         <div className="bg-transparent d-flex justify-content-center align-items-center">
-                          <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
-                          <span>Loading Data...</span>
+                            <span
+                                className="spinner-border spinner-border-sm mr-2"
+                                role="status"
+                                aria-hidden="true"></span>
+                            <span>Loading Data...</span>
                         </div>
-                          </div>
-                          ) : (
-                <Table data={renderTableData(wallets)} />
-                )
-                }
+                    </div>
+                ) : (
+                    <Table data={renderTableData(wallets)} />
+                )}
             </div>
 
             {/* ========= Show Modal Locked 2FA =========== */}

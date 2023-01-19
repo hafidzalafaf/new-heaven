@@ -49,7 +49,7 @@ export const MarketOpen: FC = (): ReactElement => {
     const currencies: Currency[] = useSelector(selectCurrencies);
     const historyLoading = useSelector(selectOrdersHistoryLoading);
 
-    useUserOrdersHistoryFetch(currentPageIndex, tab, 20);
+    useUserOrdersHistoryFetch({ pageIndex: currentPageIndex, type: tab, limit: 20 });
     useDocumentTitle('Market Order');
     useWalletsFetch();
     useMarketsFetch();

@@ -21,7 +21,7 @@ import { BgCardSmall } from '../../assets/BackgroundCard';
 import { Table } from '../../../components';
 import { ArrowRight } from '../../assets/Arrow';
 import { ChartLandingMobile } from 'src/mobile/components';
-import { DocIcon } from 'src/mobile/assets/Wallet';
+import { ChartEmpty } from 'src/mobile/assets/ChartEmpty';
 import moment from 'moment';
 
 const noHeaderRoutes = ['/'];
@@ -38,9 +38,8 @@ const defaultTicker = {
 
 const HomeMobileScreen: React.FC = () => {
     useDocumentTitle('Home');
-    useWalletsFetch();
+    useBlogsFetch('news');
     useMarketsFetch();
-    useMarketsTickersFetch();
 
     const [loading, setLoading] = React.useState(true);
     const { formatMessage } = useIntl();
@@ -51,13 +50,11 @@ const HomeMobileScreen: React.FC = () => {
     const [news, setNews] = React.useState([]);
     const [blog, setBlog] = React.useState([]);
 
-    useBlogsFetch('news');
-
     const blogs = useSelector(selectBlogs);
 
     const [type, setType] = React.useState('all');
 
-    const shouldRenderHeader = !noHeaderRoutes.some((r) => location.pathname.includes(r));
+    // const shouldRenderHeader = !noHeaderRoutes.some((r) => location.pathname.includes(r));
 
     React.useEffect(() => {
         setTimeout(() => setLoading(false), 1000);
@@ -70,9 +67,9 @@ const HomeMobileScreen: React.FC = () => {
         }
     }, [blogs]);
 
-    if (shouldRenderHeader) {
-        return <React.Fragment />;
-    }
+    // if (shouldRenderHeader) {
+    //     return <React.Fragment />;
+    // }
 
     const marketList = markets
         .map((market) => ({
@@ -93,7 +90,6 @@ const HomeMobileScreen: React.FC = () => {
         }));
 
     const dataTranding = [...marketList].sort((a, b) => Number(b.volume) - Number(a.volume));
-    const dataAll = [...marketList];
     const dataGainers = [...marketList]
         .filter((data) => data.price_change_percent.includes('+'))
         .sort((a, b) => Number(b.price_change_percent.slice(1, -1)) - Number(a.price_change_percent.slice(1, -1)));
@@ -160,10 +156,10 @@ const HomeMobileScreen: React.FC = () => {
             </Link>,
             <div className="">
                 <ChartLandingMobile
-                    statusBd={
+                    borderColor={
                         parseFloat(item && item.price_change_percent) <= 0 ? 'rgba(255,68,69, 1)' : 'rgba(2,195,189, 1)'
                     }
-                    bgGradient={
+                    backgroundGradient={
                         parseFloat(item && item.price_change_percent) <= 0 ? 'rgba(255,68,69, 1)' : 'rgba(2,195,189, 1)'
                     }
                     label={item.kline.map((e) => e[0])}
@@ -258,20 +254,41 @@ const HomeMobileScreen: React.FC = () => {
                             onSelect={(e) => handleChangeType(e)}
                             className="mb-3">
                             <Tab eventKey="all" title="All" className="mb-3">
-                                <Table data={renderDataTable(dataAll)} />
+                                {!marketList[0] || marketList === null ? (
+                                    <div className="empty-chart-data">
+                                        <ChartEmpty className="icon-empty text-secondary mb-2" />
+                                        <h6 className="text-secondary">No data show</h6>
+                                    </div>
+                                ) : (
+                                    <Table data={renderDataTable(marketList)} />
+                                )}
                             </Tab>
                             <Tab eventKey="tranding" title="Tranding" className="mb-3">
-                                <Table data={renderDataTable(dataTranding)} />
+                                {!dataTranding[0] || dataTranding === null ? (
+                                    <div className="empty-chart-data">
+                                        <ChartEmpty className="icon-empty text-secondary mb-2" />
+                                        <h6 className="text-secondary">No data show</h6>
+                                    </div>
+                                ) : (
+                                    <Table data={renderDataTable(dataTranding)} />
+                                )}
                             </Tab>
                             <Tab eventKey="gainers" title="Gainers" className="mb-3">
-                                <Table data={renderDataTable(dataGainers)} />
+                                {!dataGainers[0] || dataGainers === null ? (
+                                    <div className="empty-chart-data">
+                                        <ChartEmpty className="icon-empty text-secondary mb-2" />
+                                        <h6 className="text-secondary">No data show</h6>
+                                    </div>
+                                ) : (
+                                    <Table data={renderDataTable(dataGainers)} />
+                                )}
                             </Tab>
 
                             <Tab eventKey="loser" title="Loser" className="mb-3">
                                 <div className="table-mobile-wrapper">
                                     {!dataLosers[0] || dataLosers === null ? (
                                         <div className="empty-chart-data">
-                                            <DocIcon className="icon-empty mb-2" />
+                                            <ChartEmpty className="icon-empty text-secondary mb-2" />
                                             <h6 className="text-secondary">No data show</h6>
                                         </div>
                                     ) : (

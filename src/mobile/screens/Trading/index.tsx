@@ -49,25 +49,21 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     const asks = useSelector(selectDepthAsks);
     const bids = useSelector(selectDepthBids);
     const isMobileDevice = useSelector(selectMobileDeviceState);
-    const [orderPercentageBuy, setOrderPercentageBuy] = React.useState(0);
-    const [orderPercentageSell, setOrderPercentageSell] = React.useState(0);
-    const [amountBuy, setAmountBuy] = React.useState('');
-    const [amountSell, setAmountSell] = React.useState('');
     const [loading, setLoading] = React.useState(false);
-    const [marketType, setMerketType] = React.useState('buy');
     const [filterSell, setFilterSell] = React.useState(false);
     const [filterBuy, setFilterBuy] = React.useState(false);
     const [hideOtherPairs, setHideOtherPairs] = React.useState<boolean>(false);
     const [showTrading, setShowTrading] = React.useState(false);
     const [showSidebar, setShowSidebar] = React.useState(false);
+    const [changeMarket, setChangeMarket] = React.useState(false);
     const [priceSell, setPriceSell] = React.useState(Decimal.format(0, currentMarket?.price_precision));
     const [priceBuy, setPriceBuy] = React.useState(Decimal.format(0, currentMarket?.price_precision));
-    const [key, setKey] = React.useState('USDT');
-    const isLoggedin = useSelector(selectUserLoggedIn);
 
     useDocumentTitle('Trading');
     useOpenOrdersFetch(currentMarket, hideOtherPairs);
     useMarketsFetch();
+
+    const ask = [...asks].sort((a, b) => +b[0] - +a[0]);
 
     const translate = React.useCallback((id: string) => formatMessage({ id: id }), [formatMessage]);
 
@@ -144,6 +140,7 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                 className="d-flex justify-content-between"
                 onClick={() => {
                     history.push(`/trading/${item.id}`);
+                    setChangeMarket(true);
                     setShowSidebar(false);
                 }}>
                 <div className="td-pair d-flex align-items-center">
@@ -204,32 +201,6 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
             setList([]);
         }
     }, [listOrder, filterBuy, filterSell, hideOtherPairs]);
-
-    // ganti harga buy
-    const handleChangePriceBuy = (e: string) => {
-        const value = e.replace(/[^0-9\.]/g, '');
-        setPriceBuy(value);
-    };
-
-    // ganti harga sell
-    const handleChangePriceSell = (e: string) => {
-        const value = e.replace(/[^0-9\.]/g, '');
-        setPriceSell(value);
-    };
-
-    // ganti amount buy
-    const handleChangeAmountBuy = (e: string) => {
-        const value = e.replace(/[^0-9\.]/g, '');
-        setAmountBuy(value);
-        setOrderPercentageBuy(0);
-    };
-
-    // ganti amout sell
-    const handleChangeAmounSell = (e: string) => {
-        const value = e.replace(/[^0-9\.]/g, '');
-        setAmountSell(value);
-        setOrderPercentageSell(0);
-    };
 
     const handleFilterSell = () => {
         setFilterSell(!filterSell);
@@ -368,11 +339,11 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                     </div>
                 )}
                 <div className="d-flex justify-content-between align-items-start trade-container w-100 ">
-                    <OrderForm />
+                    <OrderForm priceBuy={priceBuy} priceSell={priceSell} changeMarket={changeMarket} />
 
                     <div className={`w-40 ${isMobileDevice && 'mobile-device order-book-mobile'}`}>
                         <OrderBook
-                            asks={asks}
+                            asks={ask}
                             bids={bids}
                             loading={loading}
                             handleSelectPriceAsks={handleSelectPriceAsks}

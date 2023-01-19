@@ -586,7 +586,7 @@ const SignUpMobileScreen: React.FC = () => {
                         Create Account
                     </button>
                     <p className="create-account text-xs text-center font-semibold grey-text-accent mt-3">
-                        Already have an Account?
+                        Already have an Account?{' '}
                         <Link to={'/signin'} className="contrast-text">
                             Login
                         </Link>

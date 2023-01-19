@@ -7,7 +7,7 @@ import moment from 'moment';
 
 export const FAQScreen: FC = (): ReactElement => {
     useDocumentTitle('FAQ');
-    useBlogsFetch('news');
+    useBlogsFetch('faq');
     const [faq, setFaq] = React.useState<any[]>([]);
 
     const blogs = useSelector(selectBlogs);

@@ -15,19 +15,45 @@ import {
 Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip, CategoryScale);
 
 interface ChartLandingMobileProps {
+    /**
+     * Represented as an array of objects, with each object containing information about data.
+     */
     data: number[];
+
+    /**
+     * Describe a specific data point or data series on the chart
+     */
     label: string[];
+
+    /**
+     * Property refers to the width of the chart area (excluding labels, axes, and other elements) in pixels.
+     */
     width: number;
+
+    /**
+     * Property refers to the vertical dimension of a chart or graph.
+     */
     height: number;
-    bgGradient: string;
-    statusBd: string;
+
+    /**
+     * Setting color of chart area with gradient color
+     */
+    backgroundGradient?: string;
+
+    /**
+     * Setting color of border chart on type line
+     */
+    borderColor: string;
 }
 
+/**
+ * Handle displaying format currency in USD.
+ */
 const formatValue = (value: number) =>
     Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-        maximumSignificantDigits: 3,
+        maximumSignificantDigits: 4,
     }).format(value);
 
 const ChartLandingMobile: React.FC<ChartLandingMobileProps> = ({
@@ -35,10 +61,12 @@ const ChartLandingMobile: React.FC<ChartLandingMobileProps> = ({
     label,
     width,
     height,
-    bgGradient,
-    statusBd,
+    backgroundGradient,
+    borderColor,
 }) => {
-    // Init canvas for chart
+    /**
+     * Initial canvas for make chart timeseries price using kline data
+     */
     const canvas = React.useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -55,12 +83,12 @@ const ChartLandingMobile: React.FC<ChartLandingMobileProps> = ({
                         borderWidth: 2,
                         tension: 0,
                         pointRadius: 0,
-                        borderColor: statusBd,
+                        borderColor: borderColor,
                         pointBackgroundColor: 'rgb(22, 22, 22)',
                         backgroundColor: (context: ScriptableContext<'line'>) => {
                             const ctx = context.chart.ctx;
                             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                            gradient.addColorStop(0, `${bgGradient}`);
+                            gradient.addColorStop(0, `${backgroundGradient}`);
                             gradient.addColorStop(0.19, 'rgba(0,0,0, 0)');
                             return gradient;
                         },

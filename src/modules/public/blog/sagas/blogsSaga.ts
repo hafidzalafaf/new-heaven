@@ -4,8 +4,8 @@ import { blogsData, blogsError, BlogsFetch } from '../actions';
 import axios from 'axios';
 
 async function fetchNews(tag) {
-    const apiKey = '3c91665a1b107878484d3b3316';
-    const sURL = `https://news.digiassetindo.com/ghost/api/v3/content/posts/?key=${apiKey}&limit=25&filter=tag%3A${tag}`;
+    const apiKey = '01c32b65528575f7b27dfb6bf2';
+    const sURL = `https://www.heavenexchange.io/blog/ghost/api/v3/content/posts/?key=${apiKey}&limit=5&tag=${tag}`;
     const result = await axios.get(sURL);
 
     return result.data.posts;

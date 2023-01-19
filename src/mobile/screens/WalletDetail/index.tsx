@@ -51,8 +51,9 @@ interface ExtendedWalletMobile extends Wallet {
 }
 
 const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
-    useWalletsFetch();
-    useMarketsTickersFetch();
+
+    // useWalletsFetch();
+    // useMarketsTickersFetch(); 
     useMarketsFetch();
 
     const { currency = '' } = useParams<{ currency?: string }>();
@@ -235,7 +236,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     }, [totalBalance, currency, currencies, markets, tickers]);
 
     return (
-        <React.Fragment>
+        <>
             <div className="mobile-container wallet-detail dark-bg-main position-relative pg-mobile-wallet-detail">
                 <div className="head-container position-relative mb-24">
                     <Link to={'/wallets'} className="cursor-pointer position-absolute">
@@ -475,7 +476,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     </div>
                 </div>
             </div>
-        </React.Fragment>
+        </>
     );
 };
 

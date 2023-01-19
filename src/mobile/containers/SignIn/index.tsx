@@ -229,9 +229,12 @@ const SignInMobile: React.FC<SignInProps> = ({
                         labelVisible
                     />
                     {passwordError && <div className={'invalid-feedback'}>{passwordError}</div>}
-                    <p className="text-right w-100 contrast-text text-sm" onClick={() => setShowModal(true)}>
-                        Forgot Password?
-                    </p>
+
+                    <div className="">
+                        <p className="ml-auto  w-max-content contrast-text text-sm" onClick={() => setShowModal(true)}>
+                            Forgot Password?
+                        </p>
+                    </div>
                 </div>
 
                 <div className="mt-2 mb-2">{captchaLogin() && renderCaptcha}</div>

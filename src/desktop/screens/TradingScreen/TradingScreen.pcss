@@ -19,6 +19,11 @@
                         display: flex;
                         flex-direction: column-reverse;
                     }
+                    .order-book-title {
+                        span {
+                            width: 33.33%;
+                        }
+                    }
 
                     table {
                         tr {
@@ -58,6 +63,22 @@
                 &.open-orders {
                     grid-row: 3/4;
                     grid-column: 1/13;
+
+                    .cr-table-container {
+                        max-height: 350px;
+                        overflow-y: auto;
+                        position: relative;
+                        table {
+                            position: relative;
+                            th {
+                                position: sticky;
+                                top: 0;
+                            }
+                            td {
+                                padding: 20px 12px 10px 12px;
+                            }
+                        }
+                    }
                 }
                 #tradingview_2d0d5 {
                     height: 400px;
@@ -303,5 +324,8 @@
             width: 18px;
             height: 18px;
         }
+    }
+    .custom-modal-content {
+        min-width: 500px;
     }
 }
