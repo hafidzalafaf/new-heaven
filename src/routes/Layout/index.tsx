@@ -98,7 +98,7 @@ import {
     P2PProfileScreen,
     P2POrderScreen,
     P2PWalletScreen,
-    P2PAddPayment,
+    P2PAddPaymentScreen,
     P2PWalletOrderScreen,
 } from '../../desktop/screens';
 
@@ -683,7 +683,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         loading={userLoading}
                         isLogged={isLoggedIn}
                         path="/p2p/payment-method/:payment"
-                        component={P2PAddPayment}
+                        component={P2PAddPaymentScreen}
                     />
 
                     <PrivateRoute
