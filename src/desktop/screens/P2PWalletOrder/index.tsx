@@ -12,6 +12,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const dispatch = useDispatch();
     const [seconds, setSeconds] = useState(30000);
     const [timerActive, setTimerActive] = useState(false);
+    const [showPayment, setShowPayment] = useState(false);
 
     useDocumentTitle('P2P || Order');
 
@@ -104,52 +105,120 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             <div className="arrow active  arrow-right"> Pending Seller to Release Cryptos</div>
                             <div className="arrow  arrow-right"> Completed Order</div>
                         </div>
-                        <div className="order-form dark-bg-main radius-md pt-5 p-4">
-                            <div className="mb-24">
-                                <p className="mb-2 text-ms font-semibold white-text">Confirm Order Info</p>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div className="mb-1">
-                                        <span className="text-xs grey-text-accent">Amount</span>
-                                        <p className="text-sm white-text font-semibold">Rp 150,000.00</p>
-                                    </div>
-                                    <div className="mb-1">
-                                        <span className="text-xs grey-text-accent">Price</span>
-                                        <p className="text-sm white-text font-semibold">Rp 15,755.00</p>
-                                    </div>
-                                    <div className="mb-1">
-                                        <span className="text-xs grey-text-accent">Quantity</span>
-                                        <p className="text-sm white-text font-semibold">9.52 USDT</p>
+                        <div className="order-form dark-bg-main d-flex radius-md pt-5 p-4">
+                            <div className="line"></div>
+                            <div>
+                                <div className="mb-36 payment-form">
+                                    <p className="mb-2 text-ms font-semibold white-text">Confirm Order Info</p>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="mb-1">
+                                            <span className="text-xs grey-text-accent">Amount</span>
+                                            <p className="text-sm white-text font-semibold">Rp 150,000.00</p>
+                                        </div>
+                                        <div className="mb-1">
+                                            <span className="text-xs grey-text-accent">Price</span>
+                                            <p className="text-sm white-text font-semibold">Rp 15,755.00</p>
+                                        </div>
+                                        <div className="mb-1">
+                                            <span className="text-xs grey-text-accent">Quantity</span>
+                                            <p className="text-sm white-text font-semibold">9.52 USDT</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="mb-24">
-                                <p className="mb-0 text-ms font-semibold white-text">
-                                    Transfer Funds To The Seller's Account Provided Below
-                                </p>
-                                <p className="mb-2 text-xs grey-text-accent font-semibold">
-                                    Heaven only supports real-name verified payment methods
-                                </p>
-                                <div className="payment">
-                                    <div className="header-payment d-flex justify-content-between align-items-center mt-24">
-                                        <p className="mb-0">
-                                            <Wallet />
-                                            <span className="mb-0 ml-3 text-sm white-text font-semibold">
-                                                Payment Methods
-                                            </span>
-                                        </p>
-                                        <ArrowDown />
-                                    </div>
-                                    <div className="content-payment hide ">
-                                        <div className="d-flex align-items-center justify-content-end flex-wrap ">
-                                            <img src="/img/logo-bca.png" className="bank-logo mx-2" alt="bank logo" />
-                                            <img src="/img/logo-dana.png" className="bank-logo mx-2" alt="bank logo" />
-                                            <img src="/img/logo-jago.png" className="bank-logo mx-2" alt="bank logo" />
-                                            <img
-                                                src="/img/logo-shopee.png"
-                                                className="bank-logo mx-2"
-                                                alt="bank logo"
-                                            />
+                                <div className="mb-36 payment-form">
+                                    <p className="mb-0 text-ms font-semibold white-text">
+                                        Transfer Funds To The Seller's Account Provided Below
+                                    </p>
+                                    <p className="mb-1 text-xs grey-text-accent font-semibold">
+                                        Heaven only supports real-name verified payment methods
+                                    </p>
+                                    <div className="payment">
+                                        <div
+                                            className="header-payment d-flex justify-content-between align-items-center mt-3 cursor-pointer"
+                                            onClick={() => setShowPayment(!showPayment)}>
+                                            <p className="mb-0">
+                                                <Wallet />
+                                                <span className="mb-0 ml-3 text-sm white-text font-semibold">
+                                                    Payment Methods
+                                                </span>
+                                            </p>
+                                            <div className={`${showPayment ? 'rotate-180' : ''}`}>
+                                                <ArrowDown />
+                                            </div>
                                         </div>
+                                        <div className={`content-payment ${showPayment ? 'hide' : ''}`}>
+                                            <div className="d-flex align-items-center justify-content-end flex-wrap ">
+                                                <img
+                                                    src="/img/logo-bca.png"
+                                                    className="bank-logo mx-2"
+                                                    alt="bank logo"
+                                                />
+                                                <img
+                                                    src="/img/logo-dana.png"
+                                                    className="bank-logo mx-2"
+                                                    alt="bank logo"
+                                                />
+                                                <img
+                                                    src="/img/logo-jago.png"
+                                                    className="bank-logo mx-2"
+                                                    alt="bank logo"
+                                                />
+                                                <img
+                                                    src="/img/logo-shopee.png"
+                                                    className="bank-logo mx-2"
+                                                    alt="bank logo"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className={`content-payment-expand ${showPayment ? '' : 'hide'}`}>
+                                            <div className="payment-item">
+                                                <div className="payment-item_title">
+                                                    <img src="/img/logo-jago.png" className="bank-logo" alt="" />
+                                                </div>
+                                                <p className="primary-text text-xs mb-1 font-semibold mt-3">
+                                                    AT. Ade Sumargo
+                                                </p>
+                                                <p className="primary-text text-xs font-semibold mb-0"> 00001111</p>
+                                            </div>
+                                            <div className="payment-item">
+                                                <div className="payment-item_title">
+                                                    <img src="/img/logo-shopee.png" className="bank-logo" alt="" />
+                                                </div>
+                                                <p className="primary-text text-xs mb-1 font-semibold mt-3">
+                                                    AT. Ade Sumargo
+                                                </p>
+                                                <p className="primary-text text-xs font-semibold mb-0"> 00001111</p>
+                                            </div>
+                                            <div className="payment-item">
+                                                <div className="payment-item_title">
+                                                    <img src="/img/logo-bca.png" className="bank-logo" alt="" />
+                                                </div>
+                                                <p className="primary-text text-xs mb-1 font-semibold mt-3">
+                                                    AT. Ade Sumargo
+                                                </p>
+                                                <p className="primary-text text-xs font-semibold mb-0"> 00001111</p>
+                                            </div>
+                                            <div className="payment-item">
+                                                <div className="payment-item_title">
+                                                    <img src="/img/logo-dana.png" className="bank-logo" alt="" />
+                                                </div>
+                                                <p className="primary-text text-xs mb-1 font-semibold mt-3">
+                                                    AT. Ade Sumargo
+                                                </p>
+                                                <p className="primary-text text-xs font-semibold mb-0"> 00001111</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className=" payment-form last">
+                                    <p className="mb-3 text-ms font-semibold white-text">
+                                        After transferring funds. Click the button "Confirm"
+                                    </p>
+                                    <div className="d-flex">
+                                        <button className="btn btn-primary mr-5 px-5">Confirm</button>
+                                        <button className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
+                                            Cancel Order
+                                        </button>
                                     </div>
                                 </div>
                             </div>
