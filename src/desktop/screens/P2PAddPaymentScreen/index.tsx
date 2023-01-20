@@ -8,8 +8,14 @@ export const P2PAddPaymentScreen: React.FC = () => {
     return (
         <React.Fragment>
             <div className="pg-screen-p2p-add-payment">
-                <div className="container">
+                <div className="container mb-16">
                     <HeaderP2P />
+                </div>
+
+                <div className="container">
+                    <form className="form-container">
+                        <div className="tips-add-payment d-flex align-items-center p-16 gap-8"></div>
+                    </form>
                 </div>
             </div>
         </React.Fragment>
