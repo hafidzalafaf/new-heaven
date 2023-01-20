@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './CardMarket.pcss';
-import { numberFormat } from '../../../helpers';
 import { NoData } from '../../components';
 
 export interface CardMarketProps {

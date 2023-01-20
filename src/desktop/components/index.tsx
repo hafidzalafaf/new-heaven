@@ -37,3 +37,7 @@ export * from './OrderPercentage';
 export * from './OrderFormComponent';
 export * from './ModalCreateOffer';
 export * from './OfferForm';
+export * from './P2PBlockedUser';
+export * from './P2PFeedback';
+export * from './P2PPaymentMethod';
+export * from './CardP2PUserInfo';

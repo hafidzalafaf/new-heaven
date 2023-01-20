@@ -35,3 +35,5 @@ export * from './HeaderP2P';
 export * from './BannerP2P';
 export * from './TableListP2P';
 export * from './OrderP2PTable';
+export * from './P2PUserInfo';
+export * from './P2PUserTable';

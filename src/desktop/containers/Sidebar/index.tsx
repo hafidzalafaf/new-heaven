@@ -160,7 +160,8 @@ class Side extends React.Component<Props, SidebarState> {
             (r) =>
                 location.pathname.includes(r) &&
                 !location.pathname.includes('deposit') &&
-                !location.pathname.includes('withdraw')
+                !location.pathname.includes('withdraw') &&
+                !location.pathname.includes('/p2p/profile')
         );
 
         return (

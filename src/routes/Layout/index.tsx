@@ -62,7 +62,7 @@ import {
     SecurityMobileScreen,
     DeviceManagementMobileScreen,
     OrderHistoryMobileScreen,
-    AnnouncementMobileScreen
+    AnnouncementMobileScreen,
 } from '../../mobile/screens';
 
 import {
@@ -98,6 +98,7 @@ import {
     P2PProfileScreen,
     P2POrderScreen,
     P2PWalletScreen,
+    P2PAddPayment,
 } from '../../desktop/screens';
 
 interface ReduxProps {
@@ -677,9 +678,16 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         component={ChangeEmail}
                     />
 
-                    <PublicRoute
+                    <PrivateRoute
                         loading={userLoading}
-                        // isLogged={isLoggedIn}
+                        isLogged={isLoggedIn}
+                        path="/p2p/payment-method/:payment"
+                        component={P2PAddPayment}
+                    />
+
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
                         path="/p2p/order"
                         component={P2POrderScreen}
                     />
