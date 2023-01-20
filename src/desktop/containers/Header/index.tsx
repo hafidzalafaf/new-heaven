@@ -365,7 +365,9 @@ class Head extends React.Component<Props, HeaderState> {
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false"
-                                    onClick={() => this.setState({ showLanguage: !showLanguage })}>
+                                    onClick={() =>
+                                        this.setState({ showLanguage: !showLanguage, showProfileDropdown: false })
+                                    }>
                                     EN/USD
                                 </a>
                                 {showLanguage ? (
@@ -413,7 +415,12 @@ class Head extends React.Component<Props, HeaderState> {
                                 <li className="nav-item dropdown avatar px-3">
                                     <div
                                         className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm"
-                                        onClick={() => this.setState({ showProfileDropdown: !showProfileDropdown })}>
+                                        onClick={() =>
+                                            this.setState({
+                                                showProfileDropdown: !showProfileDropdown,
+                                                showLanguage: false,
+                                            })
+                                        }>
                                         <img src="/img/avatar.png" className="avatar-image" alt="" />
                                     </div>
                                     {showProfileDropdown ? (

@@ -47,7 +47,7 @@ const HeaderComponent: React.FC = () => {
         // { icon: <SettingProfile />, name: 'Setting', path: '/setting', showNotLoggedin: false },
         { icon: <Referral />, name: 'Referral', path: '/referral', showNotLoggedin: false },
         { icon: <ApiManagement />, name: 'Api Management', path: '/api-key', showNotLoggedin: false },
-        { icon: <Announcement />, name: 'Announcement', path: '/announcement', showNotLoggedin: true },
+        { icon: <Announcement />, name: 'Announcement', path: '/announcements', showNotLoggedin: true },
         { icon: <Faq />, name: 'Faq', path: '/faq', showNotLoggedin: true },
     ];
     return (

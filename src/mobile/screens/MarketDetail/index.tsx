@@ -30,11 +30,10 @@ const MarketDetailMobileScreen: React.FC = () => {
     useMarketsFetch();
     useMarketsTickersFetch();
 
+    const { currency } = useParams<{ currency?: string }>();
     const currencies = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
     const marketTickers = useSelector(selectMarketTickers);
-    const marketInfo = useSelector(selectCurrentMarket);
-    const { currency } = useParams<{ currency?: string }>();
     const dispatch = useDispatch();
 
     const marketList = markets
@@ -66,7 +65,7 @@ const MarketDetailMobileScreen: React.FC = () => {
     }, [current]);
 
     return (
-        <React.Fragment>
+        <>
             <div className="mobile-container no-header market-detail dark-bg-main">
                 <div className="mb-3">
                     <Link to={'/markets'} className="cursor-pointer position-absolute">
@@ -182,7 +181,7 @@ const MarketDetailMobileScreen: React.FC = () => {
                     </div>
                 </>
             </div>
-        </React.Fragment>
+        </>
     );
 };
 

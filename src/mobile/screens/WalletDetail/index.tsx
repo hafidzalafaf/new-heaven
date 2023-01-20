@@ -19,13 +19,7 @@ import {
     selectUserInfo,
     RootState,
 } from '../../../modules';
-import {
-    useHistoryFetch,
-    useDocumentTitle,
-    useWalletsFetch,
-    useMarketsFetch,
-    useMarketsTickersFetch,
-} from '../../../hooks';
+import { useHistoryFetch, useDocumentTitle, useMarketsFetch } from '../../../hooks';
 import Select from 'react-select';
 import moment from 'moment';
 import { PaginationMobile } from 'src/mobile/components';
@@ -38,7 +32,6 @@ import { WithdrawlIcon, DepositIcon, TransferIcon, FilterIcon, DocIcon } from '.
 import { Table } from '../../../components';
 import { CircleCloseModalNetworkIcon } from '../../../assets/images/CircleCloseIcon';
 import { InfoModalNetworkIcon } from '../../../assets/images/InfoIcon';
-import { estimateValue } from 'src/helpers/estimateValue';
 
 interface Props {
     isP2PEnabled?: boolean;
@@ -51,9 +44,8 @@ interface ExtendedWalletMobile extends Wallet {
 }
 
 const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
-
     // useWalletsFetch();
-    // useMarketsTickersFetch(); 
+    // useMarketsTickersFetch();
     useMarketsFetch();
 
     const { currency = '' } = useParams<{ currency?: string }>();

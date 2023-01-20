@@ -3,13 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { selectMarkets, selectMarketTickers, selectCurrencies, selectBlogs } from '../../../modules';
-import {
-    useMarketsFetch,
-    useMarketsTickersFetch,
-    useWalletsFetch,
-    useDocumentTitle,
-    useBlogsFetch,
-} from '../../../hooks';
+import { useMarketsFetch, useDocumentTitle, useBlogsFetch } from '../../../hooks';
 import { Decimal } from '../../../components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -24,8 +18,6 @@ import { ChartLandingMobile } from 'src/mobile/components';
 import { ChartEmpty } from 'src/mobile/assets/ChartEmpty';
 import moment from 'moment';
 
-const noHeaderRoutes = ['/'];
-
 const defaultTicker = {
     amount: '0.0',
     last: '0.0',
@@ -38,7 +30,7 @@ const defaultTicker = {
 
 const HomeMobileScreen: React.FC = () => {
     useDocumentTitle('Home');
-    useBlogsFetch('news');
+    useBlogsFetch('News');
     useMarketsFetch();
 
     const [loading, setLoading] = React.useState(true);
@@ -54,8 +46,6 @@ const HomeMobileScreen: React.FC = () => {
 
     const [type, setType] = React.useState('all');
 
-    // const shouldRenderHeader = !noHeaderRoutes.some((r) => location.pathname.includes(r));
-
     React.useEffect(() => {
         setTimeout(() => setLoading(false), 1000);
     }, []);
@@ -66,10 +56,6 @@ const HomeMobileScreen: React.FC = () => {
             setNews(blogs);
         }
     }, [blogs]);
-
-    // if (shouldRenderHeader) {
-    //     return <React.Fragment />;
-    // }
 
     const marketList = markets
         .map((market) => ({
@@ -89,11 +75,21 @@ const HomeMobileScreen: React.FC = () => {
             ),
         }));
 
+    /**
+     * Filter tranding coin market list by volume
+     */
     const dataTranding = [...marketList].sort((a, b) => Number(b.volume) - Number(a.volume));
+
+    /**
+     * Filter for coin or token that has experienced a significant increase in value.
+     */
     const dataGainers = [...marketList]
         .filter((data) => data.price_change_percent.includes('+'))
         .sort((a, b) => Number(b.price_change_percent.slice(1, -1)) - Number(a.price_change_percent.slice(1, -1)));
 
+    /**
+     * Filter for coin or token that has decreased in value
+     */
     const dataLosers = [...marketList]
         .filter((data) => data.price_change_percent.includes('-'))
         .sort((a, b) => Number(b.price_change_percent.slice(1, -1)) - Number(a.price_change_percent.slice(1, -1)));
@@ -106,6 +102,10 @@ const HomeMobileScreen: React.FC = () => {
         setType(type);
     };
 
+    /**
+     * React slick customize configuration
+     * @see https://react-slick.neostack.com/docs/api
+     */
     const settings = {
         dots: true,
         infinite: true,
@@ -154,7 +154,7 @@ const HomeMobileScreen: React.FC = () => {
                     {item && item.currency && item.currency.id && item.currency.id.toUpperCase()}
                 </p>
             </Link>,
-            <div className="">
+            <>
                 <ChartLandingMobile
                     borderColor={
                         parseFloat(item && item.price_change_percent) <= 0 ? 'rgba(255,68,69, 1)' : 'rgba(2,195,189, 1)'
@@ -164,10 +164,10 @@ const HomeMobileScreen: React.FC = () => {
                     }
                     label={item.kline.map((e) => e[0])}
                     data={item.kline.map((e) => e[2])}
-                    width={120}
-                    height={60}
+                    width={100}
+                    height={70}
                 />
-            </div>,
+            </>,
             <p
                 className={`badge white-text font-bold ${
                     item.price_change_percent.includes('-') ? 'badge-danger' : 'badge-plus'
@@ -178,8 +178,10 @@ const HomeMobileScreen: React.FC = () => {
     };
 
     return (
-        <React.Fragment>
-            {loading === false ? (
+        <>
+            {loading ? (
+                <SplashScreenMobile />
+            ) : (
                 <div className="mobile-container home-screen dark-bg-main">
                     <div>
                         <div id="heros" className="content-container w-100 mb-3">
@@ -187,23 +189,21 @@ const HomeMobileScreen: React.FC = () => {
                                 {news &&
                                     news.map((item, key) => (
                                         <div className="heroid" key={key}>
-                                            <div
-                                                className="hero one w-100 d-flex align-items-center justify-content-start position-relative"
-                                                style={{
-                                                    backgroundImage: `url(${item.background})`,
-                                                }}>
-                                                <a
-                                                    href={item.url}
-                                                    target="__blank"
-                                                    rel="noopener noreferrer"
-                                                    className="slider-ite">
-                                                    <img
-                                                        src={item.feature_image}
-                                                        alt={item.title}
-                                                        className="w-100 h-100 rounded-lg"
-                                                    />
-                                                </a>
-                                            </div>
+                                            <a
+                                                href={item.url}
+                                                target="__blank"
+                                                rel="noopener noreferrer"
+                                                className="slider-ite">
+                                                <img
+                                                    src={
+                                                        item?.feature_image === null
+                                                            ? '/img/announcement-big.png'
+                                                            : item.feature_image
+                                                    }
+                                                    alt={item.title}
+                                                    className="banner-image rounded-lg"
+                                                />
+                                            </a>
                                         </div>
                                     ))}
                             </Slider>
@@ -223,10 +223,13 @@ const HomeMobileScreen: React.FC = () => {
                                             className="slider-ite"
                                             key={key}>
                                             <div className="card-item position-relative">
-                                                {/* <BgCardSmall className={'bg-card'} /> */}
                                                 <div className="small-thumbnail-cover mb-8">
                                                     <img
-                                                        src={item.feature_image}
+                                                        src={
+                                                            item?.feature_image === null
+                                                                ? '/img/announcement-big.png'
+                                                                : item.feature_image
+                                                        }
                                                         alt="card"
                                                         className="small-thumbnail"
                                                     />
@@ -239,7 +242,6 @@ const HomeMobileScreen: React.FC = () => {
                                                         <h5 className="text-xxs white-text font-bold mb-0">
                                                             {item.title}
                                                         </h5>
-                                                        {/* <p className="text-xxs grey-text mb-0">{item.desc}</p> */}
                                                     </div>
                                                     <ArrowRight className={''} />
                                                 </div>
@@ -267,7 +269,7 @@ const HomeMobileScreen: React.FC = () => {
                                 {!dataTranding[0] || dataTranding === null ? (
                                     <div className="empty-chart-data">
                                         <ChartEmpty className="icon-empty text-secondary mb-2" />
-                                        <h6 className="text-secondary">No data show</h6>
+                                        <h6 className="text-secondary">There is no market data</h6>
                                     </div>
                                 ) : (
                                     <Table data={renderDataTable(dataTranding)} />
@@ -277,7 +279,7 @@ const HomeMobileScreen: React.FC = () => {
                                 {!dataGainers[0] || dataGainers === null ? (
                                     <div className="empty-chart-data">
                                         <ChartEmpty className="icon-empty text-secondary mb-2" />
-                                        <h6 className="text-secondary">No data show</h6>
+                                        <h6 className="text-secondary">There is no market data</h6>
                                     </div>
                                 ) : (
                                     <Table data={renderDataTable(dataGainers)} />
@@ -289,7 +291,7 @@ const HomeMobileScreen: React.FC = () => {
                                     {!dataLosers[0] || dataLosers === null ? (
                                         <div className="empty-chart-data">
                                             <ChartEmpty className="icon-empty text-secondary mb-2" />
-                                            <h6 className="text-secondary">No data show</h6>
+                                            <h6 className="text-secondary">There is no market data</h6>
                                         </div>
                                     ) : (
                                         <Table data={renderDataTable(dataLosers)} />
@@ -299,10 +301,8 @@ const HomeMobileScreen: React.FC = () => {
                         </Tabs>
                     </div>
                 </div>
-            ) : (
-                <SplashScreenMobile />
             )}
-        </React.Fragment>
+        </>
     );
 };
 

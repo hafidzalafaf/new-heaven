@@ -61,7 +61,8 @@ import {
     KycMobileScreen,
     SecurityMobileScreen,
     DeviceManagementMobileScreen,
-    OrderHistoryMobileScreen
+    OrderHistoryMobileScreen,
+    AnnouncementMobileScreen
 } from '../../mobile/screens';
 
 import {
@@ -496,6 +497,13 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             isLogged={isLoggedIn}
                             path="/history-transaction"
                             component={HistoryTransactionMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/announcements"
+                            component={AnnouncementMobileScreen}
                         />
 
                         {/* <PublicRoute loading={userLoading} path="/trading" component={TradingMobileScreen} />    */}

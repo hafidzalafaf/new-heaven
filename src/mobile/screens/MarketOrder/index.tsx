@@ -57,7 +57,6 @@ interface MarketOrderMobileScreenProps {
 const MarketOrderMobileScreen: React.FC = () => {
     const dispatch = useDispatch();
     const intl = useIntl();
-    const [key, setKey] = React.useState('open-order');
     const [showDetail, setShowDetail] = React.useState(false);
 
     const [tab, setTab] = React.useState('open');
@@ -334,10 +333,11 @@ const MarketOrderMobileScreen: React.FC = () => {
                         setStartDate('');
                         setEndDate('');
                         setAsset('');
+                        setPageIndex(0);
                     }}
                     className="">
                     <Tab eventKey="open" title="Open Order">
-                        <div className="table-mobile-wrapper">
+                        <div className="table-mobile-wrapper mb-3">
                             <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
                         </div>
                         {dataListWithIcon[0] && (
@@ -353,7 +353,7 @@ const MarketOrderMobileScreen: React.FC = () => {
                         {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
                     </Tab>
                     <Tab eventKey="close" title="Close Order">
-                        <div className="table-mobile-wrapper">
+                        <div className="table-mobile-wrapper mb-3">
                             <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
                         </div>
                         {dataListWithIcon[0] && (

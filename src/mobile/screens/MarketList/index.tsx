@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrencies, selectMarkets, selectMarketTickers } from 'src/modules';
 import { useMarketsFetch, useMarketsTickersFetch } from 'src/hooks';
-import { EditIcon, SearchIcon } from '../../assets/Market';
+import { SearchIcon } from '../../assets/Market';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { Table, Decimal } from '../../../components';

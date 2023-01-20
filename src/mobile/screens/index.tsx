@@ -30,3 +30,4 @@ export * from './KycScreen';
 export * from './Security';
 export * from './DeviceManagementMobileScreen';
 export * from './OrderHistoryMobileScreen';
+export * from './AnnouncementMobileScreen';

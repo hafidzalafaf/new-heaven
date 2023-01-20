@@ -97,7 +97,7 @@ export const ProfileScreen: FC = (): ReactElement => {
     };
 
     const handleSendCodePhone = () => {
-        if (user.phones[0] && !isChangeNumber) {
+        if (phone[0]?.validated_at === null && !isChangeNumber) {
             dispatch(resendCode({ phone_number: `+${phone[0].number}` }));
             setTimerActive(true);
             setResendCodeActive(true);
@@ -132,7 +132,7 @@ export const ProfileScreen: FC = (): ReactElement => {
     };
 
     const disabledButton = () => {
-        if (phone[0]?.validated_at === null && !isChangeNumber) {
+        if (phone[0]?.validated_at === null && !isChangeNumber && !timerActive) {
             return false;
         }
 
@@ -167,12 +167,12 @@ export const ProfileScreen: FC = (): ReactElement => {
                 )}
 
                 <div className="form">
-                    {(isChangeNumber || !user.phones[0] || user.phones[0]?.validated_at !== null) && (
+                    {(isChangeNumber || !phone[0] || phone[0]?.validated_at !== null) && (
                         <div className="form-group mb-24">
                             <CustomInput
-                                defaultLabel={`${!user.phones[0] ? '' : 'New'} Phone Number`}
+                                defaultLabel={`${!phone[0] ? '' : 'New'} Phone Number`}
                                 inputValue={newPhoneValue}
-                                label={`${!user.phones[0] ? '' : 'New'} Phone Number`}
+                                label={`${!phone[0] ? '' : 'New'} Phone Number`}
                                 placeholder="+6281902912921"
                                 type="text"
                                 labelVisible
@@ -407,21 +407,17 @@ export const ProfileScreen: FC = (): ReactElement => {
                                                     <span
                                                         className={`d-block text-left text-xs  font-normal ${
                                                             !user.phones[0] ||
-                                                            (user.phones &&
-                                                                user.phones[0] &&
-                                                                user.phones[0].validated_at === null)
+                                                            (phone && phone[0] && phone[0].validated_at === null)
                                                                 ? 'danger-text'
                                                                 : 'contrast-text'
                                                         }`}>
                                                         {!user.phones[0] ||
-                                                        (user.phones &&
-                                                            user.phones[0] &&
-                                                            user.phones[0].validated_at === null)
+                                                        (phone && phone[0] && phone[0].validated_at === null)
                                                             ? 'Unverified'
                                                             : 'Verified'}
                                                     </span>
                                                 </div>
-                                                {user.phones && user.phones[0] && user.phones[0].validated_at !== null && (
+                                                {phone && phone[0] && phone[0].validated_at !== null && (
                                                     <div className="check">
                                                         <CheckIcon />
                                                     </div>

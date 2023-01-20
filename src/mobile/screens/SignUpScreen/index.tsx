@@ -11,10 +11,7 @@ import { DropdownSmall } from '../../assets/Dropdown';
 import { ModalFullScreenMobile } from '../../components';
 import { Captcha } from '../../../components';
 import {
-    GeetestCaptchaResponse,
-    LanguageState,
     resetCaptchaState,
-    RootState,
     selectCaptchaResponse,
     selectCurrentLanguage,
     selectGeetestCaptchaSuccess,
