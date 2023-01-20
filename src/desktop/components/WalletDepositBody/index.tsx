@@ -273,7 +273,7 @@ const WalletDepositBody = () => {
                                             }
                                             className="btn-primary"
                                             onClick={handleShow}>
-                                            Show Barcode
+                                            Show QRCode
                                         </button>
                                     </div>
                                 </React.Fragment>
