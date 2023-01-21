@@ -207,7 +207,7 @@ export const TradingFutureOrderForm: FC = (): ReactElement => {
                             labelVisible={false}
                         />
                         <p className="position-absolute text-xs grey-text-accent font-bold m-0 custom-input-order-form__price">
-                            Ammount
+                            Amount
                         </p>
                         <p className="position-absolute text-xs grey-text-accent font-bold m-0 custom-input-order-form__coin">
                             BTC
@@ -365,7 +365,7 @@ export const TradingFutureOrderForm: FC = (): ReactElement => {
                             type="button"
                             className="btn btn-danger px-4"
                             data-toggle="modal"
-                            disabled={!isLoggedin}  
+                            disabled={!isLoggedin}
                             data-target="#sell-order">
                             Sell Short
                         </button>

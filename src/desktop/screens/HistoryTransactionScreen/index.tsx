@@ -69,11 +69,11 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
 
     const getTableHeaders = (data) => {
         if (type == 'withdraws') {
-            return ['Date', 'Type', 'Asset', 'Ammount', `TXID`, `Address`, 'Status'];
+            return ['Date', 'Type', 'Asset', 'Amount', `TXID`, `Address`, 'Status'];
         } else if (type == 'deposits') {
-            return ['Date', 'Type', 'Asset', 'Ammount', `TXID`, 'TID', 'Status'];
+            return ['Date', 'Type', 'Asset', 'Amount', `TXID`, 'TID', 'Status'];
         } else {
-            return ['Date', 'Type', 'Asset', 'Ammount', `Receiver ID`, 'Sender ID', 'Status'];
+            return ['Date', 'Type', 'Asset', 'Amount', `Receiver ID`, 'Sender ID', 'Status'];
         }
     };
 

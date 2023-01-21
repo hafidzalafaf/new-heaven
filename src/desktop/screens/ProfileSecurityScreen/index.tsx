@@ -129,7 +129,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                 this.setState({ seconds: this.state.seconds - 1000 });
 
                 if (this.state.seconds === 0) {
-                    this.setState({ timerActive: false, seconds: 3000 });
+                    this.setState({ timerActive: false, seconds: 30000 });
                 }
             }, 1000);
             this.setState({ timer: time });

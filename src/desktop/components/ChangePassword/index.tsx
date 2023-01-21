@@ -17,6 +17,7 @@ import { PasswordStrengthMeter } from '../index';
 import PinInput from 'react-pin-input';
 import { useLocation } from 'react-router-dom';
 import { Captcha } from 'src/components';
+import moment from 'moment';
 
 export const ChangePasswordComponent = (props) => {
     const [oldPassword, setOldPassword] = React.useState('');
@@ -31,6 +32,9 @@ export const ChangePasswordComponent = (props) => {
     const [code, setCode] = React.useState('');
     const [showModalConfirmation, setShowModalConfirmation] = React.useState(false);
     const [showModalResendCode, setShowModalResendCode] = React.useState(false);
+    const [seconds, setSeconds] = React.useState(30000);
+    const [timerActive, setTimerActive] = React.useState(false);
+
     const location: { state: { email: string } } = useLocation();
     const dispatch = useDispatch();
     const intl = useIntl();
@@ -63,6 +67,24 @@ export const ChangePasswordComponent = (props) => {
         setCode(e);
         props.handleChangePin(e);
     };
+
+    React.useEffect(() => {
+        let timer = null;
+        if (timerActive) {
+            timer = setInterval(() => {
+                setSeconds((seconds) => seconds - 1000);
+
+                if (seconds === 0) {
+                    setTimerActive(false);
+                    setSeconds(30000);
+                }
+            }, 1000);
+        }
+
+        return () => {
+            clearInterval(timer);
+        };
+    });
 
     const handleChangeNewPassword = (value: string) => {
         if (passwordErrorFirstSolution(value) && !passwordErrorFirstSolved) {
@@ -115,6 +137,7 @@ export const ChangePasswordComponent = (props) => {
             case 'recaptcha':
             case 'geetest':
                 dispatch(forgotPassword({ email, captcha_response }));
+                setTimerActive(true);
                 break;
             default:
                 dispatch(forgotPassword({ email }));
@@ -220,8 +243,11 @@ export const ChangePasswordComponent = (props) => {
                 />
                 <p
                     onClick={() => setShowModalResendCode(!showModalResendCode)}
-                    className="text-right text-sm grey-text cursor-pointer">
-                    Send Code
+                    className="text-right text-sm grey-text cursor-pointer m-0 p-0">
+                    Resend Code
+                </p>
+                <p className={`text-right text-xs cursor-pointer ${timerActive ? 'white-text' : 'grey-text'}`}>
+                    {moment(seconds).format('mm:ss')}
                 </p>
                 <div>
                     <CustomInput

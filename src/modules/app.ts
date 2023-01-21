@@ -6,6 +6,7 @@ import { blocklistAccessReducer } from './public/blocklistAccess';
 import { blogsReducer } from './public/blog';
 import { configsReducer } from './public/configs';
 import { currenciesReducer } from './public/currencies';
+import { tradingFeeReducer } from './public/tradingFee';
 import { errorHandlerReducer } from './public/errorHandler';
 import { changeColorThemeReducer } from './public/globalSettings';
 import { gridLayoutReducer } from './public/gridLayout';
@@ -56,6 +57,7 @@ export const publicReducer = combineReducers({
     colorTheme: changeColorThemeReducer,
     configs: configsReducer,
     currencies: currenciesReducer,
+    tradingFee: tradingFeeReducer,
     errorHandler: errorHandlerReducer,
     rgl: gridLayoutReducer,
     i18n: changeLanguageReducer,

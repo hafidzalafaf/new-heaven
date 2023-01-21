@@ -8,6 +8,7 @@ import { BlocklistAccessState, rootBlocklistAccessSaga } from './public/blocklis
 import { BlogsState, rootblogsSaga } from './public/blog';
 import { ConfigsState, rootConfigsSaga } from './public/configs';
 import { CurrenciesState } from './public/currencies';
+import { TradingFeeState } from './public/TradingFee';
 import { ErrorHandlerState, rootErrorHandlerSaga } from './public/errorHandler';
 import { ColorThemeState } from './public/globalSettings';
 import { GridLayoutState } from './public/gridLayout';
@@ -64,6 +65,7 @@ export * from './public/blocklistAccess';
 export * from './public/blog';
 export * from './public/configs';
 export * from './public/currencies';
+export * from './public/tradingFee';
 export * from './public/errorHandler';
 export * from './public/globalSettings';
 export * from './public/i18n';
@@ -111,6 +113,7 @@ export interface RootState {
         colorTheme: ColorThemeState;
         configs: ConfigsState;
         currencies: CurrenciesState;
+        tradingFee: TradingFeeState;
         depth: DepthState;
         errorHandler: ErrorHandlerState;
         i18n: LanguageState;
