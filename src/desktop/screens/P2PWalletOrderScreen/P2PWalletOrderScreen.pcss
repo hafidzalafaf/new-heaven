@@ -146,6 +146,78 @@
         border-bottom: 28px solid transparent;
         border-left: 28px solid var(--body-background-color);
     }
-
     /* Arrow Right */
+
+    .chat-wrap {
+        width: 100%;
+        .chat {
+            height: 500px;
+            padding-bottom: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column-reverse;
+
+            .my-chat {
+                display: flex;
+                flex-direction: column;
+                justify-content: end;
+                align-items: end;
+                margin-bottom: 12px;
+            }
+
+            .sender-chat {
+                display: flex;
+                flex-direction: column;
+                justify-content: start;
+                align-items: start;
+                margin-bottom: 12px;
+            }
+
+            .sender-name {
+                margin-bottom: 0;
+            }
+
+            .buble-chat {
+                padding: 8px;
+                border-radius: 4px;
+                background: var(--border-color);
+                max-width: 250px;
+                min-width: 100px;
+                position: relative;
+                padding-bottom: 24px;
+                .time {
+                    position: absolute;
+                    right: 4px;
+                    bottom: 4px;
+                }
+
+                img {
+                    max-width: 100%;
+                    max-height: 200px;
+                }
+            }
+
+            .chat-notification {
+                background: var(--light-background-color);
+                padding: 8px;
+                border-radius: 8px;
+            }
+        }
+        .chat-writing {
+            border-top: 1px solid var(--border-color);
+            padding-top: 8px;
+            display: flex;
+            justify-content: between;
+
+            .form-transparent {
+                background: transparent;
+                border: 0;
+
+                &:focus-visible {
+                    border: 0;
+                    outline: 0;
+                }
+            }
+        }
+    }
 }
