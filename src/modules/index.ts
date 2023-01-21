@@ -42,6 +42,7 @@ import { rootUserActivitySaga, UserActivityState } from './user/userActivity';
 import { rootWalletsSaga, WalletsState } from './user/wallets';
 import { QuickExchangeState, rootQuickExchangeSaga } from './user/quickExchange';
 import { rootWithdrawLimitSaga, WithdrawLimitState } from './user/withdrawLimit';
+import { rootWithdrawSumSaga, WithdrawSumState } from './user/withdrawSum';
 import { MarketsAdminState, rootMarketsAdminSaga } from './admin/markets';
 import { PlatformCreateState, rootPlatformCreateSaga } from './admin/platform';
 import { P2PState, rootP2PSaga } from './public/p2p';
@@ -91,6 +92,7 @@ export * from './user/userActivity';
 export * from './user/wallets';
 export * from './user/feeGroup';
 export * from './user/withdrawLimit';
+export * from './user/withdrawSum';
 export * from './user/quickExchange';
 export * from './user/abilities';
 export * from './user/paymentMethod';
@@ -146,6 +148,7 @@ export interface RootState {
         userActivity: UserActivityState;
         wallets: WalletsState;
         withdrawLimit: WithdrawLimitState;
+        withdrawSum: WithdrawSumState;
         feeGroup: FeeGroupState;
         quickExchange: QuickExchangeState;
         paymentMethod: PaymentMethodState;
@@ -208,6 +211,7 @@ export function* rootSaga() {
         call(rootUserActivitySaga),
         call(rootWalletsSaga),
         call(rootWithdrawLimitSaga),
+        call(rootWithdrawSumSaga),
         call(rootQuickExchangeSaga),
         call(rootPaymentMethodSaga),
         call(rootP2POffersSaga),

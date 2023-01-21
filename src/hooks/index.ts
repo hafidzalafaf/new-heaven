@@ -19,5 +19,6 @@ export * from './useOpenOrdersFetch';
 export * from './redux';
 export * from './useUserPaymentMethodsFetch';
 export * from './useWithdrawalLimits';
+export * from './useWithdrawSum';
 export * from './useFeeGroup';
 export * from './useUserWithdrawalLimits';

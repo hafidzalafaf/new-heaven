@@ -501,12 +501,12 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={HistoryTransactionMobileScreen}
                         />
 
-                        <PrivateRoute
+                        {/* <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
                             path="/announcements"
                             component={AnnouncementMobileScreen}
-                        />
+                        /> */}
 
                         {/* <PublicRoute loading={userLoading} path="/trading" component={TradingMobileScreen} />    */}
 

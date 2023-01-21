@@ -141,9 +141,9 @@ export const ModalInternalTransfer: React.FunctionComponent<ModalTransferShowPro
                                 <div>
                                     <CustomInput
                                         type="text"
-                                        label={'Input Amount to send'}
-                                        placeholder={'Input Amount'}
-                                        defaultLabel={'Input Amount to send'}
+                                        label={'Input Ammount to send'}
+                                        placeholder={'Input Ammount'}
+                                        defaultLabel={'Input Ammount to send'}
                                         handleChangeInput={handleChangeAmount}
                                         inputValue={amount}
                                         classNameLabel="text-ms white-text mb-8"

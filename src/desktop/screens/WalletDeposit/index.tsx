@@ -18,11 +18,11 @@ const WalletDeposit: React.FC = () => {
         <React.Fragment>
             <div className="pg-wallet-deposit-screen dark-bg-main">
                 <div className="header-deposit dark-bg-main d-flex justify-content-between py-4 px-24 mb-24">
-                    <div className="mr-2">
+                    <div className="d-flex mr-2">
                         <Link to="/wallets" className="white-text text-lg">
                             <ArrowLeftIcon className={''} />
-                            Deposit Crypto
                         </Link>
+                        <p className=" white-text text-lg mb-0 ml-4">Deposit Crypto</p>
                     </div>
 
                     <div className="ml-2">

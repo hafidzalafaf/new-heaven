@@ -36,6 +36,7 @@ import { profileReducer } from './user/profile';
 import { userActivityReducer } from './user/userActivity';
 import { walletsReducer } from './user/wallets';
 import { withdrawLimitReducer } from './user/withdrawLimit';
+import { withdrawSumReducer } from './user/withdrawSum';
 import { marketsAdminReducer } from './admin/markets';
 import { platformCreateReducer } from './admin/platform';
 import { quickExchangeReducer } from './user/quickExchange';
@@ -92,6 +93,7 @@ export const userReducer = combineReducers({
     wallets: walletsReducer,
     feeGroup: feeGroupReducer,
     withdrawLimit: withdrawLimitReducer,
+    withdrawSum: withdrawSumReducer,
     internalTransfers: internalTransfersReducer,
     quickExchange: quickExchangeReducer,
     abilities: abilitiesReducer,
