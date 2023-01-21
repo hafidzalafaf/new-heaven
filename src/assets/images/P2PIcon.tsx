@@ -328,3 +328,53 @@ export const ArrowDown = () => {
         </svg>
     );
 };
+
+export const InfoWarningIcon = () => {
+    return (
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                opacity="0.3"
+                d="M12 4C7.59 4 4 7.59 4 12C4 16.41 7.59 20 12 20C16.41 20 20 16.41 20 12C20 7.59 16.41 4 12 4ZM13 17H11V11H13V17ZM13 9H11V7H13V9Z"
+                fill="#FF9533"
+            />
+            <path
+                d="M11 7H13V9H11V7ZM11 11H13V17H11V11ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z"
+                fill="#FF9533"
+            />
+        </svg>
+    );
+};
+
+export const QRIcon = () => {
+    return (
+        <svg width={20} height={20} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_963_54799)">
+                <path
+                    d="M2.5 9.16667H9.16667V2.5H2.5V9.16667ZM4.16667 4.16667H7.5V7.5H4.16667V4.16667Z"
+                    fill="#6F6F6F"
+                />
+                <path
+                    d="M2.5 17.4997H9.16667V10.833H2.5V17.4997ZM4.16667 12.4997H7.5V15.833H4.16667V12.4997Z"
+                    fill="#6F6F6F"
+                />
+                <path
+                    d="M10.833 2.5V9.16667H17.4997V2.5H10.833ZM15.833 7.5H12.4997V4.16667H15.833V7.5Z"
+                    fill="#6F6F6F"
+                />
+                <path d="M17.4997 15.833H15.833V17.4997H17.4997V15.833Z" fill="#6F6F6F" />
+                <path d="M12.4997 10.833H10.833V12.4997H12.4997V10.833Z" fill="#6F6F6F" />
+                <path d="M14.1667 12.5H12.5V14.1667H14.1667V12.5Z" fill="#6F6F6F" />
+                <path d="M12.4997 14.167H10.833V15.8337H12.4997V14.167Z" fill="#6F6F6F" />
+                <path d="M14.1667 15.833H12.5V17.4997H14.1667V15.833Z" fill="#6F6F6F" />
+                <path d="M15.8337 14.167H14.167V15.8337H15.8337V14.167Z" fill="#6F6F6F" />
+                <path d="M15.8337 10.833H14.167V12.4997H15.8337V10.833Z" fill="#6F6F6F" />
+                <path d="M17.4997 12.5H15.833V14.1667H17.4997V12.5Z" fill="#6F6F6F" />
+            </g>
+            <defs>
+                <clipPath id="clip0_963_54799">
+                    <rect width={20} height={20} fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
