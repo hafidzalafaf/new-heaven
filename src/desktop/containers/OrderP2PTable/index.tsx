@@ -6,6 +6,7 @@ import moment from 'moment';
 import { CustomStylesSelect } from '../../../desktop/components';
 import { Table } from '../../../components';
 import { HideIcon } from '../../../assets/images/P2PIcon';
+import { Link } from 'react-router-dom';
 
 export const OrderP2PTable = () => {
     const [endDate, setEndDate] = React.useState('');
@@ -123,10 +124,10 @@ export const OrderP2PTable = () => {
             </a>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{item.status}</p>,
             <div className="d-flex align-items-center">
-                <div className="d-flex align-items-center cursor-pointer mr-8">
+                <Link to={`/p2p/wallet/order`} className="d-flex align-items-center cursor-pointer mr-8">
                     <p className="m-0 p-0 mr-6 text-xs grey-text">Order</p>
                     <HideIcon />
-                </div>
+                </Link>
                 <p className="m-0 p-0 mr-6 text-xs grey-text cursor-pointer">Cancel</p>
             </div>,
         ]);
