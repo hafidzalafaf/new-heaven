@@ -1,10 +1,11 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
 import { useDocumentTitle } from '../../../hooks';
 import { alertPush } from 'src/modules';
-import { HeaderP2P, BannerP2P, OrderP2PTable } from 'src/desktop/containers';
+import { HeaderP2P, BannerP2P, P2PFAQ } from 'src/desktop/containers';
 import { CopyableTextField } from '../../../components';
 import { copy } from '../../../helpers';
 import { useDispatch } from 'react-redux';
+import { Modal } from 'src/desktop/components';
 import moment from 'moment';
 import {
     Wallet,
@@ -13,14 +14,23 @@ import {
     AttachmentIcon,
     SendIcon,
     CheckFillIcon,
+    UploadIcon,
 } from '../../../assets/images/P2PIcon';
+import { Link, useLocation } from 'react-router-dom';
 
 export const P2PWalletOrderScreen: React.FC = () => {
     const dispatch = useDispatch();
+    const location: { state: { type: string } } = useLocation();
+    const type = location.state?.type;
+
     const [seconds, setSeconds] = useState(30000);
     const [timerActive, setTimerActive] = useState(false);
     const [showPayment, setShowPayment] = useState(false);
     const [showChat, setShowChat] = useState(true);
+    const [step, setStep] = useState(1);
+    const [showModalReport, setShowModalReport] = useState(false);
+    const [inputFile, setInputFile] = useState(null);
+    const [fileName, setFileName] = useState('');
 
     useDocumentTitle('P2P || Order');
 
@@ -46,6 +56,115 @@ export const P2PWalletOrderScreen: React.FC = () => {
         };
     });
 
+    const renderModalContent = () => {
+        return (
+            <div>
+                <div className="d-flex align-items-center justify-content-between mb-24 radius-md border-b-1 dark-bg-accent p-3">
+                    <div className="d-flex align-items-center">
+                        <img src="/img/coin.png" className="icon-lg" alt="" />
+                        <div className="ml-3">
+                            <p className="text-ms mb-2 white-text font-normal">
+                                USDT CRYPTO <CheckFillIcon />
+                            </p>
+                            <p className="mb-1 grey-text-accent text-sm">30D Trades</p>
+                            <p className="mb-1 grey-text-accent text-sm">30D Completetition Rate</p>
+                        </div>
+                    </div>
+                    <div className="ml-2">
+                        <></>
+                        <p className="mb-1 grey-text-accent text-sm text-right">1,419</p>
+                        <p className="mb-1 grey-text-accent text-sm text-right">90,01%</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h1 className="m-0 p-0 white-text text-ms font-semibold mb-12">Log Transaction Dispute</h1>
+                    <p className="m-0 p-0 grey-text-accent text-sm mb-24">
+                        Lorem ipsum dolor sit amet consectetur. Aliquam lectus id pharetra eget placerat suscipit neque
+                        ornare. Ultrices commodo morbi duis elementum diam ultrices nulla convallis nibh.
+                    </p>
+
+                    <div className="mb-24">
+                        <label className="m-0 p-0 mb-16 white-text text-ms">QR Code (Optional)</label>
+                        <input
+                            id="custom-input-file"
+                            type="file"
+                            // value={inputFile}
+                            onChange={(e) => {
+                                setInputFile(e.target.files[0]);
+                                setFileName(e.target.files[0].name);
+                            }}
+                            placeholder="Enter Full Name"
+                            className="custom-input-add-payment w-100 white-text d-none"
+                        />
+                        <label
+                            htmlFor="custom-input-file"
+                            className="d-flex justify-content-center align-content-center custom-input-file cursor-pointer dark-bg-accent border-1 p-16 radius-lg mb-16">
+                            <div className="d-flex flex-column align-items-center justify-content-center">
+                                <UploadIcon />
+                                <p className="m-0 p-0 text-xxs grey-text">{fileName ? fileName : 'Upload'}</p>
+                            </div>
+                        </label>
+                        <p className="m-0 p-0 text-right grey-text-accent text-xxs font-bold">
+                            JPG,SVG,PNG, GIF and PDF, Maximum file size is 20MB.
+                        </p>
+                    </div>
+
+                    <div className="mb-16 d-flex align-items-center gap-8">
+                        {/* <label htmlFor="stable-coin" className="m-0 p-0 grey-text-accent text-sm "></label> */}
+                        <input
+                            type="checkbox"
+                            id="stable-coin"
+                            // checked={true}
+                            readOnly={true}
+                            className="m-0 p-0 check-with-label"
+                        />
+                        <label htmlFor="stable-coin" className="m-0 p-0 grey-text-accent text-sm">
+                            Didn’t Not Receive My Stable Coin
+                        </label>
+                    </div>
+
+                    <div className="mb-16 d-flex align-items-center gap-8">
+                        <input
+                            type="checkbox"
+                            id="taking-long"
+                            // checked={true}
+                            readOnly={true}
+                            className="m-0 p-0"
+                        />
+                        <label htmlFor="taking-long" className="m-0 p-0 grey-text-accent text-sm">
+                            Transaction Taking To Long
+                        </label>
+                    </div>
+
+                    <div className="mb-24 d-flex align-items-center gap-8">
+                        <input
+                            type="checkbox"
+                            id="different-order"
+                            // checked={true}
+                            readOnly={true}
+                            className="m-0 p-0"
+                        />
+                        <label htmlFor="different-order" className="m-0 p-0 grey-text-accent text-sm">
+                            Transaction Ammount Is Different to Order Value
+                        </label>
+                    </div>
+
+                    <div className="mb-24">
+                        <label className="m-0 p-0 mb-16 white-text text-ms">Your Message</label>
+                        <textarea
+                            placeholder=""
+                            className="form-message border-1 radius-lg p-16 white-text w-100"></textarea>
+                    </div>
+
+                    <button className="btn-primary w-100" type="button">
+                        Submit The Sidepute
+                    </button>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <React.Fragment>
             <div className="pg-screen-p2p-order">
@@ -59,7 +178,9 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
                 <div className="container dark-bg-main d-flex justify-content-between align-items-center p-4">
                     <div>
-                        <p className="mb-2 text-lg white-text font-bold">Buy USDT from USDTCYPTO</p>
+                        <p className="mb-2 text-lg white-text font-bold">
+                            {type === 'sell' ? 'Sell' : 'Buy'} USDT from USDTCYPTO
+                        </p>
                         <p className="mb-0 text-sm grey-text">
                             Order has been made. Please wait for system confirmation.
                         </p>
@@ -109,9 +230,13 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     <div className="mb-4 left-side">
                         <p className="mb-3 text-sm font-bold white-text">Order Steps</p>
                         <div className="d-flex align-items-center justofy-content-between mb-3">
-                            <div className="arrow active arrow-right"> Transfers Payment To Seller</div>
-                            <div className="arrow active  arrow-right"> Pending Seller to Release Cryptos</div>
-                            <div className="arrow  arrow-right"> Completed Order</div>
+                            <div className={`arrow arrow-right ${step <= 3 && 'active'}`}>
+                                Transfers Payment To Seller
+                            </div>
+                            <div className={`arrow arrow-right ${step >= 2 && step <= 3 && 'active'}`}>
+                                Pending Seller to Release Cryptos
+                            </div>
+                            <div className={`arrow arrow-right ${step === 3 && 'active'}`}> Completed Order</div>
                         </div>
                         <div className="order-form dark-bg-main d-flex radius-md pt-5 p-4">
                             <div className="line"></div>
@@ -222,12 +347,49 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                     <p className="mb-3 text-ms font-semibold white-text">
                                         After transferring funds. Click the button "Confirm"
                                     </p>
-                                    <div className="d-flex">
-                                        <button className="btn btn-primary mr-5 px-5">Confirm</button>
-                                        <button className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
-                                            Cancel Order
-                                        </button>
-                                    </div>
+                                    {step === 3 ? (
+                                        <div className="d-flex gap-24">
+                                            <Link
+                                                to={`/p2p/wallets`}
+                                                type="button"
+                                                className="btn btn-primary px-5 text-sm">
+                                                Wallet P2P
+                                            </Link>
+                                            <button
+                                                type="button"
+                                                className="btn btn-transparent btn-inline w-auto font-semibold grey-text text-sm">
+                                                Crypto has been to your wallet
+                                            </button>
+                                        </div>
+                                    ) : step === 2 ? (
+                                        <div className="d-flex gap-24">
+                                            <button
+                                                type="button"
+                                                onClick={() => setStep(3)}
+                                                className="btn btn-primary px-5 text-sm">
+                                                Payment Received
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-transparent btn-inline w-auto font-semibold grey-text text-sm">
+                                                Transaction Issue; appeal after (00:00)
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="d-flex gap-24">
+                                            <button
+                                                type="button"
+                                                onClick={() => setStep(2)}
+                                                className="btn btn-primary px-5">
+                                                Confirm
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
+                                                Cancel Order
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -245,7 +407,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                 <img src="/img/coin.png" className="icon-lg" alt="" />
                                 <div className="ml-3">
                                     <p className="text-ms mb-2 white-text font-normal">
-                                        {' '}
                                         USDT CRYPTO <CheckFillIcon />
                                     </p>
                                     <p className="mb-1 grey-text-accent text-sm">30D Trades</p>
@@ -253,7 +414,11 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                 </div>
                             </div>
                             <div className="ml-2">
-                                <p className="text-xs my-2 danger-text font-normal text-right">Report</p>
+                                <p
+                                    onClick={() => setShowModalReport(true)}
+                                    className="text-xs my-2 danger-text font-normal text-right cursor-pointer">
+                                    Report
+                                </p>
                                 <p className="mb-1 grey-text-accent text-sm text-right">1,419</p>
                                 <p className="mb-1 grey-text-accent text-sm text-right">90,01%</p>
                             </div>
@@ -367,6 +532,14 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         )}
                     </div>
                 </div>
+
+                <div className="dark-bg-accent">
+                    <div className="container">
+                        <P2PFAQ />
+                    </div>
+                </div>
+
+                {showModalReport && <Modal show={showModalReport} content={renderModalContent()} />}
             </div>
         </React.Fragment>
     );

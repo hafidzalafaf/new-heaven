@@ -220,4 +220,50 @@
             }
         }
     }
+
+    .custom-modal-dialog {
+        max-width: 550px !important;
+    }
+
+    .custom-modal-content {
+        width: 550px !important;
+        height: 90%;
+        overflow-y: scroll;
+    }
+
+    .form-message {
+        background: transparent;
+
+        &:focus-visible {
+            outline: 0;
+        }
+    }
+    /* input[type="checkbox"] {
+        &::after {
+            border-radius: 4px;
+            background: 50%/50% 50% no-repeat;
+            border: 1px solid var(--border-color);
+            width: 18px;
+            height: 18px;
+        }
+
+        &::before {
+            border-radius: 4px;
+            background: var(--body-background-color);
+            border: 0;
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    .label-for-check {
+        width: 12px;
+        height: 12px;
+        background: #999;
+    }
+
+    .check-with-label:checked + .label-for-check {
+        background: #fff;
+        width: 30px;
+    } */
 }

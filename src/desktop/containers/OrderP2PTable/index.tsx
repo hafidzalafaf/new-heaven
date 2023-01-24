@@ -6,9 +6,10 @@ import moment from 'moment';
 import { CustomStylesSelect } from '../../../desktop/components';
 import { Table } from '../../../components';
 import { HideIcon } from '../../../assets/images/P2PIcon';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 export const OrderP2PTable = () => {
+    const history = useHistory();
     const [endDate, setEndDate] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
 
@@ -62,7 +63,7 @@ export const OrderP2PTable = () => {
             created_at: '2023-01-15T04:09:15Z',
         },
         {
-            type: 'sell',
+            type: 'buy',
             coin: 'USDT',
             fiat_amount: '216,169.60 IDR',
             price: '15,710.00 IDR',
@@ -82,7 +83,7 @@ export const OrderP2PTable = () => {
             created_at: '2023-01-15T04:09:15Z',
         },
         {
-            type: 'sell',
+            type: 'buy',
             coin: 'USDT',
             fiat_amount: '216,169.60 IDR',
             price: '15,710.00 IDR',
@@ -124,10 +125,12 @@ export const OrderP2PTable = () => {
             </a>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{item.status}</p>,
             <div className="d-flex align-items-center">
-                <Link to={`/p2p/wallet/order`} className="d-flex align-items-center cursor-pointer mr-8">
+                <div
+                    onClick={() => history.push('/p2p/wallet/order', { type: item.type })}
+                    className="d-flex align-items-center cursor-pointer mr-8">
                     <p className="m-0 p-0 mr-6 text-xs grey-text">Order</p>
                     <HideIcon />
-                </Link>
+                </div>
                 <p className="m-0 p-0 mr-6 text-xs grey-text cursor-pointer">Cancel</p>
             </div>,
         ]);
