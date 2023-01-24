@@ -99,6 +99,14 @@
                 left: -8px;
             }
         }
+
+        .payment-method {
+            color: var(--main-background-color);
+            padding: 4px 24px;
+            background: var(--white-background-color);
+            border-left: 4px solid var(--text-blue-color);
+            border-radius: 2px;
+        }
     }
 
     /* Arrow Right */
@@ -222,12 +230,12 @@
     }
 
     .custom-modal-dialog {
-        max-width: 550px !important;
+        max-width: 490px !important;
     }
 
     .custom-modal-content {
         width: 550px !important;
-        height: 90%;
+        max-height: 90%;
         overflow-y: scroll;
     }
 
@@ -238,6 +246,11 @@
             outline: 0;
         }
     }
+
+    .button-grey {
+        background: var(--modal-background-color);
+    }
+
     /* input[type="checkbox"] {
         &::after {
             border-radius: 4px;

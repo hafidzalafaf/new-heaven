@@ -5,7 +5,7 @@ import { HeaderP2P, BannerP2P, P2PFAQ } from 'src/desktop/containers';
 import { CopyableTextField } from '../../../components';
 import { copy } from '../../../helpers';
 import { useDispatch } from 'react-redux';
-import { Modal } from 'src/desktop/components';
+import { Modal, CustomInput } from 'src/desktop/components';
 import moment from 'moment';
 import {
     Wallet,
@@ -15,6 +15,11 @@ import {
     SendIcon,
     CheckFillIcon,
     UploadIcon,
+    CommentIcon,
+    GreyCheck,
+    ActiveCheck,
+    UnLikeDangerIcon,
+    LikeSuccessIcon,
 } from '../../../assets/images/P2PIcon';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -31,6 +36,24 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [showModalReport, setShowModalReport] = useState(false);
     const [inputFile, setInputFile] = useState(null);
     const [fileName, setFileName] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('');
+    const [showModalConfirm, setShowModalConfirm] = useState(false);
+    const [checkModalOne, setcheckModalOne] = useState(false);
+    const [checkModalTwo, setcheckModalTwo] = useState(false);
+    const [comment, setComment] = useState('');
+
+    const bank = [
+        {
+            id: 1,
+            name: 'jago',
+        },
+        { id: 2, name: 'bca' },
+        {
+            id: 3,
+            name: 'shopee',
+        },
+        { id: 4, name: 'dana' },
+    ];
 
     useDocumentTitle('P2P || Order');
 
@@ -38,6 +61,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
         copy('kid-code');
         dispatch(alertPush({ message: ['Order Number copied'], type: 'success' }));
     };
+
+    const disableButton = !checkModalOne || !checkModalTwo;
 
     useEffect(() => {
         let timer = null;
@@ -165,6 +190,56 @@ export const P2PWalletOrderScreen: React.FC = () => {
         );
     };
 
+    const renderModalConfirmRelease = () => {
+        return (
+            <div>
+                <div className="d-flex justify-content-center align-items-center mb-24">
+                    <CommentIcon />
+                </div>
+                <div
+                    className="d-flex align-items-center mb-24 cursor-pointer"
+                    onClick={() => setcheckModalOne(!checkModalOne)}>
+                    <div className="icon-sm">{checkModalOne ? <ActiveCheck /> : <GreyCheck />}</div>
+                    <p className="mb-0 text-sm grey-text-accent ml-3">I have not receive payment from the buyer</p>
+                </div>
+                <div className="d-flex align-items-center mb-24" onClick={() => setcheckModalTwo(!checkModalTwo)}>
+                    <div className="icon-sm">{checkModalTwo ? <ActiveCheck /> : <GreyCheck />}</div>
+                    <p className="mb-0 text-sm grey-text-accent cursor-pointer ml-3">
+                        I have received the correct amount. Payment sender matches the buyer’s verified name on Heaven
+                        Ecchange, and i agree to release mu crypto to the buyer
+                    </p>
+                </div>
+                <p className="mb-2 text-sm grey-text-accent">Tips</p>
+                <ul className="ml-0 pl-3 mb-24">
+                    <li className="text-sm grey-text-accent">
+                        Do not only check th buyer’s payment proof. Make sure to long into your account and verify
+                        payment is received!
+                    </li>
+                    <li className="text-sm grey-text-accent">
+                        If the payment is still processing, wait until you have received payment in your account before
+                        releasing the crypto!
+                    </li>
+                    <li className="text-sm grey-text-accent">
+                        Do NOT accept payment from a third-party account. Refund the amount immediately if you receive
+                        such payment to avoid financial losses caused by bank chargerback after you have released
+                        crypto.
+                    </li>
+                </ul>
+                <button
+                    className={`${
+                        disableButton ? 'button-grey white-text ' : 'btn-primary'
+                    } text-sm py-3 btn btn-block`}
+                    disabled={disableButton}
+                    onClick={() => {
+                        setStep(3);
+                        setShowModalConfirm(false);
+                    }}>
+                    Confirm
+                </button>
+            </div>
+        );
+    };
+
     return (
         <React.Fragment>
             <div className="pg-screen-p2p-order">
@@ -265,107 +340,140 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                     <p className="mb-1 text-xs grey-text-accent font-semibold">
                                         Heaven only supports real-name verified payment methods
                                     </p>
-                                    <div className="payment">
-                                        <div
-                                            className="header-payment d-flex justify-content-between align-items-center mt-3 cursor-pointer"
-                                            onClick={() => setShowPayment(!showPayment)}>
-                                            <p className="mb-0">
-                                                <Wallet />
-                                                <span className="mb-0 ml-3 text-sm white-text font-semibold">
-                                                    Payment Methods
-                                                </span>
-                                            </p>
-                                            <div className={`${showPayment ? 'rotate-180' : ''}`}>
-                                                <ArrowDown />
+                                    {paymentMethod ? (
+                                        <div className="payment-method d-flex justify-content-between align-items-center text-xs font-semibold">
+                                            <img
+                                                src={
+                                                    paymentMethod === 'bca'
+                                                        ? '/img/logo-bca.png'
+                                                        : paymentMethod === 'dana'
+                                                        ? '/img/logo-dana.png'
+                                                        : paymentMethod === 'jago'
+                                                        ? '/img/logo-jago.png'
+                                                        : '/img/logo-shopee.png'
+                                                }
+                                                className="bank-logo mx-2"
+                                                alt="bank logo"
+                                            />
+
+                                            <div>
+                                                <p className="m-0 p-0 mb-8 font-semibold text-xs">32165543</p>
+                                                <p className="m-0 p-0 mb-8 font-semibold text-xs">A.n Syaripudin</p>
                                             </div>
                                         </div>
-                                        <div className={`content-payment ${showPayment ? 'hide' : ''}`}>
-                                            <div className="d-flex align-items-center justify-content-end flex-wrap ">
-                                                <img
-                                                    src="/img/logo-bca.png"
-                                                    className="bank-logo mx-2"
-                                                    alt="bank logo"
-                                                />
-                                                <img
-                                                    src="/img/logo-dana.png"
-                                                    className="bank-logo mx-2"
-                                                    alt="bank logo"
-                                                />
-                                                <img
-                                                    src="/img/logo-jago.png"
-                                                    className="bank-logo mx-2"
-                                                    alt="bank logo"
-                                                />
-                                                <img
-                                                    src="/img/logo-shopee.png"
-                                                    className="bank-logo mx-2"
-                                                    alt="bank logo"
-                                                />
+                                    ) : (
+                                        <div className="payment">
+                                            <div
+                                                className="header-payment d-flex justify-content-between align-items-center mt-3 cursor-pointer"
+                                                onClick={() => setShowPayment(!showPayment)}>
+                                                <p className="mb-0">
+                                                    <Wallet />
+                                                    <span className="mb-0 ml-3 text-sm white-text font-semibold">
+                                                        Payment Methods
+                                                    </span>
+                                                </p>
+                                                <div className={`${showPayment ? 'rotate-180' : ''}`}>
+                                                    <ArrowDown />
+                                                </div>
+                                            </div>
+                                            <div className={`content-payment ${showPayment ? 'hide' : ''}`}>
+                                                <div className="d-flex align-items-center justify-content-end flex-wrap ">
+                                                    {bank.map((el, i) => (
+                                                        <img
+                                                            key={i}
+                                                            src={
+                                                                el.name === 'bca'
+                                                                    ? '/img/logo-bca.png'
+                                                                    : el.name === 'dana'
+                                                                    ? '/img/logo-dana.png'
+                                                                    : el.name === 'jago'
+                                                                    ? '/img/logo-jago.png'
+                                                                    : '/img/logo-shopee.png'
+                                                            }
+                                                            className="bank-logo mx-2"
+                                                            alt="bank logo"
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className={`content-payment-expand ${showPayment ? '' : 'hide'}`}>
+                                                {bank.map((el, i) => (
+                                                    <div
+                                                        key={i}
+                                                        onClick={() => setPaymentMethod(el.name)}
+                                                        className="payment-item cursor-pointer">
+                                                        <div className="payment-item_title">
+                                                            <img
+                                                                src={
+                                                                    el.name === 'bca'
+                                                                        ? '/img/logo-bca.png'
+                                                                        : el.name === 'dana'
+                                                                        ? '/img/logo-dana.png'
+                                                                        : el.name === 'jago'
+                                                                        ? '/img/logo-jago.png'
+                                                                        : '/img/logo-shopee.png'
+                                                                }
+                                                                className="bank-logo"
+                                                                alt=""
+                                                            />
+                                                        </div>
+                                                        <p className="primary-text text-xs mb-1 font-semibold mt-3">
+                                                            AT. Ade Sumargo
+                                                        </p>
+                                                        <p className="primary-text text-xs font-semibold mb-0">
+                                                            00001111
+                                                        </p>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
-                                        <div className={`content-payment-expand ${showPayment ? '' : 'hide'}`}>
-                                            <div className="payment-item">
-                                                <div className="payment-item_title">
-                                                    <img src="/img/logo-jago.png" className="bank-logo" alt="" />
-                                                </div>
-                                                <p className="primary-text text-xs mb-1 font-semibold mt-3">
-                                                    AT. Ade Sumargo
-                                                </p>
-                                                <p className="primary-text text-xs font-semibold mb-0"> 00001111</p>
-                                            </div>
-                                            <div className="payment-item">
-                                                <div className="payment-item_title">
-                                                    <img src="/img/logo-shopee.png" className="bank-logo" alt="" />
-                                                </div>
-                                                <p className="primary-text text-xs mb-1 font-semibold mt-3">
-                                                    AT. Ade Sumargo
-                                                </p>
-                                                <p className="primary-text text-xs font-semibold mb-0"> 00001111</p>
-                                            </div>
-                                            <div className="payment-item">
-                                                <div className="payment-item_title">
-                                                    <img src="/img/logo-bca.png" className="bank-logo" alt="" />
-                                                </div>
-                                                <p className="primary-text text-xs mb-1 font-semibold mt-3">
-                                                    AT. Ade Sumargo
-                                                </p>
-                                                <p className="primary-text text-xs font-semibold mb-0"> 00001111</p>
-                                            </div>
-                                            <div className="payment-item">
-                                                <div className="payment-item_title">
-                                                    <img src="/img/logo-dana.png" className="bank-logo" alt="" />
-                                                </div>
-                                                <p className="primary-text text-xs mb-1 font-semibold mt-3">
-                                                    AT. Ade Sumargo
-                                                </p>
-                                                <p className="primary-text text-xs font-semibold mb-0"> 00001111</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
                                 <div className=" payment-form last">
                                     <p className="mb-3 text-ms font-semibold white-text">
                                         After transferring funds. Click the button "Confirm"
                                     </p>
                                     {step === 3 ? (
-                                        <div className="d-flex gap-24">
-                                            <Link
-                                                to={`/p2p/wallets`}
-                                                type="button"
-                                                className="btn btn-primary px-5 text-sm">
-                                                Wallet P2P
-                                            </Link>
-                                            <button
-                                                type="button"
-                                                className="btn btn-transparent btn-inline w-auto font-semibold grey-text text-sm">
-                                                Crypto has been to your wallet
-                                            </button>
-                                        </div>
+                                        type === 'buy' ? (
+                                            <div className="d-flex gap-24">
+                                                <Link
+                                                    to={`/p2p/wallets`}
+                                                    type="button"
+                                                    className="btn btn-primary px-5 text-sm">
+                                                    Wallet P2P
+                                                </Link>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-transparent btn-inline w-auto font-semibold grey-text text-sm">
+                                                    Crypto has been to your wallet
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="d-flex gap-16">
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-transparent font-semibold gradient-text text-sm">
+                                                    Have a question
+                                                </button>
+                                                <Link
+                                                    to={`/p2p/wallets`}
+                                                    type="button"
+                                                    className="btn btn-transparent gradient-text text-sm">
+                                                    View my wallet p2p
+                                                </Link>
+                                            </div>
+                                        )
                                     ) : step === 2 ? (
                                         <div className="d-flex gap-24">
                                             <button
                                                 type="button"
-                                                onClick={() => setStep(3)}
+                                                onClick={() => {
+                                                    if (type === 'buy') {
+                                                        setStep(3);
+                                                    } else {
+                                                        setShowModalConfirm(true);
+                                                    }
+                                                }}
                                                 className="btn btn-primary px-5 text-sm">
                                                 Payment Received
                                             </button>
@@ -393,6 +501,29 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+                        {step === 3 && (
+                            <div className="">
+                                <CustomInput
+                                    inputValue={comment}
+                                    type="text"
+                                    label={'Comment'}
+                                    defaultLabel={'Comment'}
+                                    placeholder={'Enter Comment'}
+                                    labelVisible
+                                    classNameLabel="grey-text-accent text-sm font-semibold"
+                                    handleChangeInput={(e) => setComment(e)}
+                                />
+
+                                <div className="d-flex justify-content-between">
+                                    <button className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
+                                        Positive <LikeSuccessIcon />{' '}
+                                    </button>
+                                    <button className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
+                                        Positive <UnLikeDangerIcon />{' '}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="mb-4 right-side dark-bg-main p-3">
                         <div className="d-flex justify-content-between align-items-center mb-24">
@@ -540,6 +671,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                 </div>
 
                 {showModalReport && <Modal show={showModalReport} content={renderModalContent()} />}
+                {showModalConfirm && <Modal show={showModalConfirm} content={renderModalConfirmRelease()} />}
             </div>
         </React.Fragment>
     );
