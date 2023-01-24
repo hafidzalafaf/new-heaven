@@ -12,24 +12,7 @@ export const OrderP2PTable = () => {
     const history = useHistory();
     const [endDate, setEndDate] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
-
-    const optionQuote = [
-        { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
-        { label: <p className="m-0 text-sm grey-text-accent">IDR</p>, value: 'idr' },
-        { label: <p className="m-0 text-sm grey-text-accent">BTC</p>, value: 'btc' },
-        { label: <p className="m-0 text-sm grey-text-accent">TRX</p>, value: 'trx' },
-    ];
-
-    const optionStatus = [
-        { label: <p className="m-0 text-sm grey-text-accent">All Status</p>, value: 'all' },
-        { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
-        { label: <p className="m-0 text-sm grey-text-accent">Done</p>, value: 'done' },
-    ];
-
-    const optionType = [
-        { label: <p className="m-0 text-sm grey-text-accent">Buy</p>, value: 'buy' },
-        { label: <p className="m-0 text-sm grey-text-accent">Sell</p>, value: 'sell' },
-    ];
+    const [data, setData] = React.useState([]);
 
     const dummy = [
         {
@@ -92,6 +75,37 @@ export const OrderP2PTable = () => {
             status: 'Completed',
             created_at: '2023-01-15T04:09:15Z',
         },
+    ];
+
+    React.useEffect(() => {
+        setData(dummy);
+    }, []);
+
+    const filterredType = (type) => {
+        let filterredList;
+        let temp;
+        temp = dummy;
+
+        filterredList = temp.filter((item) => item.type === type);
+        setData(filterredList);
+    };
+
+    const optionQuote = [
+        { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
+        { label: <p className="m-0 text-sm grey-text-accent">IDR</p>, value: 'idr' },
+        { label: <p className="m-0 text-sm grey-text-accent">BTC</p>, value: 'btc' },
+        { label: <p className="m-0 text-sm grey-text-accent">TRX</p>, value: 'trx' },
+    ];
+
+    const optionStatus = [
+        { label: <p className="m-0 text-sm grey-text-accent">All Status</p>, value: 'all' },
+        { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
+        { label: <p className="m-0 text-sm grey-text-accent">Done</p>, value: 'done' },
+    ];
+
+    const optionType = [
+        { label: <p className="m-0 text-sm grey-text-accent">Buy</p>, value: 'buy' },
+        { label: <p className="m-0 text-sm grey-text-accent">Sell</p>, value: 'sell' },
     ];
 
     const getTableHeaders = () => {
@@ -162,10 +176,9 @@ export const OrderP2PTable = () => {
                         // })}
                         styles={CustomStylesSelect}
                         options={optionType}
-                        // onChange={(e) => {
-                        //     setStatus(e.value);
-                        //     filterredStatus(e.value);
-                        // }}
+                        onChange={(e) => {
+                            filterredType(e.value);
+                        }}
                     />
                 </div>
 
@@ -217,15 +230,15 @@ export const OrderP2PTable = () => {
                         <Tabs defaultActiveKey="all" id="fill-tab-example" className="mb-3" fill>
                             <Tab eventKey="all" title="All Orders">
                                 <div className="w-100">{renderFilter()}</div>
-                                <Table header={getTableHeaders()} data={getTableData(dummy)} />
+                                <Table header={getTableHeaders()} data={getTableData(data)} />
                             </Tab>
                             <Tab eventKey="processing" title="Processing">
                                 <div className="w-100">{renderFilter()}</div>
-                                <Table header={getTableHeaders()} data={getTableData(dummy)} />
+                                <Table header={getTableHeaders()} data={getTableData(data)} />
                             </Tab>
                             <Tab eventKey="done" title="Transaction Done">
                                 <div className="w-100">{renderFilter()}</div>
-                                <Table header={getTableHeaders()} data={getTableData(dummy)} />
+                                <Table header={getTableHeaders()} data={getTableData(data)} />
                             </Tab>
                         </Tabs>
 
