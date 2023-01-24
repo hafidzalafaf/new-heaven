@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Currency } from 'src/modules';
@@ -36,6 +36,7 @@ export interface MarketDetailInfoProps {
 }
 
 export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) => {
+    const [showDetailDesc, setShowDetailDesc] = useState(false);
     const { currency = '' } = useParams<{ currency?: string }>();
 
     return (
@@ -175,7 +176,7 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                     </div>
                 </div>
             </div>
-            <div className="about-coin mt-4 height-300">
+            <div className={`about-coin mt-4  ${showDetailDesc ? 'show' : ''}`}>
                 <h5 className="text-lg white-text">
                     About {detail && detail.currency && detail.currency.name} (
                     {detail && detail.base_unit && detail.base_unit.toUpperCase()})
@@ -193,7 +194,7 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                     {detail && detail.currency && detail.currency.name}
                     transactions are fully transparent and can’t be censored. You can send money
                 </p>
-                <p className="text-ms grey-text-accent  mb-24">
+                <p className="text-ms grey-text-accent  mb-36">
                     {detail && detail.currency && detail.currency.name} is one of the most popular cryptocurrencies in
                     the market. First introduced in 2009 by Satoshi Nakamoto,{' '}
                     {detail && detail.currency && detail.currency.name} has held the crypto market’s number one spot
@@ -206,8 +207,10 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                     {detail && detail.currency && detail.currency.name}
                     transactions are fully transparent and can’t be censored. You can send money
                 </p>
-                <div className="d-flex justify-content-center">
-                    <p className="text-center gradient-text font-bold m-0">View All</p>
+                <div
+                    className={`d-flex justify-content-center view-all cursor-pointer ${showDetailDesc && ' hide'}`}
+                    onClick={() => setShowDetailDesc(!showDetailDesc)}>
+                    <p className="text-center gradient-text font-bold m-0">{showDetailDesc ? 'Hide' : 'View All'}</p>
                 </div>
             </div>
         </React.Fragment>

@@ -1,6 +1,7 @@
 import React, { FC, ReactElement } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import { useDocumentTitle, useWalletsFetch, useUserOrdersHistoryFetch, useMarketsFetch } from '../../../hooks';
 import {
     selectCurrencies,
@@ -16,9 +17,11 @@ import {
     selectShouldFetchCancelAll,
     selectShouldFetchCancelSingle,
     selectOrdersHistoryLoading,
+    Market,
+    userOpenOrdersFetch,
 } from '../../../modules';
 import { Table, Loading } from '../../../components';
-import { CustomStylesSelect } from '../../../desktop/components';
+import { CustomStylesSelect, Modal } from '../../../desktop/components';
 import { Tabs, Tab } from 'react-bootstrap';
 import { ModalCloseIcon } from '../../../assets/images/CloseIcon';
 import Select from 'react-select';
@@ -29,6 +32,7 @@ import { OrderCommon } from 'src/modules/types';
 export const MarketOpen: FC = (): ReactElement => {
     const dispatch = useDispatch();
     const intl = useIntl();
+    const { currency = '' } = useParams<{ currency?: string }>();
 
     const [tab, setTab] = React.useState('open');
     const [currentPageIndex, setPageIndex] = React.useState(0);
@@ -38,6 +42,9 @@ export const MarketOpen: FC = (): ReactElement => {
     const [status, setStatus] = React.useState('');
     const [asset, setAsset] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [showModalCancel, setShowModalCancel] = React.useState(false);
+    const [showModalCancelAll, setShowModalCancelAll] = React.useState(false);
+    const [deleteRow, setDeleteRow] = React.useState<OrderCommon>();
 
     const orders = useSelector(selectOrdersHistory);
     const shouldFetchCancelAll = useSelector(selectShouldFetchCancelAll);
@@ -48,6 +55,8 @@ export const MarketOpen: FC = (): ReactElement => {
     const markets = useSelector(selectMarkets);
     const currencies: Currency[] = useSelector(selectCurrencies);
     const historyLoading = useSelector(selectOrdersHistoryLoading);
+
+    const current: Market | undefined = markets.find((item) => item.id === currency);
 
     useUserOrdersHistoryFetch({ pageIndex: currentPageIndex, type: tab, limit: 20 });
     useDocumentTitle('Market Order');
@@ -78,18 +87,23 @@ export const MarketOpen: FC = (): ReactElement => {
     const handleCancelAllOrders = () => {
         if (shouldFetchCancelAll) {
             dispatch(ordersCancelAllFetch());
+            setShowModalCancelAll(false);
         }
     };
 
     const handleCancelSingleOrder = (order: OrderCommon) => () => {
-        if (shouldFetchCancelAll && shouldFetchCancelSingle) {
-            dispatch(
-                openOrdersCancelFetch({
-                    order,
-                    list: data,
-                })
-            );
-        }
+        dispatch(
+            openOrdersCancelFetch({
+                order,
+                list: data,
+            })
+        );
+        setShowModalCancel(false);
+        setTimeout(() => {
+            if (current) {
+                dispatch(userOpenOrdersFetch({ market: current }));
+            }
+        }, 1000);
     };
 
     React.useEffect(() => {
@@ -162,7 +176,10 @@ export const MarketOpen: FC = (): ReactElement => {
             <>
                 {tab === 'open' ? (
                     <button
-                        onClick={handleCancelSingleOrder(item)}
+                        onClick={() => {
+                            setShowModalCancel(true);
+                            setDeleteRow(item);
+                        }}
                         type="button"
                         className="btn btn-sm btn-danger text-sm font-normal cursor-pointer">
                         Cancel Order
@@ -204,6 +221,41 @@ export const MarketOpen: FC = (): ReactElement => {
             value: item.id,
         };
     });
+
+    const renderModalContentCancel = () => (
+        <React.Fragment>
+            <h6 className="text-md white-text font-semibold mb-24">Are you sure to Cancel Orders?</h6>
+            <p className="text-sm grey-text-accent m-0 p-0 mb-24">
+                The order you made for this transaction will be canceled and you will have to repeat the transaction
+                again
+            </p>
+            <div className="d-flex">
+                <button className="btn btn-danger sm px-5 mr-3" onClick={() => setShowModalCancel(false)}>
+                    Close
+                </button>
+                <button onClick={handleCancelSingleOrder(deleteRow)} type="button" className="btn btn-primary sm px-5">
+                    Confirm
+                </button>
+            </div>
+        </React.Fragment>
+    );
+
+    const renderModalContentCancelAll = () => (
+        <React.Fragment>
+            <h6 className="text-md white-text font-semibold mb-24">Are you sure to Cancel All your Orders?</h6>
+            <p className="text-sm grey-text-accent m-0 p-0 mb-24">
+                All order transactions that you make will be cancelled, are you sure to cancel all orders?
+            </p>
+            <div className="d-flex">
+                <button className="btn btn-danger sm px-5 mr-3" onClick={() => setShowModalCancelAll(false)}>
+                    Close
+                </button>
+                <button onClick={handleCancelAllOrders} type="button" className="btn btn-primary sm px-5">
+                    Confirm
+                </button>
+            </div>
+        </React.Fragment>
+    );
 
     const renderFilter = () => {
         return (
@@ -276,7 +328,10 @@ export const MarketOpen: FC = (): ReactElement => {
                         {renderFilter()}
                         {tab === 'open' && data && data[0] && (
                             <div className="ml-3 cancel-all-order">
-                                <button type="button" onClick={handleCancelAllOrders} className="btn btn-secondary">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModalCancelAll(true)}
+                                    className="btn btn-secondary">
                                     Cancel All Orders <ModalCloseIcon className="small-icon" />
                                 </button>
                             </div>
@@ -330,6 +385,8 @@ export const MarketOpen: FC = (): ReactElement => {
                         </Tab>
                     </Tabs>
                 </div>
+                {<Modal show={showModalCancel} content={renderModalContentCancel()} />}
+                {<Modal show={showModalCancelAll} content={renderModalContentCancelAll()} />}
             </div>
         </React.Fragment>
     );

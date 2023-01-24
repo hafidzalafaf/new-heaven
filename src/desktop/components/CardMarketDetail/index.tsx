@@ -3,6 +3,7 @@ import { Currency } from 'src/modules';
 import './CardMarketDetail.pcss';
 import { numberFormat } from '../../../helpers';
 import { NoData } from '../../components';
+import { Decimal } from '../../../components';
 
 export interface DetailProps {
     amount_precision: string;
@@ -60,12 +61,9 @@ export const CardMarketDetail: React.FunctionComponent<CardMarketDetailProps> = 
 
                             <div>
                                 <p className="mb-8 text-sm white-text text-left font-bold" style={{ minWidth: 100 }}>
-                                    $
-                                    {
-                                        numberFormat(detail && detail.last, 'USA')
-                                            .toString()
-                                            .split('.')[0]
-                                    }
+                                    {title == 'Top 3 Volume'
+                                        ? detail && detail.volume
+                                        : '$ ' + Decimal.format(detail && detail.last, detail.price_precision)}
                                 </p>
                                 <p
                                     className={`m-0 text-xs ${

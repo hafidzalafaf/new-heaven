@@ -46,7 +46,7 @@ class Landing extends React.Component<Props> {
 
     public render() {
         return (
-            <div className="landing-screen dark-bg-accent">
+            <div className="landing-screen about-screen dark-bg-accent">
                 <div
                     className="content-wrapper no-sidebar "
                     style={{ backgroundImage: `url('img/background-landing.png')` }}>
@@ -65,7 +65,7 @@ class Landing extends React.Component<Props> {
                                     Enjoy your arbitrage on the HEX platform
                                 </p>
                                 <div className="d-flex justify-content-center">
-                                    <Link to={'/market'} className="btn btn-rounded btn-primary mx-3">
+                                    <Link to={'/markets'} className="btn btn-rounded btn-primary mx-3">
                                         Trade Now
                                     </Link>
                                     <a href="" className="btn btn-rounded btn-outline white-text font-bold mx-3">

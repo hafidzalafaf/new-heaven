@@ -95,8 +95,6 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
             history.push('/signin');
         }
 
-        console.log(previousState);
-
         let time = null;
         if (!previousState.timerActive && this.state.timerActive) {
             time = setInterval(() => {

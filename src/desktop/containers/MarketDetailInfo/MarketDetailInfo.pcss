@@ -4,6 +4,30 @@
         height: 48px;
     }
 }
+
+.about-coin {
+    max-height: 200px;
+    overflow: hidden;
+    position: relative;
+
+    &.show {
+        max-height: 100%;
+    }
+
+    .view-all {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 6px 0;
+        overflow: auto;
+        background: var(--body-background-color);
+        &.hide {
+            background: var(--main-background-color);
+        }
+    }
+}
+
 .tradingview-widget-copyright {
     display: none;
 }

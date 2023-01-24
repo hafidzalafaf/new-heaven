@@ -82,7 +82,7 @@ export const MarketDetailScreen: FC = (): ReactElement => {
                         </div>
                         <div className="col-lg-3 col-4 d-flex flex-column pg-market-detail-screen__content-right">
                             <MarketDetailCalculator detail={detail} />
-                            <CardMarketDetail title="Most Tranding" data={dataTranding} />
+                            <CardMarketDetail title="Top 3 Volume" data={dataTranding} />
                             <CardMarketDetail title="Top 3 Gainers" data={dataGainers} />
                             <CardMarketDetail title="Top 3 Losers" data={dataLosers} />
                         </div>

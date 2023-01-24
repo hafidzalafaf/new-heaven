@@ -103,7 +103,8 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         let filterredList;
         let temp;
         temp = list;
-        filterredList = temp.filter((item) => item.id === id);
+
+        filterredList = temp.filter((item) => item.state === id || item.status == id);
         setHistorys(filterredList);
     };
 
@@ -193,6 +194,19 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
     ];
 
+    const optionStatusWithdraw = [
+        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'pending' },
+        { label: <p className="m-0 text-sm grey-text-accent">Success</p>, value: 'succeed' },
+        { label: <p className="m-0 text-sm grey-text-accent">Error</p>, value: 'errored' },
+        { label: <p className="m-0 text-sm grey-text-accent">Failed</p>, value: 'failed' },
+    ];
+
+    const optionStatusDeposit = [
+        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'pending' },
+        { label: <p className="m-0 text-sm grey-text-accent">Collected</p>, value: 'collected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Error</p>, value: 'errored' },
+    ];
+
     const optionAssets = currencies.map((item) => {
         const customLabel = (
             <div className="d-flex align-items-center">
@@ -251,11 +265,27 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                 <div className="w-20 mr-24">
                     <p className="m-0 white-text text-sm mb-8">Status</p>
                     <Select
-                        value={optionStatus.filter(function (option) {
-                            return option.value === status;
-                        })}
+                        value={
+                            type == 'transfers'
+                                ? optionStatus.filter(function (option) {
+                                      return option.value === status;
+                                  })
+                                : type == 'withdraws'
+                                ? optionStatusWithdraw.filter(function (option) {
+                                      return option.value === status;
+                                  })
+                                : optionStatusDeposit.filter(function (option) {
+                                      return option.value === status;
+                                  })
+                        }
                         styles={CustomStylesSelect}
-                        options={optionStatus}
+                        options={
+                            type == 'transfers'
+                                ? optionStatus
+                                : type == 'withdraws'
+                                ? optionStatusWithdraw
+                                : optionStatusDeposit
+                        }
                         onChange={(e) => {
                             setStatus(e.value);
                             filterredStatus(e.value);
