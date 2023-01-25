@@ -87,9 +87,9 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
             return true;
         }
 
-        if (amountSell > balanceCoin) {
-            return true;
-        }
+        // if (amountSell > balanceCoin) {
+        //     return true;
+        // }
 
         if (amountSell === '0') {
             return true;

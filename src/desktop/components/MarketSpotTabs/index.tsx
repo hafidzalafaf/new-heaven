@@ -123,7 +123,7 @@ export const MarketSpotTabs: FC = (): ReactElement => {
             <p className={`text-sm m-0 ${item.price_change_percent.includes('-') ? 'danger-text' : 'green-text'}`}>
                 {item.price_change_percent}
             </p>,
-            <p className="text-sm m-0 grey-text-accent">{item.volume}</p>,
+            <p className="text-sm m-0 grey-text-accent">$ {item.volume}</p>,
             <div className="d-flex">
                 <div className="mr-3">
                     <Link to={`/markets/detail/${item.base_unit}`}>

@@ -90,7 +90,7 @@ export const MarketAllCryptoTabs: FC = (): ReactElement => {
             <p className={`text-sm m-0 ${item.price_change_percent.includes('-') ? 'danger-text' : 'green-text'}`}>
                 {item.price_change_percent}
             </p>,
-            <p className="m-0 text-sm white-text">{item.volume}</p>,
+            <p className="m-0 text-sm white-text">$ {item.volume}</p>,
             <div className="d-flex">
                 <div className="mr-3">
                     <Link to={`/markets/detail/${item.base_unit}`}>

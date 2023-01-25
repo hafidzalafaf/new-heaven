@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { Decimal } from '../../../components';
 import { TickerTable } from '../../components';
 import Slider from 'react-slick';
@@ -210,6 +210,11 @@ const MarketsTableComponent = (props) => {
                             redirectToTrading={handleRedirectToTrading}
                             setCurrentBidUnit={setCurrentBidUnit}
                         />
+                        <div className="d-flex justify-content-center mt-4">
+                            <Link to={'/markets'} className="btn btn-primary">
+                                Show More
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </section>
