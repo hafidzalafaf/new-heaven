@@ -32,9 +32,10 @@ export const HistoryTrade: FC = (): ReactElement => {
 
     const [historys, setHistorys] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(0);
-    const [startDate, setStartDate] = React.useState('');
-    const [endDate, setEndDate] = React.useState('');
+    const [startDate, setStartDate] = React.useState(new Date().toISOString().slice(0, 10));
+    const [endDate, setEndDate] = React.useState(new Date().toISOString().slice(0, 10));
     const [asset, setAsset] = React.useState('');
+    const [currency, setCurrency] = React.useState('');
     const [loading, setLoading] = React.useState(false);
 
     const firstElemIndex = useSelector((state: RootState) => selectFirstElemIndex(state, DEFAULT_LIMIT));
@@ -43,7 +44,7 @@ export const HistoryTrade: FC = (): ReactElement => {
 
     useDocumentTitle('Trade History');
     useMarketsFetch();
-    useHistoryFetch({ type: 'trades', limit: DEFAULT_LIMIT, page: currentPage });
+    useHistoryFetch({ type: 'trades', limit: DEFAULT_LIMIT, currency, page: currentPage });
 
     const onClickPrevPage = () => {
         setCurrentPage(Number(page) - 1);
@@ -53,12 +54,6 @@ export const HistoryTrade: FC = (): ReactElement => {
     };
 
     React.useEffect(() => {
-        if (list) {
-            setHistorys(list);
-        }
-    }, [list]);
-
-    React.useEffect(() => {
         setLoading(true);
         if (!historyLoading) {
             setLoading(false);
@@ -66,8 +61,15 @@ export const HistoryTrade: FC = (): ReactElement => {
     }, [historyLoading]);
 
     React.useEffect(() => {
+        setHistorys(list);
+    }, [list]);
+
+    React.useEffect(() => {
         if (startDate != '' && endDate != '') {
-            const filterredList = list.filter(
+            let filterredList;
+            let temp;
+            temp = list;
+            filterredList = temp.filter(
                 (item) =>
                     moment(item.created_at).format() >= moment(startDate).format() &&
                     moment(item.created_at).format() <= moment(endDate).format()
@@ -84,13 +86,15 @@ export const HistoryTrade: FC = (): ReactElement => {
           }))
         : [];
 
-    const filterredAsset = (id) => {
-        let filterredList;
-        let temp;
-        temp = list;
-        filterredList = temp.filter((item) => item.market === id);
-        setHistorys(id === '' ? historys : filterredList);
-    };
+    // console.log(formattedMarkets);
+
+    // const filterredAsset = (id) => {
+    //     let filterredList;
+    //     let temp;
+    //     temp = list;
+    //     filterredList = temp.filter((item) => item.market === id);
+    //     setHistorys(id === '' ? historys : filterredList);
+    // };
 
     const getTableHeaders = () => {
         return ['Date', 'Side', 'Market', 'Type', 'Volume', 'Price', 'Total'];
@@ -122,7 +126,7 @@ export const HistoryTrade: FC = (): ReactElement => {
         );
         return {
             label: customLabel,
-            value: item.id,
+            value: item.base_unit,
         };
     });
 
@@ -137,6 +141,7 @@ export const HistoryTrade: FC = (): ReactElement => {
                         onChange={(e) => {
                             setStartDate(e.target.value);
                         }}
+                        value={startDate}
                     />
                 </div>
 
@@ -148,6 +153,7 @@ export const HistoryTrade: FC = (): ReactElement => {
                         onChange={(e) => {
                             setEndDate(e.target.value);
                         }}
+                        value={endDate}
                     />
                 </div>
 
@@ -155,13 +161,15 @@ export const HistoryTrade: FC = (): ReactElement => {
                     <p className="m-0 white-text text-sm mb-8">Assets</p>
                     <Select
                         value={optionAssets.filter(function (option) {
-                            return option.value === asset;
+                            return option.value === currency;
                         })}
                         styles={CustomStylesSelect}
                         options={optionAssets}
                         onChange={(e) => {
-                            setAsset(e.value);
-                            filterredAsset(e.value);
+                            setCurrency(e.value);
+                            console.log(list);
+
+                            // filterredAsset(e.value);
                         }}
                     />
                 </div>
@@ -190,7 +198,7 @@ export const HistoryTrade: FC = (): ReactElement => {
                     )}
 
                     {loading && <Loading />}
-                    {!historys[0] && !loading && <NoData text="No Data Yet" />}
+                    {historys.length < 1 && !loading && <NoData text="No Data Yet" />}
                 </div>
             </div>
         </React.Fragment>

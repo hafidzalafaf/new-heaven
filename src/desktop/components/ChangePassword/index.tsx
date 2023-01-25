@@ -33,7 +33,7 @@ export const ChangePasswordComponent = (props) => {
     const [showModalConfirmation, setShowModalConfirmation] = React.useState(false);
     const [showModalResendCode, setShowModalResendCode] = React.useState(false);
     const [seconds, setSeconds] = React.useState(30000);
-    const [timerActive, setTimerActive] = React.useState(false);
+    const [timerActive, setTimerActive] = React.useState(true);
 
     const location: { state: { email: string } } = useLocation();
     const dispatch = useDispatch();
@@ -238,13 +238,15 @@ export const ChangePasswordComponent = (props) => {
                         color: '#F2F0FF',
                     }}
                     inputFocusStyle={{ fontSize: '20px', color: '#F2F0FF' }}
-                    autoSelect={true}
+                    autoSelect={false}
                     regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
                 />
                 <button
                     onClick={() => setShowModalResendCode(!showModalResendCode)}
                     disabled={timerActive}
-                    className="text-right text-sm grey-text cursor-pointer m-0 p-0 btn-transparent">
+                    className={`text-right text-sm cursor-pointer m-0 p-0 btn-transparent ${
+                        timerActive ? 'grey-text' : 'gradient-text'
+                    }`}>
                     Resend Code
                 </button>
                 <p className={`text-right text-xs cursor-pointer ${timerActive ? 'white-text' : 'grey-text'}`}>

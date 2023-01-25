@@ -42,6 +42,8 @@ export const ModalBeneficiaryList: React.FunctionComponent<ModalBeneficiaryListP
 
     const currencies = useSelector(selectCurrencies);
     const wallets = useSelector(selectWallets);
+    const [showModalCancel, setShowModalCancel] = React.useState(false);
+    const [deleteRowId, setDeleteRowId] = React.useState<Beneficiary>();
     const beneficiaries: Beneficiary[] = useSelector(selectBeneficiaries);
     const beneficiariesDeleteSuccess = useSelector(selectBeneficiariesDeleteSuccess);
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
@@ -61,6 +63,7 @@ export const ModalBeneficiaryList: React.FunctionComponent<ModalBeneficiaryListP
         (item: Beneficiary) => () => {
             dispatch(beneficiariesDelete({ id: item.id }));
             props.handleDelete();
+            setShowModalCancel(false);
         },
         []
     );
@@ -77,6 +80,23 @@ export const ModalBeneficiaryList: React.FunctionComponent<ModalBeneficiaryListP
             </React.Fragment>
         );
     };
+
+    const renderModalDeleteRow = () => (
+        <React.Fragment>
+            <h6 className="text-md white-text font-semibold mb-24  text-center">Are you sure to Delete Address?</h6>
+            <p className="text-sm grey-text-accent m-0 p-0 mb-24  text-center">
+                The beneficiary address will be deleted
+            </p>
+            <div className="d-flex  justify-content-center">
+                <button className="btn btn-danger sm px-5 mr-3" onClick={() => setShowModalCancel(false)}>
+                    Close
+                </button>
+                <button onClick={handleDeleteAddress(deleteRowId)} type="button" className="btn btn-primary sm px-5">
+                    Confirm
+                </button>
+            </div>
+        </React.Fragment>
+    );
 
     const renderContentBeneficiaryList = () => {
         return (
@@ -154,7 +174,10 @@ export const ModalBeneficiaryList: React.FunctionComponent<ModalBeneficiaryListP
                                                 : 'Unactive'}
                                         </td>
                                         <button
-                                            onClick={handleDeleteAddress(el)}
+                                            onClick={() => {
+                                                setDeleteRowId(el);
+                                                setShowModalCancel(true);
+                                            }}
                                             className="btn-transparent w-auto cursor-pointer">
                                             <TrashIcon />
                                         </button>
@@ -187,6 +210,7 @@ export const ModalBeneficiaryList: React.FunctionComponent<ModalBeneficiaryListP
                     />
                 </div>
             )}
+            {<Modal show={showModalCancel} content={renderModalDeleteRow()} />}
         </React.Fragment>
     );
 };

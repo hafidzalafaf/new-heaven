@@ -76,14 +76,20 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
 
     const disabledButtonSell = () => {
         if (!isLoggedin) {
+            console.log('1');
+
             return true;
         }
 
         if (orderLoading) {
+            console.log('2');
+
             return true;
         }
 
         if (amountSell < currentMarket?.min_amount) {
+            console.log('3');
+
             return true;
         }
 
@@ -93,6 +99,8 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
 
         if (orderType == 'limit') {
             if (priceSell === '0') {
+                console.log('4');
+
                 return true;
             }
         }
@@ -120,16 +128,16 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
 
     const renderModalContentSell = () => (
         <React.Fragment>
-            <h6 className="text-md white-text font-semibold mb-24">
+            <h6 className="text-md white-text font-semibold mb-24 text-center">
                 Are you sure to Sell {currentMarket?.base_unit?.toUpperCase()}?
             </h6>
-            <ul className="pl-2 mb-24">
+            <ul className="pl-2 mb-24 text-center style-none">
                 <li className="text-ms grey-text-accent font-semibold">
                     Sell in {amountSell} {currentMarket?.base_unit?.toUpperCase()} = $ {totalSell}
                 </li>
                 <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalSell}</li>
             </ul>
-            <div className="d-flex">
+            <div className="d-flex justify-content-center">
                 <button className="btn btn-danger sm px-5 mr-3" onClick={handleCancelModalSell}>
                     Cancel
                 </button>
@@ -142,16 +150,16 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
 
     const renderModalContentBuy = () => (
         <React.Fragment>
-            <h6 className="text-md white-text font-semibold mb-24">
+            <h6 className="text-md white-text font-semibold mb-24 text-center">
                 Are you sure to Buy {currentMarket?.base_unit?.toUpperCase()}?
             </h6>
-            <ul className="pl-2 mb-24">
+            <ul className="pl-2 mb-24 text-center style-none">
                 <li className="text-ms grey-text-accent font-semibold">
                     Bought {amountBuy} {currentMarket?.base_unit?.toUpperCase()} = $ {totalBuy}
                 </li>
                 <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalBuy}</li>
             </ul>
-            <div className="d-flex">
+            <div className="d-flex justify-content-center">
                 <button className="btn btn-danger sm px-5 mr-3" onClick={handleCancelModalBuy}>
                     Cancel
                 </button>

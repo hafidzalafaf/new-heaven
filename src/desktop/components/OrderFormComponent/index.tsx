@@ -86,6 +86,7 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
                     <input
                         type="text"
                         disabled={orderType === 'market'}
+                        placeholder={'0'}
                         defaultValue={
                             orderType === 'market'
                                 ? amount != '0'

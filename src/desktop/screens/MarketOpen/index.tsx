@@ -164,7 +164,11 @@ export const MarketOpen: FC = (): ReactElement => {
 
     const getTableData = (data) => {
         return data.map((item) => [
-            <p className="m-0 text-sm white-text">{moment(item.created_at).format('D MMM YYYY - HH:mm')}</p>,
+            <p className="m-0 text-sm white-text">
+                {!item.maker_fee
+                    ? moment(item.created_at * 1000).format('DD-MM-YYYY HH:mm:ss')
+                    : moment(item.created_at).format('DD-MM-YYYY HH:mm:ss')}
+            </p>,
             <p className="m-0 text-sm white-text">{item.market.toUpperCase()}</p>,
             <p className={`m-0 text-sm ${item.side == 'buy' ? 'green-text' : 'danger-text'}`}>
                 {item.side === 'buy' ? 'Buy' : 'Sell'}
@@ -224,12 +228,12 @@ export const MarketOpen: FC = (): ReactElement => {
 
     const renderModalContentCancel = () => (
         <React.Fragment>
-            <h6 className="text-md white-text font-semibold mb-24">Are you sure to Cancel Orders?</h6>
-            <p className="text-sm grey-text-accent m-0 p-0 mb-24">
+            <h6 className="text-md white-text font-semibold mb-24  text-center">Are you sure to Cancel Orders?</h6>
+            <p className="text-sm grey-text-accent m-0 p-0 mb-24  text-center">
                 The order you made for this transaction will be canceled and you will have to repeat the transaction
                 again
             </p>
-            <div className="d-flex">
+            <div className="d-flex  justify-content-center">
                 <button className="btn btn-danger sm px-5 mr-3" onClick={() => setShowModalCancel(false)}>
                     Close
                 </button>
@@ -331,7 +335,7 @@ export const MarketOpen: FC = (): ReactElement => {
                                 <button
                                     type="button"
                                     onClick={() => setShowModalCancelAll(true)}
-                                    className="btn btn-secondary">
+                                    className="btn btn-danger">
                                     Cancel All Orders <ModalCloseIcon className="small-icon" />
                                 </button>
                             </div>

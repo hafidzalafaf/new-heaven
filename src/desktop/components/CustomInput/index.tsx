@@ -87,7 +87,7 @@ class CustomInput extends React.Component<Props, State> {
                             onClick={handleClick}
                             disabled={isDisabled}
                             onKeyPress={onKeyPress}
-                            autoComplete={autoComplete}
+                            autoComplete={'off'}
                             name={name}
                             className={classNameInput}
                         />

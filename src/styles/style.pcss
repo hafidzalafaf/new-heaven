@@ -52,6 +52,34 @@ body {
     overflow-x: hidden;
 }
 
+/* Change the white to any color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--body-background-color) inset !important;
+}
+
+/*Change text in autofill textbox*/
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-secondary-color) !important;
+}
+
+.pincode-input-container {
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px var(--border-color) inset !important;
+    }
+
+    /*Change text in autofill textbox*/
+    input:-webkit-autofill {
+        -webkit-text-fill-color: var(--text-secondary-color) !important;
+        color: #fff !important;
+    }
+}
+
 /* background color variable */
 .dark-bg-main {
     background: var(--main-background-color) !important;

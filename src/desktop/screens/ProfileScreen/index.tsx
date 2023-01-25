@@ -52,6 +52,7 @@ export const ProfileScreen: FC = (): ReactElement => {
 
     const [seconds, setSeconds] = useState(30000);
     const [timerActive, setTimerActive] = useState(false);
+    const [accountVerified, setAccountVerified] = useState(false);
     const [kycStatus, setKycStatus] = useState('');
     const [profilekycStatus, setProfileKycStatus] = useState('');
     const phone = user.phones.slice(-1);
@@ -148,6 +149,32 @@ export const ProfileScreen: FC = (): ReactElement => {
             return true;
         }
     };
+
+    useEffect(() => {
+        if (user?.labels[2]?.key == 'otp') {
+            if (
+                user?.labels[0]?.value == 'verified' &&
+                user?.labels[1]?.value == 'verified' &&
+                user?.labels[3]?.value == 'verified' &&
+                user?.labels[4]?.value == 'verified'
+            ) {
+                setAccountVerified(true);
+            } else {
+                setAccountVerified(false);
+            }
+        } else {
+            if (
+                user?.labels[0]?.value == 'verified' &&
+                user?.labels[1]?.value == 'verified' &&
+                user?.labels[2]?.value == 'verified' &&
+                user?.labels[3]?.value == 'verified'
+            ) {
+                setAccountVerified(true);
+            } else {
+                setAccountVerified(false);
+            }
+        }
+    }, [user]);
 
     // Render phone modal
     const modalPhoneContent = () => {
@@ -343,7 +370,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                     <div className="profile-menu px-24 mb-24">
                         <div className="row">
                             <div className="col-6 col-lg-8">
-                                {user && user.labels && user.labels.length === 5 ? (
+                                {accountVerified ? (
                                     ''
                                 ) : (
                                     <div className="notification-warning alert show text-ms white-text font-normal position-relative mb-24">
@@ -356,23 +383,21 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 )}
                                 <div className="main-menu">
                                     <div className="menu-item py-24 mb-4">
-                                        <Link to={'/change-email'}>
-                                            <div className="d-flex align-items-center position-relative">
-                                                <div className="icon-bg">
-                                                    <EmailProfileIcon />
-                                                </div>
-                                                <div className="ml-3 mr-3">
-                                                    <p className="mb-1 text-ms font-normal white-text">Email</p>
-                                                    <span className="d-block text-xs grey-text-accent font-normal ">
-                                                        {user.email}
-                                                    </span>
-                                                    <span className="text-xs contrast-text font-normal">Verified</span>
-                                                </div>
-                                                <div className="check">
-                                                    <CheckIcon />
-                                                </div>
+                                        <div className="d-flex align-items-center position-relative">
+                                            <div className="icon-bg">
+                                                <EmailProfileIcon />
                                             </div>
-                                        </Link>
+                                            <div className="ml-3 mr-3">
+                                                <p className="mb-1 text-ms font-normal white-text">Email</p>
+                                                <span className="d-block text-xs grey-text-accent font-normal ">
+                                                    {user.email}
+                                                </span>
+                                                <span className="text-xs contrast-text font-normal">Verified</span>
+                                            </div>
+                                            <div className="check">
+                                                <CheckIcon />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="menu-item py-24 mb-4">
                                         <Link to={kycStatus == 'verified' ? '/profile' : '/profile/kyc'}>

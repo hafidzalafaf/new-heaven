@@ -169,10 +169,10 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                       </Decimal>,
                       formatWithSeparators(estimatedValue, ','),
                       <Decimal key={index} fixed={fixed} thousSep=",">
-                          {spotBalance}
+                          {spotBalance ? spotBalance.toString() : '0'}
                       </Decimal>,
                       <Decimal key={index} fixed={fixed} thousSep=",">
-                          {spotLocked}
+                          {spotLocked ? spotLocked.toString() : '0'}
                       </Decimal>,
                       <div key={index} className="ml-auto">
                           <button

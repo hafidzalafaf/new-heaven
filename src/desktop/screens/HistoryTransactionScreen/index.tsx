@@ -82,7 +82,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         if (!historyLoading) {
             setLoading(false);
         }
-    }, [historyLoading, list]);
+    }, [historyLoading]);
 
     React.useEffect(() => {
         setHistorys(list);
@@ -110,7 +110,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
 
     const getTableData = (data) => {
         return data.map((item) => [
-            <p className="m-0 text-sm white-text">{moment(item.created_at).format('D MMM YYYY - HH:mm')}</p>,
+            <p className="m-0 text-sm white-text">{moment(item.created_at).format('DD-MM-YYYY HH:mm:ss')}</p>,
             <p
                 className={`m-0 text-sm font-bold ${
                     type === 'deposits' ? 'contrast-text' : type === 'withdraws' ? 'danger-text' : 'blue-text'

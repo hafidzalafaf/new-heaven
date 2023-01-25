@@ -77,7 +77,7 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
             code: '',
             resendCodeActive: false,
             seconds: 30000,
-            timerActive: false,
+            timerActive: true,
             timer: null,
         };
     }
@@ -181,7 +181,9 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
                                         ) : (
                                             <button
                                                 disabled={this.state.timerActive}
-                                                className="btn-send-again text-sm grey-text border-none bg-transparent cursor-pointer p-0"
+                                                className={`btn-send-again text-sm border-none bg-transparent cursor-pointer p-0 ${
+                                                    this.state.timerActive ? 'grey-text' : 'gradient-text'
+                                                }`}
                                                 onClick={this.handleClick}>
                                                 Resend Code
                                             </button>
