@@ -8,7 +8,7 @@ import { numberFormat, accumulateVolume, calcMaxVolume } from '../../../helpers'
 import { Decimal, Loading } from '../../../components';
 import { NoData } from '../../../desktop/components';
 
-const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handleSelectPriceBids }) => {
+const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handleSelectPriceBids, orderType }) => {
     useOpenOrdersFetch();
     useDepthFetch();
 
@@ -85,11 +85,14 @@ const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handle
                                                     key={i}
                                                     onClick={() =>
                                                         isLoggedIn &&
+                                                        orderType == 'limit' &&
                                                         handleSelectPriceAsks(
                                                             Decimal.format(+item[0], currentMarket?.price_precision)
                                                         )
                                                     }
-                                                    className={`m-0 p-0 ${isLoggedIn && 'cursor-pointer'}`}>
+                                                    className={`m-0 p-0 ${
+                                                        isLoggedIn && orderType == 'limit' && 'cursor-pointer'
+                                                    }`}>
                                                     <td>
                                                         <p className="text-sm danger-text font-bold m-0 p-0 text-left">
                                                             {Decimal.format(+item[0], currentMarket?.price_precision)}
@@ -150,11 +153,14 @@ const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handle
                                                 key={i}
                                                 onClick={() =>
                                                     isLoggedIn &&
+                                                    orderType == 'limit' &&
                                                     handleSelectPriceBids(
                                                         Decimal.format(+item[0], currentMarket?.price_precision)
                                                     )
                                                 }
-                                                className={`m-0 p-0 ${isLoggedIn && 'cursor-pointer'}`}>
+                                                className={`m-0 p-0 ${
+                                                    isLoggedIn && orderType == 'limit' && 'cursor-pointer'
+                                                }`}>
                                                 <td>
                                                     <p className="text-sm green-text font-bold m-0 p-0 text-left">
                                                         {Decimal.format(+item[0], currentMarket?.price_precision)}

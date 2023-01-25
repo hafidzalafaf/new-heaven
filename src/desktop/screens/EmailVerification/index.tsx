@@ -180,6 +180,7 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
                                             <Spinner animation="border" variant="primary" />
                                         ) : (
                                             <button
+                                                disabled={this.state.timerActive}
                                                 className="btn-send-again text-sm grey-text border-none bg-transparent cursor-pointer p-0"
                                                 onClick={this.handleClick}>
                                                 Resend Code

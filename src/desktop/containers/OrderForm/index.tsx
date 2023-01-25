@@ -91,12 +91,10 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
         //     return true;
         // }
 
-        if (amountSell === '0') {
-            return true;
-        }
-
-        if (priceSell === '0') {
-            return true;
+        if (orderType == 'limit') {
+            if (priceSell === '0') {
+                return true;
+            }
         }
     };
 
@@ -113,12 +111,10 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
             return true;
         }
 
-        if (amountBuy === '0') {
-            return true;
-        }
-
-        if (priceBuy === '0') {
-            return true;
+        if (orderType == 'limit') {
+            if (priceBuy === '0') {
+                return true;
+            }
         }
     };
 
