@@ -523,7 +523,12 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
         }
 
         return (
-            <div className={desktopCls}>
+            <div
+                className={desktopCls}
+                onClick={() => {
+                    localStorage.setItem('showProfileDropdown', 'false');
+                    localStorage.setItem('showLanguage', 'false');
+                }}>
                 <Switch>
                     <PublicRoute loading={userLoading} isLogged={isLoggedIn} path="/signin" component={SignInScreen} />
                     <PublicRoute loading={userLoading} isLogged={isLoggedIn} path="/signup" component={SignUpScreen} />

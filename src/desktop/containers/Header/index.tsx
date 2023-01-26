@@ -141,13 +141,34 @@ class Head extends React.Component<Props, HeaderState> {
 
         const ticker = this.props.tickers[this.props.currentMarket?.id];
 
+        // if (window.performance) {
+        //     console.info('window.performance works fine on this browser');
+        // }
+        // console.info(performance.navigation.type);
+        // if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+        //     console.info('This page is reloaded');
+        // } else {
+        //     console.info('This page is not reloaded');
+        // }
+
+        if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+            localStorage.setItem('showProfileDropdown', 'false');
+            localStorage.setItem('showLanguage', 'false');
+        }
+
         return (
             <React.Fragment>
                 <nav
                     className={`navbar navbar-expand-lg py-2 px-24 ${
                         thisTradingHeader ? 'dark-bg-accent' : 'dark-bg-accent'
                     }`}>
-                    <Link to="/" className="navbar-brand">
+                    <Link
+                        onClick={() => {
+                            localStorage.setItem('showProfileDropdown', 'false');
+                            localStorage.setItem('showLanguage', 'false');
+                        }}
+                        to="/"
+                        className="navbar-brand">
                         <Logo />
                     </Link>
                     <div className="d-flex align-items-center">
@@ -222,7 +243,11 @@ class Head extends React.Component<Props, HeaderState> {
                             this.state.showHeader && 'show'
                         } navbar-collapse justify-content-between`}
                         id="navbarNavDropdown">
-                        <div>
+                        <div
+                            onClick={() => {
+                                localStorage.setItem('showProfileDropdown', 'false');
+                                localStorage.setItem('showLanguage', 'false');
+                            }}>
                             {!thisAuthHeader ? (
                                 <React.Fragment>
                                     <ul className="navbar-nav main-navbar">
@@ -365,12 +390,20 @@ class Head extends React.Component<Props, HeaderState> {
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false"
-                                    onClick={() =>
-                                        this.setState({ showLanguage: !showLanguage, showProfileDropdown: false })
-                                    }>
+                                    // onClick={() =>
+                                    //     this.setState({ showLanguage: !showLanguage, showProfileDropdown: false })
+                                    // }
+                                    onClick={() => {
+                                        if (localStorage.getItem('showLanguage') == 'false') {
+                                            localStorage.setItem('showProfileDropdown', 'false');
+                                            localStorage.setItem('showLanguage', 'true');
+                                        } else {
+                                            localStorage.setItem('showLanguage', 'false');
+                                        }
+                                    }}>
                                     EN/USD
                                 </a>
-                                {showLanguage ? (
+                                {localStorage.getItem('showLanguage') == 'true' ? (
                                     <div
                                         className="dropdown-menu dark-bg-accent p-3 radius-sm"
                                         aria-labelledby="navbarDropdownMenuLink">
@@ -413,20 +446,35 @@ class Head extends React.Component<Props, HeaderState> {
 
                             {isLoggedIn ? (
                                 <li className="nav-item dropdown avatar px-3">
-                                    <div
+                                    <a
                                         className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm"
-                                        onClick={() =>
-                                            this.setState({
-                                                showProfileDropdown: !showProfileDropdown,
-                                                showLanguage: false,
-                                            })
-                                        }>
+                                        href="#"
+                                        id="navbarDropdownMenuProfile"
+                                        role="button"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                        // onClick={() =>
+                                        //     this.setState({
+                                        //         showProfileDropdown: !showProfileDropdown,
+                                        //         showLanguage: false,
+                                        //     })
+                                        // }
+
+                                        onClick={() => {
+                                            if (localStorage.getItem('showProfileDropdown') == 'false') {
+                                                localStorage.setItem('showProfileDropdown', 'true');
+                                                localStorage.setItem('showLanguage', 'false');
+                                            } else {
+                                                localStorage.setItem('showProfileDropdown', 'false');
+                                            }
+                                        }}>
                                         <img src="/img/avatar.png" className="avatar-image" alt="" />
-                                    </div>
-                                    {showProfileDropdown ? (
+                                    </a>
+                                    {localStorage.getItem('showProfileDropdown') == 'true' ? (
                                         <div
                                             className="dropdown-menu dark-bg-accent p-3 radius-sm"
-                                            aria-labelledby="navbarDropdownMenuLink">
+                                            aria-labelledby="navbarDropdownMenuProfile">
                                             {ProfileDropdown.map((item, index) => (
                                                 <div
                                                     key={index}

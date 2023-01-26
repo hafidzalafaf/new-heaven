@@ -65,6 +65,8 @@ interface DispatchProps {
 interface ProfileApiKeysState {
     otpCode: string;
     codeFocused: boolean;
+    showModalDelete: boolean;
+    itemDelete: any;
 }
 
 type Props = ReduxProps & DispatchProps & IntlProps;
@@ -73,6 +75,8 @@ class ProfileApiKeysComponent extends React.Component<Props, ProfileApiKeysState
     public state = {
         otpCode: '',
         codeFocused: false,
+        showModalDelete: false,
+        itemDelete: {},
     };
 
     public t = (key: string) => {
@@ -96,6 +100,31 @@ class ProfileApiKeysComponent extends React.Component<Props, ProfileApiKeysState
 
     public render() {
         const { apiKeys, dataLoaded, firstElemIndex, lastElemIndex, nextPageExists, pageIndex, user } = this.props;
+
+        const renderModalContentCancel = () => (
+            <React.Fragment>
+                <h6 className="text-md white-text font-semibold mb-24  text-center">Are you sure to Delete Api Key?</h6>
+                <p className="text-sm grey-text-accent m-0 p-0 mb-24  text-center">
+                    The API Key you made will be deleted
+                </p>
+                <div className="d-flex  justify-content-center">
+                    <button
+                        className="btn btn-danger sm px-5 mr-3"
+                        onClick={() => this.setState({ showModalDelete: false })}>
+                        Close
+                    </button>
+                    <button
+                        onClick={() => {
+                            this.handleDeleteKeyClick(this.state.itemDelete);
+                            this.setState({ showModalDelete: false });
+                        }}
+                        type="button"
+                        className="btn btn-primary sm px-5">
+                        Confirm
+                    </button>
+                </div>
+            </React.Fragment>
+        );
 
         return (
             <React.Fragment>
@@ -171,6 +200,12 @@ class ProfileApiKeysComponent extends React.Component<Props, ProfileApiKeysState
                         {this.renderModalBody()}
                     </div>
                 </Modal>
+
+                {this.state.showModalDelete && (
+                    <Modal show={this.state.showModalDelete}>
+                        <div className="p-4">{renderModalContentCancel()}</div>
+                    </Modal>
+                )}
             </React.Fragment>
         );
     }
@@ -208,7 +243,11 @@ class ProfileApiKeysComponent extends React.Component<Props, ProfileApiKeysState
                     />
                 </Form>
             </div>,
-            <p className="danger-text text-sm cursor-pointer" onClick={() => this.handleDeleteKeyClick(item)}>
+            <p
+                className="danger-text text-sm cursor-pointer"
+                onClick={() => {
+                    this.setState({ itemDelete: item, showModalDelete: true });
+                }}>
                 Delete
             </p>,
         ]);

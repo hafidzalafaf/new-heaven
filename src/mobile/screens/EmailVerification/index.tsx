@@ -22,25 +22,18 @@ import {
     createConfirmationCodeFetch,
     selectConfirmationCodeCreateSuccess,
 } from '../../../modules';
-import { CommonError } from '../../../modules/types';
+import { Link } from 'react-router-dom';
 import { ArrowLeft } from '../../assets/Arrow';
 import PinInput from 'react-pin-input';
 import { CheckSuccess } from '../../assets/CheckIcon';
 import { ErrorIcon } from '../../assets/ErrorIcon';
+import moment from 'moment';
 
 type LocationProps = {
     state: {
         email: string;
     };
 };
-
-// type ErrorProps = {
-//     error?: CommonError;
-// };
-
-// type CaptchaResponseProps = {
-//     captcha_response?: string | GeetestCaptchaResponse;
-// };
 
 const EmailVerificationMobileScreen: React.FC = () => {
     const dispatch = useDispatch();
@@ -61,6 +54,8 @@ const EmailVerificationMobileScreen: React.FC = () => {
 
     const [code, setCode] = React.useState('');
     const [verificationStatus, setVerificationStatus] = React.useState({ type: '', show: false });
+    const [seconds, setSeconds] = React.useState(30000);
+    const [timerActive, setTimerActive] = React.useState(true);
 
     React.useEffect(() => {
         setDocumentTitle('Email Verification');
@@ -85,6 +80,24 @@ const EmailVerificationMobileScreen: React.FC = () => {
         setCode(value);
     };
 
+    React.useEffect(() => {
+        let timer = null;
+        if (timerActive) {
+            timer = setInterval(() => {
+                setSeconds((seconds) => seconds - 1000);
+
+                if (seconds === 0) {
+                    setTimerActive(false);
+                    setSeconds(30000);
+                }
+            }, 1000);
+        }
+
+        return () => {
+            clearInterval(timer);
+        };
+    });
+
     const handleVerify = () => {
         dispatch(createConfirmationCodeFetch({ email, code }));
     };
@@ -93,6 +106,9 @@ const EmailVerificationMobileScreen: React.FC = () => {
         switch (captchaType()) {
             case 'recaptcha':
             case 'geetest':
+                if (email && captcha_response) {
+                    setTimerActive(true);
+                }
                 dispatch(
                     emailVerificationFetch({
                         email,
@@ -140,7 +156,9 @@ const EmailVerificationMobileScreen: React.FC = () => {
     return (
         <React.Fragment>
             <div className="mobile-container no-header dark-bg-main">
-                <ArrowLeft className={'back'} />
+                <Link to={`/signin`}>
+                    <ArrowLeft className={'back'} />
+                </Link>
                 <h1 className="mt-4 font-extrabold text-md grey-text-accent mb-3">Verification</h1>
                 <p className="text-sm grey-text">Enter the code we just sent you on your email address</p>
                 <PinInput
@@ -165,16 +183,24 @@ const EmailVerificationMobileScreen: React.FC = () => {
                     autoSelect={true}
                     regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
                 />
-                <div className=" text-right countdown-container mb-3">
+                <div className=" text-right countdown-container m-0">
                     {emailVerificationLoading ? (
                         <Spinner animation="border" variant="primary" />
                     ) : (
-                        <button onClick={handleResend} className="mb-0 grey-text text-xs bg-transparent border-0">
+                        <button
+                            disabled={timerActive}
+                            onClick={handleResend}
+                            className={`text-right text-sm cursor-pointer m-0 p-0 btn-transparent ${
+                                timerActive ? 'grey-text' : 'gradient-text'
+                            }`}>
                             Resend Code
-                            {/* <span>: (00:59)</span> */}
                         </button>
                     )}
                 </div>
+
+                <p className={`text-right text-xs cursor-pointer ${timerActive ? 'white-text' : 'grey-text'}`}>
+                    {moment(seconds).format('mm:ss')}
+                </p>
 
                 <div className="mt-4 mb-2">{renderCaptcha()}</div>
 

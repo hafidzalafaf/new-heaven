@@ -60,6 +60,7 @@ interface ProfileSecurityState {
     phone: any;
     timer: any;
     kyc: any;
+    label: any;
 }
 
 interface OwnProps {
@@ -115,6 +116,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
             phone: this.props.user.phones.slice(-1),
             timer: null,
             kyc: this.props.user.profiles.slice(-1),
+            label: this.props.user.labels,
         };
     }
 
@@ -124,7 +126,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
 
     public componentDidUpdate(previousProps, previousState) {
         let time = null;
-        if (previousState === this.state.timerActive) {
+        if (!previousState.timerActive && this.state.timerActive) {
             time = setInterval(() => {
                 this.setState({ seconds: this.state.seconds - 1000 });
 
@@ -169,6 +171,8 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
             await this.props.toggle2faFetch({ code: twoFaCode, enable: false });
             this.setState({ showTwoFaModal: !this.state.showTwoFaModal });
         };
+
+        const labelPhone = [...this.state.label].find((item) => item.key === 'phone');
 
         return (
             <React.Fragment>
@@ -265,8 +269,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                                         <div className="ml-4">
                                             <p className="d-flex mb-1 text-ms white-text font-bold">
                                                 Phone Number Verification
-                                                {!this.props.user.phones[0] ||
-                                                this.state.phone[0].validated_at === null ? (
+                                                {labelPhone?.value !== 'verified' ? (
                                                     <CloseIconSecurity className="ml-3" />
                                                 ) : (
                                                     <CheckIcon className="ml-3" />
@@ -352,7 +355,13 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                     ) : (this.props.user.phones[0] && this.state.isChangeNumber) ||
                       this.props.user.phones[0].validated_at !== null ? (
                         <p className="danger-text">
-                            You only have {5 - this.props.user.phones.length} chances to change your phone number
+                            {this.props.user.phones.length === 4 && this.state.isChangeNumber
+                                ? `Sorry, you run out of time for changing your phone number`
+                                : this.props.user.phones.length < 4 && this.state.isChangeNumber
+                                ? `You only have ${
+                                      4 - this.props.user.phones.length
+                                  } chances to change your phone number`
+                                : `Please verify your phone number`}
                         </p>
                     ) : (
                         'Set Your New Phone Number And Verified'
@@ -367,18 +376,19 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
 
                 <div className="form">
                     {(this.state.isChangeNumber ||
-                        !this.props.user.phones[0] ||
-                        this.props.user.phones[0].validated_at !== null) && (
+                        !this.state.phone[0] ||
+                        this.state.phone[0].validated_at !== null) && (
                         <div className="form-group mb-24">
                             <CustomInput
-                                defaultLabel={`${!this.props.user.phones[0] ? '' : 'New'} Phone Number`}
+                                defaultLabel={`${!this.state.phone[0] ? '' : 'New'} Phone Number`}
                                 inputValue={this.state.newPhone}
-                                label={`${!this.props.user.phones[0] ? '' : 'New'} Phone Number`}
+                                label={`${!this.state.phone[0] ? '' : 'New'} Phone Number`}
                                 placeholder="+6281902912921"
                                 type="text"
                                 labelVisible
                                 classNameLabel="white-text text-sm"
                                 handleChangeInput={(e) => this.setState({ newPhone: e })}
+                                isDisabled={this.state.phone.length === 4}
                             />
                         </div>
                     )}
@@ -397,16 +407,14 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
                                 handleChangeInput={(e) => this.setState({ confirmationCode: e })}
+                                isDisabled={this.state.phone.length === 4}
                             />
                             <button
                                 type="submit"
                                 disabled={this.disabledButton()}
                                 onClick={this.handleSendCodePhone}
                                 className="btn btn-primary ml-2 text-nowrap">
-                                {(!this.state.isChangeNumber &&
-                                    this.state.phone &&
-                                    this.state.phone[0] &&
-                                    this.state.phone[0].validate_at === null) ||
+                                {(!this.state.isChangeNumber && this.state.phone[0].validated_at === null) ||
                                 this.state.resendCodeActive
                                     ? 'Resend Code'
                                     : 'Send Code'}
@@ -420,8 +428,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                             {moment(this.state.seconds).format('mm:ss')}
                         </p>
 
-                        {!this.state.isChangeNumber &&
-                            !this.props.user.phones[0] &&
+                        {(!this.state.isChangeNumber || !this.props.user.phones[0]) &&
                             this.state.phone[0]?.validated_at === null && (
                                 <p
                                     onClick={() => {
@@ -437,7 +444,6 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                     </div>
 
                     <button
-                        // type="submit"
                         disabled={
                             this.state.phone[0]?.validate_at === null
                                 ? this.state.confirmationCode.length < 5
@@ -452,7 +458,15 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                         data-toggle="modal"
                         data-target="#change-phone"
                         data-dismiss="modal">
-                        {!this.props.user.phones[0] ? 'Add' : 'Change'}
+                        {!this.props.user.phones[0]
+                            ? 'Add'
+                            : this.state.phone[0] &&
+                              this.state.phone[0].validated_at === null &&
+                              !this.state.isChangeNumber
+                            ? 'Verify'
+                            : this.state.isChangeNumber
+                            ? 'Change'
+                            : ''}
                     </button>
                 </div>
             </React.Fragment>
@@ -465,10 +479,9 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                 <h6 className="text-xl font-bold white-text mb-0">
                     {!this.props.user.phones[0]
                         ? 'Add Phone Number'
-                        : this.props.user.phones[0].validated_at === null && !this.state.isChangeNumber
+                        : this.state.phone[0] && this.state.phone[0].validated_at === null && !this.state.isChangeNumber
                         ? 'Veirify Phone Number'
-                        : (this.props.user.phones[0] && this.state.isChangeNumber) ||
-                          this.props.user.phones[0].validated_at !== null
+                        : this.state.isChangeNumber
                         ? 'Change Phone Number'
                         : ''}
                 </h6>
@@ -508,7 +521,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
             return false;
         }
 
-        if (this.state.newPhone === '') {
+        if (this.state.newPhone === '' && !this.state.phone[0]) {
             return true;
         }
 

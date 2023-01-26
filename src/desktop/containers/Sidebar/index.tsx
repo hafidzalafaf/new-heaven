@@ -167,7 +167,12 @@ class Side extends React.Component<Props, SidebarState> {
         return (
             <React.Fragment>
                 {thisSidebarProfile && (
-                    <div className="sidebar dark-bg-accent">
+                    <div
+                        onClick={() => {
+                            localStorage.setItem('showProfileDropdown', 'false');
+                            localStorage.setItem('showLanguage', 'false');
+                        }}
+                        className="sidebar dark-bg-accent">
                         <div className="sticky-sidebar">
                             <div className="mb-36"></div>
                             <ul>

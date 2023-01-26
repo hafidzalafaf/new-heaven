@@ -69,6 +69,7 @@ const MarketOrderMobileScreen: React.FC = () => {
     const [detailData, setDetailData] = React.useState<MarketOrderMobileScreenProps>(
         {} as MarketOrderMobileScreenProps
     );
+    const [deleteRow, setDeleteRow] = React.useState<OrderCommon>();
 
     // Handle get item pagination
     const firstElementIndex = useSelector((state: RootState) => selectOrdersFirstElemIndex(state, 5));
@@ -125,6 +126,7 @@ const MarketOrderMobileScreen: React.FC = () => {
                     list: data,
                 })
             );
+            setShowDetail(false);
         }
     };
 
@@ -183,6 +185,7 @@ const MarketOrderMobileScreen: React.FC = () => {
     const handleItemDetail = (item) => {
         setShowDetail(true);
         setDetailData(item);
+        setDeleteRow(item);
     };
     const renderTableHeader = [
         <p className="mb-0 text-sm grey-text">Coins</p>,
@@ -190,6 +193,7 @@ const MarketOrderMobileScreen: React.FC = () => {
         <p className="mb-0 text-sm grey-text">Price</p>,
         <p className="mb-0 text-sm grey-text">Type</p>,
         <p className="mb-0 text-sm grey-text">Status</p>,
+        <p className="mb-0 text-sm grey-text">Action</p>,
     ];
 
     const renderDataTable = (data) => {
@@ -224,7 +228,7 @@ const MarketOrderMobileScreen: React.FC = () => {
                 key={index}
                 className={`badge text-sm mb-0 cursor-pointer danger-text`}
                 onClick={() => handleItemDetail(data[index])}>
-                Detail
+                Cancel
             </p>,
         ]);
     };
@@ -234,6 +238,7 @@ const MarketOrderMobileScreen: React.FC = () => {
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'cancel' },
         { label: <p className="m-0 text-sm grey-text-accent">Done</p>, value: 'done' },
     ];
+
     const optionAssets = formattedMarkets.map((item) => {
         const customLabel = (
             <div className="d-flex align-items-center">
@@ -315,6 +320,7 @@ const MarketOrderMobileScreen: React.FC = () => {
             <div className="mobile-container pg-market-order no-header dark-bg-main">
                 <div className="d-flex justify-content-between align-items-center head-container">
                     <h1 className="text-md font-extrabold mb-0 grey-text-accent">Market Order</h1>
+
                     <div className="d-flex justify-content-start align-items-center head-action">
                         <span className="mr-8">
                             <FilterIcon />
@@ -325,56 +331,62 @@ const MarketOrderMobileScreen: React.FC = () => {
                     </div>
                 </div>
 
-                <Tabs
-                    id="controlled-tab-example"
-                    defaultActiveKey={tab}
-                    onSelect={(e) => {
-                        setTab(e);
-                        setStartDate('');
-                        setEndDate('');
-                        setAsset('');
-                        setPageIndex(0);
-                    }}
-                    className="">
-                    <Tab eventKey="open" title="Open Order">
-                        <div className="table-mobile-wrapper mb-3">
-                            <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
-                        </div>
-                        {dataListWithIcon[0] && (
-                            <PaginationMobile
-                                firstElementIndex={firstElementIndex}
-                                lastElementIndex={lastElementIndex}
-                                page={page}
-                                nextPageExists={nextPageExists}
-                                onClickPrevPage={onClickPrevPage}
-                                onClickNextPage={onClickNextPage}
-                            />
-                        )}
-                        {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
-                    </Tab>
-                    <Tab eventKey="close" title="Close Order">
-                        <div className="table-mobile-wrapper mb-3">
-                            <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
-                        </div>
-                        {dataListWithIcon[0] && (
-                            <PaginationMobile
-                                firstElementIndex={firstElementIndex}
-                                lastElementIndex={lastElementIndex}
-                                page={page}
-                                nextPageExists={nextPageExists}
-                                onClickPrevPage={onClickPrevPage}
-                                onClickNextPage={onClickNextPage}
-                            />
-                        )}
-                        {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
-                    </Tab>
-                    <div className="ml-auto">
-                        <div className="d-flex justify-content-start align-items-center cancel-all-container">
-                            <p className="p-0 m-0">Close All</p>
+                <div className="position-relative">
+                    <Tabs
+                        id="controlled-tab-example"
+                        defaultActiveKey={tab}
+                        onSelect={(e) => {
+                            setTab(e);
+                            setStartDate('');
+                            setEndDate('');
+                            setAsset('');
+                            setPageIndex(0);
+                        }}
+                        className="position-relative">
+                        <Tab eventKey="open" title="Open Order">
+                            <div className="table-mobile-wrapper mb-3">
+                                <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
+                            </div>
+                            {dataListWithIcon[0] && (
+                                <PaginationMobile
+                                    firstElementIndex={firstElementIndex}
+                                    lastElementIndex={lastElementIndex}
+                                    page={page}
+                                    nextPageExists={nextPageExists}
+                                    onClickPrevPage={onClickPrevPage}
+                                    onClickNextPage={onClickNextPage}
+                                />
+                            )}
+                            {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
+                        </Tab>
+                        <Tab eventKey="close" title="Close Order">
+                            <div className="table-mobile-wrapper mb-3">
+                                <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
+                            </div>
+                            {dataListWithIcon[0] && (
+                                <PaginationMobile
+                                    firstElementIndex={firstElementIndex}
+                                    lastElementIndex={lastElementIndex}
+                                    page={page}
+                                    nextPageExists={nextPageExists}
+                                    onClickPrevPage={onClickPrevPage}
+                                    onClickNextPage={onClickNextPage}
+                                />
+                            )}
+                            {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
+                        </Tab>
+                    </Tabs>
+
+                    <div className="position-absolute cancel-all-container">
+                        <span
+                            onClick={handleCancelAllOrders}
+                            className="d-flex justify-content-start align-items-center cancel-all">
+                            <p className="p-0 m-0">Cancel All</p>
                             <CloseIcon />
-                        </div>
+                        </span>
                     </div>
-                </Tabs>
+                </div>
+
                 <div id="off-canvas" className={`position-fixed off-canvas ${showDetail ? ' show' : ''}`}>
                     <div className="fixed-bottom off-canvas-content-container overflow-auto">
                         <div className="d-flex align-items-center off-canvas-content-head">
@@ -385,6 +397,7 @@ const MarketOrderMobileScreen: React.FC = () => {
                                 src={detailData.dataCurrency?.icon_url}
                                 alt="icon"
                             />
+
                             <h3>{detailData?.market?.toUpperCase()}</h3>
                         </div>
                         <table className="w-100 table-canvas">
@@ -428,7 +441,8 @@ const MarketOrderMobileScreen: React.FC = () => {
                         <button
                             id="cancel-canvas"
                             className="btn btn-danger btn-mobile w-100 mb-3 mt-4"
-                            onClick={() => setShowDetail(false)}>
+                            type="button"
+                            onClick={handleCancelSingleOrder(deleteRow)}>
                             Cancel
                         </button>
                         <button

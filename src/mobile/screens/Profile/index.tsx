@@ -116,6 +116,16 @@ const ProfileMobileScreen: React.FC = () => {
         }
     };
 
+    const handleChangeVerificationCodeValue = (e) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setVerificationCode(value);
+    };
+
+    const handleChangePhoneValue = (e) => {
+        const value = e.replace(/[^0-9+\.]/g, '');
+        setNewPhoneValue(value);
+    };
+
     const handleResetPassword = () => {
         history.push('/change-email');
     };
@@ -144,7 +154,12 @@ const ProfileMobileScreen: React.FC = () => {
         <>
             <div className="mb-24">
                 <div className="d-flex align-items-center mb-5">
-                    <div className="mr-3" onClick={() => setShowModalPhone(!showModalPhone)}>
+                    <div
+                        className="mr-3"
+                        onClick={() => {
+                            setShowModalPhone(!showModalPhone);
+                            setIsChangeNumber(!isChangeNumber);
+                        }}>
                         <ArrowLeft className={'cursor-pointer text-white'} />
                     </div>
                     <span className="text-secondary text-lg">Setting Phone Number</span>
@@ -156,7 +171,7 @@ const ProfileMobileScreen: React.FC = () => {
                         'You already add phone number, please verify by click send code button to get OTP number'
                     ) : user.phones[0] && isChangeNumber ? (
                         <p className="danger-text">
-                            You only have {5 - user.phones.length} chances to change your phone number
+                            You only have {4 - user.phones.length} chances to change your phone number
                         </p>
                     ) : (
                         'Set Your New Phone Number And Verified'
@@ -178,7 +193,7 @@ const ProfileMobileScreen: React.FC = () => {
                                 type="text"
                                 labelVisible
                                 classNameLabel="white-text text-sm"
-                                handleChangeInput={(e) => setNewPhoneValue(e)}
+                                handleChangeInput={(e) => handleChangePhoneValue(e)}
                             />
                         </div>
                     )}
@@ -196,7 +211,7 @@ const ProfileMobileScreen: React.FC = () => {
                                 classNameLabel="d-none"
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
-                                handleChangeInput={(e) => setVerificationCode(e)}
+                                handleChangeInput={(e) => handleChangeVerificationCodeValue(e)}
                             />
                             <button
                                 disabled={disabledButton()}
@@ -296,20 +311,19 @@ const ProfileMobileScreen: React.FC = () => {
                         <h3 className="grey-text-accent font-bold text-sm">36.80.199.122</h3>
                     </div>
                 </div>
-                {!hideWarning && user.level < 3 &&
-                <div className="alert-mobile-warning px-2 py-3 alert d-flex align-items-center justify-content-between show text-xs warning-text font-normal position-relative mb-24">
-                    <WarningIcon className="mr-2" />
-                    <span className="text-xxs warning-text font-normal">
-                        Complete your identity verify to start trading with heaven exchange
-                    </span>
-                    {
-                        user.level >= 3 &&
-                    <div onClick={()=> setHideWarning(true)} className="close-icon cursor-pointer">
-                        <CloseIcon fill="#FF9533" className="ml-2" />
+                {!hideWarning && user.level < 3 && (
+                    <div className="alert-mobile-warning px-2 py-3 alert d-flex align-items-center justify-content-between show text-xs warning-text font-normal position-relative mb-24">
+                        <WarningIcon className="mr-2" />
+                        <span className="text-xxs warning-text font-normal">
+                            Complete your identity verify to start trading with heaven exchange
+                        </span>
+                        {user.level >= 3 && (
+                            <div onClick={() => setHideWarning(true)} className="close-icon cursor-pointer">
+                                <CloseIcon fill="#FF9533" className="ml-2" />
+                            </div>
+                        )}
                     </div>
-                    }
-                </div>
-                }
+                )}
                 <div>
                     <div
                         className=" d-flex align-items-center mb-24 cursor-pointer"

@@ -5,7 +5,7 @@ import { Button, Spinner } from 'react-bootstrap';
 import { injectIntl } from 'react-intl';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import { RouterProps } from 'react-router';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, Link } from 'react-router-dom';
 import { compose } from 'redux';
 import { IntlProps } from '../../../';
 import { accountUploadSizeMaxRange, accountUploadSizeMinRange, languages } from '../../../api/config';
@@ -162,6 +162,11 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
                     <div className="container">
                         <div className="kyc-document-screen">
                             <div>
+                                <div className="mb-3">
+                                    <Link to={'/profile'} className="cursor-pointer">
+                                        <ArrowLeft className={'back'} />
+                                    </Link>
+                                </div>
                                 <h3 className="text-lg text-white font-bold mb-3">KYC Verification</h3>
                                 {kycStatus !== 'pending' && (
                                     <>

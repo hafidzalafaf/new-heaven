@@ -37,8 +37,8 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const [currency, setCurrency] = React.useState('');
     const [type, setType] = React.useState('withdraws');
     const [status, setStatus] = React.useState('');
-    const [startDate, setStartDate] = React.useState('');
-    const [endDate, setEndDate] = React.useState('');
+    const [startDate, setStartDate] = React.useState(new Date().toISOString().slice(0, 10));
+    const [endDate, setEndDate] = React.useState(new Date().toISOString().slice(0, 10));
     const [loading, setLoading] = React.useState(false);
 
     const firstElemIndex = useSelector((state: RootState) => selectFirstElemIndex(state, DEFAULT_LIMIT));
@@ -234,6 +234,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                         onChange={(e) => {
                             setStartDate(e.target.value);
                         }}
+                        value={startDate}
                     />
                 </div>
 
@@ -245,6 +246,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                         onChange={(e) => {
                             setEndDate(e.target.value);
                         }}
+                        value={endDate}
                     />
                 </div>
 

@@ -36,8 +36,8 @@ export const MarketOpen: FC = (): ReactElement => {
 
     const [tab, setTab] = React.useState('open');
     const [currentPageIndex, setPageIndex] = React.useState(0);
-    const [startDate, setStartDate] = React.useState('');
-    const [endDate, setEndDate] = React.useState('');
+    const [startDate, setStartDate] = React.useState(new Date().toISOString().slice(0, 10));
+    const [endDate, setEndDate] = React.useState(new Date().toISOString().slice(0, 10));
     const [data, setData] = React.useState([]);
     const [status, setStatus] = React.useState('');
     const [asset, setAsset] = React.useState('');
@@ -272,6 +272,7 @@ export const MarketOpen: FC = (): ReactElement => {
                         onChange={(e) => {
                             setStartDate(e.target.value);
                         }}
+                        value={startDate}
                     />
                 </div>
 
@@ -283,6 +284,7 @@ export const MarketOpen: FC = (): ReactElement => {
                         onChange={(e) => {
                             setEndDate(e.target.value);
                         }}
+                        value={endDate}
                     />
                 </div>
 

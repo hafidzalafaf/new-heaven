@@ -72,6 +72,8 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                     ...spotWallet,
                     spotBalance: spotWallet ? spotWallet.balance : '0',
                     spotLocked: spotWallet ? spotWallet.locked : '0',
+                    status: cur.status,
+                    network: cur.networks,
                 };
             });
 
@@ -128,16 +130,20 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                               </div>
                           </Link>,
                           <div className="td-available-order d-flex flex-column justify-content-start align-items-start">
-                              <h3 className="p-0 m-0 text-one">Total Balance</h3>
+                              <h3 className="p-0 m-0 text-one">Available</h3>
                               <h4 className="p-0 m-0 text-two">
                                   <Decimal key={index} fixed={fixed} thousSep=",">
-                                      {totalBalance ? totalBalance.toString() : '0'}
+                                      {spotBalance ? spotBalance.toString() : '0'}
                                   </Decimal>
                               </h4>
                           </div>,
                           <div className="td-available-order d-flex flex-column justify-content-start align-items-start">
-                              <h3 className="p-0 m-0 text-one">Estimated Value</h3>
-                              <h4 className="p-0 m-0 text-two">{formatWithSeparators(estimatedValue, ',')}</h4>
+                              <h3 className="p-0 m-0 text-one">On Order</h3>
+                              <h4 className="p-0 m-0 text-two">
+                                  <Decimal key={index} fixed={fixed} thousSep=",">
+                                      {spotLocked ? spotLocked.toString() : '0'}
+                                  </Decimal>
+                              </h4>
                           </div>,
                           <Link to={`/wallets/${currency}/detail`}>
                               <ArrowRight className={''} />
@@ -207,7 +213,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
     return (
         <React.Fragment>
             <div className="mobile-container wallet-list no-header dark-bg-main position-relative">
-                <h1 className="w-100 heading-one mb-24 mt-0">{formatMessage({ id: 'page.mobile.wallets.balance' })}</h1>
+                <h1 className="w-100 heading-one mb-24 mt-0 white-text">Overview</h1>
                 <div className="estimate-container d-flex flex-column w-100">
                     <div className="total-container w-50 d-flex flex-column">
                         <h3 className="text-md grey-text font-bold  mb-0">

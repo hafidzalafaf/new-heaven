@@ -60,7 +60,6 @@ export const ProfileScreen: FC = (): ReactElement => {
     const label = user.labels;
 
     const labelPhone = [...label].find((item) => item.key === 'phone');
-    // const label
 
     React.useEffect(() => {
         if (blogs) {
@@ -187,7 +186,11 @@ export const ProfileScreen: FC = (): ReactElement => {
                         'You already add phone number, please verify by click send code button to get OTP number'
                     ) : (user.phones[0] && isChangeNumber) || user.phones[0] !== null ? (
                         <p className="danger-text">
-                            You only have {5 - user.phones.length} chances to change your phone number
+                            {user.phones.length === 4 && isChangeNumber
+                                ? `Sorry, you run out of time for changing your phone number`
+                                : user.phones.length < 4 && isChangeNumber
+                                ? `You only have ${4 - user.phones.length} chances to change your phone number`
+                                : `Please verify your phone number`}
                         </p>
                     ) : (
                         'Set Your New Phone Number And Verified'
@@ -209,6 +212,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 labelVisible
                                 classNameLabel="white-text text-sm"
                                 handleChangeInput={(e) => setNewPhoneValue(e)}
+                                isDisabled={user.phones.length === 4}
                             />
                         </div>
                     )}
@@ -226,6 +230,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 classNameLabel="d-none"
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
+                                isDisabled={user.phones.length === 4}
                                 handleChangeInput={(e) => setVerificationCode(e)}
                             />
                             <button
@@ -272,9 +277,11 @@ export const ProfileScreen: FC = (): ReactElement => {
                         data-dismiss="modal">
                         {!user.phones[0]
                             ? 'Add'
-                            : user.phones[0] && user.phones[0].validated_at === null && !isChangeNumber
-                            ? 'Veify'
-                            : 'Change'}
+                            : phone[0] && phone[0].validated_at === null
+                            ? 'Verify'
+                            : isChangeNumber
+                            ? 'Change'
+                            : ''}
                     </button>
                 </div>
             </React.Fragment>
@@ -287,9 +294,9 @@ export const ProfileScreen: FC = (): ReactElement => {
                 <h6 className="text-xl font-bold white-text mb-0">
                     {!user.phones[0]
                         ? 'Add Phone Number'
-                        : user.phones[0].validated_at === null && !isChangeNumber
+                        : phone[0] && phone[0].validated_at === null && !isChangeNumber
                         ? 'Veirify Phone Number'
-                        : user.phones[0] !== null || isChangeNumber
+                        : isChangeNumber
                         ? 'Change Phone Number'
                         : ''}
                 </h6>

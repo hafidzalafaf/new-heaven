@@ -95,7 +95,9 @@ class ProfileAccountActivityComponent extends React.Component<Props> {
         return userData.map((item) => {
             return [
                 <div className="d-flex align-items-center">
-                    <DeviceIcon />
+                    <span className="mr-2">
+                        <DeviceIcon />
+                    </span>
                     <p className="mb-0 text-sm grey-text-accent">{getUserAgent(item.user_agent)}</p>
                 </div>,
                 <p className="mb-0 text-sm grey-text-accent">{localeDate(item.created_at, 'fullDate')}</p>,

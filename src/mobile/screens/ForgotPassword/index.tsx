@@ -91,15 +91,13 @@ const ForgotPasswordMobileScreen: React.FC<CaptchaProps> = (props) => {
             return true;
         }
 
-        if (props.captchaType === 'recaptcha' && !reCaptchaSuccess) {
+        // if (props.captchaType === 'recaptcha' && !reCaptchaSuccess) {
+        //     return true;
+        // }
+
+        if (!geetestCaptchaSuccess) {
             return true;
         }
-
-        if (props.captchaType === 'geetest' && !geetestCaptchaSuccess) {
-            return true;
-        }
-
-        return false;
     };
 
     const handleForgotPassword = () => {
