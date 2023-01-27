@@ -30,3 +30,5 @@ export * from './P2PScreen';
 export * from './P2PProfileScreen';
 export * from './P2POrderScreen';
 export * from './P2PWalletScreen';
+export * from './P2PAddPaymentScreen';
+export * from './P2PWalletOrderScreen';

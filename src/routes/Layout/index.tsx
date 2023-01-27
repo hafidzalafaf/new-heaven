@@ -62,7 +62,7 @@ import {
     SecurityMobileScreen,
     DeviceManagementMobileScreen,
     OrderHistoryMobileScreen,
-    // AnnouncementMobileScreen
+    AnnouncementMobileScreen,
 } from '../../mobile/screens';
 
 import {
@@ -98,6 +98,8 @@ import {
     P2PProfileScreen,
     P2POrderScreen,
     P2PWalletScreen,
+    P2PAddPaymentScreen,
+    P2PWalletOrderScreen,
 } from '../../desktop/screens';
 
 interface ReduxProps {
@@ -682,9 +684,38 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         component={ChangeEmail}
                     />
 
-                    <PublicRoute loading={userLoading} path="/p2p/order" component={P2POrderScreen} />
-                    <PublicRoute loading={userLoading} path="/p2p/wallets" component={P2PWalletScreen} />
-                    <PublicRoute loading={userLoading} path="/p2p/profile" component={P2PProfileScreen} />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/payment-method/:payment"
+                        component={P2PAddPaymentScreen}
+                    />
+
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/order"
+                        component={P2POrderScreen}
+                    />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/wallets"
+                        component={P2PWalletScreen}
+                    />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/profile"
+                        component={P2PProfileScreen}
+                    />
+
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/wallet/order"
+                        component={P2PWalletOrderScreen}
+                    />
                     <PublicRoute loading={userLoading} path="/p2p" component={P2PScreen} />
                     <Route exact={true} path="/" component={LandingScreen} />
                     <Route path="**">

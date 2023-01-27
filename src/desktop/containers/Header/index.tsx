@@ -279,6 +279,13 @@ class Head extends React.Component<Props, HeaderState> {
                                             </Link>
                                         </li>
                                         <li
+                                            className={`nav-item ${location.pathname == '/p2p' && 'active'}`}
+                                            onClick={() => this.setState({ showHeader: false })}>
+                                            <Link to={'/p2p'} className="nav-link px-3 text-sm font-bold">
+                                                P2P
+                                            </Link>
+                                        </li>
+                                        <li
                                             className={`nav-item ${location.pathname == '/faq' && 'active'}`}
                                             onClick={() => this.setState({ showHeader: false })}>
                                             <Link to={'/faq'} className="nav-link px-3 text-sm font-bold">

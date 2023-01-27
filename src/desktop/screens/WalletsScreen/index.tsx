@@ -1,14 +1,13 @@
 import React, { FC, ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { EstimatedValue, WalletsOverview } from '../../containers';
-import { useDocumentTitle, useWalletsFetch } from 'src/hooks';
-import { selectCurrencies, selectWallets } from 'src/modules';
+import { useDocumentTitle, useWalletsFetch } from '../../../hooks';
+import { selectWallets } from '../../../modules';
 import { useHistory } from 'react-router-dom';
 
 export const WalletsScreen: FC = (): ReactElement => {
     const history = useHistory();
     const wallets = useSelector(selectWallets) || [];
-    const currencies = useSelector(selectCurrencies);
 
     useDocumentTitle('Wallets');
     useWalletsFetch();
