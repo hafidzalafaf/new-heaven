@@ -43,7 +43,7 @@ export const ProfileScreen: FC = (): ReactElement => {
 
     const [showModal2FaGoogle, setShowModal2FAGoogle] = useState(false);
     const [showModalChangePhone, setShowModalChangePhone] = useState(false);
-    const [twoFaGoogleValue, settwoFaGoogleValue] = useState('');
+    const [twoFaGoogleValue, setTwoFaGoogleValue] = useState('');
     const [newPhoneValue, setNewPhoneValue] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
     const [isChangeNumber, setIsChangeNumber] = useState(false);
@@ -135,7 +135,7 @@ export const ProfileScreen: FC = (): ReactElement => {
         setShowModal2FAGoogle(!showModal2FaGoogle);
     };
 
-    const disabledButton = () => {
+    const disabledButtonCode = () => {
         if (phone[0]?.validated_at === null && !isChangeNumber && !timerActive) {
             return false;
         }
@@ -146,6 +146,22 @@ export const ProfileScreen: FC = (): ReactElement => {
 
         if (timerActive) {
             return true;
+        }
+    };
+
+    const disabledButton = () => {
+        if (phone[0]?.validated_at === null && !isChangeNumber) {
+            if (verificationCode.length < 5) {
+                return true;
+            }
+        } else {
+            if (verificationCode.length < 5) {
+                return true;
+            }
+
+            if (!newPhoneValue) {
+                return true;
+            }
         }
     };
 
@@ -174,6 +190,21 @@ export const ProfileScreen: FC = (): ReactElement => {
             }
         }
     }, [user]);
+
+    const handleChangeVerificationCodeValue = (e) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setVerificationCode(value);
+    };
+
+    const handleChangePhoneValue = (e) => {
+        const value = e.replace(/[^0-9+\.]/g, '');
+        setNewPhoneValue(value);
+    };
+
+    const handleChangeTwoFaGoogleValue = (e) => {
+        const value = e.replace(/[^0-9+\.]/g, '');
+        setTwoFaGoogleValue(value);
+    };
 
     // Render phone modal
     const modalPhoneContent = () => {
@@ -211,7 +242,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 type="text"
                                 labelVisible
                                 classNameLabel="white-text text-sm"
-                                handleChangeInput={(e) => setNewPhoneValue(e)}
+                                handleChangeInput={(e) => handleChangePhoneValue(e)}
                                 isDisabled={user.phones.length === 4}
                             />
                         </div>
@@ -230,11 +261,11 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 classNameLabel="d-none"
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
-                                isDisabled={user.phones.length === 4}
-                                handleChangeInput={(e) => setVerificationCode(e)}
+                                isDisabled={isChangeNumber && user.phones.length === 4}
+                                handleChangeInput={(e) => handleChangeVerificationCodeValue(e)}
                             />
                             <button
-                                disabled={disabledButton()}
+                                disabled={disabledButtonCode()}
                                 onClick={handleSendCodePhone}
                                 className="btn btn-primary ml-2 text-nowrap">
                                 {(!isChangeNumber && phone && phone[0] && phone[0].validated_at === null) ||
@@ -253,6 +284,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 onClick={() => {
                                     setIsChangeNumber(true);
                                     setTimerActive(false);
+                                    setVerificationCode('');
                                 }}
                                 className="text-right white-text text-xs cursor-pointer">
                                 Change Phone
@@ -261,15 +293,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                     </div>
                     <button
                         type="submit"
-                        disabled={
-                            phone && phone[0]?.validated_at === null
-                                ? verificationCode.length < 5
-                                    ? true
-                                    : false
-                                : newPhoneValue === '' || verificationCode.length < 5
-                                ? true
-                                : false
-                        }
+                        disabled={disabledButton()}
                         onClick={handleChangePhone}
                         className="btn btn-primary btn-block"
                         data-toggle="modal"
@@ -305,6 +329,8 @@ export const ProfileScreen: FC = (): ReactElement => {
                     onClick={() => {
                         setShowModalChangePhone(false);
                         setIsChangeNumber(false);
+                        setVerificationCode('');
+                        setNewPhoneValue('');
                     }}
                 />
             </React.Fragment>
@@ -330,7 +356,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                             labelVisible
                             classNameInput="text-center spacing-10"
                             classNameLabel="white-text text-sm"
-                            handleChangeInput={(e) => settwoFaGoogleValue(e)}
+                            handleChangeInput={(e) => handleChangeTwoFaGoogleValue(e)}
                         />
                     </div>
                     <button

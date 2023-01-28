@@ -76,31 +76,19 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
 
     const disabledButtonSell = () => {
         if (!isLoggedin) {
-            console.log('1');
-
             return true;
         }
 
         if (orderLoading) {
-            console.log('2');
-
             return true;
         }
 
         if (amountSell < currentMarket?.min_amount) {
-            console.log('3');
-
             return true;
         }
 
-        // if (amountSell > balanceCoin) {
-        //     return true;
-        // }
-
         if (orderType == 'limit') {
             if (priceSell === '0') {
-                console.log('4');
-
                 return true;
             }
         }

@@ -173,7 +173,7 @@ export const MarketOpen: FC = (): ReactElement => {
             <p className={`m-0 text-sm ${item.side == 'buy' ? 'green-text' : 'danger-text'}`}>
                 {item.side === 'buy' ? 'Buy' : 'Sell'}
             </p>,
-            <p className="m-0 text-sm white-text">{item.price}</p>,
+            <p className="m-0 text-sm white-text">{item.ord_type === 'market' ? item.avg_price : item.price}</p>,
             <p className="m-0 text-sm white-text text-italic">{item.origin_volume}</p>,
             <p className="m-0 text-sm white-text text-italic">{item.executed_volume}</p>,
             <p className="m-0 text-sm white-text text-italic">{item.remaining_volume}</p>,

@@ -5,7 +5,7 @@ import { ConfigUpdateState, rootConfigUpdateSaga } from './admin/config';
 import { AlertState, rootHandleAlertSaga } from './public/alert';
 import { BlockchainsState } from './public/blockchains';
 import { BlocklistAccessState, rootBlocklistAccessSaga } from './public/blocklistAccess';
-import { BlogsState, rootblogsSaga } from './public/blog';
+import { BlogsState, rootBlogsSaga } from './public/blog';
 import { ConfigsState, rootConfigsSaga } from './public/configs';
 import { CurrenciesState } from './public/currencies';
 import { TradingFeeState } from './public/TradingFee';
@@ -184,7 +184,7 @@ export function* rootSaga() {
         call(rootAuthSaga),
         call(rootBeneficiariesSaga),
         call(rootBlocklistAccessSaga),
-        call(rootblogsSaga),
+        call(rootBlogsSaga),
         call(rootConfigUpdateSaga),
         call(rootDocumentationSaga),
         call(rootEmailVerificationSaga),

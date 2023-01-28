@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-    connect,
-    MapStateToProps,
-} from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import {
     geetestCaptchaFetch,
     GeetestCaptchaKeys,
@@ -10,9 +7,10 @@ import {
     RootState,
     selectCaptchaKeys,
     selectCurrentLanguage,
+    selectCaptchaDataObjectLoading,
 } from '../../modules';
 
-import initGeetest = require("../../helpers/geetest.js")
+import initGeetest = require('../../helpers/geetest.js');
 
 interface OwnProps {
     shouldCaptchaReset?: boolean;
@@ -22,6 +20,7 @@ interface OwnProps {
 interface ReduxProps {
     lang: string;
     geetestCaptchaKeys?: GeetestCaptchaKeys;
+    loading: boolean;
 }
 
 interface DispatchProps {
@@ -31,7 +30,6 @@ interface DispatchProps {
 type Props = ReduxProps & DispatchProps & OwnProps;
 
 class GeetestCaptchaComponent extends React.Component<Props> {
-
     public constructor(props) {
         super(props);
         this.captchaContainerRef = React.createRef();
@@ -46,20 +44,20 @@ class GeetestCaptchaComponent extends React.Component<Props> {
 
     public componentWillReceiveProps(next: Props) {
         if (this.props.geetestCaptchaKeys !== next.geetestCaptchaKeys && next.geetestCaptchaKeys !== undefined) {
-            const {
-                geetestCaptchaKeys,
-                lang,
-            } = next;
-            initGeetest({
-                gt: geetestCaptchaKeys.gt,
-                challenge: geetestCaptchaKeys.challenge,
-                offline: 0,
-                new_captcha: false,
-                product: 'popup',
-                width: '100%',
-                lang: lang,
-                https: true,
-            }, this.captchaComingHandler);
+            const { geetestCaptchaKeys, lang } = next;
+            initGeetest(
+                {
+                    gt: geetestCaptchaKeys.gt,
+                    challenge: geetestCaptchaKeys.challenge,
+                    offline: 0,
+                    new_captcha: false,
+                    product: 'popup',
+                    width: '100%',
+                    lang: lang,
+                    https: true,
+                },
+                this.captchaComingHandler
+            );
         }
 
         if (!this.props.shouldCaptchaReset && next.shouldCaptchaReset) {
@@ -76,10 +74,14 @@ class GeetestCaptchaComponent extends React.Component<Props> {
     };
 
     public render() {
-        return <div ref={this.captchaContainerRef} />;
+        return this.props.loading ? (
+            <p className="text-center white-text text-sm m-0 p-0">Loading Authentication...</p>
+        ) : (
+            <div ref={this.captchaContainerRef} />
+        );
     }
 
-    private captchaComingHandler = captcha => {
+    private captchaComingHandler = (captcha) => {
         this.captcha = captcha;
         this.captcha.appendTo(this.captchaContainerRef.current);
         this.captcha.onSuccess(this.captchaSuccessHandler);
@@ -96,10 +98,10 @@ const mapDispatchProps = {
     geetestCaptchaFetch,
 };
 
-const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> =
-    (state: RootState): ReduxProps => ({
-        lang: selectCurrentLanguage(state),
-        geetestCaptchaKeys: selectCaptchaKeys(state),
-    });
+const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> = (state: RootState): ReduxProps => ({
+    lang: selectCurrentLanguage(state),
+    geetestCaptchaKeys: selectCaptchaKeys(state),
+    loading: selectCaptchaDataObjectLoading(state),
+});
 
 export const GeetestCaptcha = connect(mapStateToProps, mapDispatchProps)(GeetestCaptchaComponent);

@@ -89,7 +89,7 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
     const usdt = usd && usd.balance ? usd.balance.toString() : '0';
 
     const handleSetValue = (value: string | number | undefined, defaultValue: string) => value || defaultValue;
-    const safePrice = totalPrice / Number(amount) || price;
+    const safePrice = totalPrice / Number(amount) || tickerItem?.last;
 
     return (
         <React.Fragment>
@@ -206,7 +206,7 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
                             </>
                         ) : (
                             <>
-                                {Decimal.format(balance, currentMarket?.price_precision)}{' '}
+                                {Decimal.format(balance, currentMarket?.amount_precision)}{' '}
                                 {currentMarket?.base_unit?.toUpperCase()}
                             </>
                         )}

@@ -7,6 +7,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'redux';
 import { IntlProps } from '../../../';
 import { Decimal } from 'src/components';
+import { languages } from '../../../api/config';
 import '../../../styles/colors.pcss';
 import {
     Market,
@@ -21,10 +22,16 @@ import {
     Currency,
     selectMarketTickers,
     changeColorTheme,
+    selectCurrentLanguage,
+    changeLanguage,
+    Ticker,
+    selectUserInfo,
+    User,
+    changeUserDataFetch,
 } from '../../../modules';
 import { numberFormat } from '../../../helpers';
 import { Logo } from '../../../assets/images/Logo';
-import { IndonesianFlag, AmericanFlag } from '../../../assets/images/Flags';
+import { EnglishFlag, RussiaFlag } from '../../../assets/images/Flags';
 import { MoonIcon, SunIcon } from 'src/assets/images/SwitchTheme';
 import { Api, Dashboard, Logout, Referral, Security, Wallet } from '../../../assets/images/ProfileDropdown';
 
@@ -33,7 +40,9 @@ interface ReduxProps {
     colorTheme: string;
     isLoggedIn: boolean;
     currencies: Currency[];
-    tickers: any;
+    tickers: Ticker | undefined | any;
+    currentLanguage: string;
+    user: User;
 }
 
 interface OwnProps {
@@ -44,6 +53,8 @@ interface DispatchProps {
     setMobileWalletUi: typeof setMobileWalletUi;
     logout: typeof logoutFetch;
     changeColorTheme: typeof changeColorTheme;
+    changeLanguange: typeof changeLanguage;
+    changeUserDataFetch: typeof changeUserDataFetch;
 }
 
 interface LocationProps extends RouterProps {
@@ -56,6 +67,7 @@ export interface HeaderState {
     showLanguage: boolean;
     showProfileDropdown: boolean;
     showHeader: boolean;
+    lang: string;
 }
 
 const authHeader = ['/signin', '/signup', '/email-verification', '/forgot_password', '/password_reset', '/trading'];
@@ -71,8 +83,16 @@ class Head extends React.Component<Props, HeaderState> {
             showLanguage: false,
             showProfileDropdown: false,
             showHeader: false,
+            lang: '',
         };
     }
+
+    // public componentDidMount() {
+    //     if (this.props.user?.data && !this.state.lang) {
+    //         let data = this.props.user.data && JSON.parse(this.props.user.data);
+    //         this.setState({ lang: data?.language });
+    //     }
+    // }
 
     public translate = (e: string) => {
         return this.props.intl.formatMessage({ id: e });
@@ -126,12 +146,14 @@ class Head extends React.Component<Props, HeaderState> {
 
         const LanguageDropdown = [
             {
-                flag: <IndonesianFlag className="mr-2" />,
-                name: 'Indonesia',
+                flag: <img src="/img/en.png" alt="en" className="mr-2" />,
+                name: 'English',
+                code: 'en',
             },
             {
-                flag: <AmericanFlag className="mr-2" />,
-                name: 'American',
+                flag: <img src="/img/ru.png" alt="ru" className="mr-2" />,
+                name: 'Russian',
+                code: 'ru',
             },
         ];
 
@@ -140,16 +162,6 @@ class Head extends React.Component<Props, HeaderState> {
             this.props.currencies.find((item) => item.id === this.props.currentMarket?.base_unit);
 
         const ticker = this.props.tickers[this.props.currentMarket?.id];
-
-        // if (window.performance) {
-        //     console.info('window.performance works fine on this browser');
-        // }
-        // console.info(performance.navigation.type);
-        // if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
-        //     console.info('This page is reloaded');
-        // } else {
-        //     console.info('This page is not reloaded');
-        // }
 
         if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
             localStorage.setItem('showProfileDropdown', 'false');
@@ -188,13 +200,20 @@ class Head extends React.Component<Props, HeaderState> {
                                                 key={index}
                                                 className="dropdown-wallets-item"
                                                 onClick={() => {
-                                                    this.setState({ showProfileDropdown: false });
-                                                    this.setState({ showHeader: false });
+                                                    // localStorage.removeItem('showProfileDropdown');
+                                                    localStorage.setItem('showProfileDropdown', 'false');
+                                                    this.setState({ showProfileDropdown: false, showHeader: false });
                                                 }}>
                                                 <Link to={item.url} className="d-flex">
                                                     {item.icon}
                                                     <div className="pl-3">
-                                                        <p className="mb-0 text-sm font-bold white-text">{item.name}</p>
+                                                        <p
+                                                            onClick={() =>
+                                                                localStorage.setItem('showProfileDropdown', 'false')
+                                                            }
+                                                            className="mb-0 text-sm font-bold white-text">
+                                                            {item.name}
+                                                        </p>
                                                         <span className="text-xs grey-text-accent font-normal">
                                                             {item.desc}
                                                         </span>
@@ -390,9 +409,6 @@ class Head extends React.Component<Props, HeaderState> {
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false"
-                                    // onClick={() =>
-                                    //     this.setState({ showLanguage: !showLanguage, showProfileDropdown: false })
-                                    // }
                                     onClick={() => {
                                         if (localStorage.getItem('showLanguage') == 'false') {
                                             localStorage.setItem('showProfileDropdown', 'false');
@@ -401,7 +417,9 @@ class Head extends React.Component<Props, HeaderState> {
                                             localStorage.setItem('showLanguage', 'false');
                                         }
                                     }}>
-                                    EN/USD
+                                    {!this.props.isLoggedIn
+                                        ? `${localStorage.getItem('lang_code').toUpperCase()}/USDT`
+                                        : `${localStorage.getItem('lang_code').toUpperCase()}/USDT`}
                                 </a>
                                 {localStorage.getItem('showLanguage') == 'true' ? (
                                     <div
@@ -415,7 +433,11 @@ class Head extends React.Component<Props, HeaderState> {
                                                 {LanguageDropdown.map((item, key) => (
                                                     <div
                                                         key={`language-${key}`}
-                                                        onClick={() => this.setState({ showLanguage: false })}
+                                                        onClick={() => {
+                                                            this.handleChangeLanguage(item.code);
+                                                            this.setState({ showLanguage: false });
+                                                            localStorage.setItem('showLanguage', 'false');
+                                                        }}
                                                         className="dropdown-item grey-text-accent text-sm active cursor-pointer">
                                                         {item.flag} {item.name}
                                                     </div>
@@ -565,6 +587,28 @@ class Head extends React.Component<Props, HeaderState> {
     private handleChangeCurrentStyleMode = (value: string) => {
         this.props.changeColorTheme(value);
     };
+
+    private handleChangeLanguage = (language: string) => {
+        if (this.props.isLoggedIn) {
+            const data = this.props.user.data && JSON.parse(this.props.user.data);
+
+            if (data?.languange !== language) {
+                const payload = {
+                    ...this.props.user,
+                    data: JSON.stringify({
+                        ...data,
+                        language,
+                    }),
+                };
+
+                this.props.changeUserDataFetch({ user: payload });
+            }
+        } else {
+            localStorage.setItem('lang_code', language);
+        }
+
+        this.props.changeLanguange(language);
+    };
 }
 
 const mapStateToProps = (state: RootState): ReduxProps => ({
@@ -573,6 +617,8 @@ const mapStateToProps = (state: RootState): ReduxProps => ({
     isLoggedIn: selectUserLoggedIn(state),
     currencies: selectCurrencies(state),
     tickers: selectMarketTickers(state),
+    currentLanguage: selectCurrentLanguage(state),
+    user: selectUserInfo(state),
 });
 
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, {}> = (dispatch) => ({
@@ -580,6 +626,8 @@ const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, {}> = (dispa
     toggleMarketSelector: () => dispatch(toggleMarketSelector()),
     logout: () => dispatch(logoutFetch()),
     changeColorTheme: (payload) => dispatch(changeColorTheme(payload)),
+    changeLanguange: (payload) => dispatch(changeLanguage(payload)),
+    changeUserDataFetch: (payload) => dispatch(changeUserDataFetch(payload)),
 });
 
 export const Header = compose(

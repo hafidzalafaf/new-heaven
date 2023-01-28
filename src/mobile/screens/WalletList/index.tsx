@@ -285,7 +285,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                         />
                     </div>
                 </div>
-                {!filteredWallets.length ? (
+                {!filteredWallets.length && !filterValue ? (
                     <div className="w-100 h-100 grey-text-accent">
                         <div className="bg-transparent d-flex justify-content-center align-items-center">
                             <span

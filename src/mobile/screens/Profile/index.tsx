@@ -102,8 +102,8 @@ const ProfileMobileScreen: React.FC = () => {
         }
     };
 
-    const disabledButton = () => {
-        if (phone[0] && !isChangeNumber) {
+    const disabledButtonCode = () => {
+        if (phone[0]?.validated_at === null && !isChangeNumber && !timerActive) {
             return false;
         }
 
@@ -113,6 +113,22 @@ const ProfileMobileScreen: React.FC = () => {
 
         if (timerActive) {
             return true;
+        }
+    };
+
+    const disabledButton = () => {
+        if (phone[0]?.validated_at === null && !isChangeNumber) {
+            if (verificationCode.length < 5) {
+                return true;
+            }
+        } else {
+            if (verificationCode.length < 5) {
+                return true;
+            }
+
+            if (!newPhoneValue) {
+                return true;
+            }
         }
     };
 
@@ -159,6 +175,8 @@ const ProfileMobileScreen: React.FC = () => {
                         onClick={() => {
                             setShowModalPhone(!showModalPhone);
                             setIsChangeNumber(!isChangeNumber);
+                            setNewPhoneValue('');
+                            setVerificationCode('');
                         }}>
                         <ArrowLeft className={'cursor-pointer text-white'} />
                     </div>
@@ -167,11 +185,15 @@ const ProfileMobileScreen: React.FC = () => {
                 <p className="text-sm grey-text mb-8">
                     {!user.phones[0] ? (
                         'Set Your Phone Number And Verified'
-                    ) : user.phones[0].validated_at === null && !isChangeNumber ? (
+                    ) : user.phones[0] && user.phones[0].validated_at === null && !isChangeNumber ? (
                         'You already add phone number, please verify by click send code button to get OTP number'
-                    ) : user.phones[0] && isChangeNumber ? (
+                    ) : (user.phones[0] && isChangeNumber) || user.phones[0] !== null ? (
                         <p className="danger-text">
-                            You only have {4 - user.phones.length} chances to change your phone number
+                            {user.phones.length === 4 && isChangeNumber
+                                ? `Sorry, you run out of time for changing your phone number`
+                                : user.phones.length < 4 && isChangeNumber
+                                ? `You only have ${4 - user.phones.length} chances to change your phone number`
+                                : `Please verify your phone number`}
                         </p>
                     ) : (
                         'Set Your New Phone Number And Verified'
@@ -193,6 +215,7 @@ const ProfileMobileScreen: React.FC = () => {
                                 type="text"
                                 labelVisible
                                 classNameLabel="white-text text-sm"
+                                isDisabled={user.phones.length === 4}
                                 handleChangeInput={(e) => handleChangePhoneValue(e)}
                             />
                         </div>
@@ -211,13 +234,17 @@ const ProfileMobileScreen: React.FC = () => {
                                 classNameLabel="d-none"
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
+                                isDisabled={isChangeNumber && user.phones.length === 4}
                                 handleChangeInput={(e) => handleChangeVerificationCodeValue(e)}
                             />
                             <button
-                                disabled={disabledButton()}
+                                disabled={disabledButtonCode()}
                                 onClick={handleSendCodePhone}
                                 className="btn btn-primary ml-2 text-nowrap">
-                                {(!isChangeNumber && phone[0]) || resendCodeActive ? 'Resend Code' : 'Send Code'}
+                                {(!isChangeNumber && phone && phone[0] && phone[0].validated_at === null) ||
+                                resendCodeActive
+                                    ? 'Resend Code'
+                                    : 'Send Code'}
                             </button>
                         </div>
                         <div className="mt-2">
@@ -232,6 +259,7 @@ const ProfileMobileScreen: React.FC = () => {
                                     onClick={() => {
                                         setIsChangeNumber(true);
                                         setTimerActive(false);
+                                        setVerificationCode('');
                                     }}
                                     className="text-right white-text text-xs cursor-pointer text-underline">
                                     Change Phone
@@ -241,7 +269,7 @@ const ProfileMobileScreen: React.FC = () => {
                     </div>
                     <button
                         type="submit"
-                        disabled={newPhoneValue === '' && verificationCode === '' ? true : false}
+                        disabled={disabledButton()}
                         onClick={handleChangePhone}
                         className="btn btn-primary btn-block"
                         data-toggle="modal"

@@ -8,7 +8,17 @@ import { numberFormat, accumulateVolume, calcMaxVolume } from '../../../helpers'
 import { Decimal, Loading } from '../../../components';
 import { NoData } from '../../../desktop/components';
 
-const OrderBookComponent = ({ asks, bids, loading, handleSelectPriceAsks, handleSelectPriceBids, orderType }) => {
+export interface OrderBookProps {
+    asks: any;
+    bids: any;
+    loading: boolean;
+    orderType?: string;
+    handleSelectPriceAsks: (e: string) => void;
+    handleSelectPriceBids: (e: string) => void;
+}
+
+const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
+    const { asks, bids, loading, orderType, handleSelectPriceAsks, handleSelectPriceBids } = props;
     useOpenOrdersFetch();
     useDepthFetch();
 

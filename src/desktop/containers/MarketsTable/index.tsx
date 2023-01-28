@@ -48,7 +48,7 @@ const cardBanner = [
 const MarketsTableComponent = (props) => {
     useMarketsFetch();
     useMarketsTickersFetch();
-    useBlogsFetch('news');
+    useBlogsFetch({ tag: 'news' });
 
     const history = useHistory();
     const dispatch = useDispatch();

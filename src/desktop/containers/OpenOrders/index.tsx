@@ -31,7 +31,10 @@ export interface OpenOrdersProps {
     handleFilterSell?: () => void;
 
     handleFilterBuy?: () => void;
+
     isMobileDevices?: boolean;
+
+    handleShowModalCancelAll?: () => void;
 }
 
 export class OpenOrders extends React.Component<OpenOrdersProps> {
@@ -88,7 +91,7 @@ export class OpenOrders extends React.Component<OpenOrdersProps> {
                     {this.props.isMobileDevices && (
                         <p
                             className="text-sm danger-text font-bold mb-0 ml-2 cursor-pointer"
-                            onClick={() => this.props.handleCancelAll()}>
+                            onClick={this.props.handleShowModalCancelAll}>
                             Cancel All{' '}
                         </p>
                     )}

@@ -87,6 +87,20 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
         if (!this.props.location.state) {
             this.props.history.push('/signin');
         }
+
+        let time = null;
+        if (this.state.timerActive) {
+            time = setInterval(() => {
+                this.setState({ seconds: this.state.seconds - 1000 });
+
+                if (this.state.seconds === 0) {
+                    clearInterval(this.state.timer);
+                    this.setState({ timerActive: false, seconds: 30000 });
+                }
+            }, 1000);
+
+            this.setState({ timer: time });
+        }
     }
 
     public componentDidUpdate(previousProps, previousState) {
@@ -182,7 +196,7 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
                                             <button
                                                 disabled={this.state.timerActive}
                                                 className={`btn-send-again text-sm border-none bg-transparent cursor-pointer p-0 ${
-                                                    this.state.timerActive ? 'grey-text' : 'gradient-text'
+                                                    this.state.timerActive ? 'grey-text' : 'contrast-text'
                                                 }`}
                                                 onClick={this.handleClick}>
                                                 Resend Code

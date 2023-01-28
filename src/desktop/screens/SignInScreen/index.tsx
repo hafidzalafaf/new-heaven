@@ -22,6 +22,7 @@ import {
     selectGeetestCaptchaSuccess,
     selectCaptchaResponse,
     resetCaptchaState,
+    selectCaptchaDataObjectLoading,
 } from '../../../modules';
 
 export const SignInScreen: React.FC = () => {
@@ -262,6 +263,7 @@ export const SignInScreen: React.FC = () => {
                                         captcha_response={captcha_response}
                                         classNameEmail={emailClassname}
                                         classNamePassword={passwordClassname}
+                                        // captchaLoading={captchaLoading}
                                     />
                                 </React.Fragment>
                             )}

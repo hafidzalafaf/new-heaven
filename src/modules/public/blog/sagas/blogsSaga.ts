@@ -5,7 +5,7 @@ import axios from 'axios';
 
 async function fetchNews(tag) {
     const apiKey = '01c32b65528575f7b27dfb6bf2';
-    const sURL = `https://www.heavenexchange.io/blog/ghost/api/v3/content/posts/?key=${apiKey}&limit=5&tag=${tag}`;
+    const sURL = `https://www.heavenexchange.io/blog/ghost/api/v3/content/posts/?key=${apiKey}&limit=15&tag=${tag}`;
     const result = await axios.get(sURL);
 
     return result.data.posts;

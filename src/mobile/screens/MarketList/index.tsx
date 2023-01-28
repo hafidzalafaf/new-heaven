@@ -42,12 +42,12 @@ const MarketListlMobileScreen: React.FC = () => {
     const marketList = markets
         .map((market) => ({
             ...market,
-            last: Decimal.format(Number((marketTickers[market.id] || defaultTicker).last), market.amount_precision),
+            last: Decimal.format(Number((marketTickers[market.id] || defaultTicker).last), market.price_precision),
             open: Decimal.format(Number((marketTickers[market.id] || defaultTicker).open), market.price_precision),
             price_change_percent: String((marketTickers[market.id] || defaultTicker).price_change_percent),
             high: Decimal.format(Number((marketTickers[market.id] || defaultTicker).high), market.amount_precision),
             currency: currencies.find((cur) => cur.id == market.base_unit),
-            volume: Decimal.format(Number((marketTickers[market.id] || defaultTicker).volume), market.price_precision),
+            volume: Decimal.format(Number((marketTickers[market.id] || defaultTicker).volume), market.amount_precision),
         }))
         .map((market) => ({
             ...market,
@@ -250,7 +250,7 @@ const MarketListlMobileScreen: React.FC = () => {
                     defaultActiveKey="all-crypto"
                     activeKey={key}
                     onSelect={(k) => handleSelect(k)}
-                    className="">
+                    className="d-flex justify-content-start gap-24">
                     <Tab eventKey="favorite" title="Favorite">
                         <div className="table-mobile-wrapper">
                             {!favoriteList[0] ? (
@@ -279,13 +279,6 @@ const MarketListlMobileScreen: React.FC = () => {
                         <Tab eventKey="future" title="Future">
                             <div className="table-mobile-wrapper">
                                 <Table data={renderDataTable(tableData(), true)} header={renderTableHeader} />
-                            </div>
-                        </Tab>
-                    )}
-                    {newListingMarket.length > 0 && (
-                        <Tab eventKey="new-listing" title="New Listing">
-                            <div className="table-mobile-wrapper">
-                                <Table data={renderDataTable(tableData(), false)} header={renderTableHeader} />
                             </div>
                         </Tab>
                     )}
