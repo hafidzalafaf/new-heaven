@@ -4,11 +4,22 @@ import { useIntl } from 'react-intl';
 import { FilterInput } from '..';
 import { Wallet } from '../../../modules';
 
+interface ExtendedWallet extends Wallet {
+    spotBalance?: string;
+    spotLocked?: string;
+    p2pBalance?: string;
+    p2pLocked?: string;
+    status?: string;
+    network?: any;
+    last: any;
+    marketId: string;
+}
+
 interface ParentProps {
     wallets: Wallet[];
     nonZeroSelected: boolean;
     setFilterValue: (value: string) => void;
-    setFilteredWallets: (value: Wallet[]) => void;
+    setFilteredWallets: (value: ExtendedWallet[]) => void;
     handleClickCheckBox: (value: boolean) => void;
 }
 
@@ -17,8 +28,6 @@ interface ParentProps {
  */
 export const WalletsHeader: React.FunctionComponent<ParentProps> = (props: ParentProps) => {
     const { wallets, nonZeroSelected } = props;
-
-    const [active, setActive] = React.useState(false);
 
     const intl = useIntl();
 
@@ -31,7 +40,7 @@ export const WalletsHeader: React.FunctionComponent<ParentProps> = (props: Paren
     };
 
     const handleFilter = (result: object[]) => {
-        props.setFilteredWallets(result as Wallet[]);
+        props.setFilteredWallets(result as ExtendedWallet[]);
     };
 
     const handleToggleCheckbox = React.useCallback(

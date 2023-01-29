@@ -1428,6 +1428,43 @@ export const ru: LangType = {
     'success.payment_method.updated': 'Payment Method: successfully updated',
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
 
+    // HEAVEN NEW
+    'page.header.navbar.signUp': 'Sign Up',
+    'page.header.navbar.home': 'Home',
+    'page.header.navbar.market': 'Market',
+    'page.header.navbar.support': 'Support',
+    'page.header.navbar.announcement': 'sdjnds',
+
+    'page.header.navbar.trade.24change': '24 Change',
+    'page.header.navbar.trade.24high': '24 High',
+    'page.header.navbar.trade.24low': '24 Low',
+    'page.header.navbar.trade.24volume': '24 Volume',
+
+    'page.header.navbar.dropdown.language': 'Language',
+
+    'page.header.navbar.dropdown.currency': 'Currency',
+    'page.header.navbar.dropdown.usd': 'USD',
+    'page.header.navbar.dropdown.idr': 'IDR',
+    'page.header.navbar.dropdown.language.usd': 'USDT',
+    'page.header.navbar.dropdown.language.idr': 'IDR',
+
+    'page.body.landing.footer.links': 'Links',
+    'page.body.landing.footer.links.how': 'How it works',
+    'page.body.landing.footer.links.cryptos': 'Cryptos',
+    'page.body.landing.footer.links.features': 'Features',
+    'page.body.landing.footer.links.testimonial': 'Testimonial',
+    'page.body.landing.footer.links.blogs': 'Blogs',
+
+    'page.body.landing.footer.legal': 'Legal',
+    'page.body.landing.footer.legal.tos': 'Term of use',
+    'page.body.landing.footer.legal.toc': 'Term of conditions',
+    'page.body.landing.footer.legal.privacy': 'Privacy Policy',
+    'page.body.landing.footer.legal.cookie': 'Cookie Policy',
+
+    'page.body.landing.footer.newsletter': 'Newsletter',
+    'page.body.landing.footer.subscribe': 'Subscribe',
+    'page.body.landing.footer.newsletter.email': 'We don’t sell your email and spam',
+
     ...nationalitiesNames,
     ...mobileTranslationsRu,
 };

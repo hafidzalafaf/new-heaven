@@ -33,6 +33,8 @@ interface ExtendedWallet extends Wallet {
     p2pLocked?: string;
     status?: string;
     network?: any;
+    last: any;
+    marketId: string;
 }
 
 const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
@@ -62,10 +64,6 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
     useMarketsTickersFetch();
     useMarketsFetch();
 
-    // console.log(tickers, 'ini ticker');
-    // console.log(markets, 'ini market');
-    // console.log(wallets, 'ini wallets');
-
     useEffect(() => {
         if (wallets.length && (isP2PEnabled ? p2pWallets.length : true) && currencies.length) {
             const extendedWallets: ExtendedWallet[] = currencies.map((cur) => {
@@ -75,6 +73,8 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
 
                 const spotWallet = wallets.find((i) => i.currency === cur.id);
                 const p2pWallet = isP2PEnabled ? p2pWallets.find((i) => i.currency === cur.id) : null;
+                const market = markets.find((item) => item.base_unit == cur.id);
+                const ticker = tickers[market?.id];
 
                 return {
                     ...(spotWallet || p2pWallet),
@@ -82,6 +82,8 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                     spotLocked: spotWallet ? spotWallet.locked : '0',
                     status: cur.status,
                     network: cur.networks,
+                    marketId: market ? market.id : null,
+                    last: ticker ? ticker.last : null,
                     p2pBalance: p2pWallet ? p2pWallet.balance : '0',
                     p2pLocked: p2pWallet ? p2pWallet.locked : '0',
                 };
@@ -92,7 +94,7 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
             setFilteredWallets(extendedWalletsFilter);
             setMergedWallets(extendedWalletsFilter);
         }
-    }, [wallets, p2pWallets, currencies, isP2PEnabled]);
+    }, [wallets, p2pWallets, currencies, isP2PEnabled, markets, tickers]);
 
     React.useEffect(() => {
         setLoading(true);
@@ -132,8 +134,6 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
             ? filteredWallets.filter((i) => i.balance && Number(i.balance) > 0)
             : filteredWallets;
 
-        // console.log(list);
-
         const filteredList = list.filter(
             (i) =>
                 !filterValue ||
@@ -149,17 +149,17 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                   const { currency, iconUrl, name, fixed, spotBalance, spotLocked, p2pBalance, p2pLocked } = item;
                   const totalBalance =
                       Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
-                  const estimatedValue =
-                      Number(totalBalance) && currency
-                          ? estimateUnitValue(
-                                currency.toUpperCase(),
-                                VALUATION_PRIMARY_CURRENCY,
-                                +totalBalance,
-                                currencies,
-                                markets,
-                                tickers
-                            )
-                          : Decimal.format(0, fixed);
+                  const estimatedValue = item?.last !== null ? item.last * totalBalance : '0';
+                  //   Number(totalBalance) && currency
+                  //       ? estimateUnitValue(
+                  //             currency.toUpperCase(),
+                  //             VALUATION_PRIMARY_CURRENCY,
+                  //             +totalBalance,
+                  //             currencies,
+                  //             markets,
+                  //             tickers
+                  //         )
+                  //       : Decimal.format(0, fixed);
 
                   return [
                       <div key={index} className="d-flex">
@@ -174,7 +174,9 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                       <Decimal key={index} fixed={fixed} thousSep=",">
                           {totalBalance ? totalBalance.toString() : '0'}
                       </Decimal>,
-                      formatWithSeparators(estimatedValue, ','),
+                      <Decimal key={index} fixed={fixed} thousSep=",">
+                          {estimatedValue ? estimatedValue.toString() : '0'}
+                      </Decimal>,
                       <Decimal key={index} fixed={fixed} thousSep=",">
                           {spotBalance ? spotBalance.toString() : '0'}
                       </Decimal>,

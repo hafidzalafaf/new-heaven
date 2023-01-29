@@ -211,7 +211,6 @@ export const ru = {
     'page.mobile.historyTransaction.internalTransfer.status.pending': 'В ожидании',
 
     'page.header.navbar.signUp': 'Sign Up',
-
     'page.header.navbar.home': 'Home',
     'page.header.navbar.market': 'Market',
     'page.header.navbar.support': 'Support',
