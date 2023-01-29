@@ -67,6 +67,7 @@ export interface HeaderState {
     showLanguage: boolean;
     showProfileDropdown: boolean;
     showHeader: boolean;
+    lang: string;
 }
 
 const authHeader = ['/signin', '/signup', '/email-verification', '/forgot_password', '/password_reset', '/trading'];
@@ -82,8 +83,16 @@ class Head extends React.Component<Props, HeaderState> {
             showLanguage: false,
             showProfileDropdown: false,
             showHeader: false,
+            lang: '',
         };
     }
+
+    // public componentDidMount() {
+    //     if (this.props.user?.data && !this.state.lang) {
+    //         let data = this.props.user.data && JSON.parse(this.props.user.data);
+    //         this.setState({ lang: data?.language });
+    //     }
+    // }
 
     public translate = (e: string) => {
         return this.props.intl.formatMessage({ id: e });
@@ -137,12 +146,12 @@ class Head extends React.Component<Props, HeaderState> {
 
         const LanguageDropdown = [
             {
-                flag: <EnglishFlag className="mr-2" />,
+                flag: <img src="/img/en.png" alt="en" className="mr-2" />,
                 name: 'English',
                 code: 'en',
             },
             {
-                flag: <RussiaFlag className="mr-2" />,
+                flag: <img src="/img/ru.png" alt="ru" className="mr-2" />,
                 name: 'Russian',
                 code: 'ru',
             },
@@ -400,9 +409,6 @@ class Head extends React.Component<Props, HeaderState> {
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false"
-                                    // onClick={() =>
-                                    //     this.setState({ showLanguage: !showLanguage, showProfileDropdown: false })
-                                    // }
                                     onClick={() => {
                                         if (localStorage.getItem('showLanguage') == 'false') {
                                             localStorage.setItem('showProfileDropdown', 'false');
@@ -411,7 +417,9 @@ class Head extends React.Component<Props, HeaderState> {
                                             localStorage.setItem('showLanguage', 'false');
                                         }
                                     }}>
-                                    EN/USD
+                                    {!this.props.isLoggedIn
+                                        ? `${localStorage.getItem('lang_code').toUpperCase()}/USDT`
+                                        : `${localStorage.getItem('lang_code').toUpperCase()}/USDT`}
                                 </a>
                                 {localStorage.getItem('showLanguage') == 'true' ? (
                                     <div
@@ -593,13 +601,13 @@ class Head extends React.Component<Props, HeaderState> {
                     }),
                 };
 
-                changeUserDataFetch({ user: payload });
+                this.props.changeUserDataFetch({ user: payload });
             }
         } else {
             localStorage.setItem('lang_code', language);
         }
 
-        changeLanguage(language);
+        this.props.changeLanguange(language);
     };
 }
 

@@ -261,7 +261,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 classNameLabel="d-none"
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
-                                isDisabled={user.phones.length === 4}
+                                isDisabled={isChangeNumber && user.phones.length === 4}
                                 handleChangeInput={(e) => handleChangeVerificationCodeValue(e)}
                             />
                             <button
@@ -284,6 +284,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 onClick={() => {
                                     setIsChangeNumber(true);
                                     setTimerActive(false);
+                                    setVerificationCode('');
                                 }}
                                 className="text-right white-text text-xs cursor-pointer">
                                 Change Phone
@@ -300,7 +301,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                         data-dismiss="modal">
                         {!user.phones[0]
                             ? 'Add'
-                            : phone[0] && phone[0].validated_at === null && !isChangeNumber
+                            : phone[0] && phone[0].validated_at === null
                             ? 'Verify'
                             : isChangeNumber
                             ? 'Change'
@@ -328,6 +329,8 @@ export const ProfileScreen: FC = (): ReactElement => {
                     onClick={() => {
                         setShowModalChangePhone(false);
                         setIsChangeNumber(false);
+                        setVerificationCode('');
+                        setNewPhoneValue('');
                     }}
                 />
             </React.Fragment>

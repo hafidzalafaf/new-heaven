@@ -62,9 +62,9 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
     useMarketsTickersFetch();
     useMarketsFetch();
 
-    console.log(tickers, 'ini ticker');
-    console.log(markets, 'ini market');
-    console.log(wallets, 'ini wallets');
+    // console.log(tickers, 'ini ticker');
+    // console.log(markets, 'ini market');
+    // console.log(wallets, 'ini wallets');
 
     useEffect(() => {
         if (wallets.length && (isP2PEnabled ? p2pWallets.length : true) && currencies.length) {
@@ -132,7 +132,7 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
             ? filteredWallets.filter((i) => i.balance && Number(i.balance) > 0)
             : filteredWallets;
 
-        console.log(list);
+        // console.log(list);
 
         const filteredList = list.filter(
             (i) =>

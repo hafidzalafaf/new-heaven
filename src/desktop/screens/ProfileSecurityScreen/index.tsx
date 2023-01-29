@@ -389,7 +389,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                                 labelVisible
                                 classNameLabel="white-text text-sm"
                                 handleChangeInput={(e) => this.handleChangePhoneValue(e)}
-                                isDisabled={this.state.phone.length === 4}
+                                isDisabled={this.props.user?.phones?.length === 4}
                             />
                         </div>
                     )}
@@ -408,7 +408,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
                                 handleChangeInput={(e) => this.handleChangeVerificationCodeValue(e)}
-                                isDisabled={this.state.phone.length === 4}
+                                isDisabled={this.state.isChangeNumber && this.props.user?.phones?.length === 4}
                             />
                             <button
                                 type="submit"
@@ -436,6 +436,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                                         this.setState({
                                             isChangeNumber: !this.state.isChangeNumber,
                                             timerActive: false,
+                                            verificationCode: '',
                                         });
                                     }}
                                     className="text-right white-text text-xs cursor-pointer">
@@ -453,9 +454,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                         data-dismiss="modal">
                         {!this.props.user.phones[0]
                             ? 'Add'
-                            : this.state.phone[0] &&
-                              this.state.phone[0].validated_at === null &&
-                              !this.state.isChangeNumber
+                            : this.state.phone[0] && this.state.phone[0].validated_at === null
                             ? 'Verify'
                             : this.state.isChangeNumber
                             ? 'Change'
@@ -480,7 +479,14 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                 </h6>
                 <ModalCloseIcon
                     className="cursor-pointer ml-4"
-                    onClick={() => this.setState({ showPhoneModal: false, isChangeNumber: false })}
+                    onClick={() =>
+                        this.setState({
+                            showPhoneModal: false,
+                            isChangeNumber: false,
+                            verificationCode: '',
+                            newPhone: '',
+                        })
+                    }
                 />
             </React.Fragment>
         );
@@ -500,12 +506,15 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
     // handle submit change  add phone
     public handleChangePhone = () => {
         if (this.props.user.phones[0] && !this.state.isChangeNumber) {
-            verifyPhone({
+            this.props.verifyPhone({
                 phone_number: `+${this.state.phone[0].number}`,
                 verification_code: this.state.verificationCode,
             });
         } else {
-            verifyPhone({ phone_number: this.state.newPhone, verification_code: this.state.verificationCode });
+            this.props.verifyPhone({
+                phone_number: this.state.newPhone,
+                verification_code: this.state.verificationCode,
+            });
         }
     };
 
