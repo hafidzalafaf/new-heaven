@@ -4,6 +4,23 @@ import { nationalitiesNames } from '../../translations/nationalities';
 
 export const ru: LangType = {
     'page.header.navbar.signIn': 'Войти',
+    'page.header.navbar.signUp': 'Список',
+    'page.header.navbar.home': 'дом',
+    'page.header.navbar.market': 'Рынок',
+    'page.header.navbar.support': 'Поддерживать',
+    'page.header.navbar.announcement': 'Объявление',
+    'page.header.navbar.trade.24change': '24 Change',
+    'page.header.navbar.trade.24high': '24 High',
+    'page.header.navbar.trade.24low': '24 Low',
+    'page.header.navbar.trade.24volume': '24 Volume',
+
+    'page.header.navbar.dropdown.language': 'Язык',
+    'page.header.navbar.dropdown.currency': 'Валюта ',
+    'page.header.navbar.dropdown.usd': 'USD',
+    'page.header.navbar.dropdown.idr': 'IDR',
+    'page.header.navbar.dropdown.language.usd': 'USDT',
+    'page.header.navbar.dropdown.language.idr': 'IDR',
+
     'page.header.navbar.quick.exchange': 'Quick exchange',
     'page.header.navbar.trade': 'Биржа',
     'page.header.navbar.wallets': 'Кошельки',
@@ -117,8 +134,8 @@ export const ru: LangType = {
     'page.body.landing.header.button2': 'log in',
     'page.body.landing.header.button3': 'register',
 
-    'page.body.landing.marketInfo.title.text1': 'Welcome to NusaExchange.',
-    'page.body.landing.marketInfo.title.text2': 'Buy, sell and trade digital currency.',
+    'page.body.landing.marketInfo.title.text1': 'Криптовалюта растет, деньги сэкономлены для лучшей жизни с',
+    'page.body.landing.marketInfo.title.text2': 'Наслаждайтесь арбитражем на платформе HEX',
     'page.body.landing.marketInfo.title.button': 'start trading',
 
     'page.body.landing.platformInfo.item.first.value': '30M+',
@@ -162,6 +179,23 @@ export const ru: LangType = {
     'page.body.landing.startTrading.title': 'Start trading now',
     'page.body.landing.startTrading.button1': 'register',
     'page.body.landing.startTrading.button2': 'Start trading',
+
+    'page.body.landing.footer.links': 'ССЫЛКИ',
+    'page.body.landing.footer.links.how': 'Как это работает',
+    'page.body.landing.footer.links.cryptos': 'Крипто',
+    'page.body.landing.footer.links.features': 'Функции',
+    'page.body.landing.footer.links.testimonial': 'Отзыв',
+    'page.body.landing.footer.links.blogs': 'Блоги',
+
+    'page.body.landing.footer.legal': 'правовой',
+    'page.body.landing.footer.legal.tos': 'Условия пользования',
+    'page.body.landing.footer.legal.toc': 'Условия',
+    'page.body.landing.footer.legal.privacy': 'Политика конфиденциальности',
+    'page.body.landing.footer.legal.cookie': 'Политика в отношении файлов cookie',
+
+    'page.body.landing.footer.newsletter': 'Новостная рассылка',
+    'page.body.landing.footer.subscribe': 'Подписаться',
+    'page.body.landing.footer.newsletter.email': 'Мы не продаем вашу электронную почту и спам',
 
     'page.body.landing.footer.exchange': 'Exchange',
     'page.body.landing.footer.wallets': 'Wallets',
@@ -1427,43 +1461,6 @@ export const ru: LangType = {
     'success.payment_method.created': 'Payment Method: successfully created',
     'success.payment_method.updated': 'Payment Method: successfully updated',
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
-
-    // HEAVEN NEW
-    'page.header.navbar.signUp': 'Sign Up',
-    'page.header.navbar.home': 'Home',
-    'page.header.navbar.market': 'Market',
-    'page.header.navbar.support': 'Support',
-    'page.header.navbar.announcement': 'sdjnds',
-
-    'page.header.navbar.trade.24change': '24 Change',
-    'page.header.navbar.trade.24high': '24 High',
-    'page.header.navbar.trade.24low': '24 Low',
-    'page.header.navbar.trade.24volume': '24 Volume',
-
-    'page.header.navbar.dropdown.language': 'Language',
-
-    'page.header.navbar.dropdown.currency': 'Currency',
-    'page.header.navbar.dropdown.usd': 'USD',
-    'page.header.navbar.dropdown.idr': 'IDR',
-    'page.header.navbar.dropdown.language.usd': 'USDT',
-    'page.header.navbar.dropdown.language.idr': 'IDR',
-
-    'page.body.landing.footer.links': 'Links',
-    'page.body.landing.footer.links.how': 'How it works',
-    'page.body.landing.footer.links.cryptos': 'Cryptos',
-    'page.body.landing.footer.links.features': 'Features',
-    'page.body.landing.footer.links.testimonial': 'Testimonial',
-    'page.body.landing.footer.links.blogs': 'Blogs',
-
-    'page.body.landing.footer.legal': 'Legal',
-    'page.body.landing.footer.legal.tos': 'Term of use',
-    'page.body.landing.footer.legal.toc': 'Term of conditions',
-    'page.body.landing.footer.legal.privacy': 'Privacy Policy',
-    'page.body.landing.footer.legal.cookie': 'Cookie Policy',
-
-    'page.body.landing.footer.newsletter': 'Newsletter',
-    'page.body.landing.footer.subscribe': 'Subscribe',
-    'page.body.landing.footer.newsletter.email': 'We don’t sell your email and spam',
 
     ...nationalitiesNames,
     ...mobileTranslationsRu,

@@ -57,11 +57,11 @@ class Landing extends React.Component<Props> {
                         <div className="wrapper d-flex justify-content-around align-items-center flex-column index-2">
                             <div className="my-5">
                                 <h1 className="text-main-title white-text text-center mb-24 max-w-lg">
-                                    Crypto Increases, Money Saved For Better Life with{' '}
+                                    {this.translate('page.body.landing.marketInfo.title.text1')}{' '}
                                     <span className="gradient-text">HEX Exchange</span>
                                 </h1>
                                 <p className="text-md grey-text-accent text-center mb-24">
-                                    Enjoy your arbitrage on the HEX platform
+                                    {this.translate('page.body.landing.marketInfo.title.text2')}
                                 </p>
                                 <div className="d-flex justify-content-center">
                                     <Link to={'/markets'} className="btn btn-rounded btn-primary mx-3">
