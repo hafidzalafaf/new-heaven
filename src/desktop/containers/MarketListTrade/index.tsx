@@ -143,9 +143,9 @@ const MarketListTradeComponent = ({ handleRedirectToTrading }) => {
                                             <div className="py-2">
                                                 <p
                                                     className={`text-xs mb-0 text-right ${
-                                                        item.price_change_percent.includes('+')
+                                                        item.price_change_percent?.includes('+')
                                                             ? 'green-text'
-                                                            : item.price_change_percent.includes('-')
+                                                            : item.price_change_percent?.includes('-')
                                                             ? 'danger-text'
                                                             : 'green-text'
                                                     }`}>

@@ -200,9 +200,9 @@ class OrderBookContainer extends React.Component<Props, State> {
                 const currentTicker = currentMarket && this.getTickerValue(currentMarket, marketTickers);
                 lastPrice = currentTicker.last;
 
-                if (currentTicker.price_change_percent.includes('+')) {
+                if (currentTicker.price_change_percent?.includes('+')) {
                     priceChangeSign = 'positive';
-                } else if (currentTicker.price_change_percent.includes('-')) {
+                } else if (currentTicker.price_change_percent?.includes('-')) {
                     priceChangeSign = 'negative';
                 }
             }

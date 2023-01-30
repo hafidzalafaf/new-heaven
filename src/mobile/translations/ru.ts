@@ -195,7 +195,7 @@ export const ru = {
     // History transacrion
     'page.mobile.historyTransaction.internalTransfer.header': 'История транзакций',
 
-    // History trasaction Internal Transfer
+    // History transaction Internal Transfer
     'page.mobile.historyTransaction.internalTransfer.header.coins': 'Монеты',
     'page.mobile.historyTransaction.internalTransfer.header.amount': 'Количество',
     'page.mobile.historyTransaction.internalTransfer.header.type': 'Тип',

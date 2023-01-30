@@ -49,6 +49,7 @@ describe('Ranger module', () => {
                 rangerUrl: `ws://localhost:${echoServerPort}`,
                 finexUrl: '',
                 p2pUrl: '',
+                newsUrl: '',
             }
         };
     });

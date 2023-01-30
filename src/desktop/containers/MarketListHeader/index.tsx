@@ -36,10 +36,10 @@ export const MarketListHeader: FC = (): ReactElement => {
 
     const dataVolumes = [...marketList].sort((a, b) => Number(+b.volume) - Number(+a.volume));
     const dataGainers = [...marketList]
-        .filter((data) => data.price_change_percent.includes('+'))
+        .filter((data) => data.price_change_percent?.includes('+'))
         .sort((a, b) => Number(b.price_change_percent.slice(1, -1)) - Number(a.price_change_percent.slice(1, -1)));
     const dataLosers = [...marketList]
-        .filter((data) => data.price_change_percent.includes('-'))
+        .filter((data) => data.price_change_percent?.includes('-'))
         .sort((a, b) => Number(b.price_change_percent.slice(1, -1)) - Number(a.price_change_percent.slice(1, -1)));
 
     const dataHighlight = [...marketList].sort(

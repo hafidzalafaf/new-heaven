@@ -203,13 +203,13 @@ const MarketListlMobileScreen: React.FC = () => {
             </React.Fragment>,
             <p
                 className={`grey-text text-sm font-bold mb-0 ${
-                    item.price_change_percent.includes('-') ? 'danger-text' : 'contrast-text'
+                    item.price_change_percent?.includes('-') ? 'danger-text' : 'contrast-text'
                 }`}>
                 {item && item.last}
             </p>,
             <p
                 className={`badge white-text font-bold mb-0 ${
-                    item.price_change_percent.includes('-') ? 'badge-danger' : 'badge-success'
+                    item.price_change_percent?.includes('-') ? 'badge-danger' : 'badge-success'
                 }`}>
                 {item && item.price_change_percent}
             </p>,

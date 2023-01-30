@@ -32,7 +32,7 @@ import moment from 'moment';
 
 export const ProfileScreen: FC = (): ReactElement => {
     useDocumentTitle('Profile');
-    useBlogsFetch('faq');
+    useBlogsFetch({ tag: 'faq' });
     const user = useSelector(selectUserInfo);
     const apiKeys = useSelector(selectApiKeys);
     const blogs = useSelector(selectBlogs);

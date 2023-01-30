@@ -96,7 +96,7 @@ const MarketDetailMobileScreen: React.FC = () => {
                         <h1 className="p-0 m-0">$ {detail && detail.last}</h1>
                         <h4
                             className={`p-0 m-0 ${
-                                detail && detail.price_change_percent && detail.price_change_percent.includes('-')
+                                detail && detail.price_change_percent && detail.price_change_percent?.includes('-')
                                     ? 'danger-text'
                                     : 'contrast-text'
                             }`}>
@@ -149,9 +149,9 @@ const MarketDetailMobileScreen: React.FC = () => {
                                 <h4 className="p-0 m-0">Change (1h)</h4>
                                 <p
                                     className={`p-0 m-0 ${
-                                        detail && detail.price_change_percent.includes('+')
+                                        detail && detail.price_change_percent?.includes('+')
                                             ? 'green-text'
-                                            : detail && detail.price_change_percent.includes('-')
+                                            : detail && detail.price_change_percent?.includes('-')
                                             ? 'danger-text'
                                             : 'grey-text-accent'
                                     }`}>

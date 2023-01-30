@@ -193,7 +193,7 @@ export const en = {
     // History transacrion
     'page.mobile.historyTransaction.internalTransfer.header': 'Transaction History',
 
-    // History trasaction Internal Transfer
+    // History transaction Internal Transfer
     'page.mobile.historyTransaction.internalTransfer.header.coins' : 'Coins',
     'page.mobile.historyTransaction.internalTransfer.header.amount' : 'Amount',
     'page.mobile.historyTransaction.internalTransfer.header.type' : 'Type',
@@ -209,7 +209,7 @@ export const en = {
     'page.mobile.historyTransaction.internalTransfer.status.canceled' : 'Canceled',
     'page.mobile.historyTransaction.internalTransfer.status.pending' : 'Pending',
 
-    // History trasaction Deposit
+    // History transaction Deposit
     'page.mobile.historyTransaction.deposit.header.date' : 'Date',
     'page.mobile.historyTransaction.deposit.header.type' : 'Type',
     'page.mobile.historyTransaction.deposit.header.asset' : 'Asset',
@@ -219,7 +219,7 @@ export const en = {
     'page.mobile.historyTransaction.deposit.header.status' : 'Status',
     'page.mobile.historyTransaction.deposit.header.action' : 'Action',
 
-    //History trasaction Withdraw
+    //History transaction Withdraw
     'page.mobile.historyTransaction.withdraw.header.date' : 'Date',
     'page.mobile.historyTransaction.withdraw.header.type' : 'Type',
     'page.mobile.historyTransaction.withdraw.header.asset' : 'Asset',

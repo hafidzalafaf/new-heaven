@@ -1,31 +1,18 @@
 import { CommonError } from '../../types';
 import { BLOGS_DATA, BLOGS_ERROR, BLOGS_FETCH } from './constants';
-
-export interface BlogsPayload1 {
-    id: String;
-    cover: String;
-    title: String;
-    category: String;
-    content: String;
-    created_at: String;
-    slug: String;
-    url: String;
-    created_at_f: String;
-    published_at: string;
-}
+import { Blogs } from './types';
 
 export interface BlogsFetch {
     type: typeof BLOGS_FETCH;
     payload: {
-        // type: string;
-        limit?: string;
+        limit?: string | '15';
         tag: string;
     };
 }
 
 export interface BlogsData {
     type: typeof BLOGS_DATA;
-    payload: BlogsPayload1;
+    payload: Blogs[];
 }
 
 export interface BlogsError {

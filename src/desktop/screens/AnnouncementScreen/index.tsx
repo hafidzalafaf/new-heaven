@@ -12,7 +12,7 @@ export const AnnouncementScreen: FC = (): ReactElement => {
     const [blog, setBlog] = React.useState<any[]>([]);
 
     useDocumentTitle('Announcement');
-    useBlogsFetch('news');
+    useBlogsFetch({ tag: 'news' });
 
     const blogs = useSelector(selectBlogs);
 

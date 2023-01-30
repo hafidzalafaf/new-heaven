@@ -2,9 +2,18 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { blogsFetch } from '../modules';
 
-export const useBlogsFetch = (tag) => {
+interface BlogProps {
+    limit?: string,
+    tag: string
+}
+
+export const useBlogsFetch =  ({ limit= '15', tag }: BlogProps) => {
     const dispatch = useDispatch();
     React.useEffect(() => {
-        dispatch(blogsFetch(tag));
+       if (limit) { 
+        dispatch(blogsFetch({limit, tag}));
+       } else {
+        dispatch(blogsFetch({tag}));
+       }
     }, [dispatch]);
 };

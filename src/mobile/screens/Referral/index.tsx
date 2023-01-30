@@ -64,7 +64,7 @@ const ReferralMobileScreen: React.FC = () => {
                                 Total rewards : <span>0.00USDT</span>
                             </h1>
                             <p className="text-sm grey-text mb-0">
-                                Invite your friend and earn 50% commission on their exchange trasaction, Copy link
+                                Invite your friend and earn 50% commission on their exchange transaction, Copy link
                                 bellow and share referral link to your friends
                             </p>
                         </div>

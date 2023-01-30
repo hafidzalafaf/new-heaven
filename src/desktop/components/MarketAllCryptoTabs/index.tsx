@@ -87,7 +87,7 @@ export const MarketAllCryptoTabs: FC = (): ReactElement => {
                 <p className="m-0 mr-24 white-text font-bold">{item.name && item.name.toUpperCase()}</p>
             </div>,
             <p className="m-0 text-sm white-text">$ {item.last}</p>,
-            <p className={`text-sm m-0 ${item.price_change_percent.includes('-') ? 'danger-text' : 'green-text'}`}>
+            <p className={`text-sm m-0 ${item.price_change_percent?.includes('-') ? 'danger-text' : 'green-text'}`}>
                 {item.price_change_percent}
             </p>,
             <p className="m-0 text-sm white-text">$ {item.volume}</p>,
