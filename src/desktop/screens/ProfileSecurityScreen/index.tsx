@@ -472,7 +472,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                     {!this.props.user.phones[0]
                         ? 'Add Phone Number'
                         : this.state.phone[0] && this.state.phone[0].validated_at === null && !this.state.isChangeNumber
-                        ? 'Veirify Phone Number'
+                        ? 'Verify Phone Number'
                         : this.state.isChangeNumber
                         ? 'Change Phone Number'
                         : ''}

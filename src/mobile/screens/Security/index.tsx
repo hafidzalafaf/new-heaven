@@ -322,18 +322,16 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
                                 </div>
                             </div>
                         </div>
-                        <div className='mt-4'>
-                            <Link to='/device-management' className="d-flex align-items-center justify-content-between mt-4">
-                            <p className="d-flex mb-1 text-base white-text font-bold my-auto">
-                            Account Activity
-                            </p>
-                            <ArrowRight className={''}/>
+                        <div className="mt-4">
+                            <Link
+                                to="/device-management"
+                                className="d-flex align-items-center justify-content-between mt-4">
+                                <p className="d-flex mb-1 text-base white-text font-bold my-auto">Account Activity</p>
+                                <ArrowRight className={''} />
                             </Link>
                             <div className="d-flex align-items-center justify-content-between mt-4">
-                            <p className="d-flex mb-1 text-base white-text font-bold my-auto">
-                            Manage Account
-                            </p>
-                            <ArrowRight className={''}/>
+                                <p className="d-flex mb-1 text-base white-text font-bold my-auto">Manage Account</p>
+                                <ArrowRight className={''} />
                             </div>
                         </div>
                     </div>
@@ -492,7 +490,7 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
                         {!this.props.user.phones[0]
                             ? 'Add Phone Number'
                             : this.props.user.phones[0].validated_at === null && !this.state.isChangeNumber
-                            ? 'Veirify Phone Number'
+                            ? 'Verify Phone Number'
                             : (this.props.user.phones[0] && this.state.isChangeNumber) ||
                               this.props.user.phones[0].validated_at !== null
                             ? 'Change Phone Number'

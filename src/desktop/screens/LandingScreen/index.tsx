@@ -65,10 +65,10 @@ class Landing extends React.Component<Props> {
                                 </p>
                                 <div className="d-flex justify-content-center">
                                     <Link to={'/markets'} className="btn btn-rounded btn-primary mx-3">
-                                        Trade Now
+                                        {this.translate('page.body.landing.marketInfo.title.button1')}
                                     </Link>
                                     <a href="" className="btn btn-rounded btn-outline white-text font-bold mx-3">
-                                        Download App
+                                        {this.translate('page.body.landing.marketInfo.title.button2')}
                                     </a>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@ class Landing extends React.Component<Props> {
                                 <div className="d-flex new-coin justify-content-center">
                                     <div className="new-coin-content">
                                         <p className="mb-0 text-md white-text font-semibold mb-24 text-center">
-                                            New Coins
+                                            {this.translate('page.body.landing.new.coins')}
                                         </p>
                                         <div className="d-flex">
                                             <p className="mb-0 font-semibold white-text mr-4">
