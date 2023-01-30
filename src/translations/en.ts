@@ -138,7 +138,14 @@ export const en = {
 
     'page.body.landing.marketInfo.title.text1': 'Crypto Increases, Money Saved For Better Life with',
     'page.body.landing.marketInfo.title.text2': 'Buy, sell and trade digital currency.',
-    'page.body.landing.marketInfo.title.button': 'start trading',
+    'page.body.landing.marketInfo.title.button1': 'Trade Now',
+    'page.body.landing.marketInfo.title.button2': 'Download App',
+
+    'page.body.landing.new.coins': 'New Coins',
+
+    'page.body.landing.popular.coin.title': 'Popular Crypto Coins',
+    'page.body.landing.popular.coin.desc': 'Most popular coins to trade',
+    'page.body.landing.popular.coin.show.more': 'Show More',
 
     'page.body.landing.platformInfo.item.first.value': '30M+',
     'page.body.landing.platformInfo.item.first.title': 'Customers served',

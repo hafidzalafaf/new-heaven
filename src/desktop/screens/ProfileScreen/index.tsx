@@ -319,7 +319,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                     {!user.phones[0]
                         ? 'Add Phone Number'
                         : phone[0] && phone[0].validated_at === null && !isChangeNumber
-                        ? 'Veirify Phone Number'
+                        ? 'Verify Phone Number'
                         : isChangeNumber
                         ? 'Change Phone Number'
                         : ''}

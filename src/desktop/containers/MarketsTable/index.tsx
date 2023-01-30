@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, Link } from 'react-router-dom';
 import { Decimal } from '../../../components';
@@ -52,6 +53,8 @@ const MarketsTableComponent = (props) => {
 
     const history = useHistory();
     const dispatch = useDispatch();
+    const { formatMessage } = useIntl();
+
     const markets = useSelector(selectMarkets);
     const marketTickers = useSelector(selectMarketTickers);
     const currencies = useSelector(selectCurrencies);
@@ -198,9 +201,11 @@ const MarketsTableComponent = (props) => {
                                 ))}
                         </Slider>
                     </div>
-                    <h2 className="text-main-title white-text text-center font-extrabold ">Popular Crypto Coins</h2>
+                    <h2 className="text-main-title white-text text-center font-extrabold ">
+                        {formatMessage({ id: 'page.body.landing.popular.coin.title' })}
+                    </h2>
                     <p className=" mb-24 text-md font-normal grey-text-accent text-center">
-                        Most popular coins to trade
+                        {formatMessage({ id: 'page.body.landing.popular.coin.desc' })}
                     </p>
                     <div className="market-list">
                         <TickerTable
@@ -212,7 +217,7 @@ const MarketsTableComponent = (props) => {
                         />
                         <div className="d-flex justify-content-center mt-4">
                             <Link to={'/markets'} className="btn btn-primary">
-                                Show More
+                                {formatMessage({ id: 'page.body.landing.popular.coin.show.more' })}
                             </Link>
                         </div>
                     </div>

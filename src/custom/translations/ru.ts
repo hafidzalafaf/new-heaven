@@ -136,7 +136,14 @@ export const ru: LangType = {
 
     'page.body.landing.marketInfo.title.text1': 'Криптовалюта растет, деньги сэкономлены для лучшей жизни с',
     'page.body.landing.marketInfo.title.text2': 'Наслаждайтесь арбитражем на платформе HEX',
-    'page.body.landing.marketInfo.title.button': 'start trading',
+    'page.body.landing.marketInfo.title.button1': 'Торгуйте сейчас',
+    'page.body.landing.marketInfo.title.button2': 'Скачать приложение',
+
+    'page.body.landing.new.coins': 'Новые монеты',
+
+    'page.body.landing.popular.coin.title': 'Популярные крипто-монеты',
+    'page.body.landing.popular.coin.desc': 'Самые популярные монеты для торговли',
+    'page.body.landing.popular.coin.show.more': 'Показать больше',
 
     'page.body.landing.platformInfo.item.first.value': '30M+',
     'page.body.landing.platformInfo.item.first.title': 'Customers served',

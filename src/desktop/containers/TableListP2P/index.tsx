@@ -1,15 +1,59 @@
 import * as React from 'react';
-import { InputGroup, DropdownButton, Dropdown, Form } from 'react-bootstrap';
+import { useIntl } from 'react-intl';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
+import { useP2PCurrenciesFetch, useP2PPaymentMethodsFetch, useUserPaymentMethodsFetch } from 'src/hooks';
+import {
+    selectUserLoggedIn,
+    Offer,
+    offersFetch,
+    RootState,
+    selectP2POffers,
+    selectP2POffersCurrentPage,
+    selectP2POffersFirstElemIndex,
+    selectP2POffersLastElemIndex,
+    selectP2POffersNextPageExists,
+    selectP2POffersTotalNumber,
+    selectP2PPaymentMethodsData,
+    selectWallets,
+} from 'src/modules';
+import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import { RefreshIcon, CheckIcon, CloseIcon } from 'src/assets/images/P2PIcon';
 import { CustomStylesSelect, ModalCreateOffer } from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
 
 export const TableListP2P = () => {
+    useP2PCurrenciesFetch();
+    useP2PPaymentMethodsFetch();
+    useUserPaymentMethodsFetch();
+
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const intl = useIntl();
+
+    const isLoggedIn = useSelector(selectUserLoggedIn);
+    const page = useSelector(selectP2POffersCurrentPage);
+    const list = useSelector(selectP2POffers);
+    const total = useSelector(selectP2POffersTotalNumber);
+    const wallets = useSelector(selectWallets);
+    const paymentMethods = useSelector(selectP2PPaymentMethodsData);
+    const firstElemIndex = useSelector((state: RootState) =>
+        selectP2POffersFirstElemIndex(state, DEFAULT_TABLE_PAGE_LIMIT)
+    );
+    const lastElemIndex = useSelector((state: RootState) =>
+        selectP2POffersLastElemIndex(state, DEFAULT_TABLE_PAGE_LIMIT)
+    );
+    const nextPageExists = useSelector((state: RootState) =>
+        selectP2POffersNextPageExists(state, DEFAULT_TABLE_PAGE_LIMIT)
+    );
+
     const [side, setSide] = React.useState('buy');
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
+
+    console.log(list, 'ini list');
 
     const optionQuote = [
         { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
@@ -129,7 +173,9 @@ export const TableListP2P = () => {
 
                         <button
                             type="button"
-                            onClick={() => setShowModalCreateOffer(!showModalCreateOffer)}
+                            onClick={() =>
+                                isLoggedIn ? setShowModalCreateOffer(!showModalCreateOffer) : history.push('/signin')
+                            }
                             className="btn-primary">
                             + Create Offers
                         </button>
