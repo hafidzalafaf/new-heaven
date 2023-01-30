@@ -48,6 +48,11 @@ import { p2pTransfersReducer } from './user/p2pTransfers';
 import { p2pOrdersReducer } from './user/p2pOrders';
 import { p2pDisputeReducer } from './user/p2pDispute';
 import { feeGroupReducer } from './user/feeGroup';
+import { feedbackReducer } from './user/p2pFeedback';
+import { orderReducer } from './user/p2pOrder';
+import { orderConfirmReducer } from './user/p2pOrderConfirmation';
+import { p2pOfferReducer } from './user/p2pOffer';
+import { p2pOfferAvailableReducer } from './user/p2pAvailableOffer';
 
 export const publicReducer = combineReducers({
     alerts: alertReducer,
@@ -105,6 +110,11 @@ export const userReducer = combineReducers({
     p2pOrders: p2pOrdersReducer,
     p2pDispute: p2pDisputeReducer,
     confirmationCode: confirmationCodeReducer,
+    p2pFeedback: feedbackReducer,
+    p2pOrder: orderReducer,
+    p2pOrderConfirm: orderConfirmReducer,
+    p2pOffer: p2pOfferReducer,
+    p2pOfferAvailable: p2pOfferAvailableReducer,
 });
 
 export const adminReducer = combineReducers({

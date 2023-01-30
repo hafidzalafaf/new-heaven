@@ -52,9 +52,14 @@ import { P2POffersState, rootP2POffersSaga } from './user/p2pOffers';
 import { P2PTransfersState, rootP2PTransfersSaga } from './user/p2pTransfers';
 import { P2POrdersState, rootP2POrdersSaga } from './user/p2pOrders';
 import { P2PDisputeState, rootP2PDisputeSaga } from './user/p2pDispute';
-import { rootFeeGroupSaga, FeeGroupState } from './user/feeGroup';
-import { rootWithdrawLimitsSaga, WithdrawLimitsState } from './public/withdrawLimits';
+import { FeeGroupState, rootFeeGroupSaga } from './user/feeGroup';
+import { WithdrawLimitsState, rootWithdrawLimitsSaga } from './public/withdrawLimits';
 import { ConfirmationCodeState, rootConfirmationCodeSaga } from './user/emailVerificationCode';
+import { FeedbackState, rootP2PFeedbackSaga } from './user/p2pFeedback';
+import { OrderState, rootP2POrderSaga } from './user/p2pOrder';
+import { OrderConfirmState, rootP2POrderConfirmationSaga } from './user/p2pOrderConfirmation';
+import { P2POfferState, rootP2POfferSaga } from './user/p2pOffer';
+import { P2POfferAvailableState, rootP2PAvailableOfferSaga } from './user/p2pAvailableOffer';
 
 export * from './admin/config';
 export * from './admin/markets';
@@ -103,6 +108,11 @@ export * from './user/p2pOrders';
 export * from './user/p2pTransfers';
 export * from './user/p2pDispute';
 export * from './user/emailVerificationCode';
+export * from './user/p2pFeedback';
+export * from './user/p2pOrder';
+export * from './user/p2pOrderConfirmation';
+export * from './user/p2pOffer';
+export * from './user/p2pAvailableOffer';
 
 export interface RootState {
     public: {
@@ -160,6 +170,11 @@ export interface RootState {
         p2pOrders: P2POrdersState;
         p2pDispute: P2PDisputeState;
         confirmationCode: ConfirmationCodeState;
+        p2pFeedback: FeedbackState;
+        p2pOrder: OrderState;
+        p2pConfirm: OrderConfirmState;
+        p2pOffer: P2POfferState;
+        p2pOfferAvailable: P2POfferAvailableState;
     };
     admin: {
         configUpdate: ConfigUpdateState;
@@ -223,5 +238,10 @@ export function* rootSaga() {
         call(rootP2PDisputeSaga),
         call(rootConfigsSaga),
         call(rootConfirmationCodeSaga),
+        call(rootP2PFeedbackSaga),
+        call(rootP2POrderSaga),
+        call(rootP2POrderConfirmationSaga),
+        call(rootP2POfferSaga),
+        call(rootP2PAvailableOfferSaga),
     ]);
 }
