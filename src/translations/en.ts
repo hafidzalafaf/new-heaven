@@ -136,7 +136,7 @@ export const en = {
     'page.body.landing.header.button2': 'log in',
     'page.body.landing.header.button3': 'register',
 
-    'page.body.landing.marketInfo.title.text1': 'Welcome to Heaven Exchange.',
+    'page.body.landing.marketInfo.title.text1': 'Crypto Increases, Money Saved For Better Life with',
     'page.body.landing.marketInfo.title.text2': 'Buy, sell and trade digital currency.',
     'page.body.landing.marketInfo.title.button': 'start trading',
 
