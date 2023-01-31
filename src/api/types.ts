@@ -7,6 +7,7 @@ declare global {
             rangerUrl: string;
             finexUrl: string;
             p2pUrl: string;
+            p2pUrl2: string;
             newsUrl: string;
         };
         finex: string | boolean;

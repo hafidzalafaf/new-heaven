@@ -6,7 +6,7 @@ import { P2POfferCreate, p2pOfferCreateData, p2pOfferCreateError } from '../acti
 
 const config = (csrfToken?: string): RequestOptions => {
     return {
-        apiVersion: 'p2p',
+        apiVersion: 'p2p2',
         headers: { 'X-CSRF-Token': csrfToken },
     };
 };
