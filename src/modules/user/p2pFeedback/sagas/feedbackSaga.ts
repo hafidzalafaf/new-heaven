@@ -4,7 +4,7 @@ import { API, RequestOptions } from '../../../../api';
 import { feedbackData, feedbackError, FeedbackFetch } from '../actions';
 
 const config: RequestOptions = {
-    apiVersion: 'p2p',
+    apiVersion: 'p2p2',
 };
 
 export function* feedbackSaga(action: FeedbackFetch) {

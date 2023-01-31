@@ -7,6 +7,9 @@ import {
     P2P_CURRENCIES_DATA,
     P2P_CURRENCIES_ERROR,
     P2P_CURRENCIES_FETCH,
+    P2P_FIAT_DATA,
+    P2P_FIAT_FETCH,
+    P2P_FIAT_ERROR,
     P2P_HIGHEST_PRICE_DATA,
     P2P_HIGHEST_PRICE_ERROR,
     P2P_HIGHEST_PRICE_FETCH,
@@ -18,9 +21,16 @@ import {
     P2P_PAYMENT_METHODS_ERROR,
     P2P_PAYMENT_METHODS_FETCH,
 } from './constants';
-import { Offer, P2PCurrency, PaymentMethod } from './types';
+import { Offer, P2PCurrency, P2PFiat, PaymentMethod } from './types';
 
 export interface P2PState {
+    fiats: {
+        data: P2PFiat[];
+        fetching: boolean;
+        success: boolean;
+        timestamp?: number;
+        error?: CommonError;
+    };
     currencies: {
         data: P2PCurrency[];
         fetching: boolean;
@@ -57,6 +67,11 @@ export interface P2PState {
 }
 
 export const initialP2PState: P2PState = {
+    fiats: {
+        data: [],
+        fetching: false,
+        success: false,
+    },
     currencies: {
         data: [],
         fetching: false,
@@ -107,14 +122,9 @@ export const p2pOffersFetchReducer = (state: P2PState['offers'], action: P2PActi
             };
         case P2P_OFFERS_UPDATE:
             const newList = sliceArray(
-                insertOrUpdate(
-                    state.list,
-                    action.payload,
-                    state.side,
-                    state.base,
-                    state.quote,
-                    state.payment_method,
-            ), defaultStorageLimit());
+                insertOrUpdate(state.list, action.payload, state.side, state.base, state.quote, state.payment_method),
+                defaultStorageLimit()
+            );
 
             return {
                 ...state,
@@ -130,6 +140,34 @@ export const p2pOffersFetchReducer = (state: P2PState['offers'], action: P2PActi
                 side: '',
                 total: 0,
                 list: [],
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+const p2pFiatsReducer = (state: P2PState['fiats'], action: P2PActions) => {
+    switch (action.type) {
+        case P2P_FIAT_FETCH:
+            return {
+                ...state,
+                fetching: true,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+        case P2P_FIAT_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case P2P_FIAT_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
                 error: action.error,
             };
         default:
@@ -230,6 +268,17 @@ export const p2pReducer = (state = initialP2PState, action: P2PActions) => {
                 ...state,
                 currencies: p2pCurrenciesReducer(p2pCurrenciesState, action),
             };
+
+        case P2P_FIAT_FETCH:
+        case P2P_FIAT_DATA:
+        case P2P_FIAT_ERROR:
+            const p2pFiatState = { ...state.fiats };
+
+            return {
+                ...state,
+                fiats: p2pFiatsReducer(p2pFiatState, action),
+            };
+
         case P2P_PAYMENT_METHODS_FETCH:
         case P2P_PAYMENT_METHODS_DATA:
         case P2P_PAYMENT_METHODS_ERROR:
@@ -239,6 +288,7 @@ export const p2pReducer = (state = initialP2PState, action: P2PActions) => {
                 ...state,
                 paymentMethods: p2pPaymentMethodsReducer(p2pPaymentMethodsState, action),
             };
+
         case P2P_OFFERS_FETCH:
         case P2P_OFFERS_DATA:
         case P2P_OFFERS_ERROR:
@@ -249,6 +299,7 @@ export const p2pReducer = (state = initialP2PState, action: P2PActions) => {
                 ...state,
                 offers: p2pOffersFetchReducer(p2pOffersFetchState, action),
             };
+
         case P2P_HIGHEST_PRICE_FETCH:
         case P2P_HIGHEST_PRICE_DATA:
         case P2P_HIGHEST_PRICE_ERROR:

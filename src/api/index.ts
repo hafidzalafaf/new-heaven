@@ -4,7 +4,7 @@ import { JsonBody, makeRequest } from './requestBuilder';
 export * from './config';
 
 export interface RequestOptions {
-    apiVersion: 'applogic' | 'exchange' | 'account' | 'finex' | 'sonic' | 'p2p' | 'news';
+    apiVersion: 'applogic' | 'exchange' | 'account' | 'finex' | 'sonic' | 'p2p' | 'p2p2' | 'news';
     withHeaders?: boolean;
     headers?: any;
 }
@@ -24,7 +24,7 @@ export interface ApiWrapper {
 }
 
 export const API: ApiWrapper = {
-    get: (config: RequestOptions) => async (url: string) =>       
+    get: (config: RequestOptions) => async (url: string) =>
         makeRequest(
             {
                 method: 'get',

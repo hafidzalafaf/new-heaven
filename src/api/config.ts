@@ -9,7 +9,8 @@ export const defaultConfig: Config = {
         applogicUrl: `${hostUrl}/api/v2/applogic`,
         rangerUrl: `${rangerHostUrl}/api/v2/ranger`,
         finexUrl: `${hostUrl}/api/v2/finex`,
-        p2pUrl: `${hostUrl}/api/v1/`,
+        p2pUrl: `http://192.168.1.56:3000/api/v1`,
+        p2pUrl2: `http://192.168.1.56:3001/api/v1`,
         newsUrl: `${hostUrl}/blog/ghost/api/v3`,
     },
     finex: false,
@@ -60,6 +61,7 @@ export const applogicUrl = () => Cryptobase.config.api.applogicUrl;
 export const rangerUrl = () => Cryptobase.config.api.rangerUrl;
 export const finexUrl = () => Cryptobase.config.api.finexUrl || tradeUrl();
 export const p2pUrl = () => Cryptobase.config.api.p2pUrl;
+export const p2pUrl2 = () => Cryptobase.config.api.p2pUrl2;
 export const newsUrl = () => Cryptobase.config.api.newsUrl;
 export const withCredentials = () => convertToBoolean(Cryptobase.config.withCredentials);
 export const incrementalOrderBook = () => convertToBoolean(Cryptobase.config.incrementalOrderBook);

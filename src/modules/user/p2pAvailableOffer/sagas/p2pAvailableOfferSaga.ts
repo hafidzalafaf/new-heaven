@@ -5,7 +5,7 @@ import { p2pOfferAvailableData, p2pOfferAvailableError, P2POfferAvailableFetch }
 import { buildQueryString } from 'src/helpers';
 
 const config: RequestOptions = {
-    apiVersion: 'p2p',
+    apiVersion: 'p2p2',
 };
 
 export function* p2pAvailableOfferSaga(action: P2POfferAvailableFetch) {
