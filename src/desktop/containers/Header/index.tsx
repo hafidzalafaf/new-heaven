@@ -7,7 +7,6 @@ import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'redux';
 import { IntlProps } from '../../../';
 import { Decimal } from 'src/components';
-import { languages } from '../../../api/config';
 import '../../../styles/colors.pcss';
 import {
     Market,
@@ -29,11 +28,10 @@ import {
     User,
     changeUserDataFetch,
 } from '../../../modules';
-import { numberFormat } from '../../../helpers';
 import { Logo } from '../../../assets/images/Logo';
-import { EnglishFlag, RussiaFlag } from '../../../assets/images/Flags';
 import { MoonIcon, SunIcon } from 'src/assets/images/SwitchTheme';
 import { Api, Dashboard, Logout, Referral, Security, Wallet } from '../../../assets/images/ProfileDropdown';
+import { Dropdown } from 'react-bootstrap';
 
 interface ReduxProps {
     currentMarket: Market | undefined;
@@ -64,10 +62,8 @@ interface LocationProps extends RouterProps {
 }
 
 export interface HeaderState {
-    showLanguage: boolean;
-    showProfileDropdown: boolean;
     showHeader: boolean;
-    lang: string;
+    languageActive: string;
 }
 
 const authHeader = ['/signin', '/signup', '/email-verification', '/forgot_password', '/password_reset', '/trading'];
@@ -80,10 +76,8 @@ class Head extends React.Component<Props, HeaderState> {
         super(props);
 
         this.state = {
-            showLanguage: false,
-            showProfileDropdown: false,
             showHeader: false,
-            lang: '',
+            languageActive: 'en',
         };
     }
 
@@ -102,7 +96,6 @@ class Head extends React.Component<Props, HeaderState> {
         const thisAuthHeader = authHeader.some((r) => location.pathname.includes(r)) && location.pathname !== '/';
         const thisTradingHeader = tradingHeader.some((r) => location.pathname.includes(r));
 
-        const { showLanguage, showProfileDropdown } = this.state;
         const { isLoggedIn } = this.props;
 
         const logoutButton = async () => {
@@ -163,80 +156,54 @@ class Head extends React.Component<Props, HeaderState> {
 
         const ticker = this.props.tickers[this.props.currentMarket?.id];
 
-        if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
-            localStorage.setItem('showProfileDropdown', 'false');
-            localStorage.setItem('showLanguage', 'false');
-        }
-
         return (
             <React.Fragment>
                 <nav
                     className={`navbar navbar-expand-lg py-2 px-24 ${
                         thisTradingHeader ? 'dark-bg-accent' : 'dark-bg-accent'
                     }`}>
-                    <Link
-                        onClick={() => {
-                            localStorage.setItem('showProfileDropdown', 'false');
-                            localStorage.setItem('showLanguage', 'false');
-                        }}
-                        to="/"
-                        className="navbar-brand">
+                    <Link to="/" className="navbar-brand">
                         <Logo />
                     </Link>
                     <div className="d-flex align-items-center">
                         {this.state.showHeader && isLoggedIn && (
                             <li className="nav-item dropdown avatar profile-menu px-3">
-                                <div
-                                    className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm"
-                                    onClick={() => this.setState({ showProfileDropdown: !showProfileDropdown })}>
-                                    <img src="/img/avatar.png" className="avatar-image" alt="" />
-                                </div>
-                                {showProfileDropdown ? (
-                                    <div
-                                        className="dropdown-menu dark-bg-accent p-3 radius-sm"
-                                        aria-labelledby="navbarDropdownMenuLink">
+                                <Dropdown>
+                                    <Dropdown.Toggle
+                                        variant=""
+                                        id="dropdown-basic"
+                                        className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm">
+                                        <img src="/img/avatar.png" className="avatar-image" alt="ava" />
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu className="dropdown-profile">
                                         {ProfileDropdown.map((item, index) => (
-                                            <div
-                                                key={index}
-                                                className="dropdown-wallets-item"
-                                                onClick={() => {
-                                                    // localStorage.removeItem('showProfileDropdown');
-                                                    localStorage.setItem('showProfileDropdown', 'false');
-                                                    this.setState({ showProfileDropdown: false, showHeader: false });
-                                                }}>
+                                            <Dropdown.Item key={index} className="dark-bg-accent p-3 dropdown-profile">
                                                 <Link to={item.url} className="d-flex">
                                                     {item.icon}
                                                     <div className="pl-3">
-                                                        <p
-                                                            onClick={() =>
-                                                                localStorage.setItem('showProfileDropdown', 'false')
-                                                            }
-                                                            className="mb-0 text-sm font-bold white-text">
-                                                            {item.name}
-                                                        </p>
+                                                        <p className="mb-0 text-sm font-bold white-text">{item.name}</p>
                                                         <span className="text-xs grey-text-accent font-normal">
                                                             {item.desc}
                                                         </span>
                                                     </div>
                                                 </Link>
-                                            </div>
+                                            </Dropdown.Item>
                                         ))}
-                                        <div
-                                            className="dropdown-wallets-item cursor-pointer"
-                                            onClick={() => this.setState({ showProfileDropdown: false })}>
-                                            <div className="d-flex" onClick={logoutButton}>
-                                                <Logout />
-                                                <div className="pl-3">
-                                                    <p className="mb-0 text-sm font-bold white-text">
-                                                        {this.translate('page.header.navbar.logout')}
-                                                    </p>
+                                        <Dropdown.Item className="dark-bg-accent p-3 dropdown-profile cursor-pointer">
+                                            <div className="dark-bg-accent p-3 dropdown-profile cursor-pointer">
+                                                <div className="d-flex" onClick={logoutButton}>
+                                                    <Logout />
+                                                    <div className="pl-3">
+                                                        <p className="mb-0 text-sm font-bold white-text">
+                                                            {this.translate('page.header.navbar.logout')}
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    ''
-                                )}
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             </li>
                         )}
                         <button
@@ -250,8 +217,8 @@ class Head extends React.Component<Props, HeaderState> {
                             <span className="navbar-toggler-icon">
                                 <img
                                     src={this.state.showHeader ? '/img/humburger-show.png' : '/img/humburger.png'}
-                                    className="humberger-icon"
-                                    alt="humberger icon"
+                                    className="icon"
+                                    alt="icon"
                                     onClick={() => this.setState({ showHeader: !this.state.showHeader })}
                                 />
                             </span>
@@ -262,11 +229,7 @@ class Head extends React.Component<Props, HeaderState> {
                             this.state.showHeader && 'show'
                         } navbar-collapse justify-content-between`}
                         id="navbarNavDropdown">
-                        <div
-                            onClick={() => {
-                                localStorage.setItem('showProfileDropdown', 'false');
-                                localStorage.setItem('showLanguage', 'false');
-                            }}>
+                        <div>
                             {!thisAuthHeader ? (
                                 <React.Fragment>
                                     <ul className="navbar-nav main-navbar">
@@ -401,115 +364,78 @@ class Head extends React.Component<Props, HeaderState> {
                         {this.state.showHeader && <div className="devider"></div>}
                         <ul className="navbar-nav align-items-center">
                             <li className="nav-item dropdown px-3">
-                                <a
-                                    className="nav-link dropdown-toggle grey-text-accent text-sm"
-                                    href="#"
-                                    id="navbarDropdownMenuLink"
-                                    role="button"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                    onClick={() => {
-                                        if (localStorage.getItem('showLanguage') == 'false') {
-                                            localStorage.setItem('showProfileDropdown', 'false');
-                                            localStorage.setItem('showLanguage', 'true');
-                                        } else {
-                                            localStorage.setItem('showLanguage', 'false');
-                                        }
-                                    }}>
-                                    {!this.props.isLoggedIn
-                                        ? `${
-                                              localStorage.getItem('lang_code') !== null
-                                                  ? localStorage.getItem('lang_code').toUpperCase()
-                                                  : 'EN'
-                                          }/USDT`
-                                        : `${
-                                              localStorage.getItem('lang_code') !== null
-                                                  ? localStorage.getItem('lang_code').toUpperCase()
-                                                  : 'EN'
-                                          }/USDT`}
-                                </a>
-                                {localStorage.getItem('showLanguage') == 'true' ? (
-                                    <div
-                                        className="dropdown-menu dark-bg-accent p-3 radius-sm"
-                                        aria-labelledby="navbarDropdownMenuLink">
-                                        <div className="d-flex">
-                                            <div className="language">
-                                                <p className="text-xs font-bold mb-3 grey-text-accent">
-                                                    {this.translate('page.header.navbar.dropdown.language')}
-                                                </p>
-                                                {LanguageDropdown.map((item, key) => (
-                                                    <div
-                                                        key={`language-${key}`}
-                                                        onClick={() => {
-                                                            this.handleChangeLanguage(item.code);
-                                                            this.setState({ showLanguage: false });
-                                                            localStorage.setItem('showLanguage', 'false');
-                                                        }}
-                                                        className="dropdown-item grey-text-accent text-sm active cursor-pointer">
-                                                        {item.flag} {item.name}
+                                <Dropdown>
+                                    <Dropdown.Toggle
+                                        variant=""
+                                        className="nav-link dropdown-toggle grey-text-accent text-sm"
+                                        id="dropdown-language">
+                                        {!this.props.isLoggedIn
+                                            ? `${
+                                                  localStorage.getItem('lang_code') !== null
+                                                      ? localStorage.getItem('lang_code').toUpperCase()
+                                                      : 'EN'
+                                              }/USDT`
+                                            : `${
+                                                  localStorage.getItem('lang_code') !== null
+                                                      ? localStorage.getItem('lang_code').toUpperCase()
+                                                      : 'EN'
+                                              }/USDT`}
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item className="bg-transparent border-none">
+                                            <div className="d-flex dropdown-menu dark-bg-accent p-3 radius-sm">
+                                                <div className="language">
+                                                    <p className="text-xs font-bold mb-3 grey-text-accent">
+                                                        {this.translate('page.header.navbar.dropdown.language')}
+                                                    </p>
+                                                    {LanguageDropdown.map((item, key) => (
+                                                        <div
+                                                            key={`language-${key}`}
+                                                            onClick={() => {
+                                                                this.handleChangeLanguage(item.code);
+                                                                this.setState({ languageActive: item.code });
+                                                            }}
+                                                            className={`dropdown-item grey-text-accent text-sm cursor-pointer ${
+                                                                localStorage.getItem('lang_code') !== null
+                                                                    ? localStorage.getItem('lang_code') == item.code
+                                                                        ? 'active'
+                                                                        : ''
+                                                                    : this.state.languageActive == item.code && 'active'
+                                                            }`}>
+                                                            {item.flag} {item.name}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="line"></div>
+                                                <div className="currency">
+                                                    <p className="text-xs font-bold mb-3 grey-text-accent">
+                                                        {this.translate('page.header.navbar.dropdown.currency')}
+                                                    </p>
+                                                    <div className="dropdown-item grey-text-accent text-sm active cursor-pointer">
+                                                        <div className="dots" />
+                                                        {this.translate('page.header.navbar.dropdown.language.usd')}
                                                     </div>
-                                                ))}
-                                            </div>
-                                            <div className="line"></div>
-                                            <div
-                                                className="currency"
-                                                onClick={() => this.setState({ showLanguage: false })}>
-                                                <p className="text-xs font-bold mb-3 grey-text-accent">
-                                                    {this.translate('page.header.navbar.dropdown.currency')}
-                                                </p>
-                                                <div className="dropdown-item grey-text-accent text-sm active cursor-pointer">
-                                                    <div className="dots" />
-                                                    {this.translate('page.header.navbar.dropdown.language.usd')}
-                                                </div>
-                                                <div className="dropdown-item grey-text-accent text-sm cursor-pointer">
-                                                    <div className="dots" />
-                                                    {this.translate('page.header.navbar.dropdown.language.idr')}
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    ''
-                                )}
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             </li>
 
                             {isLoggedIn ? (
                                 <li className="nav-item dropdown avatar px-3">
-                                    <a
-                                        className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm"
-                                        href="#"
-                                        id="navbarDropdownMenuProfile"
-                                        role="button"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                        // onClick={() =>
-                                        //     this.setState({
-                                        //         showProfileDropdown: !showProfileDropdown,
-                                        //         showLanguage: false,
-                                        //     })
-                                        // }
+                                    <Dropdown>
+                                        <Dropdown.Toggle
+                                            variant=""
+                                            id="dropdown-basic"
+                                            className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm">
+                                            <img src="/img/avatar.png" className="avatar-image" alt="ava" />
+                                        </Dropdown.Toggle>
 
-                                        onClick={() => {
-                                            if (localStorage.getItem('showProfileDropdown') == 'false') {
-                                                localStorage.setItem('showProfileDropdown', 'true');
-                                                localStorage.setItem('showLanguage', 'false');
-                                            } else {
-                                                localStorage.setItem('showProfileDropdown', 'false');
-                                            }
-                                        }}>
-                                        <img src="/img/avatar.png" className="avatar-image" alt="" />
-                                    </a>
-                                    {localStorage.getItem('showProfileDropdown') == 'true' ? (
-                                        <div
-                                            className="dropdown-menu dark-bg-accent p-3 radius-sm"
-                                            aria-labelledby="navbarDropdownMenuProfile">
+                                        <Dropdown.Menu className="dropdown-profile">
                                             {ProfileDropdown.map((item, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="dropdown-wallets-item"
-                                                    onClick={() => this.setState({ showProfileDropdown: false })}>
+                                                <Dropdown.Item key={index} className="dark-bg-accent p-3">
                                                     <Link to={item.url} className="d-flex">
                                                         {item.icon}
                                                         <div className="pl-3">
@@ -521,24 +447,22 @@ class Head extends React.Component<Props, HeaderState> {
                                                             </span>
                                                         </div>
                                                     </Link>
-                                                </div>
+                                                </Dropdown.Item>
                                             ))}
-                                            <div
-                                                className="dropdown-wallets-item cursor-pointer"
-                                                onClick={() => this.setState({ showProfileDropdown: false })}>
-                                                <div className="d-flex" onClick={logoutButton}>
-                                                    <Logout />
-                                                    <div className="pl-3">
-                                                        <p className="mb-0 text-sm font-bold white-text">
-                                                            {this.translate('page.header.navbar.logout')}
-                                                        </p>
+                                            <Dropdown.Item className="dark-bg-accent p-3 cursor-pointer border-none">
+                                                <div className="dark-bg-accent p-3 cursor-pointer">
+                                                    <div className="d-flex" onClick={logoutButton}>
+                                                        <Logout />
+                                                        <div className="pl-3">
+                                                            <p className="mb-0 text-sm font-bold white-text">
+                                                                {this.translate('page.header.navbar.logout')}
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        ''
-                                    )}
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                 </li>
                             ) : (
                                 <React.Fragment>
@@ -554,16 +478,6 @@ class Head extends React.Component<Props, HeaderState> {
                                     </li>
                                 </React.Fragment>
                             )}
-
-                            {/* <span
-                                className="cursor-pointer"
-                                onClick={(e) =>
-                                    this.handleChangeCurrentStyleMode(
-                                        this.props.colorTheme === 'light' ? 'dark' : 'light'
-                                    )
-                                }>
-                                {this.props.colorTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
-                            </span> */}
                         </ul>
 
                         {this.state.showHeader && !isLoggedIn && (

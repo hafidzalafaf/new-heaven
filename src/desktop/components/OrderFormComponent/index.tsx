@@ -123,7 +123,7 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
                         type="text"
                         placeholder={'0'}
                         defaultValue={''}
-                        value={amount.includes('NaN') ? '' : amount}
+                        value={amount?.includes('NaN') ? '' : amount}
                         onChange={(e) => {
                             handleChangeAmount(e.target.value);
                             handleSide(side === 'Sell' ? 'sell' : 'buy');

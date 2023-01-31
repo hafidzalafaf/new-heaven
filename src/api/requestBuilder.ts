@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { applogicUrl, authUrl, finexUrl, p2pUrl, tradeUrl, withCredentials } from './config';
+import { applogicUrl, authUrl, finexUrl, p2pUrl, tradeUrl, newsUrl,  withCredentials } from './config';
 import { API_URL } from '../config';
 
 export type HTTPMethod = 'get' | 'post' | 'delete' | 'put' | 'patch';
@@ -31,6 +31,7 @@ const getAPI = () => {
         finex: finexUrl(),
         sonic: `${hostUrl}/api/v2/sonic`,
         p2p: p2pUrl(),
+        news: newsUrl()
     }
 };
 

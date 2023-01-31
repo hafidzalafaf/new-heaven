@@ -30,7 +30,7 @@ const defaultTicker = {
 
 const HomeMobileScreen: React.FC = () => {
     useDocumentTitle('Home');
-    useBlogsFetch('News');
+    useBlogsFetch({ tag: 'news' });
     useMarketsFetch();
 
     const [loading, setLoading] = React.useState(true);
@@ -170,7 +170,7 @@ const HomeMobileScreen: React.FC = () => {
             </>,
             <p
                 className={`badge white-text font-bold ${
-                    item.price_change_percent.includes('-') ? 'badge-danger' : 'badge-plus'
+                    item.price_change_percent?.includes('-') ? 'badge-danger' : 'badge-plus'
                 }`}>
                 {item && item.price_change_percent}
             </p>,

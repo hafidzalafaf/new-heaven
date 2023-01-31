@@ -26,10 +26,34 @@
         }
     }
 
+    .dropdown-toggle {
+        outline: 0;
+        box-shadow: 0 0 0 0;
+        border: 0;
+    }
+
+    .dropdown-toggle:focus {
+        outline: 0;
+        box-shadow: 0 0 0 0;
+        border: 0;
+    }
+
     .dropdown-menu {
-        display: block;
+        top: 10px;
         left: unset;
         right: 0;
+
+        &.show {
+            background: transparent !important;
+
+            &.dropdown-profile {
+                position: absolute;
+                inset: 0px auto auto 0px;
+                margin: 0px;
+                transform: translate3d(-200px, 56px, 0px);
+                overflow: hidden;
+            }
+        }
 
         .dropdown-item {
             padding: 6px 0;

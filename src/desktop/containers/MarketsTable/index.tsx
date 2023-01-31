@@ -161,7 +161,7 @@ const MarketsTableComponent = (props) => {
 
                                             <span
                                                 className={` font-bold text-ms ml-2 ${
-                                                    item.price_change_percent.includes('-')
+                                                    item.price_change_percent?.includes('-')
                                                         ? 'danger-text'
                                                         : 'green-text'
                                                 }`}>

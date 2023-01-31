@@ -15,6 +15,7 @@ const mockConfig: Config = {
         rangerUrl: '/api/v2/ranger',
         finexUrl: '/api/v2/finex',
         p2pUrl: '/api/v2/p2p',
+        newsUrl: '/blog/ghost/api/v3',
     },
     finex: false,
     withCredentials: false,

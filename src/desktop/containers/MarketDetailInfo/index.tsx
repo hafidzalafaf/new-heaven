@@ -62,7 +62,7 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                 </h3>
                 <h6
                     className={`text-lg font-bold m-0 mr-24 ${
-                        detail && detail.price_change_percent && detail.price_change_percent.includes('-')
+                        detail && detail.price_change_percent && detail.price_change_percent?.includes('-')
                             ? 'danger-text'
                             : 'contrast-text'
                     }`}>
@@ -159,7 +159,7 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                         </p>
                         <p
                             className={`text-sm font-bold m-0 mr-24 ${
-                                detail && detail.price_change_percent && detail.price_change_percent.includes('-')
+                                detail && detail.price_change_percent && detail.price_change_percent?.includes('-')
                                     ? 'danger-text'
                                     : 'contrast-text'
                             }`}>

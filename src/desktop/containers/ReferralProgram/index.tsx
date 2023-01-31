@@ -49,7 +49,7 @@ class ReferralProgramClass extends React.Component<Props> {
                             <h6 className="text-sm white-text font-bold">Your total rewards</h6>
                             <h2 className="gradient-text text-xl font-bold">00 USDT</h2>
                             <p className="text-sm white-text font-normal">
-                                Invite your friend and earn 50% commission on their exchange trasaction, Copy link
+                                Invite your friend and earn 50% commission on their exchange transaction, Copy link
                                 bellow and share referral link to your friends
                             </p>
                         </div>

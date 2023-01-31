@@ -439,7 +439,7 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                     <h4 className="primary-text">
                         {item.last} {item.quote_unit.toUpperCase()}
                     </h4>
-                    <h5 className={`mb-0 ${item.price_change_percent.includes('+') ? 'green-text' : 'danger-text'}`}>
+                    <h5 className={`mb-0 ${item.price_change_percent?.includes('+') ? 'green-text' : 'danger-text'}`}>
                         {item.price_change_percent}
                     </h5>
                 </div>
@@ -651,7 +651,7 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                         </div>
                         <div
                             className={`${
-                                priceChange && priceChange.price_change_percent.includes('+')
+                                priceChange && priceChange.price_change_percent?.includes('+')
                                     ? 'badge-success'
                                     : 'badge-danger'
                             }`}>
