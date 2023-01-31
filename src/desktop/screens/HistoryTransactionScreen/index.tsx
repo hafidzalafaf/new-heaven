@@ -12,6 +12,7 @@ import {
     RootState,
     alertPush,
     selectHistoryLoading,
+    fetchHistory,
 } from '../../../modules';
 import { Table } from '../../../components';
 import { Pagination } from '../../../desktop/components';
@@ -37,15 +38,15 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const [currency, setCurrency] = React.useState('');
     const [type, setType] = React.useState('withdraws');
     const [status, setStatus] = React.useState('');
-    const [startDate, setStartDate] = React.useState(new Date().toISOString().slice(0, 10));
-    const [endDate, setEndDate] = React.useState(new Date().toISOString().slice(0, 10));
+    const [startDate, setStartDate] = React.useState<string | number>();
+    const [endDate, setEndDate] = React.useState<string | number>();
+    const [startDateTransfer, setStartDateTransfer] = React.useState(new Date().toISOString().slice(0, 10));
+    const [endDateTransfer, setEndDateTransfer] = React.useState(new Date().toISOString().slice(0, 10));
     const [loading, setLoading] = React.useState(false);
 
     const firstElemIndex = useSelector((state: RootState) => selectFirstElemIndex(state, DEFAULT_LIMIT));
     const lastElemIndex = useSelector((state: RootState) => selectLastElemIndex(state, DEFAULT_LIMIT));
     const nextPageExists = useSelector((state: RootState) => selectNextPageExists(state, DEFAULT_LIMIT));
-
-    useHistoryFetch({ type: type, limit: DEFAULT_LIMIT, currency, page: currentPage });
 
     useDocumentTitle('Transaction History');
     useWalletsFetch();
@@ -58,6 +59,9 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const handleChangeType = (e) => {
         setType(e);
         setCurrency('');
+        setStatus('');
+        setStartDateTransfer('');
+        setEndDateTransfer('');
     };
 
     const onClickPrevPage = () => {
@@ -78,6 +82,23 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     };
 
     React.useEffect(() => {
+        const defaultPayload = {
+            type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+        };
+
+        const currencyPayload = {
+            type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            currency: currency,
+        };
+
+        dispatch(fetchHistory(currency ? currencyPayload : defaultPayload));
+    }, [startDate, endDate, currency, currentPage, status, type]);
+
+    React.useEffect(() => {
         setLoading(true);
         if (!historyLoading) {
             setLoading(false);
@@ -89,24 +110,15 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     }, [list]);
 
     React.useEffect(() => {
-        if (startDate != '' && endDate != '') {
+        if (startDateTransfer != '' && endDateTransfer != '') {
             const filterredList = list.filter(
                 (item) =>
-                    moment(item.created_at).format() >= moment(startDate).format() &&
-                    moment(item.created_at).format() <= moment(endDate).format()
+                    moment(item.created_at).format() >= moment(startDateTransfer).format() &&
+                    moment(item.created_at).format() <= moment(endDateTransfer).format()
             );
             setHistorys(filterredList);
         }
-    }, [startDate, endDate]);
-
-    const filterredStatus = (id) => {
-        let filterredList;
-        let temp;
-        temp = list;
-
-        filterredList = temp.filter((item) => item.state === id || item.status == id);
-        setHistorys(filterredList);
-    };
+    }, [startDateTransfer, endDateTransfer]);
 
     const getTableData = (data) => {
         return data.map((item) => [
@@ -188,12 +200,6 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         ]);
     };
 
-    const optionStatus = [
-        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'pending' },
-        { label: <p className="m-0 text-sm grey-text-accent">Completed</p>, value: 'completed' },
-        { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
-    ];
-
     const optionStatusWithdraw = [
         { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'pending' },
         { label: <p className="m-0 text-sm grey-text-accent">Success</p>, value: 'succeed' },
@@ -232,9 +238,10 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                         type="date"
                         className="form-control mb-24"
                         onChange={(e) => {
-                            setStartDate(e.target.value);
+                            type == 'transfers' ? setStartDateTransfer(e.target.value) : setStartDate(e.target.value);
                         }}
-                        value={startDate}
+                        value={type == 'transfers' ? startDateTransfer : startDate}
+                        defaultValue={type !== 'transfers' && new Date().toISOString().slice(0, 10)}
                     />
                 </div>
 
@@ -244,9 +251,10 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                         type="date"
                         className="form-control mb-24"
                         onChange={(e) => {
-                            setEndDate(e.target.value);
+                            type == 'transfers' ? setEndDateTransfer(e.target.value) : setEndDate(e.target.value);
                         }}
-                        value={endDate}
+                        value={type == 'transfers' ? endDateTransfer : endDate}
+                        defaultValue={type !== 'transfers' && new Date().toISOString().slice(0, 10)}
                     />
                 </div>
 
@@ -264,36 +272,27 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                     />
                 </div>
 
-                <div className="w-20 mr-24">
-                    <p className="m-0 white-text text-sm mb-8">Status</p>
-                    <Select
-                        value={
-                            type == 'transfers'
-                                ? optionStatus.filter(function (option) {
-                                      return option.value === status;
-                                  })
-                                : type == 'withdraws'
-                                ? optionStatusWithdraw.filter(function (option) {
-                                      return option.value === status;
-                                  })
-                                : optionStatusDeposit.filter(function (option) {
-                                      return option.value === status;
-                                  })
-                        }
-                        styles={CustomStylesSelect}
-                        options={
-                            type == 'transfers'
-                                ? optionStatus
-                                : type == 'withdraws'
-                                ? optionStatusWithdraw
-                                : optionStatusDeposit
-                        }
-                        onChange={(e) => {
-                            setStatus(e.value);
-                            filterredStatus(e.value);
-                        }}
-                    />
-                </div>
+                {type !== 'transfers' && (
+                    <div className="w-20 mr-24">
+                        <p className="m-0 white-text text-sm mb-8">Status</p>
+                        <Select
+                            value={
+                                type == 'withdraws'
+                                    ? optionStatusWithdraw.filter(function (option) {
+                                          return option.value === status;
+                                      })
+                                    : optionStatusDeposit.filter(function (option) {
+                                          return option.value === status;
+                                      })
+                            }
+                            styles={CustomStylesSelect}
+                            options={type == 'withdraws' ? optionStatusWithdraw : optionStatusDeposit}
+                            onChange={(e) => {
+                                setStatus(e.value);
+                            }}
+                        />
+                    </div>
+                )}
             </div>
         );
     };

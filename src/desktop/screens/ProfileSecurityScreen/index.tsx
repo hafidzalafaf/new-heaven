@@ -505,7 +505,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
 
     // handle submit change  add phone
     public handleChangePhone = () => {
-        if (this.props.user.phones[0] && !this.state.isChangeNumber) {
+        if (this.state.phone[0]?.validate_at == null && !this.state.isChangeNumber) {
             this.props.verifyPhone({
                 phone_number: `+${this.state.phone[0].number}`,
                 verification_code: this.state.verificationCode,

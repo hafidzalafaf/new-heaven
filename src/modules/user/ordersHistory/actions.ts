@@ -14,11 +14,14 @@ import {
     ORDERS_TEST_HISTORY_STATE,
 } from './constants';
 
-
 interface UserOrdersHistoryFetchPayload {
     pageIndex: number;
     limit: number;
     type: string;
+    state?: string;
+    market?: string;
+    time_from?: string;
+    time_to?: string;
 }
 
 export interface UserOrdersHistoryDataPayload {
@@ -91,7 +94,7 @@ export interface OrdersHistoryReset {
 }
 
 export type OrdersHistoryAction =
-    UserOrdersHistoryFetch
+    | UserOrdersHistoryFetch
     | UserOrdersHistoryData
     | UserOrdersHistoryRangerData
     | UserOrdersHistoryError
@@ -103,7 +106,6 @@ export type OrdersHistoryAction =
     | OrdersHistoryCancelData
     | OrdersHistoryCancelError
     | OrdersHistoryReset;
-
 
 export const userOrdersHistoryFetch = (payload: UserOrdersHistoryFetchPayload): UserOrdersHistoryFetch => ({
     type: ORDERS_HISTORY_FETCH,

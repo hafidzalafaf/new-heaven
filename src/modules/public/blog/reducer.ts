@@ -1,20 +1,19 @@
 import { CommonState } from '../../types';
 import { BlogsAction } from './actions';
 import { BLOGS_DATA, BLOGS_ERROR, BLOGS_FETCH } from './constants';
-import {Blogs} from "./types"
+import { Blogs } from './types';
 
 export interface BlogsState extends CommonState {
     data?: Blogs[];
     loading: boolean;
-   
 }
 
 export const initialBlogsState: BlogsState = {
     data: [],
     loading: false,
-}
+};
 
-const blogsFetchReducer = (state = initialBlogsState, action: BlogsAction) => {
+export const blogsReducer = (state = initialBlogsState, action: BlogsAction) => {
     switch (action.type) {
         case BLOGS_FETCH:
             return {
@@ -32,21 +31,6 @@ const blogsFetchReducer = (state = initialBlogsState, action: BlogsAction) => {
                 ...state,
                 loading: false,
             };
-        default:
-            return state;
-    }
-};
-
-export const blogsReducer = (state = initialBlogsState, action: BlogsAction) => {
-    switch (action.type) {
-        case BLOGS_FETCH:
-        case BLOGS_DATA:
-        case BLOGS_ERROR:
-            return {
-                ...state,
-                fetch: blogsFetchReducer({ ...state }, action),
-            };
-
         default:
             return state;
     }

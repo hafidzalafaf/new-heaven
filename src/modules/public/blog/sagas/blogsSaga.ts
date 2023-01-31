@@ -5,7 +5,7 @@ import axios from 'axios';
 import { API, RequestOptions } from '../../../../api';
 import { buildQueryString } from 'src/helpers';
 
-async function fetchNews(tag) {
+async function fetchBlogs(tag) {
     const apiKey = '01c32b65528575f7b27dfb6bf2';
     const sURL = `https://www.heavenexchange.io/blog/ghost/api/v3/content/posts/?key=${apiKey}&limit=15&tag=${tag}`;
     const result = await axios.get(sURL);
@@ -16,7 +16,7 @@ async function fetchNews(tag) {
 export function* blogsSaga(action: BlogsFetch) {
     try {
         const payload = action.payload;
-        const response = yield call(fetchNews, payload);
+        const response = yield call(fetchBlogs, payload);
         yield put(blogsData(response));
     } catch (error) {
         yield put(
@@ -31,8 +31,6 @@ export function* blogsSaga(action: BlogsFetch) {
     }
 }
 
-
-
 // const config: RequestOptions = {
 //     apiVersion: 'news',
 // };
@@ -40,7 +38,10 @@ export function* blogsSaga(action: BlogsFetch) {
 // export function* blogsSaga(action: BlogsFetch) {
 //     try {
 //         const apiKey = '01c32b65528575f7b27dfb6bf2';
-//         const feedback = yield call(API.get(config),`/content/posts/?key=${apiKey}&limit=${action.payload.limit}&tag=${action.payload.tag}`);
+//         const feedback = yield call(
+//             API.get(config),
+//             `/content/posts/?key=${apiKey}&limit=${action.payload.limit}&tag=${action.payload.tag}`
+//         );
 
 //         yield put(blogsData(feedback));
 //     } catch (error) {
