@@ -3,6 +3,9 @@ import {
     P2P_CURRENCIES_DATA,
     P2P_CURRENCIES_ERROR,
     P2P_CURRENCIES_FETCH,
+    P2P_FIAT_DATA,
+    P2P_FIAT_ERROR,
+    P2P_FIAT_FETCH,
     P2P_HIGHEST_PRICE_DATA,
     P2P_HIGHEST_PRICE_ERROR,
     P2P_HIGHEST_PRICE_FETCH,
@@ -14,17 +17,19 @@ import {
     P2P_PAYMENT_METHODS_ERROR,
     P2P_PAYMENT_METHODS_FETCH,
 } from './constants';
-import { Offer, P2PCurrency, PaymentMethod } from './types';
+import { Offer, P2PCurrency, P2PFiat, PaymentMethod } from './types';
 
 export interface OffersFetch {
     type: typeof P2P_OFFERS_FETCH;
     payload: {
-        page: number;
-        limit: number;
-        side: string;
+        page?: number;
+        limit?: number;
+        side?: string;
+        fiat?: string;
+        currency?: string;
         sort?: string;
-        base: string;
-        quote: string;
+        base?: string;
+        quote?: string;
         payment_method?: number;
     };
 }
@@ -51,6 +56,20 @@ export interface OffersError {
 export interface P2POffersUpdate {
     type: typeof P2P_OFFERS_UPDATE;
     payload: Offer;
+}
+
+export interface P2PFiatFetch {
+    type: typeof P2P_FIAT_FETCH;
+}
+
+export interface P2PFiatData {
+    type: typeof P2P_FIAT_DATA;
+    payload: P2PFiat[];
+}
+
+export interface P2PFiatError {
+    type: typeof P2P_FIAT_ERROR;
+    error: CommonError;
 }
 
 export interface P2PCurrenciesFetch {
@@ -100,9 +119,12 @@ export interface P2PHighestPriceError {
 }
 
 export type P2PActions =
-    OffersFetch
+    | OffersFetch
     | OffersData
     | OffersError
+    | P2PFiatFetch
+    | P2PFiatData
+    | P2PFiatError
     | P2PCurrenciesFetch
     | P2PCurrenciesData
     | P2PCurrenciesError
@@ -126,6 +148,20 @@ export const offersData = (payload: OffersData['payload']): OffersData => ({
 
 export const offersError = (error: CommonError): OffersError => ({
     type: P2P_OFFERS_ERROR,
+    error,
+});
+
+export const p2pFiatFetch = (): P2PFiatFetch => ({
+    type: P2P_FIAT_FETCH,
+});
+
+export const p2pFiatData = (payload: P2PFiatData['payload']): P2PFiatData => ({
+    type: P2P_FIAT_DATA,
+    payload,
+});
+
+export const p2pFiatError = (error: CommonError): P2PFiatError => ({
+    type: P2P_FIAT_ERROR,
     error,
 });
 

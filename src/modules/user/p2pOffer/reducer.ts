@@ -11,6 +11,12 @@ import {
 import { P2POffer } from './types';
 
 const defaultP2POffer: P2POffer = {
+    currency: '',
+    price: '',
+    fiat: '',
+    trade_amount: '',
+    min_amount: '',
+    max_amount: '',
     payment: [],
     paymen_limit: '',
     term_of_condition: '',

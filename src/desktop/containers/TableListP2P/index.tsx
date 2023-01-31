@@ -16,6 +16,8 @@ import {
     selectP2POffersTotalNumber,
     selectP2PPaymentMethodsData,
     selectWallets,
+    p2pFiatFetch,
+    selectP2PFiats,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import { RefreshIcon, CheckIcon, CloseIcon } from 'src/assets/images/P2PIcon';
@@ -35,6 +37,7 @@ export const TableListP2P = () => {
     const isLoggedIn = useSelector(selectUserLoggedIn);
     const page = useSelector(selectP2POffersCurrentPage);
     const list = useSelector(selectP2POffers);
+    const fiats = useSelector(selectP2PFiats);
     const total = useSelector(selectP2POffersTotalNumber);
     const wallets = useSelector(selectWallets);
     const paymentMethods = useSelector(selectP2PPaymentMethodsData);
@@ -49,11 +52,23 @@ export const TableListP2P = () => {
     );
 
     const [side, setSide] = React.useState('buy');
+    const [fiat, setFiat] = React.useState('idr');
+    const [currency, setCurrency] = React.useState('usdt');
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
 
-    console.log(list, 'ini list');
+    React.useEffect(() => {
+        dispatch(offersFetch({ fiat: 'idr', currency: 'eth', side: side }));
+    }, [dispatch, side]);
+
+    React.useEffect(() => {
+        dispatch(p2pFiatFetch());
+    }, [dispatch]);
+
+    const optionFiats = fiats?.map((item) => {
+        return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };
+    });
 
     const optionQuote = [
         { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
@@ -66,42 +81,6 @@ export const TableListP2P = () => {
         { label: <p className="m-0 text-sm grey-text-accent">All Payment</p>, value: 'all' },
         { label: <p className="m-0 text-sm grey-text-accent">Dana</p>, value: 'dana' },
         { label: <p className="m-0 text-sm grey-text-accent">Bank BCA</p>, value: 'bca' },
-    ];
-
-    const dummySell = [
-        {
-            id: '1',
-        },
-        {
-            id: '2',
-        },
-        {
-            id: '3',
-        },
-        {
-            id: '4',
-        },
-        {
-            id: '5',
-        },
-    ];
-
-    const dummyBuy = [
-        {
-            id: '1',
-        },
-        {
-            id: '2',
-        },
-        {
-            id: '3',
-        },
-        {
-            id: '4',
-        },
-        {
-            id: '5',
-        },
     ];
 
     return (
@@ -121,15 +100,14 @@ export const TableListP2P = () => {
 
                         <div className="select-filter mr-16">
                             <Select
-                                // value={optionQuote.filter(function (option) {
-                                //     return option.value === status;
-                                // })}
+                                value={optionQuote.filter(function (option) {
+                                    return option.value === fiat;
+                                })}
                                 styles={CustomStylesSelect}
-                                options={optionQuote}
-                                // onChange={(e) => {
-                                //     setStatus(e.value);
-                                //     filterredStatus(e.value);
-                                // }}
+                                options={optionFiats}
+                                onChange={(e) => {
+                                    setFiat(e.value);
+                                }}
                             />
                         </div>
 
@@ -196,21 +174,21 @@ export const TableListP2P = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {dummyBuy?.map((buy, i) => (
+                            {list?.map((buy, i) => (
                                 <tr
                                     key={i}
                                     onClick={() => {
-                                        !expandBuy && setExpandBuy(buy.id);
+                                        !expandBuy && setExpandBuy(buy.offer_number);
                                     }}
                                     className="white-text border-table cursor-pointer">
-                                    {expandBuy === buy.id ? (
+                                    {expandBuy === buy.offer_number ? (
                                         <td colSpan={5} className="row-description dark-bg-main radius-lg">
                                             <div className="d-flex align-items-center justify-content-between mb-24">
                                                 <div className="d-flex align-items-center">
                                                     <img src="/img/bigcoin.png" alt="coin" className="mr-24" />
                                                     <div>
                                                         <h2 className="m-0 p-0 white-text mb-12 text-ms fontbold">
-                                                            USDT CRYPTO
+                                                            MERCHANT NAME
                                                         </h2>
                                                         <div className="d-flex">
                                                             <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
@@ -230,44 +208,42 @@ export const TableListP2P = () => {
                                             <div className="d-flex align-items-center justify-content-between mb-24 py-12">
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
                                                     <p className="m-0 p-0 mr-16">Price</p>
-                                                    <p className="m-0 p-0 mr-4">16,749.00 IDR</p>
+                                                    <p className="m-0 p-0 mr-4">
+                                                        {buy?.price} {fiat?.toUpperCase()}
+                                                    </p>
                                                 </div>
 
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
                                                     <p className="m-0 p-0 mr-16">Available</p>
-                                                    <p className="m-0 p-0 mr-4">29,710.54 USDT</p>
+                                                    <p className="m-0 p-0 mr-4">
+                                                        {buy?.available_amount} {currency?.toUpperCase()}
+                                                    </p>
                                                 </div>
 
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
                                                     <p className="m-0 p-0 mr-16">Payment Time Limit</p>
-                                                    <p className="m-0 p-0 mr-16">15 Minutes</p>
+                                                    <p className="m-0 p-0 mr-16">{buy?.payment_time} Minutes</p>
                                                 </div>
 
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold">
                                                     <p className="m-0 p-0 mr-16">Seller's Payment Methods</p>
                                                     <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                                        <div className="label-bank">
-                                                            <img src="/img/logo-jago.png" alt="logo" />
-                                                        </div>
-
-                                                        <div className="label-bank">
-                                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                                        </div>
-
-                                                        <div className="label-bank">
-                                                            <img src="/img/logo-bca.png" alt="logo" />
-                                                        </div>
-
-                                                        <div className="label-bank">
-                                                            <img src="/img/logo-dana.png" alt="logo" />
-                                                        </div>
+                                                        {buy?.payment[0]
+                                                            ? buy?.payment?.map((bank, i) => (
+                                                                  <div key={i} className="label-bank">
+                                                                      <img src={bank?.logo} alt={bank?.bank_name} />
+                                                                  </div>
+                                                              ))
+                                                            : '-'}
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div className="d-flex align-items-center justify-content-between w-100">
                                                 <form className="dark-bg-accent w-50 form-buy">
-                                                    <h1 className="white-text text-lg mb-44">Buy USDT Crypto</h1>
+                                                    <h1 className="white-text text-lg mb-44">
+                                                        Buy {currency?.toUpperCase()} Crypto
+                                                    </h1>
 
                                                     <div className="position-relative mb-24">
                                                         <label className="white-text text-xs font-semibold mb-8">
@@ -279,7 +255,7 @@ export const TableListP2P = () => {
                                                             className="form-control input-p2p-form white-text"
                                                         />
                                                         <label className="input-label-right text-sm grey-text position-absolute">
-                                                            All IDR
+                                                            All {fiat?.toUpperCase()}
                                                         </label>
                                                     </div>
 
@@ -293,27 +269,22 @@ export const TableListP2P = () => {
                                                             className="form-control input-p2p-form white-text"
                                                         />
                                                         <label className="input-label-right text-sm grey-text position-absolute">
-                                                            USDT
+                                                            {currency?.toUpperCase()}
                                                         </label>
                                                     </div>
 
                                                     <div className="d-flex align-items-center justify-content-between w-100 btn-container">
                                                         <button className="w-50 btn-secondary grey-text">Cancel</button>
-                                                        <button className="w-50 btn-primary">Buy USDT</button>
+                                                        <button className="w-50 btn-primary">
+                                                            Buy {currency?.toUpperCase()}
+                                                        </button>
                                                     </div>
                                                 </form>
 
                                                 <div className="w-40">
                                                     <h1 className="white-text text-md mb-16">Term and Conditions :</h1>
                                                     <p className="text-xs font-extrabold grey-text mb-16">
-                                                        Fast Trade. <br /> Rek Bank Harus Sama Dengan Nama Di
-                                                        Binance,jika Rek Bank Berbeda Mana Akan Di Refund. Kolom Berita
-                                                        Harap Di Kosongkan,jangan Diisi Dengan Kata2 Mengandung Crypto
-                                                        Seperti Binance,bitcoin,usdt,crypto Iklan Online Berarti Saya
-                                                        Standby,silahkan Lgsg Trf Lgsg Proses.
-                                                    </p>
-                                                    <p className="text-xs font-extrabold grey-text ">
-                                                        Name In Binance Must Be Same With Bank Account.
+                                                        {buy?.term_of_condition}
                                                     </p>
                                                 </div>
                                             </div>
@@ -326,7 +297,7 @@ export const TableListP2P = () => {
                                                     <div>
                                                         <div className="d-flex align-items-center">
                                                             <p className="p-0 m-0 mr-12 text-sm font-bold">
-                                                                USDT - Trader
+                                                                MERCHANT NAME
                                                             </p>
                                                             <span className="check">
                                                                 <CheckIcon />
@@ -339,39 +310,37 @@ export const TableListP2P = () => {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="text-xs font-bold">16,749.00 IDR</td>
+                                            <td className="text-xs font-bold">
+                                                {buy?.price} {fiat?.toUpperCase()}
+                                            </td>
                                             <td>
                                                 <div className="d-flex text-xs font-bold mb-6">
                                                     <p className="m-0 p-0 mr-8">Available</p>
-                                                    <p className="m-0 p-0">1,000 USDT</p>
+                                                    <p className="m-0 p-0">
+                                                        {buy?.available_amount} {currency?.toUpperCase()}
+                                                    </p>
                                                 </div>
 
                                                 <div className="d-flex text-xxs font-bold mb-6">
                                                     <p className="m-0 p-0 mr-8">Limit</p>
-                                                    <p className="m-0 p-0">200.00-4,080.00 AED</p>
+                                                    <p className="m-0 p-0">
+                                                        {buy?.min_order}-{buy?.max_order} AED
+                                                    </p>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                                    <div className="label-bank">
-                                                        <img src="/img/logo-jago.png" alt="logo" />
-                                                    </div>
-
-                                                    <div className="label-bank">
-                                                        <img src="/img/logo-shopee.png" alt="logo" />
-                                                    </div>
-
-                                                    <div className="label-bank">
-                                                        <img src="/img/logo-bca.png" alt="logo" />
-                                                    </div>
-
-                                                    <div className="label-bank">
-                                                        <img src="/img/logo-dana.png" alt="logo" />
-                                                    </div>
+                                                    {buy?.payment[0]
+                                                        ? buy?.payment?.map((bank, i) => (
+                                                              <div key={i} className="label-bank">
+                                                                  <img src={bank?.logo} alt={bank?.bank_name} />
+                                                              </div>
+                                                          ))
+                                                        : '-'}
                                                 </div>
                                             </td>
                                             <td>
-                                                <button className="btn-success">Buy USDT</button>
+                                                <button className="btn-success">Buy {currency?.toUpperCase()}</button>
                                             </td>
                                         </>
                                     )}
@@ -395,21 +364,21 @@ export const TableListP2P = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {dummySell?.map((sell, i) => (
+                            {list?.map((sell, i) => (
                                 <tr
                                     key={i}
                                     onClick={() => {
-                                        !expandSell && setExpandSell(sell.id);
+                                        !expandSell && setExpandSell(sell.offer_number);
                                     }}
                                     className="white-text border-table cursor-pointer">
-                                    {expandSell === sell.id ? (
+                                    {expandSell === sell.offer_number ? (
                                         <td colSpan={5} className="row-description dark-bg-main radius-lg">
                                             <div className="d-flex align-items-center justify-content-between mb-24">
                                                 <div className="d-flex align-items-center">
                                                     <img src="/img/bigcoin.png" alt="coin" className="mr-24" />
                                                     <div>
                                                         <h2 className="m-0 p-0 white-text mb-12 text-ms fontbold">
-                                                            USDT CRYPTO
+                                                            MERCHANT NAME
                                                         </h2>
                                                         <div className="d-flex">
                                                             <p className="p-0 m-0 text-xs mr-8">1.253 Orders</p>
@@ -429,44 +398,42 @@ export const TableListP2P = () => {
                                             <div className="d-flex align-items-center justify-content-between mb-24 py-12">
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
                                                     <p className="m-0 p-0 mr-16">Price</p>
-                                                    <p className="m-0 p-0 mr-4">16,749.00 IDR</p>
+                                                    <p className="m-0 p-0 mr-4">
+                                                        {sell?.price} {fiat?.toUpperCase()}
+                                                    </p>
                                                 </div>
 
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
                                                     <p className="m-0 p-0 mr-16">Available</p>
-                                                    <p className="m-0 p-0 mr-4">29,710.54 USDT</p>
+                                                    <p className="m-0 p-0 mr-4">
+                                                        {sell?.available_amount} {currency?.toUpperCase()}
+                                                    </p>
                                                 </div>
 
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
                                                     <p className="m-0 p-0 mr-16">Payment Time Limit</p>
-                                                    <p className="m-0 p-0 mr-16">15 Minutes</p>
+                                                    <p className="m-0 p-0 mr-16">{sell?.payment_time} Minutes</p>
                                                 </div>
 
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold">
                                                     <p className="m-0 p-0 mr-16">Seller's Payment Methods</p>
                                                     <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                                        <div className="label-bank">
-                                                            <img src="/img/logo-jago.png" alt="logo" />
-                                                        </div>
-
-                                                        <div className="label-bank">
-                                                            <img src="/img/logo-shopee.png" alt="logo" />
-                                                        </div>
-
-                                                        <div className="label-bank">
-                                                            <img src="/img/logo-bca.png" alt="logo" />
-                                                        </div>
-
-                                                        <div className="label-bank">
-                                                            <img src="/img/logo-dana.png" alt="logo" />
-                                                        </div>
+                                                        {sell?.payment[0]
+                                                            ? sell?.payment?.map((bank, i) => (
+                                                                  <div key={i} className="label-bank">
+                                                                      <img src={bank?.logo} alt={bank?.bank_name} />
+                                                                  </div>
+                                                              ))
+                                                            : '-'}
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div className="d-flex align-items-center justify-content-between w-100">
                                                 <form className="dark-bg-accent w-50 form-buy">
-                                                    <h1 className="white-text text-lg mb-44">Sell USDT Crypto</h1>
+                                                    <h1 className="white-text text-lg mb-44">
+                                                        Sell {currency?.toUpperCase()} Crypto
+                                                    </h1>
 
                                                     <div className="position-relative mb-24">
                                                         <label className="white-text text-xs font-semibold mb-8">
@@ -478,7 +445,7 @@ export const TableListP2P = () => {
                                                             className="form-control input-p2p-form white-text"
                                                         />
                                                         <label className="input-label-right text-sm grey-text position-absolute">
-                                                            All IDR
+                                                            All {fiat?.toUpperCase()}
                                                         </label>
                                                     </div>
 
@@ -492,27 +459,22 @@ export const TableListP2P = () => {
                                                             className="form-control input-p2p-form white-text"
                                                         />
                                                         <label className="input-label-right text-sm grey-text position-absolute">
-                                                            USDT
+                                                            {currency?.toUpperCase()}
                                                         </label>
                                                     </div>
 
                                                     <div className="d-flex align-items-center justify-content-between w-100 btn-container">
                                                         <button className="w-50 btn-secondary grey-text">Cancel</button>
-                                                        <button className="w-50 btn-primary">Sell USDT</button>
+                                                        <button className="w-50 btn-primary">
+                                                            Sell {currency?.toUpperCase()}
+                                                        </button>
                                                     </div>
                                                 </form>
 
                                                 <div className="w-40">
                                                     <h1 className="white-text text-md mb-16">Term and Conditions :</h1>
                                                     <p className="text-xs font-extrabold grey-text mb-16">
-                                                        Fast Trade. <br /> Rek Bank Harus Sama Dengan Nama Di
-                                                        Binance,jika Rek Bank Berbeda Mana Akan Di Refund. Kolom Berita
-                                                        Harap Di Kosongkan,jangan Diisi Dengan Kata2 Mengandung Crypto
-                                                        Seperti Binance,bitcoin,usdt,crypto Iklan Online Berarti Saya
-                                                        Standby,silahkan Lgsg Trf Lgsg Proses.
-                                                    </p>
-                                                    <p className="text-xs font-extrabold grey-text ">
-                                                        Name In Binance Must Be Same With Bank Account.
+                                                        {sell?.term_of_condition}
                                                     </p>
                                                 </div>
                                             </div>
@@ -525,7 +487,7 @@ export const TableListP2P = () => {
                                                     <div>
                                                         <div className="d-flex align-items-center">
                                                             <p className="p-0 m-0 mr-12 text-sm font-bold">
-                                                                USDT - Trader
+                                                                MERCHANT NAME
                                                             </p>
                                                             <span className="check">
                                                                 <CheckIcon />
@@ -538,39 +500,37 @@ export const TableListP2P = () => {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="text-xs font-bold">16,749.00 IDR</td>
+                                            <td className="text-xs font-bold">
+                                                {sell?.price} {fiat?.toUpperCase()}
+                                            </td>
                                             <td>
                                                 <div className="d-flex text-xs font-bold mb-6">
                                                     <p className="m-0 p-0 mr-8">Available</p>
-                                                    <p className="m-0 p-0">1,000 USDT</p>
+                                                    <p className="m-0 p-0">
+                                                        {sell?.available_amount} {currency?.toUpperCase()}
+                                                    </p>
                                                 </div>
 
                                                 <div className="d-flex text-xxs font-bold mb-6">
                                                     <p className="m-0 p-0 mr-8">Limit</p>
-                                                    <p className="m-0 p-0">200.00-4,080.00 AED</p>
+                                                    <p className="m-0 p-0">
+                                                        {sell?.min_order}-{sell?.max_order} AED
+                                                    </p>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                                    <div className="label-bank">
-                                                        <img src="/img/logo-jago.png" alt="logo" />
-                                                    </div>
-
-                                                    <div className="label-bank">
-                                                        <img src="/img/logo-shopee.png" alt="logo" />
-                                                    </div>
-
-                                                    <div className="label-bank">
-                                                        <img src="/img/logo-bca.png" alt="logo" />
-                                                    </div>
-
-                                                    <div className="label-bank">
-                                                        <img src="/img/logo-dana.png" alt="logo" />
-                                                    </div>
+                                                    {sell?.payment[0]
+                                                        ? sell?.payment?.map((bank, i) => (
+                                                              <div className="label-bank">
+                                                                  <img src={bank?.logo} alt={bank?.bank_name} />
+                                                              </div>
+                                                          ))
+                                                        : '-'}
                                                 </div>
                                             </td>
                                             <td>
-                                                <button className="btn-danger">Sell USDT</button>
+                                                <button className="btn-danger">Sell {currency?.toUpperCase()}</button>
                                             </td>
                                         </>
                                     )}
