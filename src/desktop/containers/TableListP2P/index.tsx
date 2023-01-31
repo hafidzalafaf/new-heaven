@@ -24,6 +24,7 @@ import { RefreshIcon, CheckIcon, CloseIcon } from 'src/assets/images/P2PIcon';
 import { CustomStylesSelect, ModalCreateOffer } from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
+import { CustomStyleFiat } from './CustomStyleFiat';
 
 export const TableListP2P = () => {
     useP2PCurrenciesFetch();
@@ -100,7 +101,7 @@ export const TableListP2P = () => {
 
                         <div className="select-filter mr-16">
                             <Select
-                                value={optionQuote.filter(function (option) {
+                                value={optionFiats.filter(function (option) {
                                     return option.value === fiat;
                                 })}
                                 styles={CustomStylesSelect}
@@ -111,27 +112,24 @@ export const TableListP2P = () => {
                             />
                         </div>
 
-                        {/* <div>
-                        <InputGroup className="mb-3">
-                            <Form.Control aria-label="Text input with dropdown button" />
-
-                            <DropdownButton
-                                variant="outline-secondary"
-                                title="Dropdown"
-                                id="input-group-dropdown-2"
-                                align="end">
-                                <Dropdown.Item href="#">Action</Dropdown.Item>
-                                <Dropdown.Item href="#">Another action</Dropdown.Item>
-                                <Dropdown.Item href="#">Something else here</Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item href="#">Separated link</Dropdown.Item>
-                            </DropdownButton>
-                        </InputGroup>
-                    </div> */}
-
+                        <div className="d-flex align-items-center mb-24">
+                            <input type="text" placeholder="00.00" className="input-filter-fiat dark-bg-accent" />
+                            <div className="select-filter mr-16">
+                                <Select
+                                    // value={optionQuote.filter(function (option) {
+                                    //     return option.value === fiat;
+                                    // })}
+                                    styles={CustomStyleFiat}
+                                    options={optionQuote}
+                                    // onChange={(e) => {
+                                    //     setFiat(e.value);
+                                    // }}
+                                />
+                            </div>
+                        </div>
                         <div className="select-filter mr-16">
                             <Select
-                                // value={optionQuote.filter(function (option) {
+                                // value={optionPayment.filter(function (option) {
                                 //     return option.value === status;
                                 // })}
                                 styles={CustomStylesSelect}
