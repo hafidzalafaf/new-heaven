@@ -10,10 +10,14 @@ const ordersOptions: RequestOptions = {
 
 export function* ordersHistorySaga(action: UserOrdersHistoryFetch) {
     try {
-        const { pageIndex, limit, type } = action.payload;
+        const { pageIndex, limit, type, time_from, time_to, state, market } = action.payload;
         let params: any = {
             page: pageIndex,
             limit,
+            time_from,
+            time_to,
+            state,
+            market,
             ...(type === 'open' && { state: ['wait', 'trigger_wait'] }),
         };
 
@@ -31,12 +35,14 @@ export function* ordersHistorySaga(action: UserOrdersHistoryFetch) {
 
         yield put(userOrdersHistoryData({ list: data, nextPageExists, pageIndex }));
     } catch (error) {
-        yield put(sendError({
-            error,
-            processingType: 'alert',
-            extraOptions: {
-                actionError: userOrdersHistoryError,
-            },
-        }));
+        yield put(
+            sendError({
+                error,
+                processingType: 'alert',
+                extraOptions: {
+                    actionError: userOrdersHistoryError,
+                },
+            })
+        );
     }
 }

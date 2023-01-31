@@ -288,10 +288,6 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
             return true;
         }
 
-        if (this.state.timerActive) {
-            return true;
-        }
-
         return false;
     };
 }

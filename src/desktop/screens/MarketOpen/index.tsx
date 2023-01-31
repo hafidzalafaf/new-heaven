@@ -19,6 +19,7 @@ import {
     selectOrdersHistoryLoading,
     Market,
     userOpenOrdersFetch,
+    userOrdersHistoryFetch,
 } from '../../../modules';
 import { Table, Loading } from '../../../components';
 import { CustomStylesSelect, Modal } from '../../../desktop/components';
@@ -29,6 +30,7 @@ import { NoData, Pagination } from '../../components';
 import moment from 'moment';
 import { OrderCommon } from 'src/modules/types';
 
+const DEFAULT_LIMIT = 20;
 export const MarketOpen: FC = (): ReactElement => {
     const dispatch = useDispatch();
     const intl = useIntl();
@@ -36,11 +38,11 @@ export const MarketOpen: FC = (): ReactElement => {
 
     const [tab, setTab] = React.useState('open');
     const [currentPageIndex, setPageIndex] = React.useState(0);
-    const [startDate, setStartDate] = React.useState(new Date().toISOString().slice(0, 10));
-    const [endDate, setEndDate] = React.useState(new Date().toISOString().slice(0, 10));
+    const [startDate, setStartDate] = React.useState<string | number>();
+    const [endDate, setEndDate] = React.useState<string | number>();
     const [data, setData] = React.useState([]);
     const [status, setStatus] = React.useState('');
-    const [asset, setAsset] = React.useState('');
+    const [market, setMarket] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const [showModalCancel, setShowModalCancel] = React.useState(false);
     const [showModalCancelAll, setShowModalCancelAll] = React.useState(false);
@@ -58,10 +60,98 @@ export const MarketOpen: FC = (): ReactElement => {
 
     const current: Market | undefined = markets.find((item) => item.id === currency);
 
-    useUserOrdersHistoryFetch({ pageIndex: currentPageIndex, type: tab, limit: 20 });
     useDocumentTitle('Market Order');
     useWalletsFetch();
     useMarketsFetch();
+
+    const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
+    const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
+
+    React.useEffect(() => {
+        const defaultPayload = {
+            type: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+        };
+
+        const marketPayload = {
+            type: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            market: market,
+        };
+
+        const statePayload = {
+            type: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            state: status,
+        };
+
+        const datePayload = {
+            type: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+        };
+
+        const dateMarketPayload = {
+            type: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            market: market,
+        };
+
+        const dateStatePayload = {
+            type: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            state: status,
+        };
+
+        const marketStatePayload = {
+            type: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            market: market,
+            state: status,
+        };
+
+        const allParamPayload = {
+            type: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            market,
+            state: status,
+            time_from: time_from,
+            time_to: time_to,
+        };
+
+        dispatch(
+            userOrdersHistoryFetch(
+                startDate && endDate && market && status
+                    ? allParamPayload
+                    : market && status
+                    ? marketStatePayload
+                    : startDate && endDate && status
+                    ? dateStatePayload
+                    : startDate && endDate && market
+                    ? dateMarketPayload
+                    : startDate && endDate
+                    ? datePayload
+                    : status
+                    ? statePayload
+                    : market
+                    ? marketPayload
+                    : defaultPayload
+            )
+        );
+    }, [startDate, endDate, market, currentPageIndex, status, tab]);
 
     React.useEffect(() => {
         if (orders) {
@@ -106,29 +196,6 @@ export const MarketOpen: FC = (): ReactElement => {
         }, 1000);
     };
 
-    React.useEffect(() => {
-        if (startDate != '' && endDate != '') {
-            const filterredList = orders.filter(
-                (item) =>
-                    moment(item.created_at).format() >= moment(startDate).format() &&
-                    moment(item.created_at).format() <= moment(endDate).format()
-            );
-            setData(filterredList);
-        }
-    }, [startDate, endDate]);
-
-    const filterredStatus = (status) => {
-        let filterredList;
-        let temp;
-        temp = orders;
-        filterredList = temp.filter((item) => item.state === status);
-        setData(
-            status === ''
-                ? orders.filter((o) => ['done', 'cancel', 'completed', 'error'].includes(o.state))
-                : filterredList
-        );
-    };
-
     let currentBidUnitMarkets = markets;
     const formattedMarkets = currentBidUnitMarkets.length
         ? currentBidUnitMarkets.map((market) => ({
@@ -136,19 +203,6 @@ export const MarketOpen: FC = (): ReactElement => {
               currency: currencies.find((cur) => cur.id == market.base_unit),
           }))
         : [];
-
-    const filterredAsset = (id) => {
-        let filterredList;
-        let open;
-        open = orders.filter((o) => ['wait', 'pending'].includes(o.state));
-
-        let close;
-        close = orders.filter((o) => ['done', 'cancel', 'completed', 'error'].includes(o.state));
-
-        filterredList =
-            tab === 'open' ? open.filter((item) => item.market === id) : close.filter((item) => item.market === id);
-        setData(id === '' ? data : filterredList);
-    };
 
     const onClickPrevPage = () => {
         setPageIndex(currentPageIndex - 1);
@@ -205,7 +259,6 @@ export const MarketOpen: FC = (): ReactElement => {
     };
 
     const optionStatus = [
-        { label: <p className="m-0 text-sm grey-text-accent">All</p>, value: '' },
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'cancel' },
         { label: <p className="m-0 text-sm grey-text-accent">Done</p>, value: 'done' },
     ];
@@ -273,6 +326,7 @@ export const MarketOpen: FC = (): ReactElement => {
                             setStartDate(e.target.value);
                         }}
                         value={startDate}
+                        defaultValue={new Date().toISOString().slice(0, 10)}
                     />
                 </div>
 
@@ -285,6 +339,7 @@ export const MarketOpen: FC = (): ReactElement => {
                             setEndDate(e.target.value);
                         }}
                         value={endDate}
+                        defaultValue={new Date().toISOString().slice(0, 10)}
                     />
                 </div>
 
@@ -292,11 +347,10 @@ export const MarketOpen: FC = (): ReactElement => {
                     <p className="m-0 white-text text-sm mb-8">Assets</p>
                     <Select
                         value={optionAssets.filter(function (option) {
-                            return option.value === asset;
+                            return option.value === market;
                         })}
                         onChange={(e) => {
-                            setAsset(e.value);
-                            filterredAsset(e.value);
+                            setMarket(e.value);
                         }}
                         styles={CustomStylesSelect}
                         options={optionAssets}
@@ -312,7 +366,6 @@ export const MarketOpen: FC = (): ReactElement => {
                             })}
                             onChange={(e) => {
                                 setStatus(e.value);
-                                filterredStatus(e.value);
                             }}
                             styles={CustomStylesSelect}
                             options={optionStatus}
@@ -347,9 +400,10 @@ export const MarketOpen: FC = (): ReactElement => {
                         defaultActiveKey={tab}
                         onSelect={(e) => {
                             setTab(e);
-                            setStartDate('');
-                            setEndDate('');
-                            setAsset('');
+                            // setStartDate(0);
+                            // setEndDate(0);
+                            setMarket('');
+                            setStatus('');
                         }}
                         id="uncontrolled-tab-example"
                         className="mb-3">
