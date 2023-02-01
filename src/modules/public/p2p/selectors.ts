@@ -38,7 +38,7 @@ export const selectP2POffersNextPageExists = (state: RootState, limit: number): 
     state.public.p2p.offers.page + 1 < selectP2POffersPageCount(state, limit);
 
 /* P2P Fiat */
-export const selectP2PFiats = (state: RootState): P2PFiat[] => state.public.p2p.fiats.data;
+export const selectP2PFiatsData = (state: RootState): P2PFiat[] => state.public.p2p.fiats.data;
 
 export const selectP2PFiatsLoading = (state: RootState): boolean => state.public.p2p.fiats.fetching;
 

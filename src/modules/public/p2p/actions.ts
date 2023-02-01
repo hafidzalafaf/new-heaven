@@ -16,6 +16,12 @@ import {
     P2P_PAYMENT_METHODS_DATA,
     P2P_PAYMENT_METHODS_ERROR,
     P2P_PAYMENT_METHODS_FETCH,
+    P2P_MERCHANT_DETAIL_DATA,
+    P2P_MERCHANT_DETAIL_ERROR,
+    P2P_MERCHANT_DETAIL_FETCH,
+    P2P_OFFER_DETAIL_DATA,
+    P2P_OFFER_DETAIL_ERROR,
+    P2P_OFFER_DETAIL_FETCH,
 } from './constants';
 import { Offer, P2PCurrency, P2PFiat, PaymentMethod } from './types';
 
@@ -58,6 +64,44 @@ export interface P2POffersUpdate {
     payload: Offer;
 }
 
+export interface P2POfferDetailFetch {
+    type: typeof P2P_OFFER_DETAIL_FETCH;
+    payload: {
+        offer_number: string | number;
+    };
+}
+
+export interface P2POfferDetailData {
+    type: typeof P2P_OFFER_DETAIL_DATA;
+    payload: {
+        data: [];
+    };
+}
+
+export interface P2POfferDetailError {
+    type: typeof P2P_OFFER_DETAIL_ERROR;
+    error: CommonError;
+}
+
+export interface P2PMerchantDetailFetch {
+    type: typeof P2P_MERCHANT_DETAIL_FETCH;
+    payload: {
+        merchant: string | number;
+    };
+}
+
+export interface P2PMerchantDetailData {
+    type: typeof P2P_MERCHANT_DETAIL_DATA;
+    payload: {
+        data: [];
+    };
+}
+
+export interface P2PMerchantDetailError {
+    type: typeof P2P_MERCHANT_DETAIL_ERROR;
+    error: CommonError;
+}
+
 export interface P2PFiatFetch {
     type: typeof P2P_FIAT_FETCH;
 }
@@ -74,6 +118,9 @@ export interface P2PFiatError {
 
 export interface P2PCurrenciesFetch {
     type: typeof P2P_CURRENCIES_FETCH;
+    payload?: {
+        fiat: string;
+    };
 }
 
 export interface P2PCurrenciesData {
@@ -134,7 +181,13 @@ export type P2PActions =
     | P2POffersUpdate
     | P2PHighestPriceFetch
     | P2PHighestPriceData
-    | P2PHighestPriceError;
+    | P2PHighestPriceError
+    | P2POfferDetailData
+    | P2POfferDetailError
+    | P2POfferDetailFetch
+    | P2PMerchantDetailData
+    | P2PMerchantDetailError
+    | P2PMerchantDetailFetch;
 
 export const offersFetch = (payload?: OffersFetch['payload']): OffersFetch => ({
     type: P2P_OFFERS_FETCH,
@@ -148,6 +201,36 @@ export const offersData = (payload: OffersData['payload']): OffersData => ({
 
 export const offersError = (error: CommonError): OffersError => ({
     type: P2P_OFFERS_ERROR,
+    error,
+});
+
+export const p2pOfferDetailFetch = (payload?: P2POfferDetailFetch['payload']): P2POfferDetailFetch => ({
+    type: P2P_OFFER_DETAIL_FETCH,
+    payload,
+});
+
+export const p2pOfferDetailData = (payload?: P2POfferDetailData['payload']): P2POfferDetailData => ({
+    type: P2P_OFFER_DETAIL_DATA,
+    payload,
+});
+
+export const p2pOfferDetailError = (error: CommonError): P2POfferDetailError => ({
+    type: P2P_OFFER_DETAIL_ERROR,
+    error,
+});
+
+export const p2pMerchantDetailFetch = (payload?: P2PMerchantDetailFetch['payload']): P2PMerchantDetailFetch => ({
+    type: P2P_MERCHANT_DETAIL_FETCH,
+    payload,
+});
+
+export const p2pMerchantDetailData = (payload?: P2PMerchantDetailData['payload']): P2PMerchantDetailData => ({
+    type: P2P_MERCHANT_DETAIL_DATA,
+    payload,
+});
+
+export const p2pMerchantDetailError = (error: CommonError): P2PMerchantDetailError => ({
+    type: P2P_MERCHANT_DETAIL_ERROR,
     error,
 });
 
@@ -170,8 +253,9 @@ export const p2pOffersUpdate = (payload: P2POffersUpdate['payload']): P2POffersU
     payload,
 });
 
-export const p2pCurrenciesFetch = (): P2PCurrenciesFetch => ({
+export const p2pCurrenciesFetch = (payload: P2PCurrenciesFetch['payload']): P2PCurrenciesFetch => ({
     type: P2P_CURRENCIES_FETCH,
+    payload,
 });
 
 export const p2pCurrenciesData = (payload: P2PCurrenciesData['payload']): P2PCurrenciesData => ({

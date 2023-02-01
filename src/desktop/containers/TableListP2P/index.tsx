@@ -17,7 +17,9 @@ import {
     selectP2PPaymentMethodsData,
     selectWallets,
     p2pFiatFetch,
-    selectP2PFiats,
+    selectP2PFiatsData,
+    p2pCurrenciesFetch,
+    selectP2PCurrenciesData,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import { RefreshIcon, CheckIcon, CloseIcon } from 'src/assets/images/P2PIcon';
@@ -38,7 +40,8 @@ export const TableListP2P = () => {
     const isLoggedIn = useSelector(selectUserLoggedIn);
     const page = useSelector(selectP2POffersCurrentPage);
     const list = useSelector(selectP2POffers);
-    const fiats = useSelector(selectP2PFiats);
+    const fiats = useSelector(selectP2PFiatsData);
+    const currencies = useSelector(selectP2PCurrenciesData);
     const total = useSelector(selectP2POffersTotalNumber);
     const wallets = useSelector(selectWallets);
     const paymentMethods = useSelector(selectP2PPaymentMethodsData);
@@ -66,6 +69,10 @@ export const TableListP2P = () => {
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
     }, [dispatch]);
+
+    React.useEffect(() => {
+        dispatch(p2pCurrenciesFetch({ fiat }));
+    }, [fiat]);
 
     const optionFiats = fiats?.map((item) => {
         return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };

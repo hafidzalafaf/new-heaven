@@ -20,6 +20,12 @@ import {
     P2P_PAYMENT_METHODS_DATA,
     P2P_PAYMENT_METHODS_ERROR,
     P2P_PAYMENT_METHODS_FETCH,
+    P2P_MERCHANT_DETAIL_DATA,
+    P2P_MERCHANT_DETAIL_ERROR,
+    P2P_MERCHANT_DETAIL_FETCH,
+    P2P_OFFER_DETAIL_DATA,
+    P2P_OFFER_DETAIL_ERROR,
+    P2P_OFFER_DETAIL_FETCH,
 } from './constants';
 import { Offer, P2PCurrency, P2PFiat, PaymentMethod } from './types';
 
@@ -58,6 +64,20 @@ export interface P2PState {
         timestamp?: number;
         error?: CommonError;
     };
+    offer_detail: {
+        data: [];
+        fetching: boolean;
+        success: boolean;
+        timestamp?: number;
+        error?: CommonError;
+    };
+    merchant_detail: {
+        data: [];
+        fetching: boolean;
+        success: boolean;
+        timestamp?: number;
+        error?: CommonError;
+    };
     highestPrice: {
         data: string;
         fetching: boolean;
@@ -89,6 +109,16 @@ export const initialP2PState: P2PState = {
         side: '',
         base: '',
         quote: '',
+        fetching: false,
+        success: false,
+    },
+    offer_detail: {
+        data: [],
+        fetching: false,
+        success: false,
+    },
+    merchant_detail: {
+        data: [],
         fetching: false,
         success: false,
     },
@@ -231,6 +261,62 @@ const p2pPaymentMethodsReducer = (state: P2PState['paymentMethods'], action: P2P
     }
 };
 
+const p2pOfferDetailReducer = (state: P2PState['offer_detail'], action: P2PActions) => {
+    switch (action.type) {
+        case P2P_OFFER_DETAIL_FETCH:
+            return {
+                ...state,
+                fetching: true,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+        case P2P_OFFER_DETAIL_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case P2P_OFFER_DETAIL_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+const p2pMerchantDetailReducer = (state: P2PState['merchant_detail'], action: P2PActions) => {
+    switch (action.type) {
+        case P2P_MERCHANT_DETAIL_FETCH:
+            return {
+                ...state,
+                fetching: true,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+        case P2P_MERCHANT_DETAIL_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case P2P_MERCHANT_DETAIL_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
 const p2pHighestPriceReducer = (state: P2PState['highestPrice'], action: P2PActions) => {
     switch (action.type) {
         case P2P_HIGHEST_PRICE_FETCH:
@@ -298,6 +384,26 @@ export const p2pReducer = (state = initialP2PState, action: P2PActions) => {
             return {
                 ...state,
                 offers: p2pOffersFetchReducer(p2pOffersFetchState, action),
+            };
+
+        case P2P_OFFER_DETAIL_FETCH:
+        case P2P_OFFER_DETAIL_DATA:
+        case P2P_OFFER_DETAIL_ERROR:
+            const p2pOfferDetailState = { ...state.offer_detail };
+
+            return {
+                ...state,
+                offer_detail: p2pOfferDetailReducer(p2pOfferDetailState, action),
+            };
+
+        case P2P_MERCHANT_DETAIL_FETCH:
+        case P2P_MERCHANT_DETAIL_DATA:
+        case P2P_MERCHANT_DETAIL_ERROR:
+            const p2pMerchantDetailState = { ...state.merchant_detail };
+
+            return {
+                ...state,
+                merchant_detail: p2pMerchantDetailReducer(p2pMerchantDetailState, action),
             };
 
         case P2P_HIGHEST_PRICE_FETCH:

@@ -3,6 +3,14 @@ export const P2P_OFFERS_DATA = 'p2p_offers/DATA';
 export const P2P_OFFERS_ERROR = 'p2p_offers/ERROR';
 export const P2P_OFFERS_UPDATE = 'p2p_offers/UPDATE';
 
+export const P2P_OFFER_DETAIL_FETCH = 'p2p_offer_detail/FETCH';
+export const P2P_OFFER_DETAIL_DATA = 'p2p_offer_detail/DATA';
+export const P2P_OFFER_DETAIL_ERROR = 'p2p_offer_detail/ERROR';
+
+export const P2P_MERCHANT_DETAIL_FETCH = 'p2p_merchant_detail/FETCH';
+export const P2P_MERCHANT_DETAIL_DATA = 'p2p_merchant_detail/DATA';
+export const P2P_MERCHANT_DETAIL_ERROR = 'p2p_merchant_detail/ERROR';
+
 export const P2P_FIAT_FETCH = 'p2p_fiat/FETCH';
 export const P2P_FIAT_DATA = 'p2p_fiat/DATA';
 export const P2P_FIAT_ERROR = 'p2p_fiat/ERROR';
