@@ -16,7 +16,7 @@ export function* p2pCurrenciesSaga(action: P2PCurrenciesFetch) {
             `http://192.168.1.56:3001/api/v1/public/fiats/filter?fiat=${action.payload.fiat}`
         );
 
-        yield put(p2pCurrenciesData(data));
+        yield put(p2pCurrenciesData(data.data));
     } catch (error) {
         yield put(
             sendError({

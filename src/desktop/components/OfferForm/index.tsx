@@ -4,9 +4,11 @@ import { CustomStylesSelect } from '..';
 
 export interface OfferFormProps {
     showModalCreateOffer?: boolean;
+    onCloseModal?: () => void;
 }
 
 export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
+    const { showModalCreateOffer, onCloseModal } = props;
     const optionQuote = [
         { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
         { label: <p className="m-0 text-sm grey-text-accent">IDR</p>, value: 'idr' },
@@ -107,7 +109,10 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     <input className="custom-input-offer w-100 mb-24 white-text" />
                 </div>
 
-                <button className="btn-secondary w-100">Create Offers</button>
+                <button className="btn-secondary w-100 mb-24">Create Offers</button>
+                <button type="button" onClick={onCloseModal} className="danger-text btn-danger btn-outline w-100">
+                    Close
+                </button>
             </form>
         </React.Fragment>
     );

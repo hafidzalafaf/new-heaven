@@ -125,7 +125,7 @@ export interface P2PCurrenciesFetch {
 
 export interface P2PCurrenciesData {
     type: typeof P2P_CURRENCIES_DATA;
-    payload: P2PCurrency[];
+    payload: P2PCurrency;
 }
 
 export interface P2PCurrenciesError {

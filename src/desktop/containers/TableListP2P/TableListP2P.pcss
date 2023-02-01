@@ -33,14 +33,14 @@
         }
 
         .select-filter {
-            min-width: 150px;
+            min-width: 140px;
         }
 
         .input-filter-fiat {
             padding: 8px 0 8px 16px;
             gap: 16px;
             height: 54px;
-            width: 150px;
+            width: 100px;
             border-radius: 4px 0 0 4px;
             border: 1px solid var(--input-border-color);
             border-right: none;
@@ -51,6 +51,15 @@
             &:focus {
                 box-shadow: none !important;
                 outline: none !important;
+                border: 1px solid var(--input-border-color);
+                border-right: none;
+            }
+
+            &:focus-visible {
+                box-shadow: none !important;
+                outline: none !important;
+                border: 1px solid var(--input-border-color);
+                border-right: none;
             }
         }
     }
@@ -70,13 +79,18 @@
     .label-bank-container {
         .label-bank {
             width: 50px;
+            height: 30px;
             padding: 2px 4px;
             background: var(--light-background-color);
             border-left: 4px solid var(--text-success-color);
             border-radius: 4px;
             margin: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             img {
-                width: 100%;
+                max-width: 100%;
+                max-height: 100%;
             }
         }
     }
@@ -105,11 +119,11 @@
         background: #0e1114;
         border: 1px solid #23262f;
         border-radius: 6px;
-    }
 
-    .input-p2p-form:focus {
-        outline: none;
-        box-shadow: none;
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
     }
 
     .input-label-right {
@@ -131,6 +145,11 @@
         background: #15191d !important;
         border: none;
         border-radius: 4px;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
     }
 
     .btn-close {

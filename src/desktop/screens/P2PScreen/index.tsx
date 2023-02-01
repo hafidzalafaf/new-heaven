@@ -18,9 +18,9 @@ export const P2PScreen: React.FC = () => {
 
                 <div className="com-content-table-list-p2p-container">
                     <div className="d-flex justify-content-between align-items-center overflow-x-scroll mb-48">
-                        <img src="/img/landing-card.png" alt="adsense" className="px-6" />
-                        <img src="/img/landing-card.png" alt="adsense" className="px-6" />
-                        <img src="/img/landing-card.png" alt="adsense" className="px-6" />
+                        <img src="/img/p2pbanner.png" alt="adsense" className="px-6" />
+                        <img src="/img/p2pbanner.png" alt="adsense" className="px-6" />
+                        <img src="/img/p2pbanner.png" alt="adsense" className="px-6" />
                     </div>
                     <TableListP2P />
                 </div>

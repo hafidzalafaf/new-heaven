@@ -52,7 +52,7 @@ export const selectShouldFetchP2PFiats = (state: RootState): boolean =>
     !selectP2PFiatsTimestamp(state) && !selectP2PFiatsLoading(state);
 
 /* P2P Currencies */
-export const selectP2PCurrenciesData = (state: RootState): P2PCurrency[] => state.public.p2p.currencies.data;
+export const selectP2PCurrenciesData = (state: RootState): any => state.public.p2p.currencies.data;
 
 export const selectP2PCurrenciesLoading = (state: RootState): boolean => state.public.p2p.currencies.fetching;
 

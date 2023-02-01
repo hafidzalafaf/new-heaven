@@ -21,6 +21,8 @@ export interface Offer {
     min_order: string | number;
     max_order: string | number;
     payment_time: string | number;
+    sum_order: string | number;
+    persentage: string | number;
     term_of_condition: string;
     trader: any;
     payment: Payment[];
