@@ -124,27 +124,24 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                                   src={iconUrl}
                                   style={{ height: '24px', marginRight: '16px' }}
                               />
-                              <div className="d-flex flex-column justify-content-start align-items-start">
-                                  <h3 className="p-0 m-0 text-one">{name}</h3>
-                                  <h4 className="p-0 m-0 text-two">{currency.toUpperCase()}</h4>
-                              </div>
+
                           </Link>,
-                          <div className="td-available-order d-flex flex-column justify-content-start align-items-start">
-                              <h3 className="p-0 m-0 text-one">Available</h3>
+                            <Link to={`/wallets/${currency}/detail`} className="d-flex flex-column justify-content-start align-items-start">
+                              <h3 className="p-0 m-0 text-one">{name}</h3>
+                              <h4 className="p-0 m-0 text-two">{currency.toUpperCase()}</h4>
+                          </Link>,
+                          <Link to={`/wallets/${currency}/detail`} className="td-available-order d-flex flex-column justify-content-start align-items-start">
+                              <h3 className="p-0 m-0 text-one">Total Balance</h3>
                               <h4 className="p-0 m-0 text-two">
                                   <Decimal key={index} fixed={fixed} thousSep=",">
                                       {spotBalance ? spotBalance.toString() : '0'}
                                   </Decimal>
                               </h4>
-                          </div>,
-                          <div className="td-available-order d-flex flex-column justify-content-start align-items-start">
-                              <h3 className="p-0 m-0 text-one">On Order</h3>
-                              <h4 className="p-0 m-0 text-two">
-                                  <Decimal key={index} fixed={fixed} thousSep=",">
-                                      {spotLocked ? spotLocked.toString() : '0'}
-                                  </Decimal>
-                              </h4>
-                          </div>,
+                          </Link>,
+                          <Link to={`/wallets/${currency}/detail`} className="td-available-order d-flex flex-column justify-content-start align-items-start">
+                              <h3 className="p-0 m-0 text-one">Estimated Value</h3>
+                              <h4 className="p-0 m-0 text-two">{formatWithSeparators(estimatedValue, ',')}</h4>
+                          </Link>,
                           <Link to={`/wallets/${currency}/detail`}>
                               <ArrowRight className={''} />
                           </Link>,
@@ -228,13 +225,13 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
 
                     {/* <div>{VALUATION_SECONDARY_CURRENCY && renderSecondaryCurrencyValuation(estimatedValue)}</div> */}
 
-                    <div className="action-container w-100 d-flex flex-wrap justify-content-center align-items-center">
+                    <div className="action-container w-100 d-flex flex-row justify-content-center align-items-center">
                         <button
                             onClick={() => {
                                 setShowModal(!showModal);
                                 setModalType('deposit');
                             }}
-                            className="btn btn-primary btn-sm">
+                            className="btn btn-primary btn-sm d-flex">
                             <DepositIcon className={'mr-2'} />
                             {formatMessage({ id: 'page.mobile.wallets.deposit' })}
                         </button>
@@ -243,7 +240,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                                 handleClickWithdraw();
                                 setModalType('withdraw');
                             }}
-                            className="btn btn-primary btn-sm"
+                            className="btn btn-primary btn-sm d-flex"
                             data-toggle="modal"
                             data-target="#modal-withdraw">
                             <WithdrawlIcon className={'mr-2'} />
@@ -254,7 +251,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                                 handleClickWithdraw();
                                 setModalType('transfer');
                             }}
-                            className="btn btn-primary btn-sm">
+                            className="btn btn-primary btn-sm d-flex">
                             <TransferIcon className={'mr-2'} />
                             {formatMessage({ id: 'page.mobile.wallets.transfer' })}
                         </button>
