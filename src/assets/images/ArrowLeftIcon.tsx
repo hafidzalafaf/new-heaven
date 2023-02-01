@@ -27,7 +27,7 @@ export const ArrowLeftIcon = ({ className }) => {
 export const ArrowLeftGradient = () => {
     return (
         <svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_1641_14451)">
+            <g clipPath="url(#clip0_1641_14451)">
                 <path
                     d="M20.5465 9.88586L18.6665 8.00586L10.6665 16.0059L18.6665 24.0059L20.5465 22.1259L14.4398 16.0059L20.5465 9.88586Z"
                     fill="url(#paint0_linear_1641_14451)"

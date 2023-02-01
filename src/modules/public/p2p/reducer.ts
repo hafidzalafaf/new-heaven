@@ -1,6 +1,6 @@
 import { defaultStorageLimit } from 'src/api';
 import { sliceArray } from 'src/helpers';
-import { insertOrUpdate } from './helpers';
+// import { insertOrUpdate } from './helpers';
 import { CommonError } from '../../types';
 import { P2PActions } from './actions';
 import {
@@ -121,15 +121,15 @@ export const p2pOffersFetchReducer = (state: P2PState['offers'], action: P2PActi
                 error: undefined,
             };
         case P2P_OFFERS_UPDATE:
-            const newList = sliceArray(
-                insertOrUpdate(state.list, action.payload, state.side, state.base, state.quote, state.payment_method),
-                defaultStorageLimit()
-            );
+            // const newList = sliceArray(
+            //     insertOrUpdate(state.list, action.payload, state.side, state.base, state.quote, state.payment_method),
+            //     defaultStorageLimit()
+            // );
 
             return {
                 ...state,
-                list: newList,
-                total: newList.length,
+                // list: newList,
+                // total: newList.length,
             };
         case P2P_OFFERS_ERROR:
             return {

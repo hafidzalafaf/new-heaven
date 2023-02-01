@@ -56,7 +56,7 @@ export const HeaderProfileIcon = ({ fillColor }) => {
 export const HeaderGuideIcon = ({ fillColor }) => {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_916_47082)">
+            <g clipPath="url(#clip0_916_47082)">
                 <path
                     d="M17.5 24C13.916 24 11 21.084 11 17.5C11 13.916 13.916 11 17.5 11C21.084 11 24 13.916 24 17.5C24 21.084 21.084 24 17.5 24ZM17.5 12C14.467 12 12 14.467 12 17.5C12 20.533 14.467 23 17.5 23C20.533 23 23 20.533 23 17.5C23 14.467 20.533 12 17.5 12Z"
                     fill={fillColor}
@@ -518,7 +518,7 @@ export const GreyCheck = () => {
 export const ActiveCheck = () => {
     return (
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_1280_48791)">
+            <g clipPath="url(#clip0_1280_48791)">
                 <path
                     fill-rule="evenodd"
                     clip-rule="evenodd"

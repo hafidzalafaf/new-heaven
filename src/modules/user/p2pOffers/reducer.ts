@@ -1,7 +1,7 @@
 import { defaultStorageLimit } from 'src/api';
 import { sliceArray } from 'src/helpers';
 import { Offer } from 'src/modules';
-import { insertOrUpdate } from './helpers';
+// import { insertOrUpdate } from './helpers';
 import { CommonError } from '../../types';
 import { OfferNestedOrders, P2POffersActions } from './actions';
 import {
@@ -93,12 +93,12 @@ export const offersFetchReducer = (state: P2POffersState['offers'], action: P2PO
                 list: sliceArray(action.payload.list, defaultStorageLimit()),
                 total: action.payload.total,
                 fetching: false,
-                success: true,                
+                success: true,
             };
         case P2P_USER_OFFERS_UPDATE:
             return {
                 ...state,
-                list: sliceArray(insertOrUpdate(state.list, action.payload, state.state), defaultStorageLimit()),
+                // list: sliceArray(insertOrUpdate(state.list, action.payload, state.state), defaultStorageLimit()),
             };
         case P2P_USER_OFFERS_ERROR:
             return {
