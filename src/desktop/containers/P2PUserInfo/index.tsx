@@ -1,17 +1,33 @@
 import * as React from 'react';
-import { VerificationIcon, ShareIcon, CheckFillIcon, LikeIcon, UnLikeIcon } from '../../../assets/images/P2PIcon';
+import { VerificationIcon, ShareIcon, CheckFillIcon, LikeIcon, UnLikeIcon, RenameIcon } from '../../../assets/images/P2PIcon';
 import { CardP2PUserInfo } from '../../../desktop/components';
-
+import { useSelector } from 'react-redux';
+import { selectP2PAccount } from 'src/modules/user/p2pAccount';
 export const P2PUserInfo: React.FC = () => {
-    const username = 'Nusatech Exchange';
+    const [username, setUsername] = React.useState('Nusatech Exchange');
+    const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false)
+    const userP2P = useSelector(selectP2PAccount)
+    console.log(userP2P); 
+    const ModalChangeName = () => {
+        return (
+            <div hidden={showChangeUsernameModal}>
+                <form>
+                    <input  value={username} />
+                </form>
+            </div>
+        )
+    }
+    
     return (
         <React.Fragment>
             <div className="container-p2p-user-info">
+                <ModalChangeName/>
                 <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
                     <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
                         {username.slice(0, 1).toUpperCase()}
                     </div>
                     <p className="m-0 p-0 text-ms font-extrabold grey-text-accent">{username}</p>
+                    <RenameIcon onClick={() => setShowChangeUsernameModal(!showChangeUsernameModal)} className='cursor-pointer'/>
                     <div className="d-flex align-items-center gap-4 mr-12">
                         <VerificationIcon />
 
@@ -56,7 +72,7 @@ export const P2PUserInfo: React.FC = () => {
 
                         <div className="d-flex justify-content-between align-items-center gap-4">
                             <div className="progress-bar">
-                                <div className="progress" style={{ width: '80%' }} />
+                                <div className="progress" style={{ width: '20%' }} />
                             </div>
                             <UnLikeIcon />
                             <p className="m-0 p-0 grey-text text-sm">120</p>

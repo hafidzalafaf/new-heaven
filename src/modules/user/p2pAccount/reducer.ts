@@ -1,12 +1,12 @@
 import { CommonError } from '../../types';
-import { P2POfferAvailableActions } from './actions';
+import { P2PAccountActions } from './actions';
 import {
-    P2P_OFFER_AVAILABLE_FETCH,
-    P2P_OFFER_AVAILABLE_FETCH_DATA,
-    P2P_OFFER_AVAILABLE_FETCH_ERROR,
+    P2P_ACCOUNT_FETCH,
+    P2P_ACCOUNT_FETCH_DATA,
+    P2P_ACCOUNT_FETCH_ERROR,
 } from './constants';
 
-export interface P2POfferAvailableState {
+export interface P2PAccountState {
     fetch: {
         data: [];
         fetching: boolean;
@@ -15,7 +15,7 @@ export interface P2POfferAvailableState {
     };
 }
 
-export const initialP2PAvailableOfferState: P2POfferAvailableState = {
+export const initialP2PAccountState: P2PAccountState = {
     fetch: {
         data: [],
         fetching: false,
@@ -23,16 +23,16 @@ export const initialP2PAvailableOfferState: P2POfferAvailableState = {
     },
 };
 
-const p2pOfferAvailableFetchReducer = (state: P2POfferAvailableState['fetch'], action: P2POfferAvailableActions) => {
+const p2pAccountFetchReducer = (state: P2PAccountState['fetch'], action: P2PAccountActions) => {
     switch (action.type) {
-        case P2P_OFFER_AVAILABLE_FETCH:
+        case P2P_ACCOUNT_FETCH:
             return {
                 ...state,
                 fetching: true,
                 success: false,
                 error: undefined,
             };
-        case P2P_OFFER_AVAILABLE_FETCH_DATA:
+        case P2P_ACCOUNT_FETCH_DATA:
             return {
                 ...state,
                 data: action.payload,
@@ -40,7 +40,7 @@ const p2pOfferAvailableFetchReducer = (state: P2POfferAvailableState['fetch'], a
                 success: true,
                 error: undefined,
             };
-        case P2P_OFFER_AVAILABLE_FETCH_ERROR:
+        case P2P_ACCOUNT_FETCH_ERROR:
             return {
                 ...state,
                 fetching: false,
@@ -52,14 +52,14 @@ const p2pOfferAvailableFetchReducer = (state: P2POfferAvailableState['fetch'], a
     }
 };
 
-export const p2pOfferAvailableReducer = (state = initialP2PAvailableOfferState, action: P2POfferAvailableActions) => {
+export const p2pAccountReducer = (state = initialP2PAccountState, action: P2PAccountActions) => {
     switch (action.type) {
-        case P2P_OFFER_AVAILABLE_FETCH:
-        case P2P_OFFER_AVAILABLE_FETCH_DATA:
-        case P2P_OFFER_AVAILABLE_FETCH_ERROR:
+        case P2P_ACCOUNT_FETCH:
+        case P2P_ACCOUNT_FETCH_DATA:
+        case P2P_ACCOUNT_FETCH_ERROR:
             return {
                 ...state,
-                fetch: p2pOfferAvailableFetchReducer({ ...state.fetch }, action),
+                fetch: p2pAccountFetchReducer({ ...state.fetch }, action),
             };
 
         default:
