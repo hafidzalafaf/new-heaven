@@ -15,10 +15,10 @@ const defaultP2POffer: P2POffer = {
     price: '',
     fiat: '',
     trade_amount: '',
-    min_amount: '',
-    max_amount: '',
+    min_order: '',
+    max_order: '',
     payment: [],
-    paymen_limit: '',
+    payment_limit: '',
     term_of_condition: '',
     auto_replay: '',
     side: '',
@@ -26,7 +26,7 @@ const defaultP2POffer: P2POffer = {
 
 export interface P2POfferState {
     create: {
-        data: P2POffer;
+        // data: P2POffer;
         fetching: boolean;
         success: boolean;
         error?: CommonError;
@@ -41,7 +41,7 @@ export interface P2POfferState {
 
 export const initialP2POfferState: P2POfferState = {
     create: {
-        data: defaultP2POffer,
+        // data: defaultP2POffer,
         fetching: false,
         success: false,
     },
@@ -87,13 +87,10 @@ const p2pOfferCreateReducer = (state: P2POfferState['create'], action: P2POfferA
             return {
                 ...state,
                 fetching: true,
-                success: false,
-                error: undefined,
             };
         case P2P_OFFER_CREATE_DATA:
             return {
                 ...state,
-                data: action.payload,
                 fetching: false,
                 success: true,
                 error: undefined,

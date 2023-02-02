@@ -59,19 +59,20 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
 
     const handleCreateOffer = () => {
         const payload = {
-            currency,
-            price,
-            fiat,
-            trade_amount,
-            min_order,
-            max_order,
-            payment,
-            payment_limit,
-            term_of_condition,
-            auto_replay,
+            currency: currency,
+            price: price,
+            fiat: fiat,
+            trade_amount: trade_amount,
+            min_order: min_order,
+            max_order: max_order,
+            payment: payment,
+            payment_limit: payment_limit,
+            term_of_condition: term_of_condition,
+            auto_replay: auto_replay,
+            side: side,
         };
 
-        // dispatch(p2pOfferCreate(payload));
+        dispatch(p2pOfferCreate(payload));
         onCloseModal;
     };
 

@@ -63,7 +63,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
 
     return (
         <React.Fragment>
-            <form onSubmit={handleCreateOffer} className="com-form-crete-offer">
+            <form className="com-form-crete-offer">
                 <div>
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">CRYPTOCURRENCY</p>
                     <Select
@@ -191,7 +191,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     />
                 </div>
 
-                <button type="submit" className="btn-secondary w-100 mb-24">
+                <button type="button" onClick={handleCreateOffer} className="btn-secondary w-100 mb-24">
                     Create Offers
                 </button>
                 <button type="button" onClick={onCloseModal} className="danger-text btn-danger btn-outline w-100">
