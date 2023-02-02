@@ -620,7 +620,6 @@ export const TableListP2P = () => {
                 <ModalCreateOffer
                     showModalCreateOffer={showModalCreateOffer}
                     onCloseModal={handleCloseModalCreateOffer}
-                    side={side}
                 />
             )}
         </React.Fragment>
