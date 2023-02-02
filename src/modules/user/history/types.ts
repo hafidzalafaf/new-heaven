@@ -27,6 +27,7 @@ export interface PrivateTradeEvent {
     taker_type: string;
     side?: string;
     order_id?: number;
+    fee_currency: string;
 }
 
 export interface PrivateTradesState extends CommonState {

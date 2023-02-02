@@ -19,6 +19,7 @@ import {
     selectP2PFiatsData,
     p2pCurrenciesFetch,
     selectP2PCurrenciesData,
+    p2pOfferCreate,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import { RefreshIcon, CheckIcon, CloseIcon, NoDataIcon } from 'src/assets/images/P2PIcon';
@@ -619,6 +620,7 @@ export const TableListP2P = () => {
                 <ModalCreateOffer
                     showModalCreateOffer={showModalCreateOffer}
                     onCloseModal={handleCloseModalCreateOffer}
+                    side={side}
                 />
             )}
         </React.Fragment>

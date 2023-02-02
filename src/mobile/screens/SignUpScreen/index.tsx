@@ -573,11 +573,11 @@ const SignUpMobileScreen: React.FC = () => {
                         )}
                     </div>
 
-                    <div className="mt-4 mb-4">{renderCaptcha()}</div>
+                    <div className="my-3">{renderCaptcha()}</div>
 
                     <button
                         type="button"
-                        className="btn btn-primary btn-block btn-mobile"
+                        className="btn btn-primary btn-block btn-mobile my-3"
                         disabled={disableButton}
                         onClick={() => setShowTos(true)}>
                         Create Account

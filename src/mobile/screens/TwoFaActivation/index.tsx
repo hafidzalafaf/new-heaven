@@ -9,16 +9,16 @@ import { useHistory } from 'react-router';
 const TwoFaActivationMobileScreen: React.FC = () => {
     const history = useHistory();
     const user = useSelector(selectUserInfo);
-    const [state, setState] = React.useState(true);
-
-    const handleTwoFa = () => {
-        setState(!state);
-    };
 
     const handleActivateTwoFa = () => {
         user.otp ? history.push('/two-fa') : history.push('/two-fa-authentication');
     };
 
+    const [state, setState] = React.useState(user.otp);
+    const handleTwoFa = () => {
+        setState(!state);
+        window.location.reload()
+    };
     return (
         <React.Fragment>
             <div className="mobile-container two-fa-mobile no-header pt-5 home-screen dark-bg-main">

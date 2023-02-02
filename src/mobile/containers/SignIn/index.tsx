@@ -237,10 +237,10 @@ const SignInMobile: React.FC<SignInProps> = ({
                     </div>
                 </div>
 
-                <div className="mt-2 mb-2">{captchaLogin() && renderCaptcha}</div>
+                <div className="my-3">{captchaLogin() && renderCaptcha}</div>
 
                 <button
-                    className="btn btn-primary btn-block btn-mobile"
+                    className="btn btn-primary btn-block btn-mobile my-3"
                     disabled={isLoading || !emailValue.match(EMAIL_REGEX) || !passwordValue || isButtonDisabled}
                     onClick={handleClick as any}>
                     Login
