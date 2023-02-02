@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { ArrowLeft } from '../../assets/Arrow';
 import { Form } from 'react-bootstrap';
 import { selectUserInfo } from 'src/modules';

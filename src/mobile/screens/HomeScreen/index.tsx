@@ -10,7 +10,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { SplashScreenMobile } from '../SplashScreen';
 import { BgCardSmall } from '../../assets/BackgroundCard';
 import { Table } from '../../../components';
 import { ArrowRight } from '../../assets/Arrow';

@@ -28,6 +28,7 @@ import {
 import { selectApiKeys } from 'src/modules/user/apiKeys/selectors';
 import { Modal, CustomInput } from '../../components';
 import { ModalCloseIcon } from '../../../assets/images/CloseIcon';
+import { CircleCloseDangerLargeIcon } from '../../../assets/images/CircleCloseIcon';
 import moment from 'moment';
 
 export const ProfileScreen: FC = (): ReactElement => {
@@ -43,6 +44,7 @@ export const ProfileScreen: FC = (): ReactElement => {
 
     const [showModal2FaGoogle, setShowModal2FAGoogle] = useState(false);
     const [showModalChangePhone, setShowModalChangePhone] = useState(false);
+    const [showModalLocked, setShowModalLocked] = React.useState(false);
     const [twoFaGoogleValue, setTwoFaGoogleValue] = useState('');
     const [newPhoneValue, setNewPhoneValue] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
@@ -204,6 +206,36 @@ export const ProfileScreen: FC = (): ReactElement => {
     const handleChangeTwoFaGoogleValue = (e) => {
         const value = e.replace(/[^0-9+\.]/g, '');
         setTwoFaGoogleValue(value);
+    };
+
+    // MODAL MODAL KYC LOCKED
+    const renderHeaderModalLocked = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-center align-items-center w-100">
+                    <CircleCloseDangerLargeIcon />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const renderContentModalLocked = () => {
+        return (
+            <React.Fragment>
+                <h1 className="white-text text-lg mb-24 text-center ">KYC Locked</h1>
+                <p className="grey-text text-ms font-extrabold mb-24 text-center">
+                    For KYC verification you must verified your phone number first
+                </p>
+                <div className="d-flex justify-content-center align-items-center w-100 mb-0">
+                    <button
+                        onClick={() => setShowModalLocked(false)}
+                        type="button"
+                        className="btn btn-primary sm px-5 mr-3">
+                        Verify Phone Number
+                    </button>
+                </div>
+            </React.Fragment>
+        );
     };
 
     // Render phone modal
@@ -433,25 +465,31 @@ export const ProfileScreen: FC = (): ReactElement => {
                                         </div>
                                     </div>
                                     <div className="menu-item py-24 mb-4">
-                                        <Link to={kycStatus == 'verified' ? '/profile' : '/profile/kyc'}>
-                                            <div className="d-flex align-items-center position-relative">
-                                                <div className="icon-bg">
-                                                    <KycProfileIcon />
-                                                </div>
-                                                <div className="ml-3 mr-3">
-                                                    <p className="mb-1 text-ms font-normal white-text">
-                                                        KYC Verification
-                                                    </p>
-
-                                                    {renderKycStatus()}
-                                                </div>
-                                                {kycStatus === 'verified' && (
-                                                    <div className="check">
-                                                        <CheckIcon />
-                                                    </div>
-                                                )}
+                                        <div
+                                            onClick={() => {
+                                                if (user?.level < 2) {
+                                                    setShowModalLocked(true);
+                                                } else if (kycStatus == 'verified') {
+                                                    history.push('/profile');
+                                                } else {
+                                                    history.push('/profile/kyc');
+                                                }
+                                            }}
+                                            className="d-flex align-items-center position-relative cursor-pointer">
+                                            <div className="icon-bg">
+                                                <KycProfileIcon />
                                             </div>
-                                        </Link>
+                                            <div className="ml-3 mr-3">
+                                                <p className="mb-1 text-ms font-normal white-text">KYC Verification</p>
+
+                                                {renderKycStatus()}
+                                            </div>
+                                            {kycStatus === 'verified' && (
+                                                <div className="check">
+                                                    <CheckIcon />
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="menu-item py-24 mb-4">
                                         <button className="btn-transparent" onClick={handleFetchTwoFaPhone}>
@@ -595,6 +633,7 @@ export const ProfileScreen: FC = (): ReactElement => {
             {/* modal */}
             <Modal content={modalTwoFaGoogleContent()} header={modalTwoFaGoogleHeader()} show={showModal2FaGoogle} />
             <Modal content={modalPhoneContent()} header={modalPhoneHeader()} show={showModalChangePhone} />
+            <Modal show={showModalLocked} header={renderHeaderModalLocked()} content={renderContentModalLocked()} />
         </React.Fragment>
     );
 };

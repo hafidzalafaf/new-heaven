@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useUserActivityFetch } from 'src/hooks';
 import {
     RootState,
@@ -10,10 +10,9 @@ import {
     selectUserActivityFirstElemIndex,
     selectUserActivityLastElemIndex,
     selectUserActivityNextPageExists,
-    selectUserActivityPageCount,
 } from 'src/modules';
 import { DeviceIcon } from 'src/assets/images/ProfileIcon';
-import { getUserAgent, localeDate } from 'src/helpers';
+import { getUserAgent } from 'src/helpers';
 import { NoData } from 'src/desktop/components';
 import moment from 'moment';
 import { PaginationMobile } from 'src/mobile/components';
@@ -26,20 +25,16 @@ const DeviceManagementMobileScreen: React.FC = () => {
     const nextPageExists = useSelector((state: RootState) => selectUserActivityNextPageExists(state, 5));
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     useUserActivityFetch({ page: currentPageIndex, limit: 5 });
-    const dispatch = useDispatch();
     const history = useHistory();
 
     const onClickPrevPage = () => {
         setCurrentPageIndex(currentPageIndex - 1);
-        console.log(currentPageIndex);
     };
 
     const onClickNextPage = () => {
         setCurrentPageIndex(currentPageIndex + 1);
-        console.log(currentPageIndex);
     };
 
-    console.log('userActivity', userActivity);
     const renderDataDevice = (data) => {
         return data.map((item) => [
             <div className="d-flex justify-content-start align-items-stretch my-2">
