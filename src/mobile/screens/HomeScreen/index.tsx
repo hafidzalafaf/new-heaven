@@ -53,6 +53,9 @@ const HomeMobileScreen: React.FC = () => {
         }
     }, [blogs]);
 
+
+    console.log(blogs, 'blogs')
+
     const marketList = markets
         .map((market) => ({
             ...market,
@@ -172,6 +175,8 @@ const HomeMobileScreen: React.FC = () => {
             </p>,
         ]);
     };
+
+    console.log(news, 'news')
 
     return (
         <>
