@@ -1,5 +1,5 @@
 const USE_SSL = true;
-const BASE_URL = 'www.heavenexchange.io';
+const BASE_URL = 'api.heavenexchange.io';
 // const BASE_URL = 'app.nagaexchange.co.id';
 
 export const API_URL = USE_SSL ? 'https://' + BASE_URL : 'http://' + BASE_URL;

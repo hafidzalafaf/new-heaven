@@ -192,7 +192,7 @@ const SignInMobile: React.FC<SignInProps> = ({
             <h1 className="mt-4 font-extrabold text-md grey-text-accent mb-3">Heaven Exchange Login</h1>
             <div className="d-flex justify-content-start align-items-center mb-4">
                 <UnlockIcon className={'mr-2'} />
-                <p className="text-xs grey-text font-bold mb-0">https://www.heavenexchange.io/signin</p>
+                <p className="text-xs grey-text font-bold mb-0">https://api.heavenexchange.io/signin</p>
             </div>
             <form
                 className="form-sign-up tab-pane fade show active"

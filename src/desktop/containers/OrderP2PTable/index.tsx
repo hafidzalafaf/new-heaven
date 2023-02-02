@@ -133,7 +133,7 @@ export const OrderP2PTable = () => {
             <a
                 target="_blank"
                 rel="noreferrer"
-                href={'https://www.heavenexchange.io/'}
+                href={'https://api.heavenexchange.io/'}
                 className="text-underline blue-text text-sm font-semibold">
                 {item.counter_party}
             </a>,
