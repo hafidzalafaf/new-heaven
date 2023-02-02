@@ -55,7 +55,7 @@ const AnnouncementMobileScreen: React.FC = () => {
         autoplaySpeed: 6000,
         pauseOnHover: true,
     };
-
+console.log(news, 'news')
     return (
         <>
             {news.length ? (
@@ -70,7 +70,7 @@ const AnnouncementMobileScreen: React.FC = () => {
                         <Slider {...settings}>
                             {news &&
                                 news.map((item, key) => (
-                                    <div className="heroid" key={key}>
+                                    <a href={item.url} className="heroid" key={key}>
                                         <div
                                             className="hero one w-100 d-flex align-items-center justify-content-start position-relative"
                                             style={{
@@ -88,7 +88,7 @@ const AnnouncementMobileScreen: React.FC = () => {
                                                 />
                                             </a>
                                         </div>
-                                    </div>
+                                    </a>
                                 ))}
                         </Slider>
                     </div>
@@ -99,7 +99,8 @@ const AnnouncementMobileScreen: React.FC = () => {
                         </h6>
                         {currentRecords &&
                             currentRecords.map((item, key) => (
-                                <div
+                                <a
+                                    href={item.url}
                                     className="beginner-item d-flex align-items-center justify-content-between mb-3"
                                     key={key}>
                                     <div className="d-flex align-items-start justify-content-start">
@@ -118,7 +119,7 @@ const AnnouncementMobileScreen: React.FC = () => {
                                             </h6>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             ))}
                     </div>
                     <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />

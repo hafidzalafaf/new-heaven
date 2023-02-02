@@ -4,47 +4,25 @@ import { Logo } from '../../../assets/images/Logo';
 import { useSelector } from 'react-redux';
 import { selectBlogs } from 'src/modules';
 import moment from 'moment';
+import { FAQHeader } from 'src/desktop/containers';
 
 export const FAQScreen: FC = (): ReactElement => {
     useDocumentTitle('FAQ');
     useBlogsFetch({ tag: 'faq' });
     const [faq, setFaq] = React.useState<any[]>([]);
-    const [support, setSupport] = React.useState<any>([]);
 
     const blogs = useSelector(selectBlogs);
 
     React.useEffect(() => {
         if (blogs) {
-            let tempFaq = [...blogs].filter((item) => item.slug !== 'support');
-            let tempSupport = [...blogs].filter((item) => item.slug == 'support');
-            setFaq(tempFaq);
-            setSupport(tempSupport);
+            setFaq(blogs);
         }
     }, [blogs]);
 
     return (
         <React.Fragment>
             <div className="content-wrapper no-sidebar faq-screen dark-bg-accent pb-5">
-                <div
-                    className="overflow-auto py-lg-5 background"
-                    style={{ backgroundImage: `url('img/background-landing.png')` }}>
-                    <div className="d-flex flex-column justify-content-center align-items-center py-5">
-                        <h3 className="title-1 white-text font-bold mb-24">Heaven Exchange FAQ</h3>
-
-                        <div className="d-flex justify-content-center align-content-center gap-8">
-                            {support.map((item, i) => (
-                                <a
-                                    key={i}
-                                    href={item?.excerpt}
-                                    target="__blank"
-                                    rel="noopener noreferrer"
-                                    className="btn-primary cursor-pointer">
-                                    {item.title}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+                <FAQHeader />
                 <div className="container">
                     <div className="articles">
                         <div className="row justify-content-center">

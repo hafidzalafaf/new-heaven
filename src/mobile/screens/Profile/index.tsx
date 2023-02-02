@@ -333,11 +333,6 @@ const ProfileMobileScreen: React.FC = () => {
                             {dateTo12HFormat(user && user.updated_at)}
                         </h3>
                     </div>
-
-                    <div className="d-flex flex-column mb-12">
-                        <h5 className="grey-text font-bold text-xs mb-0">IP Address</h5>
-                        <h3 className="grey-text-accent font-bold text-sm">36.80.199.122</h3>
-                    </div>
                 </div>
                 {!hideWarning && user.level < 3 && (
                     <div className="alert-mobile-warning px-2 py-3 alert d-flex align-items-center justify-content-center show text-xs warning-text font-normal position-relative mb-24">

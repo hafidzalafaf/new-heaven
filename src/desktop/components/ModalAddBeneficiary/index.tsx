@@ -90,7 +90,7 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
             }
         });
     }, [coinBlockchainName]);
-    
+
     const validateCoinAddressFormat = React.useCallback(
         (value: string) => {
             const valid = WAValidator.validate(value, currencyID);
@@ -150,7 +150,6 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
                     <p className="m-0 grey-text-accent text-sm">{item.blockchain_key}</p>
                 </div>
             );
-
             return {
                 label: customLabel,
                 value: item.blockchain_key,

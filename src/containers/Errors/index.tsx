@@ -49,7 +49,7 @@ class HandleErrorWrapper extends React.Component<ErrorProps, ErrorWrapperState> 
                                 fix things.
                             </h3>
 
-                            <div className="d-flex justify-content-start align-items-center gap-24">
+                            <div className="d-flex flex-wrap justify-content-start align-items-center gap-24">
                                 <button onClick={() => location.reload()} className="btn-primary">
                                     Try Again
                                 </button>
