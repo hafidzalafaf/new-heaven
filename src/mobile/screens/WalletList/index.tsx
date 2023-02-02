@@ -124,13 +124,16 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                                   src={iconUrl}
                                   style={{ height: '24px', marginRight: '16px' }}
                               />
-
                           </Link>,
-                            <Link to={`/wallets/${currency}/detail`} className="d-flex flex-column justify-content-start align-items-start">
+                          <Link
+                              to={`/wallets/${currency}/detail`}
+                              className="d-flex flex-column justify-content-start align-items-start">
                               <h3 className="p-0 m-0 text-one">{name}</h3>
                               <h4 className="p-0 m-0 text-two">{currency.toUpperCase()}</h4>
                           </Link>,
-                          <Link to={`/wallets/${currency}/detail`} className="td-available-order d-flex flex-column justify-content-start align-items-start">
+                          <Link
+                              to={`/wallets/${currency}/detail`}
+                              className="td-available-order d-flex flex-column justify-content-start align-items-start">
                               <h3 className="p-0 m-0 text-one">Total Balance</h3>
                               <h4 className="p-0 m-0 text-two">
                                   <Decimal key={index} fixed={fixed} thousSep=",">
@@ -138,7 +141,9 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                                   </Decimal>
                               </h4>
                           </Link>,
-                          <Link to={`/wallets/${currency}/detail`} className="td-available-order d-flex flex-column justify-content-start align-items-start">
+                          <Link
+                              to={`/wallets/${currency}/detail`}
+                              className="td-available-order d-flex flex-column justify-content-start align-items-start">
                               <h3 className="p-0 m-0 text-one">Estimated Value</h3>
                               <h4 className="p-0 m-0 text-two">{formatWithSeparators(estimatedValue, ',')}</h4>
                           </Link>,
@@ -203,8 +208,26 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
         [nonZeroSelected, setNonZeroSelected]
     );
 
+    // const handleClickWithdraw = React.useCallback(() => {
+    //     if (!user.otp) {
+    //         setShowModalLocked(!showModalLocked);
+    //     } else if (user.labels[0].key === 'document' && user.labels[0].value === 'verified') {
+    //         console.log('kyc');
+    //     } else {
+    //         setShowModal(true);
+    //     }
+    // }, []);
+
+    // const handleClickWithdraw = React.useCallback(() => {
+    //     user.otp ? setShowModal(true) : setShowModalLocked(!showModalLocked);
+    // }, []);
+
     const handleClickWithdraw = React.useCallback(() => {
-        user.otp ? setShowModal(true) : setShowModalLocked(!showModalLocked);
+        if (user.level < 3) {
+            setShowModalLocked(true);
+        } else {
+            setShowModal(true);
+        }
     }, []);
 
     return (
@@ -307,16 +330,15 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                         </div>
                         <div className="text-center">
                             <p className="gradient-text mb-3">
-                                {formatMessage({ id: 'page.mobile.wallets.modal.2FA' })}
-                            </p>
-                            <p className="text-secondary text-sm">
-                                {formatMessage({ id: 'page.mobile.wallets.modal.body.2FA' })}
+                                {user?.level == 1
+                                    ? 'For withdraw you must verified your phone number and document first'
+                                    : 'For withdraw you must verified your document first'}
                             </p>
                         </div>
                         <div className="mb-0">
-                            <Link to={`/two-fa-activation`}>
+                            <Link to={`${user?.level == 1 ? '/profile' : '/profile/kyc'}`}>
                                 <button type="button" className="btn btn-primary btn-block">
-                                    {formatMessage({ id: 'page.mobile.wallets.modal.body.2FA.enable' })}
+                                    {user?.level == 1 ? 'Verify Phone Number' : 'Verify Document'}
                                 </button>
                             </Link>
                             <div className="mt-3" onClick={() => setShowModalLocked(!showModalLocked)}>
