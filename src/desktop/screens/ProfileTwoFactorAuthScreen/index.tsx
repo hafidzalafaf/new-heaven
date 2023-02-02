@@ -141,7 +141,7 @@ class ToggleTwoFactorAuthComponent extends React.Component<Props, State> {
     private renderTwoFactorAuthQR = (barcode: string) => {
         const src = `data:image/png;base64,${barcode}`;
 
-        return barcode.length > 0 && <img alt="" className="pg-profile-two-factor-auth__qr" src={src} />;
+        return barcode.length > 0 && <img alt="s" className="pg-profile-two-factor-auth__qr" src={src} />;
     };
 
     private renderSecret = (secret: string) => {

@@ -47,10 +47,6 @@ const HomeMobileScreen: React.FC = () => {
     const [type, setType] = React.useState('all');
 
     React.useEffect(() => {
-        setTimeout(() => setLoading(false), 1000);
-    }, []);
-
-    React.useEffect(() => {
         if (blogs) {
             setBlog(blogs);
             setNews(blogs);
@@ -179,9 +175,7 @@ const HomeMobileScreen: React.FC = () => {
 
     return (
         <>
-            {loading ? (
-                <SplashScreenMobile />
-            ) : (
+
                 <div className="mobile-container home-screen dark-bg-main">
                     <div>
                         <div id="heros" className="content-container w-100 mb-3">
@@ -301,7 +295,6 @@ const HomeMobileScreen: React.FC = () => {
                         </Tabs>
                     </div>
                 </div>
-            )}
         </>
     );
 };
