@@ -92,8 +92,6 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
         return { label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>, value: item.payment_user_id };
     });
 
-    // React.useEffect(() => {}, [])
-
     const handleChangeFiat = (e: string) => {
         setFiat(e);
     };
@@ -102,37 +100,15 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
         setCurrency(e);
     };
 
-    /*
-        const handleChangePayment = React.useEffect((e: any) => {
-        setPaymentValue(e);
-
-        let temp = [];
-        e?.map((el) => {
-            temp.push(el.value);
-        });
-
-        setPayment(temp);
-    }, []);
-    */
-
     const handleChangePayment = (e: any) => {
         setPaymentValue(e);
-
-        // let a = string;
         let data = e;
         let temp = [];
         data?.map((el) => {
             temp.push(el.value);
-            console.log('temp');
         });
 
-        console.log(temp, 'yo');
-
-        let a = temp;
-        setPayment(a);
-        console.log(payment, 'payment aaa');
-
-        // console.log(payment, 'payment');
+        setPayment(temp);
     };
 
     const handleChangePrice = (e: string) => {
