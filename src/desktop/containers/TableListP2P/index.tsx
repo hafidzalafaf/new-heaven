@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import {
     selectUserLoggedIn,
-    Offer,
     offersFetch,
     RootState,
     selectP2POffers,
@@ -19,7 +18,7 @@ import {
     selectP2PFiatsData,
     p2pCurrenciesFetch,
     selectP2PCurrenciesData,
-    p2pOfferCreate,
+    orderCreate,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import { RefreshIcon, CheckIcon, CloseIcon, NoDataIcon } from 'src/assets/images/P2PIcon';
@@ -27,6 +26,7 @@ import { CustomStylesSelect, ModalCreateOffer } from '../../../desktop/component
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
 import { CustomStyleFiat } from './CustomStyleFiat';
+import { CustomStylePaymentOrder } from './CustomStylePaymentOrder';
 
 export const TableListP2P = () => {
     const dispatch = useDispatch();
@@ -60,6 +60,15 @@ export const TableListP2P = () => {
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
+
+    /* ========== ORDER CREATE STATE START ========== */
+    const [price_actual, setPriceActual] = React.useState<string | number>();
+    const [payment_option, setPaymentOption] = React.useState([]);
+    const [offer_number, setOfferNumber] = React.useState('');
+    const [price, setPrice] = React.useState('');
+    const [amount, setAmount] = React.useState('');
+    const [payment_order, setPaymentOrder] = React.useState('');
+    /* ========== ORDER CREATE STATE END ========== */
 
     React.useEffect(() => {
         if (currency !== undefined && fiat !== undefined) {
@@ -95,8 +104,58 @@ export const TableListP2P = () => {
         return { label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>, value: item.payment_user_id };
     });
 
+    const optionPaymentOrder = payment_option?.map((item) => {
+        return { label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>, value: item.payment_user_id };
+    });
+
+    React.useEffect(() => {
+        const temp = +price / +price_actual;
+        if (price && price_actual) {
+            setAmount(temp.toString());
+        } else if (!price) {
+            setAmount('');
+        }
+    }, [price, price_actual]);
+
     const handleCloseModalCreateOffer = () => {
         setShowModalCreateOffer(false);
+    };
+
+    const handleCreacteOrder = () => {
+        const payloadSell = {
+            offer_number,
+            price,
+            amount,
+            payment_order,
+        };
+
+        const payloadBuy = {
+            offer_number,
+            price,
+            amount,
+        };
+
+        dispatch(orderCreate(side == 'buy' ? payloadBuy : payloadSell));
+        resetForm();
+    };
+
+    const handleChangePrice = (e: string) => {
+        setPrice(e);
+    };
+
+    const handleChangePaymentOrder = (e: string) => {
+        setPaymentOrder(e);
+    };
+
+    const handleChangeOfferNumber = (e: string) => {
+        setOfferNumber(e);
+    };
+
+    const resetForm = () => {
+        setPaymentOrder('');
+        setOfferNumber('');
+        setAmount('');
+        setPrice('');
     };
 
     return (
@@ -200,6 +259,8 @@ export const TableListP2P = () => {
                                         key={i}
                                         onClick={() => {
                                             !expandBuy && setExpandBuy(buy.offer_number);
+                                            handleChangeOfferNumber(buy?.offer_number);
+                                            setPriceActual(buy?.price);
                                         }}
                                         className="white-text border-table cursor-pointer">
                                         {expandBuy === buy.offer_number ? (
@@ -225,6 +286,7 @@ export const TableListP2P = () => {
                                                         className="btn-close"
                                                         onClick={() => {
                                                             setExpandBuy('');
+                                                            resetForm();
                                                         }}>
                                                         <CloseIcon />
                                                     </span>
@@ -277,6 +339,9 @@ export const TableListP2P = () => {
                                                             <input
                                                                 type="text"
                                                                 placeholder={'00.00'}
+                                                                value={price}
+                                                                onChange={(e) => handleChangePrice(e.target.value)}
+                                                                required
                                                                 className="form-control input-p2p-form white-text"
                                                             />
                                                             <label className="input-label-right text-sm grey-text position-absolute">
@@ -291,6 +356,8 @@ export const TableListP2P = () => {
                                                             <input
                                                                 type="text"
                                                                 placeholder={'00.00'}
+                                                                value={amount}
+                                                                required
                                                                 className="form-control input-p2p-form white-text"
                                                             />
                                                             <label className="input-label-right text-sm grey-text position-absolute">
@@ -299,10 +366,16 @@ export const TableListP2P = () => {
                                                         </div>
 
                                                         <div className="d-flex align-items-center justify-content-between w-100 btn-container">
-                                                            <button className="w-50 btn-secondary grey-text">
+                                                            <button
+                                                                type="button"
+                                                                onClick={resetForm}
+                                                                className="w-50 btn-secondary grey-text">
                                                                 Cancel
                                                             </button>
-                                                            <button className="w-50 btn-primary">
+                                                            <button
+                                                                type="button"
+                                                                onClick={handleCreacteOrder}
+                                                                className="w-50 btn-primary">
                                                                 Buy {currency?.toUpperCase()}
                                                             </button>
                                                         </div>
@@ -417,6 +490,9 @@ export const TableListP2P = () => {
                                         key={i}
                                         onClick={() => {
                                             !expandSell && setExpandSell(sell.offer_number);
+                                            handleChangeOfferNumber(sell?.offer_number);
+                                            setPriceActual(sell?.price);
+                                            setPaymentOption(sell?.payment);
                                         }}
                                         className="white-text border-table cursor-pointer">
                                         {expandSell === sell.offer_number ? (
@@ -442,6 +518,7 @@ export const TableListP2P = () => {
                                                         className="btn-close"
                                                         onClick={() => {
                                                             setExpandSell('');
+                                                            resetForm();
                                                         }}>
                                                         <CloseIcon />
                                                     </span>
@@ -494,6 +571,9 @@ export const TableListP2P = () => {
                                                             <input
                                                                 type="text"
                                                                 placeholder={'00.00'}
+                                                                value={price}
+                                                                onChange={(e) => handleChangePrice(e.target.value)}
+                                                                required
                                                                 className="form-control input-p2p-form white-text"
                                                             />
                                                             <label className="input-label-right text-sm grey-text position-absolute">
@@ -501,13 +581,15 @@ export const TableListP2P = () => {
                                                             </label>
                                                         </div>
 
-                                                        <div className="position-relative mb-44">
+                                                        <div className="position-relative mb-24">
                                                             <label className="white-text text-xs font-semibold mb-8">
                                                                 I Will Recieve
                                                             </label>
                                                             <input
                                                                 type="text"
                                                                 placeholder={'00.00'}
+                                                                value={amount}
+                                                                required
                                                                 className="form-control input-p2p-form white-text"
                                                             />
                                                             <label className="input-label-right text-sm grey-text position-absolute">
@@ -515,11 +597,33 @@ export const TableListP2P = () => {
                                                             </label>
                                                         </div>
 
+                                                        <div className="position-relative mb-44">
+                                                            <label className="white-text text-xs font-semibold mb-8">
+                                                                Payment Method
+                                                            </label>
+                                                            <Select
+                                                                value={optionPaymentOrder?.filter(function (option) {
+                                                                    return option.value === payment_order;
+                                                                })}
+                                                                styles={CustomStylePaymentOrder}
+                                                                options={optionPaymentOrder}
+                                                                onChange={(e) => {
+                                                                    handleChangePaymentOrder(e.value);
+                                                                }}
+                                                            />
+                                                        </div>
+
                                                         <div className="d-flex align-items-center justify-content-between w-100 btn-container">
-                                                            <button className="w-50 btn-secondary grey-text">
+                                                            <button
+                                                                type="button"
+                                                                onClick={resetForm}
+                                                                className="w-50 btn-secondary grey-text">
                                                                 Cancel
                                                             </button>
-                                                            <button className="w-50 btn-primary">
+                                                            <button
+                                                                type="button"
+                                                                onClick={handleCreacteOrder}
+                                                                className="w-50 btn-primary">
                                                                 Sell {currency?.toUpperCase()}
                                                             </button>
                                                         </div>

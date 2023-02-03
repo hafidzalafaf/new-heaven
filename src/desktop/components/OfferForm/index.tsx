@@ -155,7 +155,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                         options={optionPayment}
                         onChange={(e) => {
                             handleChangePayment(e);
-                            console.log(payment);
+                            // console.log(payment);
                         }}
                     />
                 </div>
