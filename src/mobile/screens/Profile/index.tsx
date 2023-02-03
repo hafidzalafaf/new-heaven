@@ -23,6 +23,8 @@ import { ModalResetPassword } from '../../assets/Modal';
 import { titleCase, dateTo12HFormat } from 'src/helpers';
 import { CustomInput } from 'src/desktop/components';
 import { GearIcon } from 'src/mobile/assets/Gear';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 // import { dateTo12HFormat } from 'src/helpers';
 
@@ -207,16 +209,15 @@ const ProfileMobileScreen: React.FC = () => {
                 <div className="form">
                     {(isChangeNumber || !user.phones[0]) && (
                         <div className="form-group mb-24">
-                            <CustomInput
-                                defaultLabel={`${!user.phones[0] ? '' : 'New'} Phone Number`}
-                                inputValue={newPhoneValue}
-                                label={`${!user.phones[0] ? '' : 'New'} Phone Number`}
-                                placeholder="+6281902912921"
-                                type="text"
-                                labelVisible
-                                classNameLabel="white-text text-sm"
-                                isDisabled={user.phones.length === 4}
-                                handleChangeInput={(e) => handleChangePhoneValue(e)}
+                            <label htmlFor="" className="text-sm white-text">{`${
+                                !user.phones[0] ? '' : 'New'
+                            } Phone Number`}</label>
+                            <PhoneInput
+                                country={'id'}
+                                value={newPhoneValue}
+                                onChange={(e) => handleChangePhoneValue(e)}
+                                placeholder={''}
+                                disabled={user.phones.length === 4}
                             />
                         </div>
                     )}
@@ -399,9 +400,10 @@ const ProfileMobileScreen: React.FC = () => {
                                             : 'Verified'}
                                     </p>
                                 </div>
-                                {user.labels[3] && user.phones && user.phones[0] && user.phones[0].validated_at !== null && (
-                                    <CheckIcon className="check-icon" />
-                                )}
+                                {user.labels[3] &&
+                                    user.phones &&
+                                    user.phones[0] &&
+                                    user.phones[0].validated_at !== null && <CheckIcon className="check-icon" />}
                             </div>
                         </div>
                     </div>

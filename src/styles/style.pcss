@@ -777,6 +777,65 @@ button[disabled] {
 .overflow-x-scroll {
     overflow-x: scroll !important;
 }
+
+.react-tel-input .form-control {
+    width: 100%;
+    height: 48px;
+    border: 1px solid var(--input-border-color);
+    background: var(--body-background-color);
+    border-radius: 8px;
+}
+
+.react-tel-input .flag-dropdown {
+    background: var(--body-background-color);
+    border-color: var(--input-border-color);
+    border-right: 0;
+    border-radius: 8px 0 0 8px;
+    &:hover,
+    &:focus {
+        background: var(--body-background-color) !important;
+        border-color: var(--input-border-color) !important;
+    }
+    .selected-flag {
+        &:hover {
+            background: var(--body-background-color) !important;
+            border-color: var(--input-border-color) !important;
+            border-radius: 8px;
+        }
+        &.open {
+            background: var(--body-background-color) !important;
+        }
+    }
+}
+
+.form-control {
+    color: var(--text-primary-color) !important;
+    &:focus {
+        box-shadow: 0 0 0 0;
+    }
+}
+
+.react-tel-input .country-list {
+    background: var(--body-background-color);
+
+    .country-name {
+        color: var(--text-primary-color);
+    }
+
+    .dial-code {
+        color: var(--text-secondary-color);
+    }
+
+    .country {
+        &:hover {
+            background: var(--main-background-color);
+        }
+
+        &.highlight {
+            background: var(--main-background-color) !important;
+        }
+    }
+}
 /* another css variable */
 
 /* MOBILE VARIABLE */

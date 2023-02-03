@@ -202,8 +202,8 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
 
     const handleToggleCheckbox = React.useCallback(
         (event) => {
-            event.preventDefault();
             setNonZeroSelected(!nonZeroSelected);
+            event.preventDefault();
         },
         [nonZeroSelected, setNonZeroSelected]
     );
@@ -280,19 +280,23 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                         </button>
                     </div>
                 </div>
-                <div className="d-flex justify-content-between align-items-center w-100 mt-3 mb-16">
-                    <form onClick={handleToggleCheckbox} className="form-group form-check mb-0">
-                        <input
-                            type="checkbox"
-                            id="nonZeroSelected"
-                            checked={nonZeroSelected}
-                            // readOnly={true}
-                            className="form-check-input"
-                        />
+                <div  className="d-flex justify-content-between align-items-center w-100 mt-3 mb-16">
+                    <div onClick={handleToggleCheckbox} className="form-group form-check mb-0">
+                        {
+                        nonZeroSelected === true ?
+                        <svg xmlns="http://www.w3.org/2000/svg" className='form-check-input' fill="#00a7ff" width="16px" height="16px" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg> :
+                        <svg width="16px" height="16px" fill='#ffffff' className='form-check-input rounded-lg' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <path fill="none" d="M0 0h24v24H0z"/>
+                            <path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
+                        </g>
+                        </svg>
+                        }
                         <label className="form-check-label text-sm font-semibold white-text" htmlFor="nonZeroSelected">
                             {formatMessage({ id: 'page.mobile.wallets.hideSmallBalance' })}
                         </label>
-                    </form>
+                    </div>
                     {/* <SearchIcon /> */}
 
                     <div className="text-right">
