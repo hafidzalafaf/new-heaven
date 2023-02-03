@@ -23,7 +23,7 @@ export function* orderCreateSaga(action: OrderCreate) {
     try {
         yield call(axios.post, `http://192.168.1.56:3001/api/v1/market/orders`, action.payload, config);
         yield put(orderCreateData());
-        yield put(alertPush({ message: ['success.feedback.created'], type: 'success' }));
+        yield put(alertPush({ message: ['success.order.created'], type: 'success' }));
     } catch (error) {
         yield put(
             sendError({
