@@ -21,6 +21,7 @@ import {
     selectMobileDeviceState,
     selectWallets,
     Ticker,
+    Market,
     orderExecuteFetch,
     selectOrderExecuteLoading,
 } from '../../../modules';
@@ -38,6 +39,7 @@ import { CloseIconTrade } from 'src/assets/images/CloseIcon';
 import { localeDate, setTradeColor, getTotalPrice, getAmount } from '../../../helpers';
 import { getTriggerSign } from './helpers';
 import { Modal } from 'src/desktop/components';
+import { FilterInput } from 'src/desktop/components';
 
 export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     const { currency } = useParams<{ currency?: string }>();
@@ -82,6 +84,8 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     const [amountSell, setAmountSell] = React.useState('');
     const [totalSell, setTotalSell] = React.useState('');
     const [side, setSide] = React.useState<OrderSide>('buy');
+    const [filterValue, setFilterValue] = React.useState<string>('');
+    const [filteredMarket, setFilteredMarket] = React.useState([]);
 
     useDocumentTitle('Trading');
     useOpenOrdersFetch(currentMarket, hideOtherPairs);
@@ -503,6 +507,24 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     const handleShowModalCancelAll = () => {
         setShowModalCancelAll(true);
     };
+    const searchFilter = (row: Market, searchKey: string) => {
+        setFilterValue(searchKey);
+        return row
+            ? row.name?.toLowerCase().includes(searchKey.toLowerCase()) ||
+                  row.id?.toLowerCase().includes(searchKey.toLowerCase())
+            : false;
+    };
+
+    const handleFilter = (result: object[]) => {
+        setFilteredMarket(result as Market[]);
+    };
+
+    const filteredList = marketList.filter(
+        (i) =>
+            !filterValue ||
+            i.name?.toLocaleLowerCase().includes(filterValue.toLowerCase()) ||
+            i.id?.toLocaleLowerCase().includes(filterValue.toLowerCase())
+    );
 
     const headersKeys = useMemo(
         () => [
@@ -761,25 +783,25 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                             </div>
                             <div className="search-container w-100 mb-16">
                                 <div className="input-group">
-                                    <input
+                                    {/* <input
                                         type="text"
                                         className="form-control"
                                         placeholder="Search"
                                         aria-label="Username"
                                         aria-describedby="basic-addon1"
-                                    />
+                                    /> */}
                                     <div className="input-group-append">
-                                        {/* <FilterInput
-                                                data={wallets}
-                                                onFilter={handleFilter}
-                                                filter={searchFilter}
-                                                placeholder={formatMessage({ id: 'page.body.wallets.overview.seach' })}
-                                                className="search-wallet"
-                                            /> */}
+                                        <FilterInput
+                                            data={marketList}
+                                            onFilter={handleFilter}
+                                            filter={searchFilter}
+                                            placeholder={'Search Coin'}
+                                            className="filter-market-trade"
+                                        />
                                     </div>
                                 </div>
                             </div>
-                            <Table data={renderSidebarData(marketList)} header={renderHeaderData} />
+                            <Table data={renderSidebarData(filteredList)} header={renderHeaderData} />
                         </div>
                         <div
                             id="close-sidebar"

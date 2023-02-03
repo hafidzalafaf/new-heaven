@@ -456,7 +456,8 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                             ? 'Add'
                             : this.state.phone[0] && this.state.phone[0].validated_at === null
                             ? 'Verify'
-                            : this.state.isChangeNumber
+                            : this.state.isChangeNumber ||
+                              (this.state.phone[0] && this.state.phone[0].validated_at !== null)
                             ? 'Change'
                             : ''}
                     </button>
@@ -473,7 +474,8 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                         ? 'Add Phone Number'
                         : this.state.phone[0] && this.state.phone[0].validated_at === null && !this.state.isChangeNumber
                         ? 'Verify Phone Number'
-                        : this.state.isChangeNumber
+                        : this.state.isChangeNumber ||
+                          (this.state.phone[0] && this.state.phone[0].validated_at !== null)
                         ? 'Change Phone Number'
                         : ''}
                 </h6>
@@ -519,7 +521,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
     };
 
     public disabledButtonCode = () => {
-        if (this.state.phone[0]?.validate_at == null && !this.state.isChangeNumber) {
+        if (this.state.phone[0]?.validate_at == null && !this.state.isChangeNumber && !this.state.timerActive) {
             return false;
         }
 

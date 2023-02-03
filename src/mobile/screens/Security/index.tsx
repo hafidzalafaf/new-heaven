@@ -525,7 +525,7 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
     };
 
     public disabledButton = () => {
-        if (this.state.phone[0]?.validate_at === null && !this.state.isChangeNumber) {
+        if (this.state.phone[0]?.validate_at === null && !this.state.isChangeNumber && !this.state.timerActive) {
             return false;
         }
 

@@ -134,7 +134,7 @@ const ChangePasswordMobileScreen: React.FC = () => {
         <React.Fragment>
             <div className="mobile-container change-password no-header home-screen dark-bg-main">
                 <div className="head-container position-relative">
-                    <Link to={''} className="cursor-pointer position-absolute">
+                    <Link to={'/profile'} className="cursor-pointer position-absolute">
                         <ArrowLeft className={'back'} />
                     </Link>
                     <h1 className="text-center text-md grey-text-accent font-bold">Profile Setting</h1>

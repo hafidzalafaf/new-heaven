@@ -21,8 +21,6 @@ export interface ModalTransferShowProps {
 }
 
 export const ModalInternalTransfer: React.FunctionComponent<ModalTransferShowProps> = (props) => {
-    const intl = useIntl();
-    const history = useHistory();
     const dispatch = useDispatch();
     const { currency = '' } = useParams<{ currency?: string }>();
 

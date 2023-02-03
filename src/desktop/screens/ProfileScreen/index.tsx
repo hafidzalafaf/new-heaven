@@ -335,7 +335,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                             ? 'Add'
                             : phone[0] && phone[0].validated_at === null
                             ? 'Verify'
-                            : isChangeNumber
+                            : isChangeNumber || (phone[0] && phone[0].validated_at !== null)
                             ? 'Change'
                             : ''}
                     </button>
@@ -352,7 +352,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                         ? 'Add Phone Number'
                         : phone[0] && phone[0].validated_at === null && !isChangeNumber
                         ? 'Verify Phone Number'
-                        : isChangeNumber
+                        : isChangeNumber || (phone[0] && phone[0].validated_at !== null)
                         ? 'Change Phone Number'
                         : ''}
                 </h6>
