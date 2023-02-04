@@ -199,7 +199,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                 />
                                 <div>
                                     <p className="m-0 text-sm grey-text-accent">
-                                        {currencyItem && currencyItem.id.toUpperCase()}
+                                        {currencyItem && currencyItem.id?.toUpperCase()}
                                     </p>
                                     <p className="m-0 text-xs grey-text-accent">{currencyItem && currencyItem.name}</p>
                                 </div>
@@ -321,7 +321,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                 <div className="my-3">
                                     <p className="mb-0 text-sm grey-text-accent">Balance</p>
                                     <p className="mb-0 text-base grey-text-accent font-bold">
-                                        {wallet.balance} {currency.toUpperCase()}
+                                        {wallet.balance} {currency?.toUpperCase()}
                                     </p>
                                 </div>
                             )}
@@ -332,7 +332,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                     })}
                                 </p>
                                 <p className="mb-0 text-base grey-text-accent font-bold">
-                                    {amount !== '' ? amount : '0'} {currency.toUpperCase()}
+                                    {amount !== '' ? amount : '0'} {currency?.toUpperCase()}
                                 </p>
                             </div>
                         </div>
@@ -400,7 +400,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                 })}{' '}
                                 <span>
                                     {' '}
-                                    {amount !== '' ? amount : '0'} {currency.toUpperCase()}{' '}
+                                    {amount !== '' ? amount : '0'} {currency?.toUpperCase()}{' '}
                                 </span>{' '}
                                 {formatMessage({
                                     id: 'page.mobile.withdraw.modal.info2',

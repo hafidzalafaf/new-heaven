@@ -1,7 +1,13 @@
-import * as React from 'react'
-import { ArrowLeft } from 'src/mobile/assets/Arrow'
-import { useHistory } from 'react-router-dom'
-import { useDocumentTitle, useWalletsFetch, useUserOrdersHistoryFetch, useMarketsFetch, useHistoryFetch } from '../../../hooks';
+import * as React from 'react';
+import { ArrowLeft } from 'src/mobile/assets/Arrow';
+import { useHistory } from 'react-router-dom';
+import {
+    useDocumentTitle,
+    useWalletsFetch,
+    useUserOrdersHistoryFetch,
+    useMarketsFetch,
+    useHistoryFetch,
+} from '../../../hooks';
 import {
     selectCurrencies,
     Currency,
@@ -10,7 +16,7 @@ import {
     selectFirstElemIndex,
     selectLastElemIndex,
     selectNextPageExists,
-    selectHistory
+    selectHistory,
 } from '../../../modules';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -57,17 +63,16 @@ const OrderHistoryMobileScreen: React.FC = () => {
     const orders = useSelector(selectHistory);
     const currencies: Currency[] = useSelector(selectCurrencies);
 
-            // Handle get item pagination
-            const firstElementIndex = useSelector((state: RootState) => selectFirstElemIndex(state, 5));
-            const lastElementIndex = useSelector((state: RootState) => selectLastElemIndex(state, 5));
-            const nextPageExists = useSelector((state: RootState) => selectNextPageExists(state, 5));
+    // Handle get item pagination
+    const firstElementIndex = useSelector((state: RootState) => selectFirstElemIndex(state, 8));
+    const lastElementIndex = useSelector((state: RootState) => selectLastElemIndex(state, 8));
+    const nextPageExists = useSelector((state: RootState) => selectNextPageExists(state, 8));
 
-    useHistoryFetch({page: currentPageIndex, type: 'trades', limit: 5});
-    
-    
+    useHistoryFetch({ page: currentPageIndex, type: 'trades', limit: 8 });
+
     const dataListWithIcon = orders.map((item) => ({
         ...item,
-        dataCurrency: currencies.find(({ id }) => id == item.fee_currency )
+        dataCurrency: currencies.find(({ id }) => id == item.fee_currency),
     }));
 
     const onClickPrevPage = () => {
@@ -99,8 +104,8 @@ const OrderHistoryMobileScreen: React.FC = () => {
             </div>,
             <div className="d-flex align-items-center text-sm">
                 <div className="">
-                    <p className="mb-0 grey-text-accent font-bold text-sm">
-                        {item.price} {item.market.toUpperCase()}
+                    <p className="mb-0 grey-text-accent font-bold text-sm text-nowrap">
+                        {item.price} {item.market?.toUpperCase()}
                     </p>
                     <p className="mb-0 grey-text text-xxs text-nowrap">
                         {moment(item.created_at).format('D MMM YYYY')}
@@ -108,7 +113,9 @@ const OrderHistoryMobileScreen: React.FC = () => {
                 </div>
             </div>,
             <p className={`badge grey-text text-sm mb-0`}>{item.price}</p>,
-            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>{item.side.charAt(0).toUpperCase() + item.side.slice(1)}</p>,
+            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>
+                {item.side?.charAt(0)?.toUpperCase() + item.side?.slice(1)}
+            </p>,
             <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>Done</p>,
             // <p key={index} className={`badge text-sm mb-0 cursor-pointer danger-text`} onClick={()=> handleItemDetail(data[index])}>
             //     Detail

@@ -158,7 +158,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     <div className="d-flex flex-column justify-content-start align-items-start">
                         <h3 className="p-0 m-0 grey-text-accent text-sm font-bold">Amount</h3>
                         <h4 className="p-0 m-0 grey-text text-sm font-bold text-nowrap">
-                            {item.amount} {item.currency.toUpperCase()}
+                            {item.amount} {item.currency?.toUpperCase()}
                         </h4>
                     </div>
                 </div>,
