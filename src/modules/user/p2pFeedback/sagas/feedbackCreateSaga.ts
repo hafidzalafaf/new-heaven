@@ -16,10 +16,10 @@ export function* feedbackCreateSaga(action: FeedbackCreate) {
     try {
         let params = '';
         if (action.payload) {
-            params = `?${buildQueryString(action.payload)}`;
+            params = `?${buildQueryString(action.payload.order_number)}`;
         }
-        const payload = yield call(API.post(config(getCsrfToken())), `/market/feedback/${params}`, action.payload);
-        yield put(feedbackCreateData(payload));
+        yield call(API.post(config(getCsrfToken())), `/market/feedback/${params}`, action.payload);
+        yield put(feedbackCreateData());
         yield put(alertPush({ message: ['success.feedback.created'], type: 'success' }));
     } catch (error) {
         yield put(
