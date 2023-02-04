@@ -21,12 +21,11 @@ export interface OrderError {
 
 export interface OrderCreate {
     type: typeof ORDER_CREATE;
-    error: CommonError;
+    payload: Order;
 }
 
 export interface OrderCreateData {
     type: typeof ORDER_CREATE_DATA;
-    payload: Order;
 }
 
 export interface OrderCreateError {
@@ -51,14 +50,13 @@ export const orderError = (error: CommonError): OrderError => ({
     error,
 });
 
-export const orderCreate = (error: CommonError): OrderCreate => ({
+export const orderCreate = (payload: OrderCreate['payload']): OrderCreate => ({
     type: ORDER_CREATE,
-    error,
+    payload,
 });
 
-export const orderCreateData = (payload: OrderCreateData['payload']): OrderCreateData => ({
+export const orderCreateData = (): OrderCreateData => ({
     type: ORDER_CREATE_DATA,
-    payload,
 });
 
 export const orderCreateError = (error: CommonError): OrderCreateError => ({

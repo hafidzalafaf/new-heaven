@@ -20,8 +20,8 @@ const config = {
 
 export function* p2pCreateOfferSaga(action: P2POfferCreate) {
     try {
-        const payload = yield call(axios.post, `http://192.168.1.56:3001/api/v1/market/trades`, config);
-        yield put(p2pOfferCreateData(payload));
+        yield call(axios.post, `http://192.168.1.56:3001/api/v1/market/trades`, action.payload, config);
+        yield put(p2pOfferCreateData());
         yield put(alertPush({ message: ['success.feedback.created'], type: 'success' }));
     } catch (error) {
         yield put(

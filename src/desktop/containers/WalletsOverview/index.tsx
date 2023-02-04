@@ -144,7 +144,7 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
         return !filteredList.length && !filterValue
             ? [[[''], [''], <Loading />, [''], [''], ['']]]
             : !filteredList.length && !loading
-            ? [[]]
+            ? [['no data found']]
             : filteredList.map((item, index) => {
                   const { currency, iconUrl, name, fixed, spotBalance, spotLocked, p2pBalance, p2pLocked } = item;
                   const totalBalance =

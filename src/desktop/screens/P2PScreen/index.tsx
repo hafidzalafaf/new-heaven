@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { useDocumentTitle } from '../../../hooks';
 import { HeaderP2P, BannerP2P, TableListP2P } from '../../containers';
+import { Modal } from 'src/desktop/components';
 
 export const P2PScreen: React.FC = () => {
     useDocumentTitle('P2P');
+    // const [showModalAnn]
+
+    const renderModalAnnouncement = () => {
+        return <p>AAAA</p>;
+    };
 
     return (
         <React.Fragment>

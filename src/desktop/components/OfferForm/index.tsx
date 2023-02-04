@@ -15,12 +15,13 @@ export interface OfferFormProps {
     min_order: string;
     max_order: string;
     payment: any;
+    paymentValue: any;
     payment_limit: string;
     term_of_condition: string;
     auto_replay: string;
     handleChangeFiat: (e: string) => void;
     handleChangeCurrency: (e: string) => void;
-    handleChangePayment: (e: string) => void;
+    handleChangePayment: (e: any) => void;
     handleChangePrice: (e: string) => void;
     handleChangeTradeAmount: (e: string) => void;
     handleChangeMinOrder: (e: string) => void;
@@ -45,6 +46,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
         min_order,
         max_order,
         payment,
+        paymentValue,
         payment_limit,
         term_of_condition,
         auto_replay,
@@ -63,7 +65,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
 
     return (
         <React.Fragment>
-            <form onSubmit={handleCreateOffer} className="com-form-crete-offer">
+            <form className="com-form-crete-offer">
                 <div>
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">CRYPTOCURRENCY</p>
                     <Select
@@ -147,13 +149,12 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                 <div>
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">PAYMENT METHOD</p>
                     <Select
-                        value={optionPayment.filter(function (option) {
-                            return option.value === payment;
-                        })}
+                        isMulti
+                        value={paymentValue}
                         styles={CustomStylesSelect}
                         options={optionPayment}
                         onChange={(e) => {
-                            handleChangePayment(e.value);
+                            handleChangePayment(e);
                         }}
                     />
                 </div>
@@ -191,7 +192,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     />
                 </div>
 
-                <button type="submit" className="btn-secondary w-100 mb-24">
+                <button type="button" onClick={handleCreateOffer} className="btn-secondary w-100 mb-24">
                     Create Offers
                 </button>
                 <button type="button" onClick={onCloseModal} className="danger-text btn-danger btn-outline w-100">

@@ -165,7 +165,7 @@ const SignUpMobileScreen: React.FC = () => {
             data: JSON.stringify({
                 language: i18n,
             }),
-            ...(isUsernameEnabled() && { usernameValue }),
+            ...(isUsernameEnabled() && { username: usernameValue }),
             ...(referralValue && { refid: referralValue }),
             ...(captchaType() !== 'none' && { captcha_response }),
         };

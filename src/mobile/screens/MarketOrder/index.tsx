@@ -364,14 +364,14 @@ const MarketOrderMobileScreen: React.FC = () => {
                 <div className="d-flex justify-content-between align-items-center head-container">
                     <h1 className="text-md font-extrabold mb-0 grey-text-accent">Market Order</h1>
 
-                    <div className="d-flex justify-content-start align-items-center head-action">
+                    {/* <div className="d-flex justify-content-start align-items-center head-action">
                         <span className="mr-8">
                             <FilterIcon />
                         </span>
                         <span>
                             <EditIcon />
                         </span>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="position-relative">

@@ -9,11 +9,13 @@ export interface PublicTrade {
     created_at: string;
     taker_type: string;
     price_change?: string;
+    fee_currency?: string;
 }
 
 export interface PrivateTrade extends PublicTrade {
     side?: string;
     order_id?: number;
+    fee_currency?: string;
 }
 
 export interface PrivateTradeEvent {
@@ -27,7 +29,7 @@ export interface PrivateTradeEvent {
     taker_type: string;
     side?: string;
     order_id?: number;
-    fee_currency: string;
+    fee_currency?: string;
 }
 
 export interface PrivateTradesState extends CommonState {
@@ -51,6 +53,7 @@ export interface Withdraw {
     completed_at: string;
     done_at: string;
     price?: number;
+    fee_currency?: string;
 }
 
 export interface Deposit {
@@ -65,6 +68,7 @@ export interface Deposit {
     completed_at: string;
     state: string;
     price?: number;
+    fee_currency?: string;
 }
 
 export type WalletHistoryElement = Withdraw | Deposit | PrivateTrade;

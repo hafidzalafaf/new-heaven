@@ -31,3 +31,4 @@ export * from './Security';
 export * from './DeviceManagementMobileScreen';
 export * from './OrderHistoryMobileScreen';
 export * from './AnnouncementMobileScreen';
+export * from './FAQMobileScreen';

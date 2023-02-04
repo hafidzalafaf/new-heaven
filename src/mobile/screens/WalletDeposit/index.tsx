@@ -4,16 +4,19 @@ import { Link, useHistory, useParams, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { alertPush, Currency, selectCurrencies, walletsAddressFetch, selectWallets, Wallet } from '../../../modules';
 import { useWalletsFetch, useDocumentTitle } from '../../../hooks';
-import { QRCode } from '../../../components';
+//import { QRCode } from '../../../components';
 import { copy } from '../../../helpers';
 import { DEFAULT_WALLET } from '../../../constants';
 import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow';
-import { InfoWarningIcon } from '../../../assets/images/InfoIcon';
+import { InfoModalNetworkIcon, InfoWarningIcon } from '../../../assets/images/InfoIcon';
 import { CopyButton } from '../../../assets/images/CopyButton';
 import { HelpIcon } from 'src/mobile/assets/Help';
 import { ModalMobile } from 'src/mobile/components';
+import { Modal } from 'react-bootstrap';
+import QRCode from 'react-qr-code';
 
 import { ModalFullScreenMobile } from 'src/mobile/components';
+import { CircleCloseModalNetworkIcon } from 'src/assets/images/CircleCloseIcon';
 
 type LocationProps = {
     state: {
@@ -37,6 +40,7 @@ const WalletDepositMobileScreen: React.FC = () => {
     const [address, setAddress] = React.useState('');
     const [showFAQ, setShowFAQ] = React.useState(false);
     const [showFAQDetail, setShowFAQDetail] = React.useState(false);
+    const [showNetworkModal, setShowNetworkModal] = React.useState(false);
 
     const wallet: Wallet = wallets.find((item) => item.currency === currency) || DEFAULT_WALLET;
     const currencies: Currency[] = useSelector(selectCurrencies);
@@ -45,6 +49,10 @@ const WalletDepositMobileScreen: React.FC = () => {
         deposit_enabled: false,
     };
 
+    const handleSelectNetwork = (blockchain_key, protocol) => {
+        history.push(`/wallets/${currencyItem.id}/deposit`, { blockchain_key: blockchain_key, protocol: protocol });
+    };
+    
     const blockchain = (protocol &&
         currencyItem &&
         currencyItem.networks &&
@@ -100,11 +108,26 @@ const WalletDepositMobileScreen: React.FC = () => {
         );
     };
 
+    const closeFAQDetail = () => {
+        setShowFAQDetail(false);
+        setShowFAQ(true);
+    };
+
+    const openFAQDetail = () => {
+        setShowFAQDetail(true);
+        setShowFAQ(false);
+    };
+
+    const handleSelectChangeNetwork = (item) => {
+        handleSelectNetwork(item && item.blockchain_key, item && item.protocol);
+        setShowNetworkModal(false)
+    };
+
     const renderContentFAQMobile = () => {
         return (
             <>
                 <div className="list-faq grey-text-accent">
-                    <div onClick={() => setShowFAQDetail(!showFAQDetail)} className="d-flex justify-content-between cursor-pointer mb-3 align-items-start pb-1 text-sm">
+                    <div onClick={openFAQDetail} className="d-flex justify-content-between cursor-pointer mb-3 align-items-start pb-1 text-sm">
                         <span>How To Deposit</span>
                         <span>
                             <ArrowRight className={''} />
@@ -156,7 +179,7 @@ const WalletDepositMobileScreen: React.FC = () => {
     const renderFAQDetailHeader = () => {
         return (
             <div className="mt-3 px-12">
-                <div onClick={() => setShowFAQDetail(!showFAQDetail)} className="cursor-pointer">
+                <div onClick={closeFAQDetail} className="cursor-pointer">
                     <ArrowLeft className={''} />
                 </div>
                 <h1 className="font-semibold navbar-brand grey-text-accent mt-3">How to Deposit</h1>
@@ -164,71 +187,46 @@ const WalletDepositMobileScreen: React.FC = () => {
         );
     };
 
-    const renderFAQDetailContent = ()=> {
+    const renderFAQDetailContent = () => {
         return (
             <div className="w-100">
                 <div className="mb-3 d-flex flex-row align-top justify-content-around">
-                    <img
-                    className='align-top'
-                    height={34}
-                    width={34}
-                    src='/img-mobile/faq/no1.svg'
-                    />
-                    <div className='w-80'>
-                    <h5 className="font-semibold white-text">Copy Address</h5>
-                    <p className="text-sm grey-text-accent">
-                    Choose the crypto and its network on this page, and copy the deposit address
-                    </p>
+                    <img className="align-top" height={34} width={34} src="/img-mobile/faq/no1.svg" />
+                    <div className="w-80">
+                        <h5 className="font-semibold white-text">Copy Address</h5>
+                        <p className="text-sm grey-text-accent">
+                            Choose the crypto and its network on this page, and copy the deposit address
+                        </p>
                     </div>
                 </div>
                 <div className="mb-3 d-flex flex-row align-top justify-content-around">
-                    <img
-                    className='align-top'
-                    height={34}
-                    width={34}
-                    src='/img-mobile/faq/no2.svg'
-                    />
-                    <div className='w-80'>
-                    <h5 className="font-semibold white-text">Initiate a Withdrawal</h5>
-                    <p className="text-sm grey-text-accent">
-                    Initiate a withdrawal on the withdrawal platform.
-                    </p>
+                    <img className="align-top" height={34} width={34} src="/img-mobile/faq/no2.svg" />
+                    <div className="w-80">
+                        <h5 className="font-semibold white-text">Initiate a Withdrawal</h5>
+                        <p className="text-sm grey-text-accent">Initiate a withdrawal on the withdrawal platform.</p>
                     </div>
                 </div>
                 <div className="mb-3 d-flex flex-row align-top justify-content-around">
-                    <img
-                    className='align-top'
-                    height={34}
-                    width={34}
-                    src='/img-mobile/faq/no3.svg'
-                    />
-                    <div className='w-80'>
-                    <h5 className="font-semibold white-text">
-                    Network Confirmation
-                    </h5>
-                    <p className="text-sm grey-text-accent">
-                    Wait for the blockchain network to confirm your transfer.
-                    </p>
+                    <img className="align-top" height={34} width={34} src="/img-mobile/faq/no3.svg" />
+                    <div className="w-80">
+                        <h5 className="font-semibold white-text">Network Confirmation</h5>
+                        <p className="text-sm grey-text-accent">
+                            Wait for the blockchain network to confirm your transfer.
+                        </p>
                     </div>
                 </div>
                 <div className="mb-3 d-flex flex-row align-top justify-content-around">
-                    <img
-                    className='align-top'
-                    height={34}
-                    width={34}
-                    src='/img-mobile/faq/no4.svg'
-                    />
-                    <div className='w-80'>
-                    <h5 className="font-semibold white-text">
-                        Deposit Success
-                    </h5>
-                    <p className="text-sm grey-text-accent">
-                        After the network confirmation,we will credit the crypto for you.
-                    </p>
+                    <img className="align-top" height={34} width={34} src="/img-mobile/faq/no4.svg" />
+                    <div className="w-80">
+                        <h5 className="font-semibold white-text">Deposit Success</h5>
+                        <p className="text-sm grey-text-accent">
+                            After the network confirmation,we will credit the crypto for you.
+                        </p>
                     </div>
                 </div>
-            </div> 
-        )};
+            </div>
+        );
+    };
 
     return (
         <React.Fragment>
@@ -244,16 +242,20 @@ const WalletDepositMobileScreen: React.FC = () => {
                             Deposit {currencyItem && currencyItem.name}
                         </h1>
                         <div onClick={() => setShowFAQ(!showFAQ)} className="cursor-pointer">
-                            <HelpIcon className={''} />
+                            <HelpIcon className={'mr-1'} />
+                            <span className="grey-text-accent text-sm">FAQ</span>
                         </div>
                     </div>
 
                     {/* ========= Render if address has been generated =========== */}
                     {depositAddress && depositAddress.address !== null && (
                         <React.Fragment>
-                            <div className="d-flex justify-content-center align-items-center radius-lg dark-bg-accent w-100 qr-container mb-16">
+                            <div className="d-flex relative justify-content-center align-items-center radius-lg dark-bg-accent w-100 qr-container mb-16">
                                 <div className="card p-1">
-                                    <QRCode dimensions={150} data={depositAddress && depositAddress.address} />
+                                    <QRCode size={200} value={depositAddress && depositAddress.address} />
+                                </div>
+                                <div className="logo-coin d-flex justify-content-center align-items-center">
+                                    <img src={currencyItem.icon_url} alt="" />
                                 </div>
                             </div>
                             <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mb-8">Network</h2>
@@ -267,7 +269,9 @@ const WalletDepositMobileScreen: React.FC = () => {
                                         {currencyItem && currencyItem.id && currencyItem.id.toUpperCase()}
                                     </h3>
                                 </div>
+                                <div className='cursor-pointer' onClick={()=> setShowNetworkModal(!showNetworkModal)}>
                                 <ArrowRight className={''} />
+                                </div>
                             </div>
                             <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mb-8">Address</h2>
                             <div className="d-flex justify-content-between align-items-center mb-24">
@@ -400,7 +404,11 @@ const WalletDepositMobileScreen: React.FC = () => {
             </section>
 
             {showFAQ && (
-                <div className="modal-benericary-list-mobile">
+                <div className="modal-benericary-list-mobile"
+                style={{
+                    zIndex: 10
+                }}
+                >
                     <ModalFullScreenMobile
                         show={showFAQ}
                         header={renderHeaderFAQMobile()}
@@ -410,10 +418,57 @@ const WalletDepositMobileScreen: React.FC = () => {
             )}
 
             {showFAQDetail && (
-                <div className="modal-benericary-list-mobile">
+                <div className="modal-benericary-list-mobile"
+                style={{
+                    zIndex: 9999
+                }}
+                >
                     <ModalMobile show={showFAQDetail} header={renderFAQDetailHeader()} content={renderFAQDetailContent()} />
                 </div>
             )}
+
+            {
+                showNetworkModal && (
+                    <Modal
+                    dialogClassName="modal-transfer-fullscreen"
+                        show={showNetworkModal}
+                    >
+                    <div className={`position-relative dark-bg-main`}>
+                    <div className={`modal-deposit-wallet ${showNetworkModal ? ' show ' : ''}`}>
+                        <div className="modal-deposit-wallet__content fixed-bottom off-canvas-content-container overflow-auto">
+                            <div className="d-flex justify-content-between align-items-center mb-12">
+                                <h3 className="p-0 m-0 text-ms grey-text-accent">Select Network</h3>
+                                <span onClick={() => setShowNetworkModal(false)} className="cursor-pointer">
+                                    <CircleCloseModalNetworkIcon />
+                                </span>
+                            </div>
+    
+                            <div className="d-flex justify-content-start align-items-start mb-24">
+                                <span className="mr-8 curspr-pointer">
+                                    <InfoModalNetworkIcon />
+                                </span>
+                                <p className="m-0 p-0 grey-text text-xxs">
+                                    Ensure that the selected network is consistent with your method of withdrawal, Otherwise
+                                    you are at risk losing your assets,
+                                </p>
+                            </div>
+    
+                            {currencyItem &&
+                                currencyItem.networks.map((item, i) => (
+                                    <div
+                                        onClick={()=>handleSelectChangeNetwork(item)}
+                                        key={i}
+                                        className={`${protocol === item.protocol ? `border border-info` : `border border-dark`} rounded-lg cursor-pointer mb-8 p-2`}>
+                                        <h3 className="p-0 m-0 text-ms grey-text-accent">{item && item.protocol}</h3>
+                                        <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
+                </div>
+                </Modal>
+                )
+            }
         </React.Fragment>
     );
 };

@@ -25,6 +25,7 @@ import PinInput from 'react-pin-input';
 import { KeyConfirmation } from 'src/mobile/assets/KeyConfirmation';
 import { selectWallets } from '../../../modules';
 import { useHistory } from 'react-router-dom';
+import { CircleCloseIcon } from 'src/assets/images/CircleCloseIcon';
 
 export const WalletWithdrawMobileScreen: React.FC = () => {
     useBeneficiariesFetch();
@@ -316,15 +317,14 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                     $ {fee !== undefined ? fee : '0'}
                                 </p>
                             </div>
-                            { wallet !== undefined &&                            
-                            <div className="my-3">
-                                <p className='mb-0 text-sm grey-text-accent'>
-                                Balance
-                                </p>
-                                <p className='mb-0 text-base grey-text-accent font-bold'>
-                                    {wallet.balance} {currency.toUpperCase()}
-                                </p>
-                            </div>}
+                            {wallet !== undefined && (
+                                <div className="my-3">
+                                    <p className="mb-0 text-sm grey-text-accent">Balance</p>
+                                    <p className="mb-0 text-base grey-text-accent font-bold">
+                                        {wallet.balance} {currency.toUpperCase()}
+                                    </p>
+                                </div>
+                            )}
                             <div className="">
                                 <p className="mb-0 text-sm grey-text-accent">
                                     {formatMessage({
@@ -440,53 +440,62 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                     dialogClassName="modal-confirmation-withdraw"
                     show={showModalConfirmationBeneficiary}>
                     <section className="container p-3 dark-bg-main">
-                        <div className="d-flex justify-content-center my-2">
-                            <KeyConfirmation />
+                        <div className="text-right">
+                            <span
+                                onClick={() => setShowModalConfirmationBeneficiary(!showModalConfirmationBeneficiary)}
+                                className="text-white">
+                                <CircleCloseIcon />
+                            </span>
                         </div>
-                        <div className="text-center">
-                            <p className="gradient-text mb-3">Confirmation New Address</p>
-                            <p className="text-secondary text-sm">
-                                We have sent you an email containing a confirmation code pin, please enter it below to
-                                save the new address:
+                        <div>
+                            <div className="d-flex justify-content-center my-2">
+                                <KeyConfirmation />
+                            </div>
+                            <div className="text-center">
+                                <p className="gradient-text mb-3">Confirmation New Address</p>
+                                <p className="text-secondary text-sm">
+                                    We have sent you an email containing a confirmation code pin, please enter it below
+                                    to save the new address:
+                                </p>
+                            </div>
+                            <div className="mb-0">
+                                <PinInput
+                                    length={6}
+                                    onChange={handleChangeBeneficiaryCode}
+                                    onComplete={handleChangeBeneficiaryCode}
+                                    type="numeric"
+                                    inputMode="number"
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        marginBottom: '8px',
+                                    }}
+                                    inputStyle={{
+                                        background: '#15191D',
+                                        borderRadius: '4px',
+                                        borderColor: '#15191D',
+                                        fontSize: '20px',
+                                        color: ' #DEDEDE',
+                                    }}
+                                    inputFocusStyle={{ fontSize: '20px', color: 'color: #23262F' }}
+                                    autoSelect={true}
+                                    regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
+                                />
+                            </div>
+                            <button
+                                disabled={isValidForm()}
+                                onClick={handleActivateBeneficiary}
+                                className="btn btn-primary btn-block mt-3">
+                                Confirm
+                            </button>
+                            <p
+                                className={`text-right text-xs  mt-2 ${
+                                    timerActive ? 'grey-text' : 'grey-text-accent cursor-pointer'
+                                }`}
+                                onClick={!timerActive && handleResendCode}>
+                                {moment(seconds).format('mm:ss')} Resend Code
                             </p>
                         </div>
-                        <div className="mb-0">
-                            <PinInput
-                                length={6}
-                                onChange={handleChangeBeneficiaryCode}
-                                onComplete={handleChangeBeneficiaryCode}
-                                type="numeric"
-                                inputMode="number"
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    marginBottom: '8px',
-                                }}
-                                inputStyle={{
-                                    background: '#15191D',
-                                    borderRadius: '4px',
-                                    borderColor: '#15191D',
-                                    fontSize: '20px',
-                                    color: ' #DEDEDE',
-                                }}
-                                inputFocusStyle={{ fontSize: '20px', color: 'color: #23262F' }}
-                                autoSelect={true}
-                                regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
-                            />
-                        </div>
-                        <button
-                            disabled={isValidForm()}
-                            onClick={handleActivateBeneficiary}
-                            className="btn btn-primary btn-block mt-3">
-                            Confirm
-                        </button>
-                        <p
-                            className={`text-right text-xs  mt-2 ${
-                                timerActive ? 'grey-text' : 'grey-text-accent cursor-pointer'
-                            }`}
-                            onClick={!timerActive && handleResendCode}>
-                            {moment(seconds).format('mm:ss')} Resend Code
-                        </p>
                     </section>
                 </Modal>
             )}

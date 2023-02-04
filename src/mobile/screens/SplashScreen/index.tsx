@@ -1,3 +1,4 @@
+
 import React from 'react';
 import LogoSplash from 'src/mobile/assets/LogoSplash';
 

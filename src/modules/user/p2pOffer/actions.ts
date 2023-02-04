@@ -28,12 +28,11 @@ export interface P2POfferError {
 
 export interface P2POfferCreate {
     type: typeof P2P_OFFER_CREATE;
-    error: CommonError;
+    payload: P2POffer;
 }
 
 export interface P2POfferCreateData {
     type: typeof P2P_OFFER_CREATE_DATA;
-    payload: P2POffer;
 }
 
 export interface P2POfferCreateError {
@@ -64,14 +63,13 @@ export const p2pOfferError = (error: CommonError): P2POfferError => ({
     error,
 });
 
-export const p2pOfferCreate = (error: CommonError): P2POfferCreate => ({
+export const p2pOfferCreate = (payload: P2POfferCreate['payload']): P2POfferCreate => ({
     type: P2P_OFFER_CREATE,
-    error,
+    payload,
 });
 
-export const p2pOfferCreateData = (payload: P2POfferCreateData['payload']): P2POfferCreateData => ({
+export const p2pOfferCreateData = (): P2POfferCreateData => ({
     type: P2P_OFFER_CREATE_DATA,
-    payload,
 });
 
 export const p2pOfferCreateError = (error: CommonError): P2POfferCreateError => ({

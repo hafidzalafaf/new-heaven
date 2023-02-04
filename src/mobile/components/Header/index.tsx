@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { selectUserLoggedIn, selectUserInfo, logoutFetch } from '../../../modules';
+import { selectUserLoggedIn, selectUserInfo, logoutFetch, alertPush } from '../../../modules';
 import { LogoIcon } from '../../assets/Logo';
 import { ScanIcon } from '../../assets/ScanIcon';
 import { UserIcon } from '../../assets/UserIcon';
@@ -58,9 +58,9 @@ const HeaderComponent: React.FC = () => {
                         <LogoIcon className={''} />
                     </Link>
                     <div className="d-flex align-items-center">
-                        <div className="mr-2">
+                        {/* <div className="mr-2">
                             <ScanIcon className={''} />
-                        </div>
+                        </div> */}
                         <div className="cursor-pointer" onClick={() => setShowSidebar(true)}>
                             <UserIcon className={'cursor-pointer'} />
                         </div>
@@ -92,11 +92,21 @@ const HeaderComponent: React.FC = () => {
                                                 <div className="user-id d-flex align-items-center">
                                                     <h3 className="text-sm grey-text d-flex align-items-center">
                                                         UID :{' '}
-                                                        <CopyableTextField
-                                                            value={user && user.uid}
-                                                            className="ml-3"
-                                                            fieldId="referral-code"
-                                                        />
+                                                        <span
+                                                            onClick={() =>
+                                                                dispatch(
+                                                                    alertPush({
+                                                                        message: [`UID copied`],
+                                                                        type: 'success',
+                                                                    })
+                                                                )
+                                                            }>
+                                                            <CopyableTextField
+                                                                value={user && user.uid}
+                                                                className="ml-3"
+                                                                fieldId="referral-code"
+                                                            />
+                                                        </span>
                                                     </h3>
                                                 </div>
                                             </div>

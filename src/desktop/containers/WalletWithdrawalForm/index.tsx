@@ -368,12 +368,14 @@ export const WalletWithdrawalForm: React.FC = () => {
             <React.Fragment>
                 <h1 className="white-text text-lg mb-24 text-center ">Withdraw Locked</h1>
                 <p className="grey-text text-ms font-extrabold mb-24 text-center">
-                    For withdraw you must verified your document first
+                    {user?.level == 1
+                        ? 'For withdraw you must verified your phone number and document first'
+                        : 'For withdraw you must verified your document first'}
                 </p>
                 <div className="d-flex justify-content-center align-items-center w-100 mb-0">
-                    <Link to={`/profile/kyc`}>
+                    <Link to={`${user?.level == 1 ? '/profile' : '/profile/kyc'}`}>
                         <button type="button" className="btn btn-primary sm px-5 mr-3">
-                            Verify Document
+                            {user?.level == 1 ? 'Verify Phone Number' : 'Verify Document'}
                         </button>
                     </Link>
                 </div>

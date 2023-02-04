@@ -16,7 +16,6 @@ import {
 export interface ModalCreateOfferPost {
     showModalCreateOffer: boolean;
     onCloseModal?: () => void;
-    side?: string;
 }
 
 export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (props) => {
@@ -27,7 +26,7 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
     const fiats = useSelector(selectP2PFiatsData);
     const currenciesData = useSelector(selectP2PCurrenciesData);
     // const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(props.showModalCreateOffer);
-    const { showModalCreateOffer, onCloseModal, side } = props;
+    const { showModalCreateOffer, onCloseModal } = props;
     const [currencies, setCurrencies] = React.useState([]);
     const [payments, setPayments] = React.useState([]);
 
@@ -38,10 +37,12 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
     const [trade_amount, setTradeAmount] = React.useState('');
     const [min_order, setMinOrder] = React.useState('');
     const [max_order, setMaxOrder] = React.useState('');
+    const [paymentValue, setPaymentValue] = React.useState([]);
     const [payment, setPayment] = React.useState([]);
     const [payment_limit, setPaymentLimit] = React.useState('');
     const [term_of_condition, setTermOfCondition] = React.useState('');
     const [auto_replay, setAutoReplay] = React.useState('');
+    const [side, setSide] = React.useState('buy');
     /* ============== STATE CREATE OFFER  END ============== */
 
     React.useEffect(() => {
@@ -59,20 +60,21 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
 
     const handleCreateOffer = () => {
         const payload = {
-            currency,
-            price,
-            fiat,
-            trade_amount,
-            min_order,
-            max_order,
-            payment,
-            payment_limit,
-            term_of_condition,
-            auto_replay,
+            currency: currency,
+            price: price,
+            fiat: fiat,
+            trade_amount: trade_amount,
+            min_order: min_order,
+            max_order: max_order,
+            payment: payment,
+            payment_limit: payment_limit,
+            term_of_condition: term_of_condition,
+            auto_replay: auto_replay,
+            side: side,
         };
 
-        // dispatch(p2pOfferCreate(payload));
-        onCloseModal;
+        dispatch(p2pOfferCreate(payload));
+        onCloseModal();
     };
 
     const optionFiats = fiats?.map((item) => {
@@ -98,8 +100,15 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
         setCurrency(e);
     };
 
-    const handleChangePayment = (e: string) => {
-        setPayment([e]);
+    const handleChangePayment = (e: any) => {
+        setPaymentValue(e);
+        let data = e;
+        let temp = [];
+        data?.map((el) => {
+            temp.push(el.value);
+        });
+
+        setPayment(temp);
     };
 
     const handleChangePrice = (e: string) => {
@@ -130,10 +139,19 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
         setAutoReplay(e);
     };
 
+    const handleChangeSide = (e: string) => {
+        setSide(e);
+    };
+
     const renderContentModalCreateOffer = () => {
         return (
             <React.Fragment>
-                <Tabs defaultActiveKey="buy" id="justify-tab-example" className="mb-3 " justify>
+                <Tabs
+                    defaultActiveKey="buy"
+                    onSelect={(e) => handleChangeSide(e)}
+                    id="justify-tab-example"
+                    className="mb-3 "
+                    justify>
                     <Tab eventKey="buy" title="Buy" className="mb-32">
                         <OfferForm
                             onCloseModal={onCloseModal}
@@ -147,6 +165,7 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
                             min_order={min_order}
                             max_order={max_order}
                             payment={payment}
+                            paymentValue={paymentValue}
                             payment_limit={payment_limit}
                             term_of_condition={term_of_condition}
                             auto_replay={auto_replay}
@@ -176,6 +195,7 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
                             min_order={min_order}
                             max_order={max_order}
                             payment={payment}
+                            paymentValue={paymentValue}
                             payment_limit={payment_limit}
                             term_of_condition={term_of_condition}
                             auto_replay={auto_replay}

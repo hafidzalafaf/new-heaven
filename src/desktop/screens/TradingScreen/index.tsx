@@ -224,7 +224,11 @@ export const TradingScreen: FC = (): ReactElement => {
 
     // buat total buy
     React.useEffect(() => {
-        const market = Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.price_precision);
+        const safePrice = totalPrice / +amountBuy || tickerItem?.last;
+        const market =
+            orderPercentageBuy !== 0
+                ? Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.price_precision)
+                : Decimal.format(+safePrice * +amountBuy, currentMarket?.price_precision);
 
         const limit =
             orderPercentageBuy !== 0

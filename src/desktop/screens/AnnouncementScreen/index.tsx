@@ -29,7 +29,7 @@ export const AnnouncementScreen: FC = (): ReactElement => {
 
     const settings = {
         dots: true,
-        infinite: true,
+        infinite: false,
         slidesToShow: 4,
         slidesToScroll: 1,
         autoplay: true,
@@ -43,7 +43,7 @@ export const AnnouncementScreen: FC = (): ReactElement => {
                 <div className="py-5 background" style={{ backgroundImage: `url('img/background-landing.png')` }}>
                     <Slider {...settings}>
                         {blog &&
-                            blog.slice(0, 5).map((item, key) => (
+                            blog.slice(0, 4).map((item, key) => (
                                 <div className="px-3 radius-md" key={key}>
                                     <a
                                         href={item.url}

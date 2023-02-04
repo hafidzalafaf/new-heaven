@@ -39,3 +39,4 @@ export * from './P2PUserInfo';
 export * from './P2PUserTable';
 export * from './WalletOverviewP2P';
 export * from './P2PFAQ';
+export * from './FAQHeader';
