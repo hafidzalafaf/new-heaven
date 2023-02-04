@@ -3,7 +3,7 @@ import { VerificationIcon, ShareIcon, CheckFillIcon, LikeIcon, UnLikeIcon, Renam
 import { CardP2PUserInfo } from '../../../desktop/components';
 import { useSelector } from 'react-redux';
 import { selectP2PAccount } from 'src/modules/user/p2pAccount';
-import { FormControl } from 'react-bootstrap';
+import { FormControl, Modal } from 'react-bootstrap';
 export const P2PUserInfo: React.FC = () => {
     const [username, setUsername] = React.useState('Nusatech Exchange');
     const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false)
@@ -19,9 +19,6 @@ export const P2PUserInfo: React.FC = () => {
                 onChange={(e)=> setUsername(e.target.value)}
                 autoFocus={true}
                 />
-                {/* <form>
-                    <input type='text' id='username' name='username' onChange={handleChange} value={username.toString()} />
-                </form> */}
             </div>
         )
     }
@@ -29,7 +26,9 @@ export const P2PUserInfo: React.FC = () => {
     return (
         <React.Fragment>
             <div className="container-p2p-user-info">
-                <ModalChangeName/>
+                <Modal show={showChangeUsernameModal}>
+                    <ModalChangeName/>
+                </Modal>
                 <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
                     <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
                         {username.slice(0, 1).toUpperCase()}
