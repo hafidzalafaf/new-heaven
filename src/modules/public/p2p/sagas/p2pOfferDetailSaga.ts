@@ -11,10 +11,6 @@ const config: RequestOptions = {
 export function* p2pOfferDetailSaga(action: P2POfferDetailFetch) {
     try {
         const data = yield call(API.get(config), `/public/trades/detail/${action.payload.offer_number}`);
-        // const data = yield call(
-        //     axios.get,
-        //     `http://192.168.1.56:3001/api/v1/public/trades/detail/${action.payload.offer_number}`
-        // );
 
         yield put(p2pOfferDetailData(data));
     } catch (error) {

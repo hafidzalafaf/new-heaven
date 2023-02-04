@@ -1,9 +1,8 @@
 import { call, put } from 'redux-saga/effects';
-import { alertPush, sendError } from '../../../';
-import { API, RequestOptions } from '../../../../api';
 import { getCsrfToken } from '../../../../helpers';
-import { P2POfferCreate, p2pOfferCreateData, p2pOfferCreateError } from '../actions';
-import axios from 'axios';
+import { API, RequestOptions } from '../../../../api';
+import { alertPush, sendError } from '../../../';
+import { P2PPaymentUserCreate, p2pPaymentUserCreateData, p2pPaymentUserCreateError } from '../action';
 
 const config = (csrfToken?: string): RequestOptions => {
     return {
@@ -12,10 +11,10 @@ const config = (csrfToken?: string): RequestOptions => {
     };
 };
 
-export function* p2pCreateOfferSaga(action: P2POfferCreate) {
+export function* p2pCreatePaymentUserSaga(action: P2PPaymentUserCreate) {
     try {
-        yield call(API.post(config(getCsrfToken())), `/market/trades`, action.payload);
-        yield put(p2pOfferCreateData());
+        yield call(API.post(config(getCsrfToken())), `/account/payment`, action.payload);
+        yield put(p2pPaymentUserCreateData());
         yield put(alertPush({ message: ['success.feedback.created'], type: 'success' }));
     } catch (error) {
         yield put(
@@ -23,7 +22,7 @@ export function* p2pCreateOfferSaga(action: P2POfferCreate) {
                 error,
                 processingType: 'alert',
                 extraOptions: {
-                    actionError: p2pOfferCreateError,
+                    actionError: p2pPaymentUserCreateError,
                 },
             })
         );
