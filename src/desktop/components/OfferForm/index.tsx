@@ -69,7 +69,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                 <div>
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">CRYPTOCURRENCY</p>
                     <Select
-                        value={optionCurrency.filter(function (option) {
+                        value={optionCurrency?.filter(function (option) {
                             return option.value === currency;
                         })}
                         styles={CustomStylesSelect}
@@ -93,7 +93,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                         />
                         <div className="w-20">
                             <Select
-                                value={optionFiats.filter(function (option) {
+                                value={optionFiats?.filter(function (option) {
                                     return option.value === fiat;
                                 })}
                                 styles={CustomStylesSelect}

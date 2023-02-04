@@ -12,7 +12,8 @@ import { Feedback } from './types';
 export interface FeedbackFetch {
     type: typeof FEEDBACK_FETCH;
     payload?: {
-        order_number: string;
+        order_number?: string;
+        assessment?: string;
     };
 }
 
@@ -35,7 +36,6 @@ export interface FeedbackCreate {
 
 export interface FeedbackCreateData {
     type: typeof FEEDBACK_CREATE_DATA;
-    payload: Feedback;
 }
 
 export interface FeedbackCreateError {
@@ -71,9 +71,8 @@ export const feedbackCreate = (payload: FeedbackCreate['payload']): FeedbackCrea
     payload,
 });
 
-export const feedbackCreateData = (payload: FeedbackCreateData['payload']): FeedbackCreateData => ({
+export const feedbackCreateData = (): FeedbackCreateData => ({
     type: FEEDBACK_CREATE_DATA,
-    payload,
 });
 
 export const feedbackCreateError = (error: CommonError): FeedbackCreateError => ({

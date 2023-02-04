@@ -11,4 +11,25 @@
     .header-container {
         padding: 0 10%;
     }
+
+    .custom-control-label {
+        /* position: relative; */
+        &::after {
+            border-radius: 4px;
+            background: 50%/50% 50% no-repeat;
+            border: 1px solid var(--border-color);
+            width: 18px;
+            height: 18px;
+            top: -9px;
+        }
+
+        &::before {
+            border-radius: 4px;
+            background: var(--body-background-color);
+            border: 0;
+            width: 18px;
+            height: 18px;
+            top: -9px;
+        }
+    }
 }

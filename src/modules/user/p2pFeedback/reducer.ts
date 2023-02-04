@@ -84,7 +84,7 @@ const feedbackCreateReducer = (state: FeedbackState['create'], action: FeedbackA
         case FEEDBACK_CREATE_DATA:
             return {
                 ...state,
-                data: action.payload,
+                // data: action.payload,
                 fetching: false,
                 success: true,
                 error: undefined,

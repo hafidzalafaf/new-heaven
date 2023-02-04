@@ -30,6 +30,8 @@ import { Modal, CustomInput } from '../../components';
 import { ModalCloseIcon } from '../../../assets/images/CloseIcon';
 import { CircleCloseDangerLargeIcon } from '../../../assets/images/CircleCloseIcon';
 import moment from 'moment';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 export const ProfileScreen: FC = (): ReactElement => {
     useDocumentTitle('Profile');
@@ -266,16 +268,15 @@ export const ProfileScreen: FC = (): ReactElement => {
                 <div className="form">
                     {(isChangeNumber || !phone[0] || phone[0]?.validated_at !== null) && (
                         <div className="form-group mb-24">
-                            <CustomInput
-                                defaultLabel={`${!phone[0] ? '' : 'New'} Phone Number`}
-                                inputValue={newPhoneValue}
-                                label={`${!phone[0] ? '' : 'New'} Phone Number`}
-                                placeholder="+6281902912921"
-                                type="text"
-                                labelVisible
-                                classNameLabel="white-text text-sm"
-                                handleChangeInput={(e) => handleChangePhoneValue(e)}
-                                isDisabled={user.phones.length === 4}
+                            <label htmlFor="" className="text-sm white-text">{`${
+                                !phone[0] ? '' : 'New'
+                            } Phone Number`}</label>
+                            <PhoneInput
+                                country={'id'}
+                                value={newPhoneValue}
+                                onChange={(phone) => setNewPhoneValue(phone)}
+                                placeholder={''}
+                                disabled={user.phones.length === 5}
                             />
                         </div>
                     )}

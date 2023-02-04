@@ -31,6 +31,8 @@ import { CheckIcon, GoogleIcon, KeyIcon, MailIcon, PhoneIcon } from '../../../as
 import { Notification } from '../../../assets/images/Notification';
 import { CloseIcon, ModalCloseIcon, CloseIconSecurity } from '../../../assets/images/CloseIcon';
 import moment from 'moment';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 interface ProfileSecurityState {
     showTwoFaModal: boolean;
     showTwoFaPhoneModal: boolean;
@@ -380,16 +382,15 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                         !this.state.phone[0] ||
                         this.state.phone[0].validated_at !== null) && (
                         <div className="form-group mb-24">
-                            <CustomInput
-                                defaultLabel={`${!this.state.phone[0] ? '' : 'New'} Phone Number`}
-                                inputValue={this.state.newPhone}
-                                label={`${!this.state.phone[0] ? '' : 'New'} Phone Number`}
-                                placeholder="+6281902912921"
-                                type="text"
-                                labelVisible
-                                classNameLabel="white-text text-sm"
-                                handleChangeInput={(e) => this.handleChangePhoneValue(e)}
-                                isDisabled={this.props.user?.phones?.length === 4}
+                            <label htmlFor="" className="text-sm white-text">{`${
+                                !this.state.phone[0] ? '' : 'New'
+                            } Phone Number`}</label>
+                            <PhoneInput
+                                country={'id'}
+                                value={this.state.newPhone}
+                                onChange={(phone) => this.handleChangePhoneValue(phone)}
+                                placeholder={''}
+                                disabled={this.props.user?.phones?.length === 5}
                             />
                         </div>
                     )}
@@ -496,7 +497,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
 
     // handle sendCode (POST)
     public handleSendCodePhone = () => {
-        if (this.props.user.phones[0] && !this.state.isChangeNumber) {
+        if (this.props.user.phones[0]?.validated_at === null && !this.state.isChangeNumber) {
             this.props.resendCode({ phone_number: `+${this.state.phone[0].number}` });
             this.setState({ timerActive: true, resendCodeActive: true });
         } else {

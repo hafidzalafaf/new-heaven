@@ -5,7 +5,7 @@ import { p2pAccountData, p2pAccountError, P2PAccountFetch } from '../actions';
 import { buildQueryString } from 'src/helpers';
 
 const config: RequestOptions = {
-    apiVersion: 'p2p2',
+    apiVersion: 'p2p',
 };
 
 export function* p2pAccountSaga(action: P2PAccountFetch) {
