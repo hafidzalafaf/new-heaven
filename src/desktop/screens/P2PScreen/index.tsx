@@ -9,7 +9,7 @@ import { Form } from 'react-bootstrap';
 export const P2PScreen: React.FC = () => {
     useDocumentTitle('P2P');
     const isLoggedIn = useSelector(selectUserLoggedIn);
-    const [showModalAnnouncement, setShowModatAnnouncement] = React.useState(true);
+    const [showModalAnnouncement, setShowModatAnnouncement] = React.useState(false);
 
     const renderModalAnnouncement = () => {
         return (

@@ -157,15 +157,42 @@ export const CheckIcon = () => {
     );
 };
 
-export const RenameIcon = ({className, onClick}) => {
-    return(
-        <svg width={24} height={24} onClick={onClick} className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13.7476 20.4428H21.0002" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.78 3.79479C13.5557 2.86779 14.95 2.73186 15.8962 3.49173C15.9485 3.53296 17.6295 4.83879 17.6295 4.83879C18.669 5.46719 18.992 6.80311 18.3494 7.82259C18.3153 7.87718 8.81195 19.7645 8.81195 19.7645C8.49578 20.1589 8.01583 20.3918 7.50291 20.3973L3.86353 20.443L3.04353 16.9723C2.92866 16.4843 3.04353 15.9718 3.3597 15.5773L12.78 3.79479Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M11.021 6.00098L16.4732 10.1881" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+export const RenameIcon = ({ className, onClick }) => {
+    return (
+        <svg
+            width={24}
+            height={24}
+            onClick={onClick}
+            className={className}
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M13.7476 20.4428H21.0002"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12.78 3.79479C13.5557 2.86779 14.95 2.73186 15.8962 3.49173C15.9485 3.53296 17.6295 4.83879 17.6295 4.83879C18.669 5.46719 18.992 6.80311 18.3494 7.82259C18.3153 7.87718 8.81195 19.7645 8.81195 19.7645C8.49578 20.1589 8.01583 20.3918 7.50291 20.3973L3.86353 20.443L3.04353 16.9723C2.92866 16.4843 3.04353 15.9718 3.3597 15.5773L12.78 3.79479Z"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+            <path
+                d="M11.021 6.00098L16.4732 10.1881"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
         </svg>
-    )
-}
+    );
+};
 
 export const CloseIcon = () => {
     return (
@@ -552,6 +579,28 @@ export const ActiveCheck = () => {
                     <rect width="11.9372" height="12" fill="white" />
                 </clipPath>
             </defs>
+        </svg>
+    );
+};
+
+export const FilterIcon = () => {
+    return (
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M11.2518 18C11.0398 18 10.8623 17.928 10.7192 17.784C10.5755 17.6405 10.5037 17.4625 10.5037 17.25V12.75L6.16489 7.2C5.97787 6.95 5.94994 6.6875 6.0811 6.4125C6.21177 6.1375 6.43918 6 6.76335 6H17.2364C17.5606 6 17.7882 6.1375 17.9194 6.4125C18.0501 6.6875 18.0219 6.95 17.8349 7.2L13.496 12.75V17.25C13.496 17.4625 13.4245 17.6405 13.2813 17.784C13.1377 17.928 12.9599 18 12.7479 18H11.2518Z"
+                fill="#B5B3BC"
+            />
+        </svg>
+    );
+};
+
+export const DropdownIcon = () => {
+    return (
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M11.3003 14.3L8.70026 11.7C8.38359 11.3833 8.31292 11.021 8.48826 10.613C8.66292 10.2043 8.97526 10 9.42526 10H14.5753C15.0253 10 15.3376 10.2043 15.5123 10.613C15.6876 11.021 15.6169 11.3833 15.3003 11.7L12.7003 14.3C12.6003 14.4 12.4919 14.475 12.3753 14.525C12.2586 14.575 12.1336 14.6 12.0003 14.6C11.8669 14.6 11.7419 14.575 11.6253 14.525C11.5086 14.475 11.4003 14.4 11.3003 14.3Z"
+                fill="#6F6F6F"
+            />
         </svg>
     );
 };

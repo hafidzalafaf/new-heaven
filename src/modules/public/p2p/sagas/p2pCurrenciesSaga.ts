@@ -12,7 +12,7 @@ export function* p2pCurrenciesSaga(action: P2PCurrenciesFetch) {
     try {
         const data = yield call(API.get(config), `/public/fiats/filter?fiat=${action.payload.fiat}`);
 
-        yield put(p2pCurrenciesData(data.data));
+        yield put(p2pCurrenciesData(data));
     } catch (error) {
         yield put(
             sendError({
