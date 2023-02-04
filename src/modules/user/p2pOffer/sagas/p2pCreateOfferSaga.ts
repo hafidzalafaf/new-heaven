@@ -7,7 +7,7 @@ import axios from 'axios';
 
 // const config = (csrfToken?: string): RequestOptions => {
 //     return {
-//         apiVersion: 'p2p2',
+//         apiVersion: 'p2p',
 //         headers: { 'X-CSRF-Token': csrfToken },
 //     };
 // };
@@ -20,7 +20,7 @@ const config = {
 
 export function* p2pCreateOfferSaga(action: P2POfferCreate) {
     try {
-        yield call(axios.post, `http://192.168.1.56:3001/api/v1/market/trades`, action.payload, config);
+        yield call(axios.post, `https://www.nusaexchange.com/api/v2/p2p/market/trades`, action.payload, config);
         yield put(p2pOfferCreateData());
         yield put(alertPush({ message: ['success.feedback.created'], type: 'success' }));
     } catch (error) {

@@ -5,7 +5,7 @@ import { p2pOfferDetailData, p2pOfferDetailError, P2POfferDetailFetch } from '..
 import axios from 'axios';
 
 const config: RequestOptions = {
-    apiVersion: 'p2p2',
+    apiVersion: 'p2p',
 };
 
 export function* p2pOfferDetailSaga(action: P2POfferDetailFetch) {
@@ -13,7 +13,7 @@ export function* p2pOfferDetailSaga(action: P2POfferDetailFetch) {
         // const data = yield call(API.get(config), '/public/currencies');
         const data = yield call(
             axios.get,
-            `http://192.168.1.56:3001/api/v1/public/trades/detail/${action.payload.offer_number}`
+            `https://www.nusaexchange.com/api/v2/p2p/public/trades/detail/${action.payload.offer_number}`
         );
 
         yield put(p2pOfferDetailData(data));

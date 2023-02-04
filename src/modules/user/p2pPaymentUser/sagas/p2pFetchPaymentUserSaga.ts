@@ -1,24 +1,23 @@
 import { call, put } from 'redux-saga/effects';
 import { sendError } from '../../../';
 import { API, RequestOptions } from '../../../../api';
-import { feedbackData, feedbackError, FeedbackFetch } from '../actions';
+import { p2pPaymentUserData, p2pPaymentUserError, P2PPaymentUserFetch } from '../action';
 
 const config: RequestOptions = {
     apiVersion: 'p2p',
 };
 
-export function* feedbackSaga(action: FeedbackFetch) {
+export function* p2pFetchPaymentUserSaga(action: P2PPaymentUserFetch) {
     try {
-        const feedback = yield call(API.get(config), `/market/feedback`);
-
-        yield put(feedbackData(feedback));
+        yield call(API.get(config), `/market/trades/`);
+        yield put(p2pPaymentUserData());
     } catch (error) {
         yield put(
             sendError({
                 error,
                 processingType: 'alert',
                 extraOptions: {
-                    actionError: feedbackError,
+                    actionError: p2pPaymentUserError,
                 },
             })
         );

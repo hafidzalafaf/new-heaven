@@ -5,7 +5,7 @@ import { p2pCurrenciesData, p2pCurrenciesError, P2PCurrenciesFetch } from '../ac
 import axios from 'axios';
 
 const config: RequestOptions = {
-    apiVersion: 'p2p2',
+    apiVersion: 'p2p',
 };
 
 export function* p2pCurrenciesSaga(action: P2PCurrenciesFetch) {

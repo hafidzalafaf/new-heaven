@@ -7,7 +7,7 @@ import { FeedbackCreate, feedbackCreateData, feedbackCreateError } from '../acti
 
 const config = (csrfToken?: string): RequestOptions => {
     return {
-        apiVersion: 'p2p2',
+        apiVersion: 'p2p',
         headers: { 'X-CSRF-Token': csrfToken },
     };
 };

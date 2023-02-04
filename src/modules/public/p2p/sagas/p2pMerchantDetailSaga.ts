@@ -5,7 +5,7 @@ import { p2pMerchantDetailData, p2pMerchantDetailError, P2PMerchantDetailFetch }
 import axios from 'axios';
 
 const config: RequestOptions = {
-    apiVersion: 'p2p2',
+    apiVersion: 'p2p',
 };
 
 export function* p2pMerchantDetailSaga(action: P2PMerchantDetailFetch) {
@@ -13,7 +13,7 @@ export function* p2pMerchantDetailSaga(action: P2PMerchantDetailFetch) {
         // const data = yield call(API.get(config), '/public/currencies');
         const data = yield call(
             axios.get,
-            `http://192.168.1.56:3001/api/v1/public/trades/merchant/${action.payload.merchant}`
+            `https://www.nusaexchange.com/api/v2/p2p/public/trades/merchant/${action.payload.merchant}`
         );
 
         yield put(p2pMerchantDetailData(data));

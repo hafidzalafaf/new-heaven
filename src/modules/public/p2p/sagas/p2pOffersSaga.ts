@@ -6,7 +6,7 @@ import { offersData, offersError, OffersFetch } from '../actions';
 import axios from 'axios';
 
 const config: RequestOptions = {
-    apiVersion: 'p2p2',
+    apiVersion: 'p2p',
     withHeaders: true,
 };
 
@@ -15,7 +15,7 @@ export function* p2pOffersSaga(action: OffersFetch) {
         const { side, sort, base, quote, payment_method, currency, fiat } = action.payload;
         const { data, headers } = yield call(
             axios.get,
-            `http://192.168.1.56:3001/api/v1/public/trades?fiat=${fiat}&currency=${currency}&side=${side}`
+            `https://www.nusaexchange.com/api/v2/p2p/public/trades?fiat=${fiat}&currency=${currency}&side=${side}`
         );
 
         yield put(

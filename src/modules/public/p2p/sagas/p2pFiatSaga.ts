@@ -6,13 +6,13 @@ import { p2pFiatData, p2pFiatError, P2PFiatFetch } from '../actions';
 import axios from 'axios';
 
 const config: RequestOptions = {
-    apiVersion: 'p2p2',
+    apiVersion: 'p2p',
     withHeaders: true,
 };
 
 export function* p2pFiatsSaga(action: P2PFiatFetch) {
     try {
-        const data = yield call(axios.get, `http://192.168.1.56:3001/api/v1/public/fiats`);
+        const data = yield call(axios.get, `https://www.nusaexchange.com/api/v2/p2p/public/fiats`);
 
         yield put(p2pFiatData(data.data));
     } catch (error) {
