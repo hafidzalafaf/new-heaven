@@ -3,17 +3,24 @@ import { VerificationIcon, ShareIcon, CheckFillIcon, LikeIcon, UnLikeIcon, Renam
 import { CardP2PUserInfo } from '../../../desktop/components';
 import { useSelector } from 'react-redux';
 import { selectP2PAccount } from 'src/modules/user/p2pAccount';
+import { FormControl } from 'react-bootstrap';
 export const P2PUserInfo: React.FC = () => {
-    const [username, setUsername] = React.useState('Nusatech Exchange');
+    const [username, setUsername] = React.useState('');
     const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false)
     const userP2P = useSelector(selectP2PAccount)
     console.log(userP2P); 
     const ModalChangeName = () => {
         return (
             <div hidden={showChangeUsernameModal}>
-                <form>
-                    <input  value={username} />
-                </form>
+                <FormControl
+                key='username'
+                type='text'
+                value={username}
+                onChange={(e)=> setUsername(e.target.value)}
+                />
+                {/* <form>
+                    <input type='text' id='username' name='username' onChange={handleChange} value={username.toString()} />
+                </form> */}
             </div>
         )
     }
