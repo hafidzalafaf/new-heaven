@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Tabs, Tab } from 'react-bootstrap';
 import '../../../styles/colors.pcss';
 import Select from 'react-select';
@@ -7,12 +8,16 @@ import { CustomStylesSelect } from '../../../desktop/components';
 import { Table } from '../../../components';
 import { HideIcon } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
+import { orderFetch } from 'src/modules';
 
 export const OrderP2PTable = () => {
     const history = useHistory();
+    const dispatch = useDispatch();
+
     const [endDate, setEndDate] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
     const [data, setData] = React.useState([]);
+    const [showNotif, setShowNotif] = React.useState(false);
 
     const dummy = [
         {
@@ -76,6 +81,10 @@ export const OrderP2PTable = () => {
             created_at: '2023-01-15T04:09:15Z',
         },
     ];
+
+    React.useEffect(() => {
+        dispatch(orderFetch());
+    }, [dispatch]);
 
     React.useEffect(() => {
         setData(dummy);

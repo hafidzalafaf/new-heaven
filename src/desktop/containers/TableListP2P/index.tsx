@@ -61,7 +61,8 @@ export const TableListP2P = () => {
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
-    const [showFilter, setShowFilter] = React.useState(true);
+    const [showFilter, setShowFilter] = React.useState(false);
+    const [showModalPrice, setShowModalPrice] = React.useState(false);
 
     /* ========== ORDER CREATE STATE START ========== */
     const [price_actual, setPriceActual] = React.useState<string | number>();
@@ -160,6 +161,18 @@ export const TableListP2P = () => {
         setPrice('');
     };
 
+    const renderModalPrice = () => {
+        return (
+            <div className="d-flex flex-column justify-content-center align-items-center">
+                <img src="/img/p2pprice.png" alt="price" width={128} height={128} className="mb-24" />
+                <h1 className="white-text text-ms font-bold mb-24">Ads Price Changed, Please Refresh</h1>
+                <button onClick={() => location.reload()} className="btn-primary w-100">
+                    Refresh
+                </button>
+            </div>
+        );
+    };
+
     const renderModalFilter = () => {
         return (
             <div className="p-24">
@@ -230,7 +243,7 @@ export const TableListP2P = () => {
                         </div>
 
                         <div className="d-flex flex-wrap align-items-center gap-8">
-                            {payments[0] ? (
+                            {payments && payments[0] ? (
                                 payments?.map((payment, i) => (
                                     <div key={i} className="badge-payment text-center text-sm grey-text">
                                         {payment?.bank_name}
@@ -244,7 +257,7 @@ export const TableListP2P = () => {
 
                     <div className="d-flex align-items-center gap-16">
                         <button className="btn-secondary w-50">Reset</button>
-                        <div className="btn-primary w-50">Confirm</div>
+                        <button className="btn-primary w-50">Confirm</button>
                     </div>
                 </form>
             </div>
@@ -827,6 +840,8 @@ export const TableListP2P = () => {
                 )}
 
                 <Modal show={showFilter} content={renderModalFilter()} />
+
+                <Modal show={showModalPrice} content={renderModalPrice()} />
             </div>
         </React.Fragment>
     );

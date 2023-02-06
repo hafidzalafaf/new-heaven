@@ -1,12 +1,19 @@
 import { CommonError } from '../../../modules/types';
-import { ORDER_FETCH, ORDER_DATA, ORDER_ERROR, ORDER_CREATE, ORDER_CREATE_DATA, ORDER_CREATE_ERROR } from './constants';
+import {
+    ORDER_FETCH,
+    ORDER_DATA,
+    ORDER_ERROR,
+    ORDER_CREATE,
+    ORDER_CREATE_DATA,
+    ORDER_CREATE_ERROR,
+    ORDER_DETAIL_DATA,
+    ORDER_DETAIL_ERROR,
+    ORDER_DETAIL_FETCH,
+} from './constants';
 import { Order } from './types';
 
 export interface OrderFetch {
     type: typeof ORDER_FETCH;
-    payload?: {
-        offer_number: string;
-    };
 }
 
 export interface OrderData {
@@ -16,6 +23,23 @@ export interface OrderData {
 
 export interface OrderError {
     type: typeof ORDER_ERROR;
+    error: CommonError;
+}
+
+export interface OrderDetailFetch {
+    type: typeof ORDER_DETAIL_FETCH;
+    payload?: {
+        offer_number: string;
+    };
+}
+
+export interface OrderDetailData {
+    type: typeof ORDER_DETAIL_DATA;
+    payload: [];
+}
+
+export interface OrderDetailError {
+    type: typeof ORDER_DETAIL_ERROR;
     error: CommonError;
 }
 
@@ -33,11 +57,19 @@ export interface OrderCreateError {
     error: CommonError;
 }
 
-export type OrderActions = OrderFetch | OrderData | OrderError | OrderCreate | OrderCreateData | OrderCreateError;
+export type OrderActions =
+    | OrderFetch
+    | OrderData
+    | OrderError
+    | OrderDetailFetch
+    | OrderDetailData
+    | OrderDetailError
+    | OrderCreate
+    | OrderCreateData
+    | OrderCreateError;
 
-export const orderFetch = (payload?: OrderFetch['payload']): OrderFetch => ({
+export const orderFetch = (): OrderFetch => ({
     type: ORDER_FETCH,
-    payload,
 });
 
 export const orderData = (payload: OrderData['payload']): OrderData => ({
@@ -47,6 +79,21 @@ export const orderData = (payload: OrderData['payload']): OrderData => ({
 
 export const orderError = (error: CommonError): OrderError => ({
     type: ORDER_ERROR,
+    error,
+});
+
+export const orderDetailFetch = (payload?: OrderDetailFetch['payload']): OrderDetailFetch => ({
+    type: ORDER_DETAIL_FETCH,
+    payload,
+});
+
+export const orderDetailData = (payload: OrderDetailData['payload']): OrderDetailData => ({
+    type: ORDER_DETAIL_DATA,
+    payload,
+});
+
+export const orderDetailError = (error: CommonError): OrderDetailError => ({
+    type: ORDER_DETAIL_ERROR,
     error,
 });
 
