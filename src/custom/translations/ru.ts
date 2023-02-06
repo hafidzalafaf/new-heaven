@@ -154,10 +154,10 @@ export const ru: LangType = {
 
     'page.body.landing.register.item.title': 'No matter your experience level',
     'page.body.landing.register.item.text':
-        'NusaExchange offers an intuitive interface with real time orderbooks, charting tools, trade history, and a simple order process so you can trade from day one.',
+        'Heaven Exchange offers an intuitive interface with real time orderbooks, charting tools, trade history, and a simple order process so you can trade from day one.',
     'page.body.landing.register.item.button': 'register',
 
-    'page.body.landing.features.title': 'NusaExchange platform features',
+    'page.body.landing.features.title': 'Heaven Exchange platform features',
     'page.body.landing.features.features.item1.title': 'Exchange',
     'page.body.landing.features.features.item2.title': 'Order Types',
     'page.body.landing.features.features.item3.title': 'Customizable Interface',
@@ -165,9 +165,9 @@ export const ru: LangType = {
     'page.body.landing.features.features.item5.title': 'Community',
     'page.body.landing.features.features.item6.title': 'Industry leading API',
     'page.body.landing.features.features.item1.text':
-        'NusaExchange offers the most liquid order book in the world, allowing users to easily exchange Bitcoin, Ethereum, EOS, Litecoin, Ripple, NEO and many other digital assets with minimal slippage.',
+        'Heaven Exchange offers the most liquid order book in the world, allowing users to easily exchange Bitcoin, Ethereum, EOS, Litecoin, Ripple, NEO and many other digital assets with minimal slippage.',
     'page.body.landing.features.features.item2.text':
-        'NusaExchange offers a suite of order types to give traders the tools they need for every scenario. Discover more about our most advanced Algorithmic orders types.',
+        'Heaven Exchange offers a suite of order types to give traders the tools they need for every scenario. Discover more about our most advanced Algorithmic orders types.',
     'page.body.landing.features.features.item3.text':
         'Organize your workspace according to your needs: compose your layout, choose between themes, set up notifications and data preferences.',
     'page.body.landing.features.features.item4.text':
@@ -180,7 +180,7 @@ export const ru: LangType = {
     'page.body.landing.tradeOnTheGo.item.text1': 'Our platform is optimized for trading on any device.',
     'page.body.landing.tradeOnTheGo.item.text2': 'And you don’t need to download any additional applications.',
     'page.body.landing.tradeOnTheGo.item.text3':
-        'All the power of NusaExchange cryptocurrency exchange, in the palm of your hand.',
+        'All the power of Heaven Exchange cryptocurrency exchange, in the palm of your hand.',
     'page.body.landing.tradeOnTheGo.item.button': 'let’s try',
 
     'page.body.landing.startTrading.title': 'Start trading now',
@@ -213,7 +213,7 @@ export const ru: LangType = {
     'page.body.landing.footer.about': 'About us',
     'page.body.landing.footer.community': 'Community',
     'page.body.landing.footer.info': 'Info',
-    'page.body.landing.footer.rights': 'NusaExchange © All rights reserved.',
+    'page.body.landing.footer.rights': 'Heaven Exchange © All rights reserved.',
 
     'page.body.landing.footer.email': 'We don’t sell your email and spam',
 

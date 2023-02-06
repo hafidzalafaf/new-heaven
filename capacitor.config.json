@@ -1,20 +1,20 @@
 {
-  "appId": "exchange.nusatech.com",
-  "appName": "NusaExchange",
-  "bundledWebRuntime": false,
-  "npmClient": "yarn",
-  "webDir": "build",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 0
+    "appId": "exchange.nusatech.com",
+    "appName": "HeavenExchange",
+    "bundledWebRuntime": false,
+    "npmClient": "yarn",
+    "webDir": "build",
+    "plugins": {
+        "SplashScreen": {
+            "launchShowDuration": 0
+        }
+    },
+    "ios": {
+        "contentInset": "always"
+    },
+    "linuxAndroidStudioPath": "/snap/bin/android-studio",
+    "cordova": {},
+    "server": {
+        "hostname": "exchange.nusatech.com"
     }
-  },
-  "ios": {
-    "contentInset": "always"
-  },
-  "linuxAndroidStudioPath": "/snap/bin/android-studio",
-  "cordova": {},
-  "server": {
-    "hostname": "exchange.nusatech.com"
-  }
 }

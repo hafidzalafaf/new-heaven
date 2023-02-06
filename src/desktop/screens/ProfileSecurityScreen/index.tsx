@@ -416,7 +416,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                                 disabled={this.disabledButtonCode()}
                                 onClick={this.handleSendCodePhone}
                                 className="btn btn-primary ml-2 text-nowrap">
-                                {(!this.state.isChangeNumber && this.state.phone[0].validated_at === null) ||
+                                {(!this.state.isChangeNumber && this.state.phone[0]?.validated_at === null) ||
                                 this.state.resendCodeActive
                                     ? 'Resend Code'
                                     : 'Send Code'}

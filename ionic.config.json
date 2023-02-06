@@ -1,7 +1,7 @@
 {
-  "name": "NusaExchange",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
+    "name": "HeavenExchange",
+    "integrations": {
+        "capacitor": {}
+    },
+    "type": "react"
 }
