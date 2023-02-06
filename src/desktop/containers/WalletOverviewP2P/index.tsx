@@ -2,7 +2,12 @@ import React, { FC, ReactElement, useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useHistory, Link } from 'react-router-dom';
+import Select from 'react-select';
+import { CustomStylesSelect } from '../../../desktop/components';
+
+import { PercentageTransferP2P } from '../../components';
 import { Decimal, formatWithSeparators, Loading, Table } from 'src/components';
+import { Modal as ModalTransfer } from 'react-bootstrap';
 import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch, useP2PWalletsFetch } from 'src/hooks';
 import {
     selectAbilities,
@@ -44,6 +49,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
     const [nonZeroSelected, setNonZeroSelected] = React.useState<boolean>(false);
     const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [showModalP2PTransfer, setShowModalP2PTransfer] = React.useState<boolean>(true);
 
     const { formatMessage } = useIntl();
     const { isP2PEnabled } = props;
@@ -241,6 +247,18 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
         );
     };
 
+    const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' },
+    ];
+
+    const [fromDate, setFromDate] = React.useState(null);
+    const [percentageValue, setPercentage] = React.useState(0);
+
+    //const [toDate, setToDate] = useState(null);
+    //const [isSwitch, setIsSwitch] = useState(false);
+
     return (
         <React.Fragment>
             <WalletsHeader
@@ -253,10 +271,126 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
             <p className="text-sm grey-text-accent mb-8">Asset balance</p>
             <Table header={headerTitles()} data={retrieveData()} />
 
+            <button onClick={() => setShowModalP2PTransfer(!showModalP2PTransfer)}>Click me</button>
+
             {retrieveData().length < 1 && <NoData text="No Data Yet" />}
 
             {showModalLocked && (
                 <Modal show={showModalLocked} header={renderHeaderModalLocked()} content={renderContentModalLocked()} />
+            )}
+
+            {showModalP2PTransfer && (
+                <ModalTransfer
+                    size="lg"
+                    onHide={() => setShowModalP2PTransfer(!showModalP2PTransfer)}
+                    show={showModalP2PTransfer}>
+                    <ModalTransfer.Header className="border-0">
+                        <div>
+                            <h5 className="text-white">Transfer Assets</h5>
+                        </div>
+                    </ModalTransfer.Header>
+                    <ModalTransfer.Body>
+                        <div className="modal-body-transfer-p2p">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="form-group w-100 mr-3">
+                                    <label className="text-white">From</label>
+                                    <Select
+                                        styles={CustomStylesSelect}
+                                        value={options.filter(function (option) {
+                                            return option.value === fromDate;
+                                        })}
+                                        onChange={(e) => setFromDate(e.value)}
+                                        options={options}
+                                    />
+                                </div>
+                                <div className="mr-3">
+                                    <svg
+                                        width={20}
+                                        height={20}
+                                        viewBox="0 0 24 23"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        {...props}>
+                                        <path
+                                            d="M.619 16.67c-.888-.886-.32-2.378.882-2.496l.154-.008h21.012a1.333 1.333 0 01.156 2.658l-.156.01H4.552l3.057 3.056a1.333 1.333 0 01-1.76 1.997l-.125-.111-5.107-5.107.002.002zM0 7.5a1.333 1.333 0 011.177-1.324l.156-.01h18.115L16.391 3.11a1.333 1.333 0 011.76-1.996l.125.11 5.107 5.107c.886.886.318 2.378-.884 2.495l-.154.008H1.333A1.333 1.333 0 010 7.5z"
+                                            fill="#F2F0FF"
+                                        />
+                                    </svg>
+                                </div>
+                                <div className="form-group w-100">
+                                    <label className="text-white">To</label>
+                                    <Select
+                                        styles={CustomStylesSelect}
+                                        value={options.filter(function (option) {
+                                            return option.value === fromDate;
+                                        })}
+                                        onChange={(e) => setFromDate(e.value)}
+                                        options={options}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <div className="form-group w-100 mr-3">
+                                    <label className="text-white">Coin Assets</label>
+                                    <Select
+                                        styles={CustomStylesSelect}
+                                        value={options.filter(function (option) {
+                                            return option.value === fromDate;
+                                        })}
+                                        onChange={(e) => setFromDate(e.value)}
+                                        options={options}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <div className="form-group">
+                                    <label className="text-white">Amount</label>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        id="exampleFormControlInput1"
+                                        placeholder="Input Amount"
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <PercentageTransferP2P
+                                    orderPercentage={percentageValue}
+                                    handleSelectPercentage={(e) => setPercentage(e)}
+                                    label0="0"
+                                    label25="25"
+                                    label50="50"
+                                    label75="75"
+                                    label100="100"
+                                    handleSide={() => ''}
+                                    side={''}
+                                    amount={''}
+                                />
+                            </div>
+                            <div className="mt-5">
+                                <div className="d-flex justify-content-between mb-2">
+                                    <div>
+                                        <h6 className="text-light">Available Amount :</h6>
+                                    </div>
+                                    <div>
+                                        <h6 className="green-text">00,00</h6>
+                                    </div>
+                                </div>
+                                <div className="d-flex justify-content-between">
+                                    <div>
+                                        <h6 className="text-light">Total Transfer : </h6>
+                                    </div>
+                                    <div>
+                                        <h6 className="green-text">00,00</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ModalTransfer.Body>
+                    <ModalTransfer.Footer className="border-0">
+                        <button className="btn btn-block btn-primary">Transfer Assets</button>
+                    </ModalTransfer.Footer>
+                </ModalTransfer>
             )}
         </React.Fragment>
     );

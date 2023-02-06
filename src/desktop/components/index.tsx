@@ -41,3 +41,4 @@ export * from './P2PBlockedUser';
 export * from './P2PFeedback';
 export * from './P2PPaymentMethod';
 export * from './CardP2PUserInfo';
+export * from './PercentageTransferP2P';
