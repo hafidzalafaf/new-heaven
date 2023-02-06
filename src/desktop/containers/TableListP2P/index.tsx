@@ -61,7 +61,7 @@ export const TableListP2P = () => {
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
-    const [showFilter, setShowFilter] = React.useState(true);
+    const [showFilter, setShowFilter] = React.useState(false);
 
     /* ========== ORDER CREATE STATE START ========== */
     const [price_actual, setPriceActual] = React.useState<string | number>();
@@ -230,7 +230,7 @@ export const TableListP2P = () => {
                         </div>
 
                         <div className="d-flex flex-wrap align-items-center gap-8">
-                            {payments[0] ? (
+                            {payments && payments[0] ? (
                                 payments?.map((payment, i) => (
                                     <div key={i} className="badge-payment text-center text-sm grey-text">
                                         {payment?.bank_name}
