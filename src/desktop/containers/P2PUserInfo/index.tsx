@@ -12,6 +12,7 @@ export const P2PUserInfo: React.FC = () => {
     const ModalChangeName = () => {
         return (
             <div hidden={!showChangeUsernameModal}>
+                <h1>Input to Change Username</h1>
                 <FormControl
                 key='username'
                 type='text'
@@ -19,6 +20,7 @@ export const P2PUserInfo: React.FC = () => {
                 onChange={(e)=> setUsername(e.target.value)}
                 autoFocus={true}
                 />
+                <div>Confirm</div>
             </div>
         )
     }
