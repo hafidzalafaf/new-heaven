@@ -366,7 +366,7 @@ export const TableListP2P = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {list.length > 1 ? (
+                            {list?.length > 1 ? (
                                 list?.map((buy, i) => (
                                     <tr
                                         key={i}
@@ -597,7 +597,7 @@ export const TableListP2P = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {list.length > 0 ? (
+                            {list?.length > 0 ? (
                                 list?.map((sell, i) => (
                                     <tr
                                         key={i}

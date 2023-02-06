@@ -60,6 +60,10 @@ import { OrderState, rootP2POrderSaga } from './user/p2pOrder';
 import { OrderConfirmState, rootP2POrderConfirmationSaga } from './user/p2pOrderConfirmation';
 import { P2POfferState, rootP2POfferSaga } from './user/p2pOffer';
 import { P2POfferAvailableState, rootP2PAvailableOfferSaga } from './user/p2pAvailableOffer';
+import { P2PProfileState, rootP2PProfileSaga } from './user/p2pProfile';
+import { P2PAccountState } from './user/p2pAccount/reducer';
+import { rootP2PAccountSaga } from './user/p2pAccount/sagas';
+import { P2PUserSettingState } from './user/p2pUserSetting/reducer';
 
 export * from './admin/config';
 export * from './admin/markets';
@@ -175,6 +179,9 @@ export interface RootState {
         p2pConfirm: OrderConfirmState;
         p2pOffer: P2POfferState;
         p2pOfferAvailable: P2POfferAvailableState;
+        p2pProfile: P2PProfileState;
+        p2pAccount: P2PAccountState;
+        p2pUserSetting: P2PUserSettingState;
     };
     admin: {
         configUpdate: ConfigUpdateState;
@@ -243,5 +250,7 @@ export function* rootSaga() {
         call(rootP2POrderConfirmationSaga),
         call(rootP2POfferSaga),
         call(rootP2PAvailableOfferSaga),
+        call(rootP2PProfileSaga),
+        call(rootP2PAccountSaga),
     ]);
 }

@@ -213,7 +213,7 @@ const HomeMobileScreen: React.FC = () => {
                             </h6>
                             <Slider {...settings2}>
                                 {blog &&
-                                    blog.map((item, key) => (
+                                    blog?.map((item, key) => (
                                         <a
                                             href={item.url}
                                             target="__blank"
