@@ -21,12 +21,13 @@ import {
     orderCreate,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
-import { RefreshIcon, CheckIcon, CloseIcon, NoDataIcon } from 'src/assets/images/P2PIcon';
+import { RefreshIcon, CheckIcon, CloseIcon, NoDataIcon, FilterIcon, DropdownIcon } from 'src/assets/images/P2PIcon';
 import { CustomStylesSelect, ModalCreateOffer } from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
 import { CustomStyleFiat } from './CustomStyleFiat';
 import { CustomStylePaymentOrder } from './CustomStylePaymentOrder';
+import { Modal } from '../../../desktop/components';
 
 export const TableListP2P = () => {
     const dispatch = useDispatch();
@@ -60,6 +61,7 @@ export const TableListP2P = () => {
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
+    const [showFilter, setShowFilter] = React.useState(false);
 
     /* ========== ORDER CREATE STATE START ========== */
     const [price_actual, setPriceActual] = React.useState<string | number>();
@@ -158,11 +160,102 @@ export const TableListP2P = () => {
         setPrice('');
     };
 
+    const renderModalFilter = () => {
+        return (
+            <div className="p-24">
+                <h1 className="text-md font-semibold grey-text-accent mb-24 text-center">Filter</h1>
+
+                <form action="">
+                    <div className="mb-24">
+                        <label htmlFor="" className="mb-16 text-ms font-extrabold grey-text">
+                            Price
+                        </label>
+
+                        <div className="position-relative mb-16">
+                            <label className="input-label-left text-sm grey-text position-absolute m-0 p-0">min</label>
+                            <input
+                                type="text"
+                                required
+                                // value={min_order}
+                                // onChange={(e) => handleChangeMinOrder(e.target.value)}
+                                placeholder="00000"
+                                className="custom-input-offer w-100 white-text"
+                            />
+                            <label className="input-label-right text-sm grey-text position-absolute m-0 p-0">IDR</label>
+                        </div>
+
+                        <div className="position-relative">
+                            <label className="input-label-left text-sm grey-text position-absolute m-0 p-0">max</label>
+                            <input
+                                type="text"
+                                required
+                                // value={max_order}
+                                // onChange={(e) => handleChangeMaxOrder(e.target.value)}
+                                placeholder="00000"
+                                className="custom-input-offer w-100 white-text"
+                            />
+                            <label className="input-label-right text-sm grey-text position-absolute m-0 p-0">IDR</label>
+                        </div>
+                    </div>
+
+                    <div className="mb-24">
+                        <label htmlFor="" className="mb-16 text-ms font-extrabold grey-text">
+                            Amount
+                        </label>
+
+                        <div className="position-relative mb-16">
+                            <label className="input-label-left text-sm grey-text position-absolute m-0 p-0">e.g</label>
+                            <input
+                                type="text"
+                                required
+                                // value={min_order}
+                                // onChange={(e) => handleChangeMinOrder(e.target.value)}
+                                placeholder="00000"
+                                className="custom-input-offer w-100 white-text"
+                            />
+                            <label className="input-label-right text-sm grey-text position-absolute m-0 p-0">IDR</label>
+                        </div>
+                    </div>
+
+                    <div className="mb-24">
+                        <div className="d-flex align-items-center justify-content-between mb-16">
+                            <label htmlFor="" className="text-ms font-extrabold grey-text">
+                                Payment Methods
+                            </label>
+
+                            <div className="d-flex align-items-center cursor-pointer">
+                                <p className="m-0 p-0 text-ms grey-text">All</p>
+                                <DropdownIcon />
+                            </div>
+                        </div>
+
+                        <div className="d-flex flex-wrap align-items-center gap-8">
+                            {payments && payments[0] ? (
+                                payments?.map((payment, i) => (
+                                    <div key={i} className="badge-payment text-center text-sm grey-text">
+                                        {payment?.bank_name}
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="m-0 p-0 text-center text-sm grey-text">No Payment Method Yet</p>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="d-flex align-items-center gap-16">
+                        <button className="btn-secondary w-50">Reset</button>
+                        <div className="btn-primary w-50">Confirm</div>
+                    </div>
+                </form>
+            </div>
+        );
+    };
+
     return (
         <React.Fragment>
             <div className="com-table-p2p w-100">
                 {/* ========= TOOLBAR START ========= */}
-                <div className="d-flex align-items-start justify-content-between toolbar-p2p w-100">
+                <div className="d-flex align-items-center justify-content-between toolbar-p2p w-100">
                     <div className="d-flex align-items-center flex-wrap">
                         <div className="d-flex align-items-center btn-type-side mb-24">
                             <button type="button" onClick={() => setSide('buy')} className="btn-side success">
@@ -213,6 +306,13 @@ export const TableListP2P = () => {
                                 //     filterredStatus(e.value);
                                 // }}
                             />
+                        </div>
+
+                        <div
+                            onClick={() => setShowFilter(true)}
+                            className="btn-filter d-flex align-items-center gap-8 mb-24 cursor-pointer">
+                            <p className="m-0 p-0 text-sm grey-text">Filter</p>
+                            <FilterIcon />
                         </div>
                     </div>
 
@@ -718,14 +818,16 @@ export const TableListP2P = () => {
                     </table>
                 )}
                 {/* ========= TABLE SELL END ========= */}
-            </div>
 
-            {showModalCreateOffer && (
-                <ModalCreateOffer
-                    showModalCreateOffer={showModalCreateOffer}
-                    onCloseModal={handleCloseModalCreateOffer}
-                />
-            )}
+                {showModalCreateOffer && (
+                    <ModalCreateOffer
+                        showModalCreateOffer={showModalCreateOffer}
+                        onCloseModal={handleCloseModalCreateOffer}
+                    />
+                )}
+
+                <Modal show={showFilter} content={renderModalFilter()} />
+            </div>
         </React.Fragment>
     );
 };

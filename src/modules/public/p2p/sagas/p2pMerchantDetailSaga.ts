@@ -11,10 +11,6 @@ const config: RequestOptions = {
 export function* p2pMerchantDetailSaga(action: P2PMerchantDetailFetch) {
     try {
         const data = yield call(API.get(config), `/public/trades/merchant/${action.payload.merchant}`);
-        // const data = yield call(
-        //     axios.get,
-        //     `http://192.168.1.56:3001/api/v1/public/trades/merchant/${action.payload.merchant}`
-        // );
 
         yield put(p2pMerchantDetailData(data));
     } catch (error) {

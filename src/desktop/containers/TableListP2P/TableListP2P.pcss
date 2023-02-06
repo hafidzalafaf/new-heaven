@@ -36,6 +36,12 @@
             min-width: 140px;
         }
 
+        .btn-filter {
+            padding: 14px 16px;
+            border: 1px solid var(--input-border-color);
+            border-radius: 4px;
+        }
+
         .input-filter-fiat {
             padding: 8px 0 8px 16px;
             gap: 16px;
@@ -154,5 +160,46 @@
 
     .btn-close {
         z-index: 9999;
+    }
+
+    .custom-modal-dialog {
+        width: 768px !important;
+
+        .custom-modal-content {
+            width: 100%;
+        }
+    }
+
+    .custom-input-offer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 14px 50px;
+        gap: 8px;
+        background: #0e1114;
+        border: 1px solid #23262f;
+        border-radius: 4px;
+    }
+
+    .custom-input-offer:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .input-label-right {
+        right: 14px;
+        top: 15px;
+    }
+
+    .input-label-left {
+        left: 14px;
+        top: 15px;
+    }
+
+    .badge-payment {
+        padding: 10px;
+        background: #15191d;
+        min-width: 100px;
+        border-radius: 4px;
     }
 }
