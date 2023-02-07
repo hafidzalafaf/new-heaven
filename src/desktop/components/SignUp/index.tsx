@@ -378,38 +378,40 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
                     <h6 className="text-lg grey-text-accent font-normal mb-24">Term of service</h6>
                 </Modal.Header>
                 <Modal.Body className="tos-content">
-                    <p className="grey-text-accent">SYARAT – SYARAT DAN KETENTUAN UMUM</p>
+                    <p className="grey-text-accent">GENERAL TERMS AND CONDITIONS</p>
                     <p className="grey-text-accent">
-                        Syarat – Syarat dan Ketentuan Umum (selanjutnya disebut sebagai “SKU”) HEAVEN EXCHANGE adalah
-                        ketentuan yang berisikan syarat dan ketentuan mengenai penggunaan produk, jasa, teknologi, fitur
-                        layanan yang diberikan oleh HEAVEN EXCHANGE termasuk, namun tidak terbatas pada penggunaan
-                        Website, Dompet Bitcoin Indonesia dan HEAVEN EXCHANGE Trading Platform (Trading App) (untuk
-                        selanjutnya disebut sebagai “Platform HEAVEN EXCHANGE”) sepanjang tidak diatur secara khusus
-                        sebagaimana tercantum pada bagian registrasi Akun HEAVEN EXCHANGE yang dibuat pada hari dan
-                        tanggal yang tercantum dalam bagian registrasi Akun https://HEAVEN EXCHANGE.com, merupakan satu
-                        kesatuan tidak terpisahkan dan persetujuan atas SKU ini. Dengan mendaftar menjadi
-                        Member/Verified Member, Anda menyatakan telah MEMBACA, MEMAHAMI, MENYETUJUI dan MEMATUHI
-                        Persyaratan dan Ketentuan di bawah. Anda disarankan membaca semua persyaratan dan ketentuan
-                        secara seksama sebelum menggunakan layanan platform HEAVEN EXCHANGE atau segala layanan yang
-                        diberikan, dan bersama dengan ini Anda setuju dan mengikatkan diri terhadap seluruh kegiatan
-                        dalam SKU ini dengan persyaratan dan ketentuan sebagai berikut : DEFINISI sepanjang konteks
-                        kalimatnya tidak menentukan lain, istilah atau definisi dalam SKU memiliki arti sebagai berikut
-                        :
+                        HEAVEN EXCHANGE General Terms and Conditions (hereinafter referred to as "SKU") are provisions
+                        that contain terms and conditions regarding the use of products, services, technology, features
+                        services provided by HEAVEN EXCHANGE including, but not limited to the use of the Website,
+                        Indonesian Bitcoin Wallet and HEAVEN EXCHANGE Trading Platform (Trading App) (hereinafter
+                        referred to as the "HEAVEN EXCHANGE Platform"). hereinafter referred to as the "HEAVEN EXCHANGE
+                        Platform") to the extent not specifically regulated as set out in the HEAVEN EXCHANGE Account
+                        registration section which is made on the day and date listed in the Account registration
+                        section https://heavenexchange.io, constitutes an integral and inseparable unity and approval of
+                        this GTC. By registering to become Member/Verified Member, you declare that you have READ,
+                        UNDERSTAND, AGREE and FOLLOW the Terms and Conditions below. You are advised to read all terms
+                        and conditions carefully before using the HEAVEN EXCHANGE platform services or any services that
+                        are provided, and together with this you agree and bind yourself to all activities in this GTC
+                        with the terms and conditions as follows in this GTC with the following terms and conditions:
+                        DEFINITIONS as long as the context sentence does not determine otherwise, the terms or
+                        definitions in the GTC have the following meanings : Translated with www.DeepL.com/Translator
+                        (free version)
                     </p>
                     <p className="grey-text-accent">
-                        Website mengacu pada situs online dengan alamat https://HEAVEN EXCHANGE.com. Website ini
-                        dikelola oleh HEAVEN EXCHANGE, dengan tidak terbatas pada para pemilik, investor, karyawan dan
-                        pihak-pihak yang terkait dengan HEAVEN EXCHANGE. Tergantung pada konteks, “Website” dapat juga
-                        mengacu pada jasa, produk, situs, konten atau layanan lain yang disediakan oleh HEAVEN EXCHANGE.
-                        Aset Kripto adalah komoditas digital yang menggunakan prinsip teknologi desentralisasi
-                        berbasiskan jaringan peer-to-peer (antar muka)atau disebut dengan Jaringan Blockchain yang
-                        diperdagangkan di dalam platform Blockchain adalah sebuah buku besar terdistribusi (distributed
-                        ledger) terbuka yang dapat mencatat transaksi antara dua pihak secara efisien dan dengan cara
-                        yang dapat diverifikasi secara permanen. Registrasi adalah proses pendaftaran menjadi Member
-                        dalam platform HEAVEN EXCHANGE yang merupakan proses verifikasi awal untuk memperoleh
-                        keterangan, pernyataan dalam penggunaan layanan platform Member adalah orang (perseorangan),
-                        badan usaha, maupun badan hukum yang telah melakukan registrasi pada platform HEAVEN EXCHANGE,
-                        sehingga memperoleh otorisasi dari platform HEAVEN EXCHANGE untuk melakukan{' '}
+                        Website refers to an online site with the address https://heavenexchange.io. This website is
+                        managed by HEAVEN EXCHANGE, with no limitation to its owners, investors, employees and related
+                        parties. parties associated with HEAVEN EXCHANGE. Depending on the context, "Website" may also
+                        refer to other services, products, sites, content or services provided by HEAVEN EXCHANGE.
+                        Crypto Assets are digital commodities that use the principle of decentralized technology based
+                        on a peer-to-peer network (interface) or referred to as a Blockchain Network that is traded on
+                        the Blockchain platform is an open distributed ledger that can record transactions. ledger that
+                        can record transactions between two parties efficiently and in a permanently verifiable manner.
+                        that can be permanently verified. Registration is the process of registering to become a Member
+                        in the HEAVEN EXCHANGE platform which is the initial verification process to obtain information,
+                        statements in the use of platform services Member is a person (individual), business entity, or
+                        legal entity that has registered on the HEAVEN EXCHANGE platform, so as to obtain authorization
+                        from the HEAVEN EXCHANGE platform to carry out Translated with www.DeepL.com/Translator (free
+                        version)
                     </p>
                 </Modal.Body>
                 <Modal.Footer className="d-flex justify-content-between border-none rounded-bottom-10">
