@@ -9,6 +9,7 @@ import { BlogsState, rootBlogsSaga } from './public/blog';
 import { ConfigsState, rootConfigsSaga } from './public/configs';
 import { CurrenciesState } from './public/currencies';
 import { TradingFeeState } from './public/TradingFee';
+import { MaxWithdrawLimitState } from './public/maxWithdrawLimit';
 import { ErrorHandlerState, rootErrorHandlerSaga } from './public/errorHandler';
 import { ColorThemeState } from './public/globalSettings';
 import { GridLayoutState } from './public/gridLayout';
@@ -55,6 +56,7 @@ import { P2PDisputeState, rootP2PDisputeSaga } from './user/p2pDispute';
 import { rootFeeGroupSaga, FeeGroupState } from './user/feeGroup';
 import { rootWithdrawLimitsSaga, WithdrawLimitsState } from './public/withdrawLimits';
 import { ConfirmationCodeState, rootConfirmationCodeSaga } from './user/emailVerificationCode';
+import { GroupMemberState, rootMemberGroupSaga } from './user/memberGroup';
 
 export * from './admin/config';
 export * from './admin/markets';
@@ -76,6 +78,7 @@ export * from './public/orderBook';
 export * from './public/recentTrades';
 export * from './public/p2p';
 export * from './public/withdrawLimits';
+export * from './public/maxWithdrawLimit';
 export * from './user/apiKeys';
 export * from './user/auth';
 export * from './user/beneficiaries';
@@ -103,6 +106,7 @@ export * from './user/p2pOrders';
 export * from './user/p2pTransfers';
 export * from './user/p2pDispute';
 export * from './user/emailVerificationCode';
+export * from './user/memberGroup';
 
 export interface RootState {
     public: {
@@ -127,6 +131,7 @@ export interface RootState {
         rgl: GridLayoutState;
         p2p: P2PState;
         withdrawLimits: WithdrawLimitsState;
+        maxWithdrawLimit: MaxWithdrawLimitState;
     };
     user: {
         abilities: AbilitiesState;
@@ -160,6 +165,7 @@ export interface RootState {
         p2pOrders: P2POrdersState;
         p2pDispute: P2PDisputeState;
         confirmationCode: ConfirmationCodeState;
+        memberGroup: GroupMemberState;
     };
     admin: {
         configUpdate: ConfigUpdateState;
@@ -223,5 +229,6 @@ export function* rootSaga() {
         call(rootP2PDisputeSaga),
         call(rootConfigsSaga),
         call(rootConfirmationCodeSaga),
+        call(rootMemberGroupSaga),
     ]);
 }

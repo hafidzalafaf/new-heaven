@@ -18,6 +18,7 @@ import { depthReducer, incrementDepthReducer, orderBookReducer } from './public/
 import { rangerReducer } from './public/ranger/reducer';
 import { recentTradesReducer } from './public/recentTrades';
 import { withdrawLimitsReducer } from './public/withdrawLimits';
+import { maxWithdrawLimitReducer } from './public/maxWithdrawLimit';
 import { apiKeysReducer } from './user/apiKeys';
 import { abilitiesReducer } from './user/abilities';
 import { authReducer } from './user/auth';
@@ -48,6 +49,7 @@ import { p2pTransfersReducer } from './user/p2pTransfers';
 import { p2pOrdersReducer } from './user/p2pOrders';
 import { p2pDisputeReducer } from './user/p2pDispute';
 import { feeGroupReducer } from './user/feeGroup';
+import { groupMemberReducer } from './user/memberGroup';
 
 export const publicReducer = combineReducers({
     alerts: alertReducer,
@@ -71,6 +73,7 @@ export const publicReducer = combineReducers({
     recentTrades: recentTradesReducer,
     p2p: p2pReducer,
     withdrawLimits: withdrawLimitsReducer,
+    maxWithdrawLimit: maxWithdrawLimitReducer,
 });
 
 export const userReducer = combineReducers({
@@ -105,6 +108,7 @@ export const userReducer = combineReducers({
     p2pOrders: p2pOrdersReducer,
     p2pDispute: p2pDisputeReducer,
     confirmationCode: confirmationCodeReducer,
+    memberGroup: groupMemberReducer,
 });
 
 export const adminReducer = combineReducers({

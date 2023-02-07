@@ -5,6 +5,7 @@ import { configsData, configsError } from '../actions';
 import { currenciesData } from '../../currencies';
 import { blockchainsData } from '../../blockchains';
 import { tradingFeeData } from '../../tradingFee';
+import { maxWithdrawLimitData } from '../../maxWithdrawLimit';
 
 const configsOptions: RequestOptions = {
     apiVersion: 'exchange',
@@ -12,11 +13,15 @@ const configsOptions: RequestOptions = {
 
 export function* getConfigsSaga() {
     try {
-        const { currencies, blockchains, trading_fees } = yield call(API.get(configsOptions), '/public/config');
+        const { currencies, blockchains, trading_fees, withdraw_limits } = yield call(
+            API.get(configsOptions),
+            '/public/config'
+        );
 
         yield put(currenciesData(currencies));
         yield put(blockchainsData(blockchains));
         yield put(tradingFeeData(trading_fees));
+        yield put(maxWithdrawLimitData(withdraw_limits));
 
         yield put(configsData());
     } catch (error) {

@@ -25,6 +25,10 @@ import {
     selectWallets,
     selectOrderExecuteLoading,
     orderExecuteFetch,
+    selectGroupMember,
+    selectTradingFee,
+    groupFetch,
+    withdrawSumFetch,
 } from '../../../modules';
 import { incrementalOrderBook } from '../../../api';
 import { OpenOrders, OrderBook, MarketListTrade, RecentTrades, OrderForm, TradingChart } from '../../containers';
@@ -50,6 +54,8 @@ export const TradingScreen: FC = (): ReactElement => {
     const tickers = useSelector(selectMarketTickers);
     const wallets = useSelector(selectWallets);
     const orderLoading = useSelector(selectOrderExecuteLoading);
+    const groupMember = useSelector(selectGroupMember);
+    const tradingFee = useSelector(selectTradingFee);
 
     // State Open Order
     const [hideOtherPairs, setHideOtherPairs] = useState<boolean>(false);
@@ -79,6 +85,16 @@ export const TradingScreen: FC = (): ReactElement => {
 
     useOpenOrdersFetch(currentMarket, hideOtherPairs);
     useDepthFetch();
+
+    React.useEffect(() => {
+        dispatch(groupFetch());
+        dispatch(withdrawSumFetch());
+    }, []);
+
+    const FeeTrading = tradingFee.find((level) => level.group == groupMember.group);
+    const willRecive = Number(totalSell) - (Number(FeeTrading?.taker) * 100 * Number(totalSell)) / 100;
+    const willPay = Number(totalBuy) + (Number(FeeTrading?.taker) * 100 * Number(totalBuy)) / 100;
+    const myTradingFee = Number(FeeTrading?.taker) * 100;
 
     const ask = [...asks].sort((a, b) => +b[0] - +a[0]);
     const bid = [...bids].sort((a, b) => +b[0] - +a[0]);
@@ -626,6 +642,9 @@ export const TradingScreen: FC = (): ReactElement => {
                                     handleSelectOrderType={handleSelectOrderType}
                                     balanceCoin={balance}
                                     balanceQuote={usdt}
+                                    fee={myTradingFee.toString()}
+                                    willRecive={willRecive}
+                                    willPay={willPay}
                                 />
                             </div>
                             <div className="grid-item recent-trades">
