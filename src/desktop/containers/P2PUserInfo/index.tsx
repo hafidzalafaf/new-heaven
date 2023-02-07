@@ -1,42 +1,52 @@
 import * as React from 'react';
-import { VerificationIcon, ShareIcon, CheckFillIcon, LikeIcon, UnLikeIcon, RenameIcon } from '../../../assets/images/P2PIcon';
+import {
+    VerificationIcon,
+    ShareIcon,
+    CheckFillIcon,
+    LikeIcon,
+    UnLikeIcon,
+    RenameIcon,
+} from '../../../assets/images/P2PIcon';
 import { CardP2PUserInfo } from '../../../desktop/components';
 import { useSelector } from 'react-redux';
 import { selectP2PAccount } from 'src/modules/user/p2pAccount';
 import { FormControl, Modal } from 'react-bootstrap';
 export const P2PUserInfo: React.FC = () => {
     const [username, setUsername] = React.useState('Nusatech Exchange');
-    const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false)
-    const userP2P = useSelector(selectP2PAccount)
-    console.log(userP2P); 
+    const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
+    // const userP2P = useSelector(selectP2PAccount)
+    // console.log(userP2P);
     const ModalChangeName = () => {
         return (
             <div hidden={!showChangeUsernameModal}>
                 <h1>Input to Change Username</h1>
                 <FormControl
-                key='username'
-                type='text'
-                value={username}
-                onChange={(e)=> setUsername(e.target.value)}
-                autoFocus={true}
+                    key="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    autoFocus={true}
                 />
                 <div>Confirm</div>
             </div>
-        )
-    }
-    
+        );
+    };
+
     return (
         <React.Fragment>
             <div className="container-p2p-user-info">
                 <Modal show={showChangeUsernameModal}>
-                    <ModalChangeName/>
+                    <ModalChangeName />
                 </Modal>
                 <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
                     <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
                         {username.slice(0, 1).toUpperCase()}
                     </div>
                     <p className="m-0 p-0 text-ms font-extrabold grey-text-accent">{username}</p>
-                    <RenameIcon onClick={() => setShowChangeUsernameModal(!showChangeUsernameModal)} className='cursor-pointer'/>
+                    <RenameIcon
+                        onClick={() => setShowChangeUsernameModal(!showChangeUsernameModal)}
+                        className="cursor-pointer"
+                    />
                     <div className="d-flex align-items-center gap-4 mr-12">
                         <VerificationIcon />
 

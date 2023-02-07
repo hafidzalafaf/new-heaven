@@ -19,11 +19,15 @@ export const CustomStylesSelect = {
     option: (provided, state) => ({
         ...provided,
         margin: '0',
-        color: 'rgba(181, 179, 188)',
+        color: state.isSelected ? '#ffff' : 'rgba(181, 179, 188)',
         background: state.isSelected ? 'rgb(14, 17, 20)' : 'rgb(11, 14, 17)',
         '&:hover': {
             background: state.isFocused ? 'rgb(14, 17, 20)' : 'rgb(11, 14, 17)',
         },
+    }),
+    singleValue: (provided) => ({
+        ...provided,
+        color: '#fff',
     }),
     indicatorSeparator: () => {},
 };
