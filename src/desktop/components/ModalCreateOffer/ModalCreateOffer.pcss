@@ -1,15 +1,26 @@
 .com-modal-create-offer-p2p {
     &.custom-modal {
+        .header {
+            margin: 0 !important;
+        }
         .custom-modal-dialog {
             max-width: 768px !important;
             width: 100%;
 
             .custom-modal-content {
+                padding-top: 0 !important;
                 width: 100%;
                 height: 99%;
                 overflow-y: scroll;
             }
         }
+    }
+
+    nav.nav-tabs.nav-justified {
+        padding-top: 24px;
+        position: fixed !important;
+        background: var(--body-background-color) !important;
+        z-index: 99999;
     }
 
     .nav-tabs {
@@ -26,6 +37,7 @@
         background: transparent;
         border: none;
         padding: 8px 0;
+        width: 720px;
     }
 
     .nav-tabs .nav-link:hover {

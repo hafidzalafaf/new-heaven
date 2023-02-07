@@ -69,10 +69,9 @@ export const TableListP2P = () => {
     const [payment, setPayment] = React.useState('');
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
-    const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
+    const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(true);
     const [showFilter, setShowFilter] = React.useState(false);
     const [showModalPrice, setShowModalPrice] = React.useState(false);
-    // const [showModalConfirmation, setShowModalConfirmtion] = React.useState(true);
 
     /* ========== ORDER CREATE STATE START ========== */
     const [price_actual, setPriceActual] = React.useState<string | number>();
@@ -319,7 +318,7 @@ export const TableListP2P = () => {
 
     const renderModalFilter = () => {
         return (
-            <div className="p-24">
+            <div className="">
                 <h1 className="text-md font-semibold grey-text-accent mb-24 text-center">Filter</h1>
 
                 <form action="">
@@ -338,7 +337,9 @@ export const TableListP2P = () => {
                                 placeholder="00000"
                                 className="custom-input-offer w-100 white-text"
                             />
-                            <label className="input-label-right text-sm grey-text position-absolute m-0 p-0">IDR</label>
+                            <label className="input-label-right text-sm grey-text position-absolute m-0 p-0">
+                                {fiat?.toUpperCase()}
+                            </label>
                         </div>
 
                         <div className="position-relative">
@@ -351,7 +352,9 @@ export const TableListP2P = () => {
                                 placeholder="00000"
                                 className="custom-input-offer w-100 white-text"
                             />
-                            <label className="input-label-right text-sm grey-text position-absolute m-0 p-0">IDR</label>
+                            <label className="input-label-right text-sm grey-text position-absolute m-0 p-0">
+                                {fiat?.toUpperCase()}
+                            </label>
                         </div>
                     </div>
 
@@ -370,7 +373,9 @@ export const TableListP2P = () => {
                                 placeholder="00000"
                                 className="custom-input-offer w-100 white-text"
                             />
-                            <label className="input-label-right text-sm grey-text position-absolute m-0 p-0">IDR</label>
+                            <label className="input-label-right text-sm grey-text position-absolute m-0 p-0">
+                                {fiat?.toUpperCase()}
+                            </label>
                         </div>
                     </div>
 

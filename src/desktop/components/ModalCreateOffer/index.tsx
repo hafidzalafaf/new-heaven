@@ -1,18 +1,8 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Modal, OfferForm } from '..';
 import { Tabs, Tab } from 'react-bootstrap';
-import {
-    selectP2POffers,
-    p2pFiatFetch,
-    selectP2PFiatsData,
-    p2pCurrenciesFetch,
-    selectP2PCurrenciesData,
-    p2pOfferCreate,
-} from 'src/modules';
-import { InfoSecondaryIcon } from 'src/assets/images/P2PIcon';
 
 export interface ModalCreateOfferPost {
     showModalCreateOffer: boolean;
@@ -81,7 +71,6 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
         payments,
     } = props;
 
-    const dispatch = useDispatch();
     const history = useHistory();
     const intl = useIntl();
     const optionFiats = fiats?.map((item) => {

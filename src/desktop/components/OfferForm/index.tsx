@@ -192,12 +192,14 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     />
                 </div>
 
-                <button type="button" onClick={handleCreateOffer} className="btn-secondary w-100 mb-24">
-                    Create Offers
-                </button>
-                <button type="button" onClick={onCloseModal} className="danger-text btn-danger btn-outline w-100">
-                    Close
-                </button>
+                <div className="position-fixed btn-wrapper dark-bg-accent">
+                    <button type="button" onClick={handleCreateOffer} className="btn-secondary w-100 mb-24">
+                        Create Offers
+                    </button>
+                    <button type="button" onClick={onCloseModal} className="danger-text btn-danger btn-outline w-100">
+                        Close
+                    </button>
+                </div>
             </form>
         </React.Fragment>
     );
