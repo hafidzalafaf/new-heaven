@@ -5,19 +5,29 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { IntlProps } from '../../../';
 import { isUsernameEnabled } from '../../../api';
-import { entropyPasswordFetch, RootState, selectCurrentPasswordEntropy, selectUserInfo, User } from '../../../modules';
+import {
+    entropyPasswordFetch,
+    RootState,
+    selectCurrentPasswordEntropy,
+    selectUserInfo,
+    User,
+    selectUserActivity,
+    UserActivityDataInterface,
+} from '../../../modules';
 import {
     changePasswordFetch,
     selectChangePasswordSuccess,
     toggle2faFetch,
     changePasswordReset,
 } from '../../../modules/user/profile';
+import { localeDate } from '../../../helpers';
 import { ArrowDownIcon } from '../../../assets/images/ArrowDownIcon';
 
 interface ReduxProps {
     user: User;
     passwordChangeSuccess?: boolean;
     currentPasswordEntropy: number;
+    userActivity: UserActivityDataInterface[];
 }
 
 interface RouterProps {
@@ -71,7 +81,9 @@ class ProfileAuthDetailsComponent extends React.Component<Props, State> {
     }
 
     public render() {
-        const { user } = this.props;
+        const { user, userActivity } = this.props;
+
+        console.log(userActivity);
 
         return (
             <React.Fragment>
@@ -99,7 +111,9 @@ class ProfileAuthDetailsComponent extends React.Component<Props, State> {
                                         Last Login
                                         <ArrowDownIcon strokeColor={''} className={'rotate-90 arrow-profile'} />
                                     </span>
-                                    <p className="text-xs white-text font-bold mb-0">{user.updated_at} </p>
+                                    <p className="text-xs white-text font-bold mb-0">
+                                        {localeDate(userActivity[0]?.created_at, 'fullDate')}{' '}
+                                    </p>
                                 </div>
                                 <div className="mr-3">
                                     <span className="text-xs grey-text font-normal ">
@@ -121,6 +135,7 @@ const mapStateToProps = (state: RootState): ReduxProps => ({
     user: selectUserInfo(state),
     passwordChangeSuccess: selectChangePasswordSuccess(state),
     currentPasswordEntropy: selectCurrentPasswordEntropy(state),
+    userActivity: selectUserActivity(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
