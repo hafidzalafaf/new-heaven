@@ -9,7 +9,7 @@ import {
 } from '../../../assets/images/P2PIcon';
 import { CardP2PUserInfo } from '../../../desktop/components';
 import { useSelector } from 'react-redux';
-import { selectP2PAccount } from 'src/modules/user/p2pAccount';
+// import { selectP2PAccount } from 'src/modules/user/p2pAccount';
 import { FormControl, Modal } from 'react-bootstrap';
 export const P2PUserInfo: React.FC = () => {
     const [username, setUsername] = React.useState('Nusatech Exchange');
