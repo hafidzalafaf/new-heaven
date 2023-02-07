@@ -17,7 +17,7 @@ const ReferralMobileScreen: React.FC = () => {
     const referralCode = user && user.uid;
 
     const doCopyReferralCode = () => {
-        copy('referral-code');
+        copy('referral-code-mobile');
         dispatch(alertPush({ message: ['page.body.wallets.tabs.deposit.ccy.message.success'], type: 'success' }));
     };
 
@@ -44,6 +44,10 @@ const ReferralMobileScreen: React.FC = () => {
             <p className="grey-text text-xs">Status</p>,
         ];
     };
+
+    console.log(referralLink);
+    console.log('JOSS');
+
     return (
         <React.Fragment>
             <div className="mobile-container referral-mobile-screen no-header home-screen dark-bg-main">
@@ -72,7 +76,7 @@ const ReferralMobileScreen: React.FC = () => {
                 </div>
                 <div className="mb-4">
                     <fieldset onClick={doCopyReferralCode}>
-                        <CopyableTextField value={referralLink} className="ml-3 w-100 " fieldId="referral-code" />
+                        <CopyableTextField value={referralLink} className="ml-3 w-100" fieldId="referral-code-mobile" />
                     </fieldset>
                 </div>
                 <div className="table-mobile-wrapper">

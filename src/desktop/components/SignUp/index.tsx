@@ -394,8 +394,7 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
                         are provided, and together with this you agree and bind yourself to all activities in this GTC
                         with the terms and conditions as follows in this GTC with the following terms and conditions:
                         DEFINITIONS as long as the context sentence does not determine otherwise, the terms or
-                        definitions in the GTC have the following meanings : Translated with www.DeepL.com/Translator
-                        (free version)
+                        definitions in the GTC have the following meanings :
                     </p>
                     <p className="grey-text-accent">
                         Website refers to an online site with the address https://heavenexchange.io. This website is
@@ -410,8 +409,7 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
                         in the HEAVEN EXCHANGE platform which is the initial verification process to obtain information,
                         statements in the use of platform services Member is a person (individual), business entity, or
                         legal entity that has registered on the HEAVEN EXCHANGE platform, so as to obtain authorization
-                        from the HEAVEN EXCHANGE platform to carry out Translated with www.DeepL.com/Translator (free
-                        version)
+                        from the HEAVEN EXCHANGE platform to carry out
                     </p>
                 </Modal.Body>
                 <Modal.Footer className="d-flex justify-content-between border-none rounded-bottom-10">
