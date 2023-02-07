@@ -19,9 +19,18 @@ import {
     p2pCurrenciesFetch,
     selectP2PCurrenciesData,
     orderCreate,
+    p2pOfferCreate,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
-import { RefreshIcon, CheckIcon, CloseIcon, NoDataIcon, FilterIcon, DropdownIcon } from 'src/assets/images/P2PIcon';
+import {
+    RefreshIcon,
+    CheckIcon,
+    CloseIcon,
+    NoDataIcon,
+    FilterIcon,
+    DropdownIcon,
+    InfoSecondaryIcon,
+} from 'src/assets/images/P2PIcon';
 import { CustomStylesSelect, ModalCreateOffer } from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
@@ -63,6 +72,7 @@ export const TableListP2P = () => {
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
     const [showModalPrice, setShowModalPrice] = React.useState(false);
+    // const [showModalConfirmation, setShowModalConfirmtion] = React.useState(true);
 
     /* ========== ORDER CREATE STATE START ========== */
     const [price_actual, setPriceActual] = React.useState<string | number>();
@@ -72,6 +82,22 @@ export const TableListP2P = () => {
     const [amount, setAmount] = React.useState('');
     const [payment_order, setPaymentOrder] = React.useState('');
     /* ========== ORDER CREATE STATE END ========== */
+
+    /* ============== STATE CREATE OFFER  START ============== */
+    const [currencyOffer, setCurrencyOffer] = React.useState(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
+    const [priceOffer, setPriceOffer] = React.useState('');
+    const [fiatOffer, setFiatOffer] = React.useState('IDR');
+    const [trade_amount, setTradeAmount] = React.useState('');
+    const [min_order, setMinOrder] = React.useState('');
+    const [max_order, setMaxOrder] = React.useState('');
+    const [paymentValue, setPaymentValue] = React.useState([]);
+    const [paymentOffer, setPaymentOffer] = React.useState([]);
+    const [payment_limit, setPaymentLimit] = React.useState('');
+    const [term_of_condition, setTermOfCondition] = React.useState('');
+    const [auto_replay, setAutoReplay] = React.useState('');
+    const [sideOffer, setSideOffer] = React.useState('buy');
+    const [showModalConfirmation, setShowModalConfirmation] = React.useState(false);
+    /* ============== STATE CREATE OFFER  END ============== */
 
     React.useEffect(() => {
         if (currency !== undefined && fiat !== undefined) {
@@ -85,7 +111,7 @@ export const TableListP2P = () => {
 
     React.useEffect(() => {
         dispatch(p2pCurrenciesFetch({ fiat }));
-    }, [fiat]);
+    }, [fiat, currencyOffer, priceOffer]);
 
     React.useEffect(() => {
         setCurrencies(currenciesData?.currency);
@@ -160,6 +186,96 @@ export const TableListP2P = () => {
         setAmount('');
         setPrice('');
     };
+
+    /* ============== FUNCTION CREATE OFFER START ============== */
+    const handleConfirmOffer = () => {
+        const payload = {
+            currency: currencyOffer,
+            price: priceOffer,
+            fiat: fiatOffer,
+            trade_amount: trade_amount,
+            min_order: min_order,
+            max_order: max_order,
+            payment: paymentOffer,
+            payment_limit: payment_limit,
+            term_of_condition: term_of_condition,
+            auto_replay: auto_replay,
+            side: sideOffer,
+        };
+
+        dispatch(p2pOfferCreate(payload));
+
+        setShowModalConfirmation(false);
+        setCurrencyOffer(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
+        setPriceOffer('');
+        setFiatOffer('IDR');
+        setTradeAmount('');
+        setMinOrder('');
+        setMaxOrder('');
+        setPaymentValue([]);
+        setPaymentOffer([]);
+        setPaymentLimit('');
+        setTermOfCondition('');
+        setAutoReplay('');
+        setSideOffer('buy');
+    };
+
+    const handleCreacteOffer = () => {
+        setShowModalConfirmation(true);
+        setShowModalCreateOffer(false);
+    };
+
+    const handleChangeFiatOffer = (e: string) => {
+        setFiatOffer(e);
+    };
+
+    const handleChangeCurrencyOffer = (e: string) => {
+        setCurrencyOffer(e);
+    };
+
+    const handleChangePaymentOffer = (e: any) => {
+        setPaymentValue(e);
+        let data = e;
+        let temp = [];
+        data?.map((el) => {
+            temp.push(el.value);
+        });
+
+        setPaymentOffer(temp);
+    };
+
+    const handleChangePriceOffer = (e: string) => {
+        setPriceOffer(e);
+    };
+
+    const handleChangeTradeAmount = (e: string) => {
+        setTradeAmount(e);
+    };
+
+    const handleChangeMinOrder = (e: string) => {
+        setMinOrder(e);
+    };
+
+    const handleChangeMaxOrder = (e: string) => {
+        setMaxOrder(e);
+    };
+
+    const handleChangePaymentLimit = (e: string) => {
+        setPaymentLimit(e);
+    };
+
+    const handleChangeTermOfCondition = (e: string) => {
+        setTermOfCondition(e);
+    };
+
+    const handleChangeAutoReplay = (e: string) => {
+        setAutoReplay(e);
+    };
+
+    const handleChangeSideOffer = (e: string) => {
+        setSideOffer(e);
+    };
+    /* ============== FUNCTION CREATE OFFER END ============== */
 
     const renderModalPrice = () => {
         return (
@@ -260,6 +376,82 @@ export const TableListP2P = () => {
                         <button className="btn-primary w-50">Confirm</button>
                     </div>
                 </form>
+            </div>
+        );
+    };
+
+    const renderModalConfirmation = () => {
+        return (
+            <div>
+                <h1 className="white-text text-md font-bold text-center mb-24">CONFIRM OFFER</h1>
+                <h2 className="grey-text text-ms font-bold mb-16">{sideOffer?.toUpperCase()}</h2>
+                <div className="d-flex flex-column gap-12 mb-24">
+                    <div className="d-flex align-items-center justify-content-between">
+                        <p className="m-0 p-0 grey-text text-xs font-bold">Asset</p>
+                        <div className="d-flex align-items-center gap-4">
+                            <img src="/img/coin.png" alt="coin" width={25} height={25} />
+                            <p className="m-0 p-0 white-text text-xxs font-bold">USDT</p>
+                        </div>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <p className="m-0 p-0 grey-text text-xs font-bold">Currency(Fiat)</p>
+                        <p className="m-0 p-0 white-text text-xxs font-bold">{fiatOffer?.toUpperCase()}</p>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <p className="m-0 p-0 grey-text text-xs font-bold">Price</p>
+                        <p className="m-0 p-0 white-text text-xxs font-bold">{priceOffer}</p>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <p className="m-0 p-0 grey-text text-xs font-bold">Trading Amount</p>
+                        <p className="m-0 p-0 white-text text-xxs font-bold">{trade_amount} USDT</p>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <p className="m-0 p-0 grey-text text-xs font-bold">Order Limit</p>
+                        <p className="m-0 p-0 white-text text-xxs font-bold">
+                            {min_order}-{max_order} IDR
+                        </p>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <p className="m-0 p-0 grey-text text-xs font-bold">Payment Method</p>
+                        <p className="m-0 p-0 white-text text-xxs font-bold">{paymentValue?.map((el) => el.label)}</p>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <p className="m-0 p-0 grey-text text-xs font-bold">Payment time limit</p>
+                        <p className="m-0 p-0 white-text text-xxs font-bold">{payment_limit} Minutes</p>
+                    </div>
+                </div>
+
+                <div className="d-flex align-items-center gap-4 mb-24">
+                    <p className="m-0 p-0 grey-text text-xs font-semibold">
+                        After confirmation od the {sideOffer?.toUpperCase()} order, the trading assets will be frozen.
+                    </p>
+                    <InfoSecondaryIcon />
+                </div>
+
+                <div className="d-flex align-items-center justify-content-between gap-8 w-100">
+                    <button
+                        onClick={() => {
+                            setShowModalConfirmation(false);
+                            setCurrencyOffer(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
+                            setPriceOffer('');
+                            setFiatOffer('IDR');
+                            setTradeAmount('');
+                            setMinOrder('');
+                            setMaxOrder('');
+                            setPaymentValue([]);
+                            setPaymentOffer([]);
+                            setPaymentLimit('');
+                            setTermOfCondition('');
+                            setAutoReplay('');
+                            setSideOffer('buy');
+                        }}
+                        className="btn-secondary w-40">
+                        Cancel
+                    </button>
+                    <button onClick={handleConfirmOffer} className="btn-primary w-60">
+                        Confirm
+                    </button>
+                </div>
             </div>
         );
     };
@@ -836,12 +1028,39 @@ export const TableListP2P = () => {
                     <ModalCreateOffer
                         showModalCreateOffer={showModalCreateOffer}
                         onCloseModal={handleCloseModalCreateOffer}
+                        currencies={currencies}
+                        fiats={fiats}
+                        payments={payments}
+                        auto_replay={auto_replay}
+                        currency={currencyOffer}
+                        fiat={fiatOffer}
+                        max_order={max_order}
+                        min_order={min_order}
+                        payment={paymentOffer}
+                        paymentValue={paymentValue}
+                        payment_limit={payment_limit}
+                        price={priceOffer}
+                        side={sideOffer}
+                        term_of_condition={term_of_condition}
+                        trade_amount={trade_amount}
+                        handleChangeAutoReplay={handleChangeAutoReplay}
+                        handleChangeCurrency={handleChangeCurrencyOffer}
+                        handleChangeFiat={handleChangeFiatOffer}
+                        handleChangeMaxOrder={handleChangeMaxOrder}
+                        handleChangeMinOrder={handleChangeMinOrder}
+                        handleChangePayment={handleChangePaymentOffer}
+                        handleChangePaymentLimit={handleChangePaymentLimit}
+                        handleChangePrice={handleChangePriceOffer}
+                        handleChangeSide={handleChangeSideOffer}
+                        handleChangeTermOfCondition={handleChangeTermOfCondition}
+                        handleChangeTradeAmount={handleChangeTradeAmount}
+                        handleConfirmOffer={handleConfirmOffer}
+                        handleCreateOffer={handleCreacteOffer}
                     />
                 )}
-
                 <Modal show={showFilter} content={renderModalFilter()} />
-
                 <Modal show={showModalPrice} content={renderModalPrice()} />
+                <Modal show={showModalConfirmation} content={renderModalConfirmation()} />
             </div>
         </React.Fragment>
     );
