@@ -4,6 +4,7 @@ import { selectUserLoggedIn, selectCurrentMarket } from '../../../modules';
 import { OrderSide } from 'src/modules/types';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Decimal } from 'src/components';
 
 export interface OrderFormProps {
     amountSell: string;
@@ -36,6 +37,9 @@ export interface OrderFormProps {
     handleSelectOrderType: (e: string) => void;
     balanceCoin: string;
     balanceQuote: string;
+    willRecive: string | number;
+    fee: string;
+    willPay: string | number;
 }
 
 export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
@@ -70,6 +74,9 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
         handleSelectOrderType,
         balanceCoin,
         balanceQuote,
+        fee,
+        willPay,
+        willRecive,
     } = props;
     const isLoggedin = useSelector(selectUserLoggedIn);
     const currentMarket = useSelector(selectCurrentMarket);
@@ -124,6 +131,10 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
                     Sell in {amountSell} {currentMarket?.base_unit?.toUpperCase()} = $ {totalSell}
                 </li>
                 <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalSell}</li>
+                <li className="text-ms grey-text-accent font-semibold">Fee {fee}%</li>
+                <li className="text-ms grey-text-accent font-semibold">
+                    Estimation receive = ${Decimal.format(willRecive, currentMarket?.price_precision)}
+                </li>
             </ul>
             <div className="d-flex justify-content-center">
                 <button className="btn btn-danger sm px-5 mr-3" onClick={handleCancelModalSell}>
@@ -146,6 +157,10 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
                     Bought {amountBuy} {currentMarket?.base_unit?.toUpperCase()} = $ {totalBuy}
                 </li>
                 <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalBuy}</li>
+                <li className="text-ms grey-text-accent font-semibold">Fee {fee}%</li>
+                <li className="text-ms grey-text-accent font-semibold">
+                    Estimation payment = ${Decimal.format(willPay, currentMarket?.price_precision)}
+                </li>
             </ul>
             <div className="d-flex justify-content-center">
                 <button className="btn btn-danger sm px-5 mr-3" onClick={handleCancelModalBuy}>

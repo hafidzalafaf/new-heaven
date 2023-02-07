@@ -9,6 +9,7 @@ import { BlogsState, rootBlogsSaga } from './public/blog';
 import { ConfigsState, rootConfigsSaga } from './public/configs';
 import { CurrenciesState } from './public/currencies';
 import { TradingFeeState } from './public/TradingFee';
+import { MaxWithdrawLimitState } from './public/maxWithdrawLimit';
 import { ErrorHandlerState, rootErrorHandlerSaga } from './public/errorHandler';
 import { ColorThemeState } from './public/globalSettings';
 import { GridLayoutState } from './public/gridLayout';
@@ -64,6 +65,7 @@ import { P2PProfileState, rootP2PProfileSaga } from './user/p2pProfile';
 import { P2PAccountState } from './user/p2pAccount/reducer';
 import { rootP2PAccountSaga } from './user/p2pAccount/sagas';
 import { P2PUserSettingState } from './user/p2pUserSetting/reducer';
+import { GroupMemberState, rootMemberGroupSaga } from './user/memberGroup';
 
 export * from './admin/config';
 export * from './admin/markets';
@@ -85,6 +87,7 @@ export * from './public/orderBook';
 export * from './public/recentTrades';
 export * from './public/p2p';
 export * from './public/withdrawLimits';
+export * from './public/maxWithdrawLimit';
 export * from './user/apiKeys';
 export * from './user/auth';
 export * from './user/beneficiaries';
@@ -117,6 +120,7 @@ export * from './user/p2pOrder';
 export * from './user/p2pOrderConfirmation';
 export * from './user/p2pOffer';
 export * from './user/p2pAvailableOffer';
+export * from './user/memberGroup';
 
 export interface RootState {
     public: {
@@ -141,6 +145,7 @@ export interface RootState {
         rgl: GridLayoutState;
         p2p: P2PState;
         withdrawLimits: WithdrawLimitsState;
+        maxWithdrawLimit: MaxWithdrawLimitState;
     };
     user: {
         abilities: AbilitiesState;
@@ -182,6 +187,7 @@ export interface RootState {
         p2pProfile: P2PProfileState;
         p2pAccount: P2PAccountState;
         p2pUserSetting: P2PUserSettingState;
+        memberGroup: GroupMemberState;
     };
     admin: {
         configUpdate: ConfigUpdateState;
@@ -252,5 +258,6 @@ export function* rootSaga() {
         call(rootP2PAvailableOfferSaga),
         call(rootP2PProfileSaga),
         call(rootP2PAccountSaga),
+        call(rootMemberGroupSaga),
     ]);
 }

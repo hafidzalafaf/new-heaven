@@ -18,12 +18,19 @@ import {
     selectUserInfo,
     selectBeneficiariesFetchError,
     selectWithdrawLimitError,
+    selectWithdrawSum,
+    selectGroupMember,
+    selectMaxWithdrawLimit,
+    groupFetch,
+    withdrawSumFetch,
+    selectWallets,
+    walletsWithdrawCcyFetch,
+    selectWithdrawSuccess,
 } from '../../../modules';
 import { GLOBAL_PLATFORM_CURRENCY, DEFAULT_FIAT_PRECISION } from '../../../constants';
 import { Decimal, Tooltip } from '../../../components';
 import { CirclePlusIcon } from '../../../assets/images/CirclePlusIcon';
 import { useBeneficiariesFetch, useWithdrawLimits, useReduxSelector, useWalletsFetch } from '../../../hooks';
-import { walletsWithdrawCcyFetch, selectWithdrawSuccess, selectWallets } from '../../../modules';
 import PinInput from 'react-pin-input';
 import { CircleCloseIcon } from 'src/assets/images/CircleCloseIcon';
 import moment from 'moment';
@@ -33,6 +40,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     useBeneficiariesFetch();
     useWithdrawLimits();
     useWalletsFetch();
+
     const intl = useIntl();
     const history = useHistory();
     const dispatch = useDispatch();
@@ -54,6 +62,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     const { currency = '' } = useParams<{ currency?: string }>();
     const [beneficiaryCode, setBeneficiaryCode] = React.useState('');
     const [currencyId, setCurrencyId] = React.useState('');
+    const [messageAmount, setMessageAmount] = React.useState('');
 
     const withdrawSuccess = useSelector(selectWithdrawSuccess);
     const beneficiaries: Beneficiary[] = useSelector(selectBeneficiaries);
@@ -65,13 +74,22 @@ export const WalletWithdrawalForm: React.FC = () => {
     const currencies: Currency[] = useSelector(selectCurrencies);
     const wallets = useSelector(selectWallets);
     const user = useSelector(selectUserInfo);
-
+    const withdrawLimits = useSelector(selectMaxWithdrawLimit);
+    const withdrawSum = useSelector(selectWithdrawSum);
+    const memberGroup = useSelector(selectGroupMember);
     const beneficiariesList = beneficiaries.filter((item) => item.currency === currency);
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
-    const wallet = wallets.find((item) => item.currency === currency);
+    const wallet = wallets.length && wallets.find((item) => item.currency.toLowerCase() === currency.toLowerCase());
+    const balance = wallet && wallet.balance ? wallet.balance.toString() : '0';
 
     const [seconds, setSeconds] = React.useState(30000);
     const [timerActive, setTimerActive] = React.useState(false);
+
+    React.useEffect(() => {
+        dispatch(groupFetch());
+        dispatch(withdrawSumFetch());
+        // dispatch()
+    }, [dispatch]);
 
     React.useEffect(() => {
         let timer = null;
@@ -102,6 +120,17 @@ export const WalletWithdrawalForm: React.FC = () => {
             setShowModalLocked(true);
         }
     });
+    const myWithdrawLimit = withdrawLimits.find((group) => group?.group == memberGroup?.group);
+    const remainingWithdrawDaily = myWithdrawLimit
+        ? Number(myWithdrawLimit?.limit_24_hour) - Number(withdrawSum?.last_24_hours)
+        : 0;
+    const remainingWithdrawMothly = myWithdrawLimit
+        ? Number(myWithdrawLimit?.limit_1_month) - Number(withdrawSum?.last_1_month)
+        : 0;
+
+    console.log(remainingWithdrawDaily);
+    console.log(myWithdrawLimit?.limit_24_hour, 'a');
+    console.log(withdrawLimits);
 
     const blockchainKeyValue =
         currencyItem && currencyItem.networks.find((item) => item.blockchain_key === blockchainKey);
@@ -120,6 +149,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     const handleChangeAmount = (e) => {
         const value = e.replace(/[^0-9\.]/g, '');
         setAmount(value);
+        amountValidation(e);
     };
 
     const handleChangeOtp = (value: string) => {
@@ -383,6 +413,40 @@ export const WalletWithdrawalForm: React.FC = () => {
         );
     };
 
+    const disabledButton = () => {
+        if (currency == '') {
+            return true;
+        } else if (!amount) {
+            return true;
+        } else if (!beneficiaryId) {
+            return true;
+        } else if (!address) {
+            return true;
+        } else if (withdrawRecive < 1) {
+            return true;
+        } else if (messageAmount) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const amountValidation = (e) => {
+        if (Number(e) > Number(balance)) {
+            setMessageAmount('Your balance is insufficient');
+            return true;
+        } else if (Number(e) > Number(remainingWithdrawDaily)) {
+            setMessageAmount('Exceeded the withdrawal limit today');
+            return true;
+        } else if (Number(e) > Number(remainingWithdrawMothly)) {
+            setMessageAmount(`Exceeded the current month's withdrawal limit`);
+            return true;
+        } else {
+            setMessageAmount('');
+            return false;
+        }
+    };
+
     return (
         <React.Fragment>
             <div>
@@ -440,10 +504,18 @@ export const WalletWithdrawalForm: React.FC = () => {
                             handleChangeInput={handleChangeAmount}
                             inputValue={amount}
                             classNameLabel="d-none"
-                            classNameInput={`dark-bg-accent`}
+                            classNameInput={`dark-bg-accent ${!blockchainKey && 'input-disable'} ${
+                                messageAmount && 'error'
+                            }`}
                             autoFocus={false}
                             labelVisible={false}
+                            isDisabled={!blockchainKey}
                         />
+                        {messageAmount !== '' ? (
+                            <span className="text-xxs danger-text font-normal">{messageAmount}</span>
+                        ) : (
+                            ''
+                        )}
                     </div>
                 </div>
                 <p className="text-sm grey-text-accent ">
@@ -453,6 +525,18 @@ export const WalletWithdrawalForm: React.FC = () => {
                     <p className="mb-0 text-ms grey-text-accent">Your Balance</p>
                     <p className="mb-0 text-ms grey-text-accent font-bold">
                         {wallet?.balance} {currency.toUpperCase()}
+                    </p>
+                </div>
+                <div className="d-flex justify-content-between mb-12">
+                    <p className="mb-0 text-ms grey-text-accent">Daily Limit </p>
+                    <p className="mb-0 text-ms grey-text-accent font-bold">
+                        {remainingWithdrawDaily} {currency.toUpperCase()}
+                    </p>
+                </div>
+                <div className="d-flex justify-content-between mb-12">
+                    <p className="mb-0 text-ms grey-text-accent">Monthly Limit </p>
+                    <p className="mb-0 text-ms grey-text-accent font-bold">
+                        {remainingWithdrawMothly} {currency.toUpperCase()}
                     </p>
                 </div>
                 <div className="d-flex justify-content-between mb-12">
@@ -474,19 +558,7 @@ export const WalletWithdrawalForm: React.FC = () => {
                 </div>
                 <button
                     type="button"
-                    disabled={
-                        !currency
-                            ? true
-                            : !amount
-                            ? true
-                            : !beneficiaryId
-                            ? true
-                            : !address
-                            ? true
-                            : withdrawRecive < 1
-                            ? true
-                            : false
-                    }
+                    disabled={disabledButton()}
                     onClick={handleWithdraw}
                     className="btn btn-primary btn-block">
                     Withdraw
