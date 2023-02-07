@@ -26,6 +26,8 @@ import { estimateUnitValue } from 'src/helpers/estimateValue';
 import { VALUATION_PRIMARY_CURRENCY } from 'src/constants';
 import { WalletsHeader, Modal, NoData } from '../../components';
 import { CircleCloseDangerLargeIcon } from '../../../assets/images/CircleCloseIcon';
+import { SpotWalletIcon } from 'src/assets/images/SpotWalletIcon';
+import { P2PWalletIcon } from 'src/assets/images/P2PWalletIcon';
 
 interface Props {
     isP2PEnabled?: boolean;
@@ -42,6 +44,13 @@ interface ExtendedWallet extends Wallet {
     marketId: string;
 }
 
+interface CoinDetailProps {
+    id: any;
+    currency: string;
+    name: string;
+    iconUrl: string;
+}
+
 const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
     const [filterValue, setFilterValue] = React.useState<string>('');
     const [filteredWallets, setFilteredWallets] = React.useState<ExtendedWallet[]>([]);
@@ -49,7 +58,9 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
     const [nonZeroSelected, setNonZeroSelected] = React.useState<boolean>(false);
     const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
     const [loading, setLoading] = React.useState<boolean>(false);
-    const [showModalP2PTransfer, setShowModalP2PTransfer] = React.useState<boolean>(true);
+    const [showModalP2PTransfer, setShowModalP2PTransfer] = React.useState<boolean>(false);
+    const [currId, setCurrId] = React.useState<CoinDetailProps>({} as CoinDetailProps);
+    //const [currenciesObj, setCurrencyObj] = React.useState<CoinDetailProps>({} as CoinDetailProps);
 
     const { formatMessage } = useIntl();
     const { isP2PEnabled } = props;
@@ -136,6 +147,12 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
         [history]
     );
 
+    const handleTransferP2P = (curr) => {
+        setCurrId(curr);
+        console.log(curr);
+        setShowModalP2PTransfer((prevState) => !prevState);
+    };
+
     const retrieveData = useCallback(() => {
         const list = nonZeroSelected
             ? filteredWallets.filter((i) => i.balance && Number(i.balance) > 0)
@@ -200,13 +217,9 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                               {item && item.network && item.network[0] ? 'P2P Trade' : 'Disabled'}
                           </button>
                           <button
-                              onClick={() => {
-                                  item &&
-                                      item.network &&
-                                      item.network[0] &&
-                                      item.network[0].withdrawal_enabled &&
-                                      handleClickWithdraw(currency);
-                              }}
+                              onClick={() =>
+                                  item && item.network && item.network[0] && handleTransferP2P(filteredList[index])
+                              }
                               className={`bg-transparent border-none ${
                                   item && item.network && item.network[0] && item.network[0].withdrawal_enabled
                                       ? 'warning-text'
@@ -247,17 +260,49 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
         );
     };
 
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' },
+    const optionsAssets = [
+        {
+            value: 'spotWallet',
+            label: (
+                <div className="w-full d-flex align-items-center">
+                    <div className="mr-2">
+                        <SpotWalletIcon />
+                    </div>
+                    <div>
+                        <p className="m-0 text-sm grey-text-accent">Spot Wallet</p>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            value: 'p2pWallet',
+            label: (
+                <div className="w-full d-flex align-items-center">
+                    <div className="mr-2">
+                        <P2PWalletIcon />
+                    </div>
+                    <div>
+                        <p className="m-0 text-sm grey-text-accent">P2P Wallet</p>
+                    </div>
+                </div>
+            ),
+        },
     ];
 
-    const [fromDate, setFromDate] = React.useState(null);
+    const newOption = currencies.map((item) => ({ value: item.id, label: item.name }));
+
+    const [fromAddress, setFromAddress] = React.useState(null);
+    const [toAddress, setToAddress] = React.useState(null);
+    const [coinList, setCoinList] = React.useState(null);
     const [percentageValue, setPercentage] = React.useState(0);
 
-    //const [toDate, setToDate] = useState(null);
-    //const [isSwitch, setIsSwitch] = useState(false);
+    const [isSwitch, setIsSwitch] = React.useState(false);
+
+    const switchAddress = () => {
+        setFromAddress(toAddress);
+        setToAddress(fromAddress);
+        setIsSwitch((prevState) => !prevState);
+    };
 
     return (
         <React.Fragment>
@@ -271,8 +316,6 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
             <p className="text-sm grey-text-accent mb-8">Asset balance</p>
             <Table header={headerTitles()} data={retrieveData()} />
 
-            <button onClick={() => setShowModalP2PTransfer(!showModalP2PTransfer)}>Click me</button>
-
             {retrieveData().length < 1 && <NoData text="No Data Yet" />}
 
             {showModalLocked && (
@@ -281,13 +324,11 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
 
             {showModalP2PTransfer && (
                 <ModalTransfer
-                    size="lg"
+                    dialogClassName="modal-p2p-transfer"
                     onHide={() => setShowModalP2PTransfer(!showModalP2PTransfer)}
                     show={showModalP2PTransfer}>
-                    <ModalTransfer.Header className="border-0">
-                        <div>
-                            <h5 className="text-white">Transfer Assets</h5>
-                        </div>
+                    <ModalTransfer.Header className="border-0 m-0">
+                        <h5 className="text-white">Transfer Assets</h5>
                     </ModalTransfer.Header>
                     <ModalTransfer.Body>
                         <div className="modal-body-transfer-p2p">
@@ -295,15 +336,16 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                                 <div className="form-group w-100 mr-3">
                                     <label className="text-white">From</label>
                                     <Select
+                                        isSearchable={false}
                                         styles={CustomStylesSelect}
-                                        value={options.filter(function (option) {
-                                            return option.value === fromDate;
+                                        value={optionsAssets.filter(function (option) {
+                                            return option.value === fromAddress;
                                         })}
-                                        onChange={(e) => setFromDate(e.value)}
-                                        options={options}
+                                        onChange={(e) => setFromAddress(e.value)}
+                                        options={optionsAssets}
                                     />
                                 </div>
-                                <div className="mr-3">
+                                <div className="mr-3 cursor-pointer" onClick={switchAddress}>
                                     <svg
                                         width={20}
                                         height={20}
@@ -320,26 +362,24 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                                 <div className="form-group w-100">
                                     <label className="text-white">To</label>
                                     <Select
+                                        isSearchable={false}
                                         styles={CustomStylesSelect}
-                                        value={options.filter(function (option) {
-                                            return option.value === fromDate;
+                                        value={optionsAssets.filter(function (option) {
+                                            return option.value === toAddress;
                                         })}
-                                        onChange={(e) => setFromDate(e.value)}
-                                        options={options}
+                                        onChange={(e) => setToAddress(e.value)}
+                                        options={optionsAssets}
                                     />
                                 </div>
                             </div>
-                            <div>
-                                <div className="form-group w-100 mr-3">
-                                    <label className="text-white">Coin Assets</label>
-                                    <Select
-                                        styles={CustomStylesSelect}
-                                        value={options.filter(function (option) {
-                                            return option.value === fromDate;
-                                        })}
-                                        onChange={(e) => setFromDate(e.value)}
-                                        options={options}
-                                    />
+                            <div className="form-group">
+                                <div className="w-full d-flex align-items-center coin-selected">
+                                    <img src={currId.iconUrl} alt="icon" className="mr-12 small-coin-icon" />
+                                    <div>
+                                        <p className="m-0 text-sm grey-text-accent">{currId.currency.toUpperCase()}</p>
+                                        <p className="m-0 text-xs grey-text-accent">{currId.name}</p>
+                                    </div>
+                                    {/* <h4 className="text-white">{currId}</h4> */}
                                 </div>
                             </div>
                             <div>
