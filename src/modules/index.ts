@@ -62,8 +62,7 @@ import { OrderConfirmState, rootP2POrderConfirmationSaga } from './user/p2pOrder
 import { P2POfferState, rootP2POfferSaga } from './user/p2pOffer';
 import { P2POfferAvailableState, rootP2PAvailableOfferSaga } from './user/p2pAvailableOffer';
 import { P2PProfileState, rootP2PProfileSaga } from './user/p2pProfile';
-import { P2PAccountState } from './user/p2pAccount/reducer';
-import { rootP2PAccountSaga } from './user/p2pAccount/sagas';
+import { rootP2PPaymentUserSaga, P2PPaymentUserState } from './user/p2pPaymentUser';
 import { P2PUserSettingState } from './user/p2pUserSetting/reducer';
 import { GroupMemberState, rootMemberGroupSaga } from './user/memberGroup';
 
@@ -121,6 +120,8 @@ export * from './user/p2pOrderConfirmation';
 export * from './user/p2pOffer';
 export * from './user/p2pAvailableOffer';
 export * from './user/memberGroup';
+export * from './user/p2pProfile';
+export * from './user/p2pPaymentUser';
 
 export interface RootState {
     public: {
@@ -185,8 +186,8 @@ export interface RootState {
         p2pOffer: P2POfferState;
         p2pOfferAvailable: P2POfferAvailableState;
         p2pProfile: P2PProfileState;
-        p2pAccount: P2PAccountState;
         p2pUserSetting: P2PUserSettingState;
+        p2pPaymentUser: P2PPaymentUserState;
         memberGroup: GroupMemberState;
     };
     admin: {
@@ -257,7 +258,7 @@ export function* rootSaga() {
         call(rootP2POfferSaga),
         call(rootP2PAvailableOfferSaga),
         call(rootP2PProfileSaga),
-        call(rootP2PAccountSaga),
         call(rootMemberGroupSaga),
+        call(rootP2PPaymentUserSaga),
     ]);
 }

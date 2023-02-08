@@ -9,7 +9,7 @@ const config: RequestOptions = {
 
 export function* p2pFetchPaymentUserSaga(action: P2PPaymentUserFetch) {
     try {
-        yield call(API.get(config), `/market/trades/`);
+        yield call(API.get(config), `/account/payment`);
         yield put(p2pPaymentUserData());
     } catch (error) {
         yield put(
