@@ -53,7 +53,7 @@ export const MarketFavoriteTabs: FC = (): ReactElement => {
             ...market,
             last: Decimal.format(+(marketTickers[market.id] || defaultTicker).last, market.price_precision),
             open: Decimal.format(+(marketTickers[market.id] || defaultTicker).open, market.price_precision),
-            price_change_percent: marketTickers[market.id].price_change_percent,
+            price_change_percent: marketTickers[market.id]?.price_change_percent,
             high: Decimal.format(+(marketTickers[market.id] || defaultTicker).high, market.price_precision),
             low: Decimal.format(+(marketTickers[market.id] || defaultTicker).low, market.price_precision),
             volume: Decimal.format(+(marketTickers[market.id] || defaultTicker).volume, market.amount_precision),
