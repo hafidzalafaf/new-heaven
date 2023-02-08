@@ -17,6 +17,7 @@ import {
 } from '../../../modules';
 import { Logo } from '../../../assets/images/Logo';
 import { Facebook, Linkedin, Youtube } from '../../../assets/images/SocialMedia';
+import './Footer.pcss'
 
 interface State {
     isOpenLanguage: boolean;
@@ -106,7 +107,7 @@ class FooterContainer extends React.Component<Props, State> {
                                 <div className="input-group mb-0">
                                     <input
                                         type="text"
-                                        className="form-control newsletter-input text-secondary"
+                                        className="form-control newsletter-input footer-input"
                                         placeholder="Enter Your Email"
                                     />
                                     <label htmlFor="newslatter" className=" newsletter-input-label">

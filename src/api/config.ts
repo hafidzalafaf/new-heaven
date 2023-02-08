@@ -9,7 +9,7 @@ export const defaultConfig: Config = {
         applogicUrl: `${hostUrl}/api/v2/applogic`,
         rangerUrl: `${rangerHostUrl}/api/v2/ranger`,
         finexUrl: `${hostUrl}/api/v2/finex`,
-        p2pUrl: `https://dev.backendexchange.com/api/v2/p2p`,
+        p2pUrl: `${hostUrl}/api/v2/p2p`,
         newsUrl: `${hostUrl}/blog/ghost/api/v3`,
     },
     finex: false,
