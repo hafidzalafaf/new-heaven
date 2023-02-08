@@ -6,8 +6,8 @@ import moment from 'moment';
 
 export const P2PFeedback: React.FC = () => {
     const data = [
-        { id: 1, positive: true, name: 'Nusatech Exchange' },
-        { id: 2, positive: false, name: 'Nusatech Exchange' },
+        { id: 1, timer: '9:45', payment_method: '/img/logo-jago.png', positive: true, name: 'Nusatech Exchange' },
+        { id: 2, timer: '9:45', payment_method: '/img/logo-dana.png', positive: false, name: 'Nusatech Exchange' },
     ];
 
     const dataPositive = data.filter((item) => item.positive === true);
@@ -30,6 +30,19 @@ export const P2PFeedback: React.FC = () => {
                         </p>
                         <p className="m-0 p-0 text-xxs font-bold white-text">Transaksi cepat, Sopan dan Ramah</p>
                     </div>
+                </div>
+
+                <div className='text-white'>
+                    <p>{item.timer}</p>
+                </div>
+                <div className='bg-white ml-20 mr-20'>
+                    <img
+                        height={16}
+                        width={32}
+                        src={item.payment_method}
+                        alt="payment_method"
+                        className="ml-10 mr-10"
+                    />
                 </div>
 
                 <span>{item.positive ? <LikeSuccessIcon /> : <UnLikeDangerIcon />}</span>
