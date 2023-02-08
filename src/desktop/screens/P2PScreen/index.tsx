@@ -12,11 +12,17 @@ export const P2PScreen: React.FC = () => {
 
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(selectUserLoggedIn);
-    const [showModalAnnouncement, setShowModatAnnouncement] = React.useState(false);
+    const [showModalAnnouncement, setShowModalAnnouncement] = React.useState(false);
 
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
     }, [dispatch]);
+
+    React.useEffect(() => {
+        setTimeout(() => {
+            setShowModalAnnouncement(true);
+        }, 3000);
+    }, []);
 
     const renderModalAnnouncement = () => {
         return (
@@ -34,7 +40,6 @@ export const P2PScreen: React.FC = () => {
                 </p>
 
                 <div className="d-flex align-items-center gap-8 mb-24">
-                    {/* <input type="checkbox" className="custom-control-label" /> */}
                     <Form.Check
                         type="checkbox"
                         custom
@@ -45,7 +50,7 @@ export const P2PScreen: React.FC = () => {
                     <p className="m-0 p-0 grey-text-accent text-sm">I have read and agree to the above content</p>
                 </div>
 
-                <button type="button" onClick={() => setShowModatAnnouncement(false)} className="btn-primary w-100">
+                <button type="button" onClick={() => setShowModalAnnouncement(false)} className="btn-primary w-100">
                     Continue
                 </button>
             </React.Fragment>

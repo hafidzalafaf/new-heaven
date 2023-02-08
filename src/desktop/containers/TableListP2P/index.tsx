@@ -20,6 +20,7 @@ import {
     selectP2PCurrenciesData,
     orderCreate,
     p2pOfferCreate,
+    selectUserInfo,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import {
@@ -31,7 +32,7 @@ import {
     DropdownIcon,
     InfoSecondaryIcon,
 } from 'src/assets/images/P2PIcon';
-import { CustomStylesSelect, ModalCreateOffer, TableOfferP2P } from '../../../desktop/components';
+import { CustomStylesSelect, ModalCreateOffer, TableOfferP2P, ModalUserLevel } from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
 import { CustomStyleFiat } from './CustomStyleFiat';
@@ -48,6 +49,7 @@ export const TableListP2P = () => {
     const list = useSelector(selectP2POffers);
     const fiats = useSelector(selectP2PFiatsData);
     const currenciesData = useSelector(selectP2PCurrenciesData);
+    const user = useSelector(selectUserInfo);
     const total = useSelector(selectP2POffersTotalNumber);
     const wallets = useSelector(selectWallets);
     const paymentMethods = useSelector(selectP2PPaymentMethodsData);
@@ -72,6 +74,8 @@ export const TableListP2P = () => {
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
     const [showModalPrice, setShowModalPrice] = React.useState(false);
+    const [showModalUserLevel, setShowModalUserLevel] = React.useState(false);
+    const [title, setTitle] = React.useState('');
 
     /* ========== ORDER CREATE STATE START ========== */
     const [price_actual, setPriceActual] = React.useState<string | number>();
@@ -160,8 +164,13 @@ export const TableListP2P = () => {
             amount,
         };
 
-        dispatch(orderCreate(side == 'buy' ? payloadBuy : payloadSell));
-        resetForm();
+        if (user?.level < 3) {
+            setShowModalUserLevel(true);
+            setTitle('Create Order');
+        } else {
+            dispatch(orderCreate(side == 'buy' ? payloadBuy : payloadSell));
+            resetForm();
+        }
     };
 
     const handleChangePrice = (e: string) => {
@@ -582,9 +591,16 @@ export const TableListP2P = () => {
 
                         <button
                             type="button"
-                            onClick={() =>
-                                isLoggedIn ? setShowModalCreateOffer(!showModalCreateOffer) : history.push('/signin')
-                            }
+                            onClick={() => {
+                                if (isLoggedIn && user?.level < 3) {
+                                    setShowModalUserLevel(true);
+                                    setTitle('Create Offer');
+                                } else if (isLoggedIn && user?.level == 3) {
+                                    setShowModalCreateOffer(!showModalCreateOffer);
+                                } else {
+                                    history.push('/signin');
+                                }
+                            }}
                             className="btn-primary mb-24">
                             + Create Offers
                         </button>
@@ -665,6 +681,14 @@ export const TableListP2P = () => {
                         handleChangeTradeAmount={handleChangeTradeAmount}
                         handleConfirmOffer={handleConfirmOffer}
                         handleCreateOffer={handleCreacteOffer}
+                    />
+                )}
+
+                {showModalUserLevel && (
+                    <ModalUserLevel
+                        show={showModalUserLevel}
+                        title={title}
+                        onClose={() => setShowModalUserLevel(false)}
                     />
                 )}
                 <Modal show={showFilter} content={renderModalFilter()} />
