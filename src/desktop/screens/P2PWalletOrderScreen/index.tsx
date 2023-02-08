@@ -1,10 +1,12 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { orderDetailFetch, selectP2POrderDetail } from 'src/modules';
 import { useDocumentTitle } from '../../../hooks';
 import { alertPush } from 'src/modules';
 import { HeaderP2P, BannerP2P, P2PFAQ } from 'src/desktop/containers';
 import { CopyableTextField } from '../../../components';
 import { copy } from '../../../helpers';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Modal, CustomInput } from 'src/desktop/components';
 import moment from 'moment';
 import {
@@ -21,12 +23,15 @@ import {
     UnLikeDangerIcon,
     LikeSuccessIcon,
 } from '../../../assets/images/P2PIcon';
-import { Link, useLocation } from 'react-router-dom';
 
 export const P2PWalletOrderScreen: React.FC = () => {
+    useDocumentTitle('P2P || Order');
     const dispatch = useDispatch();
-    const location: { state: { type: string } } = useLocation();
-    const type = location.state?.type;
+    const { order_number = '' } = useParams<{ order_number?: string }>();
+    const location: { state: { side: string } } = useLocation();
+    const side = location.state?.side;
+
+    const detail = useSelector(selectP2POrderDetail);
 
     const [seconds, setSeconds] = useState(30000);
     const [timerActive, setTimerActive] = useState(false);
@@ -42,6 +47,12 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [checkModalTwo, setcheckModalTwo] = useState(false);
     const [comment, setComment] = useState('');
 
+    console.log(detail);
+
+    React.useEffect(() => {
+        dispatch(orderDetailFetch({ offer_number: order_number }));
+    }, [dispatch, order_number]);
+
     const bank = [
         {
             id: 1,
@@ -54,8 +65,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
         },
         { id: 4, name: 'dana' },
     ];
-
-    useDocumentTitle('P2P || Order');
 
     const doCopyNumber = () => {
         copy('kid-code');
@@ -254,7 +263,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                 <div className="container dark-bg-main d-flex justify-content-between align-items-center p-4">
                     <div>
                         <p className="mb-2 text-lg white-text font-bold">
-                            {type === 'sell' ? 'Sell' : 'Buy'} USDT from USDTCYPTO
+                            {side === 'sell' ? 'Sell' : 'Buy'} USDT from USDT CRYPTO
                         </p>
                         <p className="mb-0 text-sm grey-text">
                             Order has been made. Please wait for system confirmation.
@@ -288,7 +297,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             <span className="grey-text text-sm">Order number</span>
                             <fieldset onClick={doCopyNumber}>
                                 <CopyableTextField
-                                    value={'20000000000000000000'}
+                                    value={`${detail?.order?.order_number}`}
                                     className="ml-3 w-100 "
                                     fieldId="kid-code"
                                 />
@@ -296,7 +305,9 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         </div>
                         <div className="d-flex align-items-center">
                             <span className="grey-text text-sm mr-2">Time created</span>
-                            <span className="grey-text text-sm">2022-12-16 08:54:57</span>
+                            <span className="grey-text text-sm">
+                                {moment(detail?.order?.created_at).format('YYYY-MM-DD hh:mm:ss')}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -434,7 +445,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                         After transferring funds. Click the button "Confirm"
                                     </p>
                                     {step === 3 ? (
-                                        type === 'buy' ? (
+                                        side === 'buy' ? (
                                             <div className="d-flex gap-24">
                                                 <Link
                                                     to={`/p2p/wallets`}
@@ -468,7 +479,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    if (type === 'buy') {
+                                                    if (side === 'buy') {
                                                         setStep(3);
                                                     } else {
                                                         setShowModalConfirm(true);

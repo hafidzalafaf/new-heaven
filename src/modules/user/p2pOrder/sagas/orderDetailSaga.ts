@@ -10,11 +10,7 @@ const config: RequestOptions = {
 
 export function* orderDetailSaga(action: OrderDetailFetch) {
     try {
-        let params = '';
-        if (action.payload) {
-            params = `?${buildQueryString(action.payload)}`;
-        }
-        const feedback = yield call(API.get(config), `/market/orders/${params}`);
+        const feedback = yield call(API.get(config), `/market/orders/${action.payload.offer_number}`);
         yield put(orderDetailData(feedback));
     } catch (error) {
         yield put(
