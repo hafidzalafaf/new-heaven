@@ -775,7 +775,7 @@ export const en = {
     'page.modal.withdraw.success.button': 'OK',
 
     'page.modal.expired.title': 'Your session has expired',
-    'page.modal.expired.submit': 'Log in again',
+    'page.modal.expired.submit': 'Sign in again',
 
     /* Customization */
     'page.body.customization.tabs.themes': 'Colors',

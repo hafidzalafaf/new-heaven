@@ -367,12 +367,12 @@ class Head extends React.Component<Props, HeaderState> {
                                                   localStorage.getItem('lang_code') !== null
                                                       ? localStorage.getItem('lang_code').toUpperCase()
                                                       : 'EN'
-                                              }/USDT`
+                                              }`
                                             : `${
                                                   localStorage.getItem('lang_code') !== null
                                                       ? localStorage.getItem('lang_code').toUpperCase()
                                                       : 'EN'
-                                              }/USDT`}
+                                              }`}
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>
@@ -399,16 +399,6 @@ class Head extends React.Component<Props, HeaderState> {
                                                             {item.flag} {item.name}
                                                         </div>
                                                     ))}
-                                                </div>
-                                                <div className="line"></div>
-                                                <div className="currency">
-                                                    <p className="text-xs font-bold mb-3 grey-text-accent">
-                                                        {this.translate('page.header.navbar.dropdown.currency')}
-                                                    </p>
-                                                    <div className="dropdown-item grey-text-accent text-sm active cursor-pointer">
-                                                        <div className="dots" />
-                                                        {this.translate('page.header.navbar.dropdown.language.usd')}
-                                                    </div>
                                                 </div>
                                             </div>
                                         </Dropdown.Item>
