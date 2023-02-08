@@ -83,8 +83,6 @@ class ProfileAuthDetailsComponent extends React.Component<Props, State> {
     public render() {
         const { user, userActivity } = this.props;
 
-        console.log(userActivity);
-
         return (
             <React.Fragment>
                 <div className="profile-detail px-24 py-4 dark-bg-main mb-24">

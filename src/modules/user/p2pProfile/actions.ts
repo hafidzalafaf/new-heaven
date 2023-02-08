@@ -1,17 +1,8 @@
 import { CommonError } from '../../types';
-import {
-    P2P_PROFILE_FETCH,
-    P2P_PROFILE_FETCH_DATA,
-    P2P_PROFILE_FETCH_ERROR,
-} from './constants';
+import { P2P_PROFILE_FETCH, P2P_PROFILE_FETCH_DATA, P2P_PROFILE_FETCH_ERROR } from './constants';
 
 export interface P2PProfileFetch {
     type: typeof P2P_PROFILE_FETCH;
-    payload?: {
-        type: string;
-        ordering: string;
-        order_by: string;
-    };
 }
 
 export interface P2PProfileData {
@@ -26,9 +17,8 @@ export interface P2PProfileError {
 
 export type P2PProfileActions = P2PProfileFetch | P2PProfileData | P2PProfileError;
 
-export const p2pProfileFetch = (payload?: P2PProfileFetch['payload']): P2PProfileFetch => ({
+export const p2pProfileFetch = (): P2PProfileFetch => ({
     type: P2P_PROFILE_FETCH,
-    payload,
 });
 
 export const p2pProfileData = (payload: P2PProfileData['payload']): P2PProfileData => ({

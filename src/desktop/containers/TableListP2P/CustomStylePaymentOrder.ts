@@ -5,7 +5,7 @@ export const CustomStylePaymentOrder = {
         borderRadius: '6px',
         background: 'rgb(14, 17, 20)',
         boxShadow: state.isFocused ? null : null,
-        padding: '16px',
+        // padding: '16px',
         cursor: 'pointer',
         maxWidth: '100%',
         marginRight: '0px',

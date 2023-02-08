@@ -69,7 +69,7 @@ export const TableListP2P = () => {
     const [payment, setPayment] = React.useState('');
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
-    const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(true);
+    const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
     const [showModalPrice, setShowModalPrice] = React.useState(false);
 
@@ -172,19 +172,21 @@ export const TableListP2P = () => {
         setPaymentOrder(e);
     };
 
-    const handleSelectOfferBuy = (expand: string, offer_number: string, price: string) => {
+    const handleSelectOfferBuy = (expand: string, offer_number: string, price: string, payment?: any) => {
         if (!expandBuy) {
             setExpandBuy(expand);
-            handleChangeOfferNumber(offer_number);
+            setOfferNumber(offer_number);
             setPriceActual(price);
+            setPaymentOption([]);
         }
     };
 
-    const handleSelectOfferSell = (expand: string, offer_number: string, price: string) => {
-        if (!expandBuy) {
+    const handleSelectOfferSell = (expand: string, offer_number: string, price: string, payment: any) => {
+        if (!expandSell) {
             setExpandSell(expand);
-            handleChangeOfferNumber(offer_number);
+            setOfferNumber(offer_number);
             setPriceActual(price);
+            setPaymentOption(payment);
         }
     };
 
@@ -196,10 +198,6 @@ export const TableListP2P = () => {
     const handleCloseExpandSell = () => {
         setExpandSell('');
         resetForm();
-    };
-
-    const handleChangeOfferNumber = (e: string) => {
-        setOfferNumber(e);
     };
 
     const resetForm = () => {
@@ -446,7 +444,9 @@ export const TableListP2P = () => {
                     </div>
                     <div className="d-flex align-items-center justify-content-between">
                         <p className="m-0 p-0 grey-text text-xs font-bold">Payment Method</p>
-                        <p className="m-0 p-0 white-text text-xxs font-bold">{paymentValue?.map((el) => el.label)}</p>
+                        {paymentValue?.map((el) => (
+                            <p className="m-0 p-0 white-text text-xxs font-bold">{el.label}</p>
+                        ))}
                     </div>
                     <div className="d-flex align-items-center justify-content-between">
                         <p className="m-0 p-0 grey-text text-xs font-bold">Payment time limit</p>
@@ -496,10 +496,24 @@ export const TableListP2P = () => {
                 <div className="d-flex align-items-center justify-content-between toolbar-p2p w-100">
                     <div className="d-flex align-items-center flex-wrap">
                         <div className="d-flex align-items-center btn-type-side mb-24">
-                            <button type="button" onClick={() => setSide('buy')} className="btn-side success">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSide('buy');
+                                    setExpandBuy('');
+                                    resetForm();
+                                }}
+                                className="btn-side success">
                                 Buy
                             </button>
-                            <button type="button" onClick={() => setSide('sell')} className="btn-side danger">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSide('sell');
+                                    setExpandSell('');
+                                    resetForm();
+                                }}
+                                className="btn-side danger">
                                 Sell
                             </button>
                         </div>
@@ -594,232 +608,6 @@ export const TableListP2P = () => {
                         handleCloseExpand={handleCloseExpandBuy}
                         resetForm={resetForm}
                     />
-                    // <table className="w-100">
-                    //     <thead className="w-100">
-                    //         <tr className="w-100 text-xs font-bold grey-text-accent border-table">
-                    //             <th className="table-head">Advertiser</th>
-                    //             <th className="table-head">Price</th>
-                    //             <th className="table-head">Available / Limit</th>
-                    //             <th className="table-head">Payment Methods</th>
-                    //             <th className="table-head">Trades 0 Fee(s)</th>
-                    //         </tr>
-                    //     </thead>
-                    //     <tbody>
-                    //         {list?.length > 1 ? (
-                    //             list?.map((buy, i) => (
-                    //                 <tr
-                    //                     key={i}
-                    //                     onClick={() => {
-                    //                         !expandBuy && setExpandBuy(buy.offer_number);
-                    //                         handleChangeOfferNumber(buy?.offer_number);
-                    //                         setPriceActual(buy?.price);
-                    //                     }}
-                    //                     className="white-text border-table cursor-pointer">
-                    //                     {expandBuy === buy.offer_number ? (
-                    //                         <td colSpan={5} className="row-description dark-bg-main radius-lg">
-                    //                             <div className="d-flex align-items-center justify-content-between mb-24">
-                    //                                 <div className="d-flex align-items-center">
-                    //                                     <img src="/img/bigcoin.png" alt="coin" className="mr-24" />
-                    //                                     <div>
-                    //                                         <h2 className="m-0 p-0 white-text mb-12 text-ms fontbold">
-                    //                                             {buy?.trader?.email}
-                    //                                         </h2>
-                    //                                         <div className="d-flex">
-                    //                                             <p className="p-0 m-0 text-xs mr-8">
-                    //                                                 {buy?.sum_order} Orders
-                    //                                             </p>
-                    //                                             <p className="p-0 m-0 text-xs ">
-                    //                                                 {buy?.persentage} % Complete
-                    //                                             </p>
-                    //                                         </div>
-                    //                                     </div>
-                    //                                 </div>
-                    //                                 <span
-                    //                                     className="btn-close"
-                    //                                     onClick={() => {
-                    //                                         setExpandBuy('');
-                    //                                         resetForm();
-                    //                                     }}>
-                    //                                     <CloseIcon />
-                    //                                 </span>
-                    //                             </div>
-
-                    //                             <div className="d-flex align-items-center justify-content-between mb-24 py-12">
-                    //                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
-                    //                                     <p className="m-0 p-0 mr-16">Price</p>
-                    //                                     <p className="m-0 p-0 mr-4">
-                    //                                         {buy?.price} {fiat?.toUpperCase()}
-                    //                                     </p>
-                    //                                 </div>
-
-                    //                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
-                    //                                     <p className="m-0 p-0 mr-16">Available</p>
-                    //                                     <p className="m-0 p-0 mr-4">
-                    //                                         {buy?.available_amount} {currency?.toUpperCase()}
-                    //                                     </p>
-                    //                                 </div>
-
-                    //                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
-                    //                                     <p className="m-0 p-0 mr-16">Payment Time Limit</p>
-                    //                                     <p className="m-0 p-0 mr-16">{buy?.payment_time} Minutes</p>
-                    //                                 </div>
-
-                    //                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold">
-                    //                                     <p className="m-0 p-0 mr-16">Seller's Payment Methods</p>
-                    //                                     <div className="d-flex flex-wrap align-items-center label-bank-container">
-                    //                                         {buy?.payment[0]
-                    //                                             ? buy?.payment?.map((bank, i) => (
-                    //                                                   <div key={i} className="label-bank">
-                    //                                                       <img src={bank?.logo} alt={bank?.bank_name} />
-                    //                                                   </div>
-                    //                                               ))
-                    //                                             : '-'}
-                    //                                     </div>
-                    //                                 </div>
-                    //                             </div>
-
-                    //                             <div className="d-flex align-items-center justify-content-between w-100">
-                    //                                 <form className="dark-bg-accent w-50 form-buy">
-                    //                                     <h1 className="white-text text-lg mb-44">
-                    //                                         Buy {currency?.toUpperCase()} Crypto
-                    //                                     </h1>
-
-                    //                                     <div className="position-relative mb-24">
-                    //                                         <label className="white-text text-xs font-semibold mb-8">
-                    //                                             I Want To Pay
-                    //                                         </label>
-                    //                                         <input
-                    //                                             type="text"
-                    //                                             placeholder={'00.00'}
-                    //                                             value={price}
-                    //                                             onChange={(e) => handleChangePrice(e.target.value)}
-                    //                                             required
-                    //                                             className="form-control input-p2p-form white-text"
-                    //                                         />
-                    //                                         <label className="input-label-right text-sm grey-text position-absolute">
-                    //                                             All {fiat?.toUpperCase()}
-                    //                                         </label>
-                    //                                     </div>
-
-                    //                                     <div className="position-relative mb-44">
-                    //                                         <label className="white-text text-xs font-semibold mb-8">
-                    //                                             I Will Recieve
-                    //                                         </label>
-                    //                                         <input
-                    //                                             type="text"
-                    //                                             placeholder={'00.00'}
-                    //                                             value={amount}
-                    //                                             required
-                    //                                             className="form-control input-p2p-form white-text"
-                    //                                         />
-                    //                                         <label className="input-label-right text-sm grey-text position-absolute">
-                    //                                             {currency?.toUpperCase()}
-                    //                                         </label>
-                    //                                     </div>
-
-                    //                                     <div className="d-flex align-items-center justify-content-between w-100 btn-container">
-                    //                                         <button
-                    //                                             type="button"
-                    //                                             onClick={resetForm}
-                    //                                             className="w-50 btn-secondary grey-text">
-                    //                                             Cancel
-                    //                                         </button>
-                    //                                         <button
-                    //                                             type="button"
-                    //                                             onClick={handleCreacteOrder}
-                    //                                             className="w-50 btn-primary">
-                    //                                             Buy {currency?.toUpperCase()}
-                    //                                         </button>
-                    //                                     </div>
-                    //                                 </form>
-
-                    //                                 <div className="w-40">
-                    //                                     <h1 className="white-text text-md mb-16">
-                    //                                         Term and Conditions :
-                    //                                     </h1>
-                    //                                     <p className="text-xs font-extrabold grey-text mb-16">
-                    //                                         {buy?.term_of_condition}
-                    //                                     </p>
-                    //                                 </div>
-                    //                             </div>
-                    //                         </td>
-                    //                     ) : (
-                    //                         <>
-                    //                             <td>
-                    //                                 <div className="d-flex align-items-center table-row">
-                    //                                     <img src="/img/coin.png" alt="coin" className="mr-16" />
-                    //                                     <div>
-                    //                                         <div className="d-flex align-items-center">
-                    //                                             <p className="p-0 m-0 mr-12 text-sm font-bold">
-                    //                                                 {buy?.trader?.email}
-                    //                                             </p>
-                    //                                             <span className="check">
-                    //                                                 <CheckIcon />
-                    //                                             </span>
-                    //                                         </div>
-                    //                                         <div className="d-flex">
-                    //                                             <p className="p-0 m-0 text-xs mr-8">
-                    //                                                 {buy?.sum_order} Orders
-                    //                                             </p>
-                    //                                             <p className="p-0 m-0 text-xs ">
-                    //                                                 {buy?.persentage} % Complete
-                    //                                             </p>
-                    //                                         </div>
-                    //                                     </div>
-                    //                                 </div>
-                    //                             </td>
-                    //                             <td className="text-xs font-bold">
-                    //                                 {buy?.price} {fiat?.toUpperCase()}
-                    //                             </td>
-                    //                             <td>
-                    //                                 <div className="d-flex text-xs font-bold mb-6">
-                    //                                     <p className="m-0 p-0 mr-8">Available</p>
-                    //                                     <p className="m-0 p-0">
-                    //                                         {buy?.available_amount} {currency?.toUpperCase()}
-                    //                                     </p>
-                    //                                 </div>
-
-                    //                                 <div className="d-flex text-xxs font-bold mb-6">
-                    //                                     <p className="m-0 p-0 mr-8">Limit</p>
-                    //                                     <p className="m-0 p-0">
-                    //                                         {buy?.min_order}-{buy?.max_order} AED
-                    //                                     </p>
-                    //                                 </div>
-                    //                             </td>
-                    //                             <td>
-                    //                                 <div className="d-flex flex-wrap align-items-center label-bank-container">
-                    //                                     {buy?.payment[0]
-                    //                                         ? buy?.payment?.map((bank, i) => (
-                    //                                               <div key={i} className="label-bank">
-                    //                                                   <img src={bank?.logo} alt={bank?.bank_name} />
-                    //                                               </div>
-                    //                                           ))
-                    //                                         : '-'}
-                    //                                 </div>
-                    //                             </td>
-                    //                             <td>
-                    //                                 <button className="btn-success">
-                    //                                     Buy {currency?.toUpperCase()}
-                    //                                 </button>
-                    //                             </td>
-                    //                         </>
-                    //                     )}
-                    //                 </tr>
-                    //             ))
-                    //         ) : (
-                    //             <tr>
-                    //                 <td colSpan={5}>
-                    //                     <div className="d-flex justify-content-center align-items-center w-100 min-h-300">
-                    //                         <div className="d-flex flex-column justify-content-center align-items-center">
-                    //                             <NoDataIcon />
-                    //                             <p className="grey-text">No Data</p>
-                    //                         </div>
-                    //                     </div>
-                    //                 </td>
-                    //             </tr>
-                    //         )}
-                    //     </tbody>
-                    // </table>
                 )}
                 {/* ========= TABLE BUY END ========= */}
 
@@ -842,249 +630,6 @@ export const TableListP2P = () => {
                         handleCloseExpand={handleCloseExpandSell}
                         resetForm={resetForm}
                     />
-                    // <table className="w-100">
-                    //     <thead className="w-100">
-                    //         <tr className="w-100 text-xs font-bold grey-text-accent border-table">
-                    //             <th className="table-head">Advertiser</th>
-                    //             <th className="table-head">Price</th>
-                    //             <th className="table-head">Available / Limit</th>
-                    //             <th className="table-head">Payment Methods</th>
-                    //             <th className="table-head">Trades 0 Fee(s)</th>
-                    //         </tr>
-                    //     </thead>
-                    //     <tbody>
-                    //         {list?.length > 0 ? (
-                    //             list?.map((sell, i) => (
-                    //                 <tr
-                    //                     key={i}
-                    //                     onClick={() => {
-                    //                         !expandSell && setExpandSell(sell.offer_number);
-                    //                         handleChangeOfferNumber(sell?.offer_number);
-                    //                         setPriceActual(sell?.price);
-                    //                         setPaymentOption(sell?.payment);
-                    //                     }}
-                    //                     className="white-text border-table cursor-pointer">
-                    //                     {expandSell === sell.offer_number ? (
-                    //                         <td colSpan={5} className="row-description dark-bg-main radius-lg">
-                    //                             <div className="d-flex align-items-center justify-content-between mb-24">
-                    //                                 <div className="d-flex align-items-center">
-                    //                                     <img src="/img/bigcoin.png" alt="coin" className="mr-24" />
-                    //                                     <div>
-                    //                                         <h2 className="m-0 p-0 white-text mb-12 text-ms fontbold">
-                    //                                             {sell?.trader?.email}
-                    //                                         </h2>
-                    //                                         <div className="d-flex">
-                    //                                             <p className="p-0 m-0 text-xs mr-8">
-                    //                                                 {sell?.sum_order} Orders
-                    //                                             </p>
-                    //                                             <p className="p-0 m-0 text-xs ">
-                    //                                                 {sell?.persentage} % Complete
-                    //                                             </p>
-                    //                                         </div>
-                    //                                     </div>
-                    //                                 </div>
-                    //                                 <span
-                    //                                     className="btn-close"
-                    //                                     onClick={() => {
-                    //                                         setExpandSell('');
-                    //                                         resetForm();
-                    //                                     }}>
-                    //                                     <CloseIcon />
-                    //                                 </span>
-                    //                             </div>
-
-                    //                             <div className="d-flex align-items-center justify-content-between mb-24 py-12">
-                    //                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
-                    //                                     <p className="m-0 p-0 mr-16">Price</p>
-                    //                                     <p className="m-0 p-0 mr-4">
-                    //                                         {sell?.price} {fiat?.toUpperCase()}
-                    //                                     </p>
-                    //                                 </div>
-
-                    //                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
-                    //                                     <p className="m-0 p-0 mr-16">Available</p>
-                    //                                     <p className="m-0 p-0 mr-4">
-                    //                                         {sell?.available_amount} {currency?.toUpperCase()}
-                    //                                     </p>
-                    //                                 </div>
-
-                    //                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
-                    //                                     <p className="m-0 p-0 mr-16">Payment Time Limit</p>
-                    //                                     <p className="m-0 p-0 mr-16">{sell?.payment_time} Minutes</p>
-                    //                                 </div>
-
-                    //                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold">
-                    //                                     <p className="m-0 p-0 mr-16">Seller's Payment Methods</p>
-                    //                                     <div className="d-flex flex-wrap align-items-center label-bank-container">
-                    //                                         {sell?.payment[0]
-                    //                                             ? sell?.payment?.map((bank, i) => (
-                    //                                                   <div key={i} className="label-bank">
-                    //                                                       <img src={bank?.logo} alt={bank?.bank_name} />
-                    //                                                   </div>
-                    //                                               ))
-                    //                                             : '-'}
-                    //                                     </div>
-                    //                                 </div>
-                    //                             </div>
-
-                    //                             <div className="d-flex align-items-center justify-content-between w-100">
-                    //                                 <form className="dark-bg-accent w-50 form-buy">
-                    //                                     <h1 className="white-text text-lg mb-44">
-                    //                                         Sell {currency?.toUpperCase()} Crypto
-                    //                                     </h1>
-
-                    //                                     <div className="position-relative mb-24">
-                    //                                         <label className="white-text text-xs font-semibold mb-8">
-                    //                                             I Want To Pay
-                    //                                         </label>
-                    //                                         <input
-                    //                                             type="text"
-                    //                                             placeholder={'00.00'}
-                    //                                             value={price}
-                    //                                             onChange={(e) => handleChangePrice(e.target.value)}
-                    //                                             required
-                    //                                             className="form-control input-p2p-form white-text"
-                    //                                         />
-                    //                                         <label className="input-label-right text-sm grey-text position-absolute">
-                    //                                             All {fiat?.toUpperCase()}
-                    //                                         </label>
-                    //                                     </div>
-
-                    //                                     <div className="position-relative mb-24">
-                    //                                         <label className="white-text text-xs font-semibold mb-8">
-                    //                                             I Will Recieve
-                    //                                         </label>
-                    //                                         <input
-                    //                                             type="text"
-                    //                                             placeholder={'00.00'}
-                    //                                             value={amount}
-                    //                                             required
-                    //                                             className="form-control input-p2p-form white-text"
-                    //                                         />
-                    //                                         <label className="input-label-right text-sm grey-text position-absolute">
-                    //                                             {currency?.toUpperCase()}
-                    //                                         </label>
-                    //                                     </div>
-
-                    //                                     <div className="position-relative mb-44">
-                    //                                         <label className="white-text text-xs font-semibold mb-8">
-                    //                                             Payment Method
-                    //                                         </label>
-                    //                                         <Select
-                    //                                             value={optionPaymentOrder?.filter(function (option) {
-                    //                                                 return option.value === payment_order;
-                    //                                             })}
-                    //                                             styles={CustomStylePaymentOrder}
-                    //                                             options={optionPaymentOrder}
-                    //                                             onChange={(e) => {
-                    //                                                 handleChangePaymentOrder(e.value);
-                    //                                             }}
-                    //                                         />
-                    //                                     </div>
-
-                    //                                     <div className="d-flex align-items-center justify-content-between w-100 btn-container">
-                    //                                         <button
-                    //                                             type="button"
-                    //                                             onClick={resetForm}
-                    //                                             className="w-50 btn-secondary grey-text">
-                    //                                             Cancel
-                    //                                         </button>
-                    //                                         <button
-                    //                                             type="button"
-                    //                                             onClick={handleCreacteOrder}
-                    //                                             className="w-50 btn-primary">
-                    //                                             Sell {currency?.toUpperCase()}
-                    //                                         </button>
-                    //                                     </div>
-                    //                                 </form>
-
-                    //                                 <div className="w-40">
-                    //                                     <h1 className="white-text text-md mb-16">
-                    //                                         Term and Conditions :
-                    //                                     </h1>
-                    //                                     <p className="text-xs font-extrabold grey-text mb-16">
-                    //                                         {sell?.term_of_condition}
-                    //                                     </p>
-                    //                                 </div>
-                    //                             </div>
-                    //                         </td>
-                    //                     ) : (
-                    //                         <>
-                    //                             <td>
-                    //                                 <div className="d-flex align-items-center table-row">
-                    //                                     <img src="/img/coin.png" alt="coin" className="mr-16" />
-                    //                                     <div>
-                    //                                         <div className="d-flex align-items-center">
-                    //                                             <p className="p-0 m-0 mr-12 text-sm font-bold">
-                    //                                                 {sell?.trader?.email}
-                    //                                             </p>
-                    //                                             <span className="check">
-                    //                                                 <CheckIcon />
-                    //                                             </span>
-                    //                                         </div>
-                    //                                         <div className="d-flex">
-                    //                                             <p className="p-0 m-0 text-xs mr-8">
-                    //                                                 {sell?.sum_order} Orders
-                    //                                             </p>
-                    //                                             <p className="p-0 m-0 text-xs ">
-                    //                                                 {sell?.persentage} % Complete
-                    //                                             </p>
-                    //                                         </div>
-                    //                                     </div>
-                    //                                 </div>
-                    //                             </td>
-                    //                             <td className="text-xs font-bold">
-                    //                                 {sell?.price} {fiat?.toUpperCase()}
-                    //                             </td>
-                    //                             <td>
-                    //                                 <div className="d-flex text-xs font-bold mb-6">
-                    //                                     <p className="m-0 p-0 mr-8">Available</p>
-                    //                                     <p className="m-0 p-0">
-                    //                                         {sell?.available_amount} {currency?.toUpperCase()}
-                    //                                     </p>
-                    //                                 </div>
-
-                    //                                 <div className="d-flex text-xxs font-bold mb-6">
-                    //                                     <p className="m-0 p-0 mr-8">Limit</p>
-                    //                                     <p className="m-0 p-0">
-                    //                                         {sell?.min_order}-{sell?.max_order} AED
-                    //                                     </p>
-                    //                                 </div>
-                    //                             </td>
-                    //                             <td>
-                    //                                 <div className="d-flex flex-wrap align-items-center label-bank-container">
-                    //                                     {sell?.payment[0]
-                    //                                         ? sell?.payment?.map((bank, i) => (
-                    //                                               <div className="label-bank">
-                    //                                                   <img src={bank?.logo} alt={bank?.bank_name} />
-                    //                                               </div>
-                    //                                           ))
-                    //                                         : '-'}
-                    //                                 </div>
-                    //                             </td>
-                    //                             <td>
-                    //                                 <button className="btn-danger">
-                    //                                     Sell {currency?.toUpperCase()}
-                    //                                 </button>
-                    //                             </td>
-                    //                         </>
-                    //                     )}
-                    //                 </tr>
-                    //             ))
-                    //         ) : (
-                    //             <tr>
-                    //                 <td colSpan={5}>
-                    //                     <div className="d-flex justify-content-center align-items-center w-100 min-h-300">
-                    //                         <div className="d-flex flex-column justify-content-center align-items-center">
-                    //                             <NoDataIcon />
-                    //                             <p className="grey-text">No Data</p>
-                    //                         </div>
-                    //                     </div>
-                    //                 </td>
-                    //             </tr>
-                    //         )}
-                    //     </tbody>
-                    // </table>
                 )}
                 {/* ========= TABLE SELL END ========= */}
 

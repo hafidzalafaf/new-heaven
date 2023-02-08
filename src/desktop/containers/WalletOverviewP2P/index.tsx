@@ -149,7 +149,6 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
 
     const handleTransferP2P = (curr) => {
         setCurrId(curr);
-        console.log(curr);
         setShowModalP2PTransfer((prevState) => !prevState);
     };
 

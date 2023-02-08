@@ -19,7 +19,7 @@ export interface TableOfferP2PProps {
     handleChangePrice: (e: string) => void;
     handleChangePaymentOrder?: (e: string) => void;
     handleCreacteOrder: () => void;
-    handleSelectOffer: (expand: string, offer_number: string, price: string) => void;
+    handleSelectOffer: (expand: string, offer_number: string, price: string, payment: any) => void;
     handleCloseExpand: () => void;
     resetForm: () => void;
 }
@@ -58,12 +58,17 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                     </tr>
                 </thead>
                 <tbody>
-                    {list?.length > 1 ? (
+                    {list?.length > 0 ? (
                         list?.map((item, i) => (
                             <tr
                                 key={i}
                                 onClick={() => {
-                                    handleSelectOffer(item?.offer_number, item?.offer_number, item?.price);
+                                    handleSelectOffer(
+                                        item?.offer_number,
+                                        item?.offer_number,
+                                        item?.price,
+                                        item?.payment
+                                    );
                                 }}
                                 className="white-text border-table cursor-pointer">
                                 {expand === item.offer_number ? (
@@ -140,7 +145,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                         required
                                                         className="form-control input-p2p-form white-text"
                                                     />
-                                                    <label className="input-label-right text-sm grey-text position-absolute">
+                                                    <label className="input-label-order text-sm grey-text position-absolute">
                                                         All {fiat?.toUpperCase()}
                                                     </label>
                                                 </div>
@@ -156,7 +161,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                         required
                                                         className="form-control input-p2p-form white-text"
                                                     />
-                                                    <label className="input-label-right text-sm grey-text position-absolute">
+                                                    <label className="input-label-order text-sm grey-text position-absolute">
                                                         {currency?.toUpperCase()}
                                                     </label>
                                                 </div>
@@ -256,7 +261,9 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                             </div>
                                         </td>
                                         <td>
-                                            <button className="btn-success">Buy {currency?.toUpperCase()}</button>
+                                            <button className={`${side == 'buy' ? 'btn-success' : 'btn-danger'}`}>
+                                                {side == 'buy' ? 'Buy' : 'Sell'} {currency?.toUpperCase()}
+                                            </button>
                                         </td>
                                     </>
                                 )}

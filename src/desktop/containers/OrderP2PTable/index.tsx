@@ -8,12 +8,16 @@ import { CustomStylesSelect } from '../../../desktop/components';
 import { Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
-import { orderFetch } from 'src/modules';
+import { orderFetch, selectP2POrder } from 'src/modules';
 import { Modal } from '../../../desktop/components';
 
 export const OrderP2PTable = () => {
     const history = useHistory();
     const dispatch = useDispatch();
+
+    const order = useSelector(selectP2POrder);
+
+    console.log(order);
 
     const [endDate, setEndDate] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
@@ -21,81 +25,18 @@ export const OrderP2PTable = () => {
     const [active, setActive] = React.useState('');
     const [showModalCancel, setShowModalCancel] = React.useState(false);
 
-    const dummy = [
-        {
-            type: 'sell',
-            coin: 'USDT',
-            fiat_amount: '216,169.60 IDR',
-            price: '15,710.00 IDR',
-            crypto_amount: '13.76 USDT',
-            counter_party: 'OAChanger',
-            status: 'Completed',
-            created_at: '2023-01-15T04:09:15Z',
-        },
-        {
-            type: 'sell',
-            coin: 'USDT',
-            fiat_amount: '216,169.60 IDR',
-            price: '15,710.00 IDR',
-            crypto_amount: '13.76 USDT',
-            counter_party: 'OAChanger',
-            status: 'Completed',
-            created_at: '2023-01-15T04:09:15Z',
-        },
-        {
-            type: 'sell',
-            coin: 'USDT',
-            fiat_amount: '216,169.60 IDR',
-            price: '15,710.00 IDR',
-            crypto_amount: '13.76 USDT',
-            counter_party: 'OAChanger',
-            status: 'Completed',
-            created_at: '2023-01-15T04:09:15Z',
-        },
-        {
-            type: 'buy',
-            coin: 'USDT',
-            fiat_amount: '216,169.60 IDR',
-            price: '15,710.00 IDR',
-            crypto_amount: '13.76 USDT',
-            counter_party: 'OAChanger',
-            status: 'Completed',
-            created_at: '2023-01-15T04:09:15Z',
-        },
-        {
-            type: 'sell',
-            coin: 'USDT',
-            fiat_amount: '216,169.60 IDR',
-            price: '15,710.00 IDR',
-            crypto_amount: '13.76 USDT',
-            counter_party: 'OAChanger',
-            status: 'Completed',
-            created_at: '2023-01-15T04:09:15Z',
-        },
-        {
-            type: 'buy',
-            coin: 'USDT',
-            fiat_amount: '216,169.60 IDR',
-            price: '15,710.00 IDR',
-            crypto_amount: '13.76 USDT',
-            counter_party: 'OAChanger',
-            status: 'Completed',
-            created_at: '2023-01-15T04:09:15Z',
-        },
-    ];
-
-    // React.useEffect(() => {
-    //     dispatch(orderFetch());
-    // }, [dispatch]);
+    React.useEffect(() => {
+        dispatch(orderFetch());
+    }, [dispatch]);
 
     React.useEffect(() => {
-        setData(dummy);
-    }, []);
+        setData(order);
+    }, [order]);
 
     const filterredType = (type) => {
         let filterredList;
         let temp;
-        temp = dummy;
+        temp = data;
 
         filterredList = temp.filter((item) => item.type === type);
         setData(filterredList);
@@ -132,11 +73,11 @@ export const OrderP2PTable = () => {
                     }`}>
                     {item.type === 'sell' ? 'Sell' : 'Buy'}
                 </p>
-                <p className="m-0 p-0 white-text text-xs">{moment(item.created_at).format('DD-MM-YYYY HH:MM:SS')}</p>
+                <p className="m-0 p-0 white-text text-xs">{moment(item?.created_at).format('DD-MM-YYYY hh:mm:ss')}</p>
             </div>,
             <div className="d-flex align-items-center">
-                <img src="/img/coin.png" alt={item.coin} className="mr-12" />
-                <p className="white-text text-sm font-semibold m-0 p-0">{item.coin}</p>
+                <img src="/img/coin.png" alt={item?.fiat} className="mr-12" />
+                <p className="white-text text-sm font-semibold m-0 p-0">{item?.fiat}</p>
             </div>,
             <p className="m-0 p-0 grey-text text-sm font-semibold">{item.fiat_amount}</p>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{item.price}</p>,
@@ -148,7 +89,7 @@ export const OrderP2PTable = () => {
                 className="text-underline blue-text text-sm font-semibold">
                 {item.counter_party}
             </a>,
-            <p className="m-0 p-0 white-text text-sm font-semibold">{item.status}</p>,
+            <p className="m-0 p-0 white-text text-sm font-semibold">{item?.state}</p>,
             <div className="d-flex align-items-center">
                 <div
                     onClick={() => history.push('/p2p/wallet/order', { type: item.type })}

@@ -1,15 +1,22 @@
 import * as React from 'react';
 import { useDocumentTitle } from '../../../hooks';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { HeaderP2P, BannerP2P, TableListP2P } from '../../containers';
 import { selectUserLoggedIn } from 'src/modules';
 import { Modal } from 'src/desktop/components';
 import { Form } from 'react-bootstrap';
+import { p2pProfileFetch } from 'src/modules/user/p2pProfile';
 
 export const P2PScreen: React.FC = () => {
     useDocumentTitle('P2P');
+
+    const dispatch = useDispatch();
     const isLoggedIn = useSelector(selectUserLoggedIn);
     const [showModalAnnouncement, setShowModatAnnouncement] = React.useState(false);
+
+    React.useEffect(() => {
+        dispatch(p2pProfileFetch());
+    }, [dispatch]);
 
     const renderModalAnnouncement = () => {
         return (

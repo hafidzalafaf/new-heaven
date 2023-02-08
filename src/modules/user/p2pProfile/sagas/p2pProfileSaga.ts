@@ -10,15 +10,7 @@ const config: RequestOptions = {
 
 export function* p2pProfileSaga(action: P2PProfileFetch) {
     try {
-        let type = '';
-        let ordering = '';
-        let order_by = '';
-        if (action.payload) {
-            type = `?${buildQueryString(action.payload.type)}`;
-            ordering = `?${buildQueryString(action.payload.ordering)}`;
-            order_by = `?${buildQueryString(action.payload.order_by)}`;
-        }
-        const feedback = yield call(API.get(config), `/trades?type=${type}&ordering=${ordering}&order_by=${order_by}`);
+        const feedback = yield call(API.get(config), `/account/users`);
 
         yield put(p2pProfileData(feedback));
     } catch (error) {

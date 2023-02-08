@@ -128,10 +128,6 @@ export const WalletWithdrawalForm: React.FC = () => {
         ? Number(myWithdrawLimit?.limit_1_month) - Number(withdrawSum?.last_1_month)
         : 0;
 
-    console.log(remainingWithdrawDaily);
-    console.log(myWithdrawLimit?.limit_24_hour, 'a');
-    console.log(withdrawLimits);
-
     const blockchainKeyValue =
         currencyItem && currencyItem.networks.find((item) => item.blockchain_key === blockchainKey);
     const fee = blockchainKeyValue && blockchainKeyValue.withdraw_fee;
