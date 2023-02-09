@@ -27,12 +27,12 @@ export const HeaderP2P = () => {
                         <p className="m-0 p-0 white-text text-ms">Profile P2P</p>
                     </Link>
 
-                    <Link to={'/'} className="d-flex justify-content-center align-content-center mr-24 cursor-pointer">
+                    {/* <Link to={'/'} className="d-flex justify-content-center align-content-center mr-24 cursor-pointer">
                         <span className="mr-8">
                             <HeaderGuideIcon fillColor={'var(--text-secondary-color)'} />
                         </span>
                         <p className="m-0 p-0 white-text text-ms">User Guide</p>
-                    </Link>
+                    </Link> */}
 
                     <Link to={'/'} className="d-flex justify-content-center align-content-center cursor-pointer">
                         <span className="mr-8">

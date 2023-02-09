@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { p2pProfileFetch, selectP2PProfile } from 'src/modules/user/p2pProfile';
 import { FormControl, Modal } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { p2pPaymentUserFetch } from 'src/modules';
+import { p2pPaymentUserFetch, selectP2PPaymentUser } from 'src/modules';
 export const P2PUserInfo: React.FC = () => {
     const dispatch = useDispatch();
     const [username, setUsername] = React.useState('Nusatech Exchange');
@@ -24,13 +24,11 @@ export const P2PUserInfo: React.FC = () => {
         dispatch(p2pPaymentUserFetch());
     }, []);
     const userP2P = useSelector(selectP2PProfile);
-    // const userP2PPayment = useSelector(selectP2PPaymentUser)
+    const userP2PPayment = useSelector(selectP2PPaymentUser)
 
     console.log(userP2P);
-
-
-    // const userP2P = useSelector(selectP2PAccount)
-    // console.log(userP2P);
+    console.log(userP2PPayment);
+    
     const ModalChangeName = () => {
         return (
             <form onSubmit={()=> setShowChangeUsernameModal(false)} className='bg-black p-10 pt-20' hidden={!showChangeUsernameModal}>

@@ -35,14 +35,8 @@ export const P2PFeedback: React.FC = () => {
                 <div className='text-white'>
                     <p>{item.timer}</p>
                 </div>
-                <div className='bg-white ml-20 mr-20'>
-                    <img
-                        height={16}
-                        width={32}
-                        src={item.payment_method}
-                        alt="payment_method"
-                        className="ml-10 mr-10"
-                    />
+                <div key={i} className="label-bank">
+                    <img src='/dummy' alt='this is a test' />
                 </div>
 
                 <span>{item.positive ? <LikeSuccessIcon /> : <UnLikeDangerIcon />}</span>
