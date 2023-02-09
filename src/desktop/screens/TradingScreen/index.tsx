@@ -119,15 +119,19 @@ export const TradingScreen: FC = (): ReactElement => {
         }
     }, [current]);
 
+    console.log('dfghj');
+
     React.useEffect(() => {
         if (orderBookLoading) {
+            console.log('ashar');
+
             setLoading(true);
             setTimeout(() => {
                 dispatch(depthIncrementSubscribeResetLoading());
                 setLoading(false);
             }, 2000);
         }
-    }, [currentMarket, orderBookLoading]);
+    }, [orderBookLoading, currentMarket]);
 
     React.useEffect(() => {
         if (listOrder) {

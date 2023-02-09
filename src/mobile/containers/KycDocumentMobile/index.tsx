@@ -28,6 +28,7 @@ import { CloseIcon } from '../../../assets/images/CloseIcon';
 import DocumentFrontExample from 'src/assets/images/kyc/DocumentFrontExample.svg';
 import DocumentSelfieExample from 'src/assets/images/kyc/DocumentSelfieExample.svg';
 import './KycDocumentMobile.pcss';
+import moment from 'moment';
 
 interface ReduxProps {
     lang: string;
@@ -485,13 +486,13 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
 
     private handleChangeIssuedDate = (e: OnChangeEvent) => {
         this.setState({
-            issuedDate: formatDate(e.target.value),
+            issuedDate: moment(e.target.value).format('DD/MM/YYYY'),
         });
     };
 
     private handleChangeExpiration = (e: OnChangeEvent) => {
         this.setState({
-            expireDate: formatDate(e.target.value),
+            expireDate: moment(e.target.value).format('DD/MM/YYYY'),
         });
     };
 
@@ -528,7 +529,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
 
     private handleChangeBirthDate = (e: OnChangeEvent) => {
         this.setState({
-            birthDate: formatDate(e.target.value),
+            birthDate: moment(e.target.value).format('DD/MM/YYYY'),
         });
     };
 

@@ -95,18 +95,7 @@ class IdentityComponent extends React.Component<Props, IdentityState> {
 
     public render() {
         const { editSuccess, sendSuccess, lang } = this.props;
-        const {
-            city,
-            dateOfBirth,
-            firstName,
-            // lastName,
-            postcode,
-            residentialAddress,
-            // district,
-            country,
-            // placeOfBirth,
-            // province,
-        } = this.state;
+        const { city, dateOfBirth, firstName, postcode, residentialAddress, country } = this.state;
         /* tslint:disable */
         languages.map((l: string) => countries.registerLocale(require(`i18n-iso-countries/langs/${l}.json`)));
 
@@ -290,7 +279,7 @@ class IdentityComponent extends React.Component<Props, IdentityState> {
 
     private handleChangeDate = (e: OnChangeEvent) => {
         this.setState({
-            dateOfBirth: formatDate(e.target.value),
+            dateOfBirth: e.target.value,
         });
     };
 
@@ -340,26 +329,13 @@ class IdentityComponent extends React.Component<Props, IdentityState> {
     };
 
     private handleCheckButtonDisabled = () => {
-        const {
-            dateOfBirth,
-            firstName,
-            postcode,
-            residentialAddress,
-            city,
-            country,
-            // district,
-            // placeOfBirth,
-            // province,
-        } = this.state;
+        const { dateOfBirth, firstName, postcode, residentialAddress, city, country } = this.state;
 
         const fullNameValid = this.handleValidateInput('fullName', firstName);
         const residentialAddressValid = this.handleValidateInput('residentialAddress', residentialAddress);
         const postcodeValid = this.handleValidateInput('postcode', postcode);
         const dateOfBirthValid = this.handleValidateInput('dateOfBirth', dateOfBirth);
         const cityValid = this.handleValidateInput('city', city);
-        // const districtValid = this.handleValidateInput('district', district);
-        // const provinceValid = this.handleValidateInput('province', province);
-        // const placeOfBirthValid = this.handleValidateInput('placeOfBirth', placeOfBirth);
 
         return !fullNameValid || !residentialAddressValid || !cityValid || !postcodeValid || !dateOfBirthValid;
     };
@@ -369,14 +345,6 @@ class IdentityComponent extends React.Component<Props, IdentityState> {
         const { labels, user } = this.props;
         const dob = !isDateInFuture(this.state.dateOfBirth) ? this.state.dateOfBirth : '';
         const profileInfo: IdentityData = {
-            // first_name: this.state.firstName,
-            // last_name: '',
-            // dob: dob,
-            // address: `${this.state.residentialAddress + '/' + this.state.district}`,
-            // postcode: this.state.postcode,
-            // city: `${this.state.city + ' ' + this.state.province}`,
-            // country: this.state.country,
-            // confirm: true,
             first_name: this.state.firstName,
             last_name: this.state.lastName,
             dob,
