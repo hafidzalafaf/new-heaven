@@ -135,12 +135,17 @@ const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
                                 {Decimal.format(lastTrade && +lastTrade.price, currentMarket?.price_precision)}
                                 {lastTrade && +lastTrade.price_change > 0 ? <TradeUp /> : <TradeDown />}
                             </h3>
-                            <p
-                                className={`p-0 m-0 text-sm font-normal ${
-                                    lastTrade && +lastTrade.price_change > 0 ? 'green-text' : 'danger-text'
-                                }`}>
-                                {Decimal.format(lastTrade && +lastTrade.price_change, currentMarket?.price_precision)}
-                            </p>
+                            {lastTrade?.price_change && (
+                                <p
+                                    className={`p-0 m-0 text-sm font-normal ${
+                                        lastTrade && +lastTrade.price_change > 0 ? 'green-text' : 'danger-text'
+                                    }`}>
+                                    {Decimal.format(
+                                        lastTrade && +lastTrade.price_change,
+                                        currentMarket?.price_precision
+                                    )}
+                                </p>
+                            )}
                         </div>
                         <div className="max-400 position-relative">
                             <div className="table-background top-30 bottom-table">

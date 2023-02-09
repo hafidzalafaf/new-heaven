@@ -65,6 +65,7 @@ interface ProfileSecurityState {
     phone: any;
     timer: any;
     kyc: any;
+    label: any;
 }
 
 interface OwnProps {
@@ -120,6 +121,7 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
             phone: this.props.user.phones.slice(-1),
             timer: null,
             kyc: this.props.user.profiles.slice(-1),
+            label: this.props.user.labels,
         };
     }
 
@@ -175,6 +177,8 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
             this.setState({ showTwoFaModal: !this.state.showTwoFaModal });
             this.setState({ twoFaCode: '' });
         };
+
+        const labelPhone = [...this.state.label].find((item) => item.key === 'phone');
 
         return (
             <React.Fragment>
@@ -275,7 +279,7 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
                             <div className="ml-4">
                                 <p className="d-flex mb-1 text-xs flex-nowrap white-text font-bold">
                                     Phone Number Verification
-                                    {!this.props.user.phones[0] || this.state.phone[0].validated_at === null ? (
+                                    {labelPhone?.value !== 'verified' ? (
                                         <CloseIconSecurity className="ml-3" />
                                     ) : (
                                         <CheckIcon className="ml-3" />
