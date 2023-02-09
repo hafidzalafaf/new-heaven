@@ -9,11 +9,26 @@ import {
 } from '../../../assets/images/P2PIcon';
 import { CardP2PUserInfo } from '../../../desktop/components';
 import { useSelector } from 'react-redux';
-// import { selectP2PAccount } from 'src/modules/user/p2pAccount';
+import { p2pProfileFetch, selectP2PProfile } from 'src/modules/user/p2pProfile';
 import { FormControl, Modal } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { p2pPaymentUserFetch } from 'src/modules';
 export const P2PUserInfo: React.FC = () => {
+    const dispatch = useDispatch();
     const [username, setUsername] = React.useState('Nusatech Exchange');
     const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
+
+
+    React.useEffect(() => {
+        dispatch(p2pProfileFetch());
+        dispatch(p2pPaymentUserFetch());
+    }, []);
+    const userP2P = useSelector(selectP2PProfile);
+    // const userP2PPayment = useSelector(selectP2PPaymentUser)
+
+    console.log(userP2P);
+
+
     // const userP2P = useSelector(selectP2PAccount)
     // console.log(userP2P);
     const ModalChangeName = () => {

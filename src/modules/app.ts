@@ -55,6 +55,8 @@ import { orderConfirmReducer } from './user/p2pOrderConfirmation';
 import { p2pOfferReducer } from './user/p2pOffer';
 import { p2pOfferAvailableReducer } from './user/p2pAvailableOffer';
 import { groupMemberReducer } from './user/memberGroup';
+import { p2pProfileReducer } from './user/p2pProfile';
+import { p2pPaymentUserReducer } from './user/p2pPaymentUser/reducer';
 
 export const publicReducer = combineReducers({
     alerts: alertReducer,
@@ -118,6 +120,8 @@ export const userReducer = combineReducers({
     p2pOrderConfirm: orderConfirmReducer,
     p2pOffer: p2pOfferReducer,
     p2pOfferAvailable: p2pOfferAvailableReducer,
+    p2pProfile: p2pProfileReducer,
+    p2pPaymentUser: p2pPaymentUserReducer,
     memberGroup: groupMemberReducer,
 });
 
