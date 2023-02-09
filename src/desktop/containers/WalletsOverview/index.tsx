@@ -141,25 +141,15 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                 i.currency?.toLocaleLowerCase().includes(filterValue.toLowerCase())
         );
 
-        return !filteredList.length && !filterValue
+        return !filteredList[0] && !filterValue && !nonZeroSelected
             ? [[[''], [''], <Loading />, [''], [''], ['']]]
-            : !filteredList.length && !loading
+            : !filteredList[0] && !loading
             ? [['no data found']]
             : filteredList.map((item, index) => {
                   const { currency, iconUrl, name, fixed, spotBalance, spotLocked, p2pBalance, p2pLocked } = item;
                   const totalBalance =
                       Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
                   const estimatedValue = item?.last !== null ? item.last * totalBalance : '0';
-                  //   Number(totalBalance) && currency
-                  //       ? estimateUnitValue(
-                  //             currency.toUpperCase(),
-                  //             VALUATION_PRIMARY_CURRENCY,
-                  //             +totalBalance,
-                  //             currencies,
-                  //             markets,
-                  //             tickers
-                  //         )
-                  //       : Decimal.format(0, fixed);
 
                   return [
                       <div key={index} className="d-flex">
