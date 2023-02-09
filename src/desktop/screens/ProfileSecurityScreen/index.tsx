@@ -196,7 +196,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                         </div>
                         <div className="row">
                             <div className="col-lg-8">
-                                {this.props.user.labels.length === 5 ? (
+                                {this.props.user.level === 3 ? (
                                     ''
                                 ) : (
                                     <div className="notification-warning alert show text-sm white-text font-normal position-relative mb-24">
