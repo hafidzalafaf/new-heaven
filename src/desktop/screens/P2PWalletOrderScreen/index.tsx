@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState, useEffect } from 'react';
+import * as React from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { orderDetailFetch, selectP2POrderDetail } from 'src/modules';
 import { useDocumentTitle } from '../../../hooks';
@@ -33,25 +33,42 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     const detail = useSelector(selectP2POrderDetail);
 
-    const [seconds, setSeconds] = useState(30000);
-    const [timerActive, setTimerActive] = useState(false);
-    const [showPayment, setShowPayment] = useState(false);
-    const [showChat, setShowChat] = useState(true);
-    const [step, setStep] = useState(1);
-    const [showModalReport, setShowModalReport] = useState(false);
-    const [inputFile, setInputFile] = useState(null);
-    const [fileName, setFileName] = useState('');
-    const [paymentMethod, setPaymentMethod] = useState('');
-    const [showModalConfirm, setShowModalConfirm] = useState(false);
-    const [checkModalOne, setcheckModalOne] = useState(false);
-    const [checkModalTwo, setcheckModalTwo] = useState(false);
-    const [comment, setComment] = useState('');
+    const [seconds, setSeconds] = React.useState(30000);
+    const [timerActive, setTimerActive] = React.useState(false);
+    const [showPayment, setShowPayment] = React.useState(false);
+    const [showChat, setShowChat] = React.useState(true);
+    const [step, setStep] = React.useState(1);
+    const [inputFile, setInputFile] = React.useState(null);
+    const [fileName, setFileName] = React.useState('');
+    const [paymentMethod, setPaymentMethod] = React.useState('');
+    const [checkModalOne, setcheckModalOne] = React.useState(false);
+    const [checkModalTwo, setcheckModalTwo] = React.useState(false);
+    const [comment, setComment] = React.useState('');
 
-    console.log(detail);
+    const [showModalConfirm, setShowModalConfirm] = React.useState(false);
+    const [showModalReport, setShowModalReport] = React.useState(false);
+    const [showModalBuyOrderCompleted, setShowModalBuyOrderCompleted] = React.useState(false);
 
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
     }, [dispatch, order_number]);
+
+    React.useEffect(() => {
+        let timer = null;
+        if (timerActive) {
+            timer = setInterval(() => {
+                setSeconds((seconds) => seconds - 1000);
+
+                if (seconds === 0) {
+                    setTimerActive(false);
+                    setSeconds(30000);
+                }
+            }, 1000);
+        }
+        return () => {
+            clearInterval(timer);
+        };
+    });
 
     const bank = [
         {
@@ -72,23 +89,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
     };
 
     const disableButton = !checkModalOne || !checkModalTwo;
-
-    useEffect(() => {
-        let timer = null;
-        if (timerActive) {
-            timer = setInterval(() => {
-                setSeconds((seconds) => seconds - 1000);
-
-                if (seconds === 0) {
-                    setTimerActive(false);
-                    setSeconds(30000);
-                }
-            }, 1000);
-        }
-        return () => {
-            clearInterval(timer);
-        };
-    });
 
     const renderModalContent = () => {
         return (
@@ -246,6 +246,44 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     Confirm
                 </button>
             </div>
+        );
+    };
+
+    const renderModalBuyOrderCompleted = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-center align-items-center w-100 mb-24">
+                    <img src="/img/p2pcalendar.png" alt="completed" width={104} height={106} />
+                </div>
+                <h1 className="m-0 p-0 white-text text-ms font-bold text-center mb-24">Buy Order Completed</h1>
+
+                <div className="d-flex justify-content-between align-items-center gap-48 mb-24">
+                    <div>
+                        <p className="m-0 p-0 grey-text-accent text-xs font-semibold">Amount</p>
+                        <p className="m-0 p-0 white-text text-ms font-semibold">Rp 150,000.00</p>
+                    </div>
+                    <div>
+                        <p className="m-0 p-0 grey-text-accent text-xs font-semibold">Price</p>
+                        <p className="m-0 p-0 white-text text-ms font-semibold">Rp 15,755.00</p>
+                    </div>
+                    <div>
+                        <p className="m-0 p-0 grey-text-accent text-xs font-semibold">Quantity</p>
+                        <p className="m-0 p-0 white-text text-ms font-semibold">9.52 USDT</p>
+                    </div>
+                </div>
+
+                <button
+                    onClick={() => {
+                        if (side == 'buy') {
+                            setShowModalBuyOrderCompleted(false);
+                            setStep(3);
+                        }
+                    }}
+                    type="button"
+                    className="btn-primary w-100">
+                    Continue
+                </button>
+            </React.Fragment>
         );
     };
 
@@ -480,7 +518,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                                 type="button"
                                                 onClick={() => {
                                                     if (side === 'buy') {
-                                                        setStep(3);
+                                                        setShowModalBuyOrderCompleted(true);
                                                     } else {
                                                         setShowModalConfirm(true);
                                                     }
@@ -681,8 +719,9 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     </div>
                 </div>
 
-                {showModalReport && <Modal show={showModalReport} content={renderModalContent()} />}
-                {showModalConfirm && <Modal show={showModalConfirm} content={renderModalConfirmRelease()} />}
+                <Modal show={showModalReport} content={renderModalContent()} />
+                <Modal show={showModalConfirm} content={renderModalConfirmRelease()} />
+                <Modal show={showModalBuyOrderCompleted} content={renderModalBuyOrderCompleted()} />
             </div>
         </React.Fragment>
     );

@@ -9,7 +9,6 @@ import {
     P2P_PAYMENT_USER_FETCH,
 } from './constants';
 import { IPaymentUser } from './types';
-import { P2PAccountActions } from '../p2pAccount';
 
 const defaultP2PPaymentUser: IPaymentUser = {
     payment_method: '',
