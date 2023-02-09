@@ -45,9 +45,6 @@ const ReferralMobileScreen: React.FC = () => {
         ];
     };
 
-    console.log(referralLink);
-    console.log('JOSS');
-
     return (
         <React.Fragment>
             <div className="mobile-container referral-mobile-screen no-header home-screen dark-bg-main">

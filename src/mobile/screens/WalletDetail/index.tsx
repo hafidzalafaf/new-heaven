@@ -27,11 +27,13 @@ import { Decimal } from '../../../components';
 import { estimateUnitValue } from 'src/helpers/estimateValue';
 import { VALUATION_PRIMARY_CURRENCY } from 'src/constants';
 import { CustomStylesSelect } from '../../../desktop/components';
+import { Modal } from 'react-bootstrap';
 import { ArrowLeft } from '../../assets/Arrow';
 import { WithdrawlIcon, DepositIcon, TransferIcon, FilterIcon, DocIcon } from '../../assets/Wallet';
 import { Table } from '../../../components';
 import { CircleCloseModalNetworkIcon } from '../../../assets/images/CircleCloseIcon';
 import { InfoModalNetworkIcon } from '../../../assets/images/InfoIcon';
+import { GearIcon } from 'src/mobile/assets/Gear';
 
 interface Props {
     isP2PEnabled?: boolean;
@@ -79,6 +81,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const [showNetwork, setShowNetwork] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
     const [estimatedValue, setEstimatedValue] = React.useState<string>();
+    const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
 
     // Handle get item pagination
     const firstElementIndex = useSelector((state: RootState) => selectFirstElemIndex(state, 5));
@@ -280,7 +283,13 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     </button>
                     <button
                         type="button"
-                        onClick={() => history.push(`/wallets/${currency}/withdraw`)}
+                        onClick={() => {
+                            if (user.level == 3) {
+                                history.push(`/wallets/${currency}/withdraw`);
+                            } else {
+                                setShowModalLocked(true);
+                            }
+                        }}
                         className="btn btn-primary btn-sm font-normal m-1">
                         <WithdrawlIcon className={''} />
                         {formatMessage({ id: 'page.mobile.wallets.withdraw' })}
@@ -467,6 +476,39 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                         </div>
                     </div>
                 </div>
+
+                {/* ========= Show Modal Locked 2FA =========== */}
+
+                {showModalLocked && (
+                    <Modal show={showModalLocked}>
+                        <section className="container p-3 dark-bg-main">
+                            <div className="d-flex justify-content-center my-2">
+                                <GearIcon />
+                            </div>
+                            <div className="text-center">
+                                <p className="gradient-text mb-3">
+                                    {user?.level == 1
+                                        ? 'For withdraw you must verified your phone number and document first'
+                                        : 'For withdraw you must verified your document first'}
+                                </p>
+                            </div>
+                            <div className="mb-0">
+                                <Link to={`${user?.level == 1 ? '/profile' : '/profile/kyc'}`}>
+                                    <button type="button" className="btn btn-primary btn-block">
+                                        {user?.level == 1 ? 'Verify Phone Number' : 'Verify Document'}
+                                    </button>
+                                </Link>
+                                <div className="mt-3" onClick={() => setShowModalLocked(!showModalLocked)}>
+                                    <button type="button" className="btn btn-outline-primary btn-block">
+                                        {formatMessage({ id: 'page.mobile.wallets.modal.body.2FA.cancel' })}
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+                    </Modal>
+                )}
+
+                {/* ========== End Modal ===========*/}
             </div>
         </>
     );

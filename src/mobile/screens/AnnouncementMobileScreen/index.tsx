@@ -55,7 +55,7 @@ const AnnouncementMobileScreen: React.FC = () => {
         autoplaySpeed: 6000,
         pauseOnHover: true,
     };
-console.log(news, 'news')
+
     return (
         <>
             {news.length ? (
