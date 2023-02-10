@@ -4,6 +4,12 @@ import { HeaderP2P } from '../../../desktop/containers';
 import Select from 'react-select';
 import { CustomStylesSelect } from '../../../desktop/components';
 import { InfoWarningIcon, QRIcon } from '../../../assets/images/P2PIcon';
+import { useParams } from 'react-router';
+
+interface Bank {
+    payment: string;
+}
+
 
 export const P2PAddPaymentScreen: React.FC = () => {
     useDocumentTitle('P2P || Add Payment');
@@ -11,6 +17,12 @@ export const P2PAddPaymentScreen: React.FC = () => {
     const [type, setType] = React.useState('bank');
     const [inputFile, setInputFile] = React.useState(null);
     const [fileName, setFileName] = React.useState('');
+    const bank: Bank = useParams();
+
+    console.log(bank.payment);
+
+    const replacedDash = bank.payment.replace(/-/g, ' ');
+    const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
 
     const optionPayment = [
         { label: <p className="m-0 text-sm grey-text-accent">All Payment</p>, value: 'all' },
@@ -38,17 +50,12 @@ export const P2PAddPaymentScreen: React.FC = () => {
 
                         <div className="mb-24">
                             <label className="m-0 p-0 mb-16 white-text text-ms">Payment Method</label>
-                            <Select
-                                // value={optionQuote.filter(function (option) {
-                                //     return option.value === status;
-                                // })}
-                                styles={CustomStylesSelect}
-                                options={optionPayment}
-                                // onChange={(e) => {
-                                //     setStatus(e.value);
-                                //     filterredStatus(e.value);
-                                // }}
-                            />
+                            <input
+                                    type="text"
+                                    className="custom-input-add-payment w-100 white-text"
+                                    value={renderedWord}
+                                    disabled
+                                />
                         </div>
 
                         {type === 'bank' ? (

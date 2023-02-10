@@ -24,7 +24,7 @@ export interface P2PPaymentUserState {
     };
 
     fetch: {
-        data: IPaymentUser[];
+        data: [];
         fetching: boolean;
         success: boolean;
         error?: CommonError;
