@@ -357,6 +357,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         comment={comment}
                         side={side}
                         bank={bank}
+                        detail={detail}
                         handleChangePaymentMethod={handleChangePaymentMethod}
                         handleChangeStep={handleChangeStep}
                         handleChangeComment={handleChangeComment}

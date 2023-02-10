@@ -10,6 +10,7 @@ export interface P2POrderStepProps {
     comment: string;
     side: string;
     bank: any[];
+    detail: any;
     handleChangePaymentMethod: (e: string) => void;
     handleChangeStep: (e: number) => void;
     handleChangeComment: (e: string) => void;
@@ -26,6 +27,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         comment,
         side,
         bank,
+        detail,
         handleChangePaymentMethod,
         handleChangeStep,
         handleChangeComment,
@@ -53,15 +55,17 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Amount</span>
-                                    <p className="text-sm white-text font-semibold">Rp 150,000.00</p>
+                                    <p className="text-sm white-text font-semibold">
+                                        Rp {detail?.offer?.price * detail?.order?.amount}
+                                    </p>
                                 </div>
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Price</span>
-                                    <p className="text-sm white-text font-semibold">Rp 15,755.00</p>
+                                    <p className="text-sm white-text font-semibold">Rp {detail?.offer?.price}</p>
                                 </div>
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Quantity</span>
-                                    <p className="text-sm white-text font-semibold">9.52 USDT</p>
+                                    <p className="text-sm white-text font-semibold">{detail?.order?.amount} USDT</p>
                                 </div>
                             </div>
                         </div>
