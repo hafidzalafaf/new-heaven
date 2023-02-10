@@ -26,7 +26,14 @@ export const FAQHeader: FC = (): ReactElement => {
                     <h3 className="title-1 white-text font-bold mb-24">Heaven Exchange FAQ</h3>
 
                     <div className="d-flex justify-content-center align-content-center gap-8">
-                        {support.map((item, i) => (
+                        <a
+                            href="https://t.me/heavenexchange"
+                            target="__blank"
+                            rel="noopener noreferrer"
+                            className="btn-primary cursor-pointer">
+                            Contact Support
+                        </a>
+                        {/* {support.map((item, i) => (
                             <a
                                 key={i}
                                 href={item?.excerpt}
@@ -35,7 +42,7 @@ export const FAQHeader: FC = (): ReactElement => {
                                 className="btn-primary cursor-pointer">
                                 {item.title}
                             </a>
-                        ))}
+                        ))} */}
                     </div>
                 </div>
             </div>
