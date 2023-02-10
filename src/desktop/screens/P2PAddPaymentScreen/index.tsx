@@ -24,11 +24,17 @@ export const P2PAddPaymentScreen: React.FC = () => {
     const replacedDash = bank.payment.replace(/-/g, ' ');
     const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
 
-    const optionPayment = [
-        { label: <p className="m-0 text-sm grey-text-accent">All Payment</p>, value: 'all' },
-        { label: <p className="m-0 text-sm grey-text-accent">Dana</p>, value: 'dana' },
-        { label: <p className="m-0 text-sm grey-text-accent">Bank BCA</p>, value: 'bca' },
-    ];
+
+    //post data to backend
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('file', inputFile);
+        formData.append('type', type);
+        formData.append('name', renderedWord);
+        console.log(formData);
+
+    };
 
     return (
         <React.Fragment>
@@ -130,7 +136,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
 
                         <div className="d-flex justify-content-between align-items-center gap-24">
                             <button className="btn-secondary w-49 radius-sm">Cancel</button>
-                            <button className="btn-primary w-49">Confirm</button>
+                            <button onClick={()=>handleSubmit} className="btn-primary w-49">Confirm</button>
                         </div>
                     </form>
                 </div>
