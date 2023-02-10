@@ -7,6 +7,7 @@ import { Modal } from '../../../desktop/components';
 import Select from 'react-select';
 import { OrderFormComponent } from '../../components';
 import { CustomStylesSelect } from 'src/desktop/components';
+import { Decimal } from 'src/components';
 
 export interface OrderFormProps {
     changeMarket?: boolean;
@@ -43,6 +44,9 @@ export interface OrderFormProps {
     side: string;
     handleChangeValueByButton: (increase: boolean, type: string) => void;
     handleChangeValueAmountByButton: (increase: boolean, type: string) => void;
+    willRecive: string | number;
+    fee: string;
+    willPay: string | number;
 }
 
 export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
@@ -81,6 +85,9 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
         side,
         handleChangeValueByButton,
         handleChangeValueAmountByButton,
+        fee,
+        willPay,
+        willRecive,
     } = props;
     const currentMarket = useSelector(selectCurrentMarket);
     const isLoggedin = useSelector(selectUserLoggedIn);
@@ -132,9 +139,21 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
             </h6>
             <ul className="pl-2 mb-24">
                 <li className="text-ms grey-text-accent font-semibold">
-                    Sell in {amountSell} {currentMarket?.base_unit?.toUpperCase()} = $ {totalSell}
+                    Sell in {amountSell} {currentMarket?.base_unit?.toUpperCase()} ={' '}
+                    {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalSell}
                 </li>
-                <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalSell}</li>
+                <li className="text-ms grey-text-accent font-semibold">
+                    Total spent {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalSell}
+                </li>
+                <li className="text-ms grey-text-accent font-semibold">Fee {fee}%</li>
+                <li className="text-ms grey-text-accent font-semibold">
+                    Estimation receive = {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                    {Decimal.format(
+                        willRecive,
+                        currentMarket?.price_precision,
+                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                    )}
+                </li>
             </ul>
             <div className="d-flex">
                 <button className="btn btn-danger sm px-5 mr-3" onClick={handleCancelModalSell}>
@@ -154,9 +173,21 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
             </h6>
             <ul className="pl-2 mb-24">
                 <li className="text-ms grey-text-accent font-semibold">
-                    Bought {amountBuy} {currentMarket?.base_unit?.toUpperCase()} = $ {totalBuy}
+                    Bought {amountBuy} {currentMarket?.base_unit?.toUpperCase()} ={' '}
+                    {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalBuy}
                 </li>
-                <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalBuy}</li>
+                <li className="text-ms grey-text-accent font-semibold">
+                    Total spent {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalBuy}
+                </li>
+                <li className="text-ms grey-text-accent font-semibold">Fee {fee}%</li>
+                <li className="text-ms grey-text-accent font-semibold">
+                    Estimation payment = {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                    {Decimal.format(
+                        willPay,
+                        currentMarket?.price_precision,
+                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                    )}
+                </li>
             </ul>
             <div className="d-flex">
                 <button className="btn btn-danger sm px-5 mr-3" onClick={handleCancelModalBuy}>

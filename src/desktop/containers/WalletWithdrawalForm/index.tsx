@@ -88,7 +88,6 @@ export const WalletWithdrawalForm: React.FC = () => {
     React.useEffect(() => {
         dispatch(groupFetch());
         dispatch(withdrawSumFetch());
-        // dispatch()
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -120,6 +119,7 @@ export const WalletWithdrawalForm: React.FC = () => {
             setShowModalLocked(true);
         }
     });
+
     const myWithdrawLimit = withdrawLimits.find((group) => group?.group == memberGroup?.group);
     const remainingWithdrawDaily = myWithdrawLimit
         ? Number(myWithdrawLimit?.limit_24_hour) - Number(withdrawSum?.last_24_hours)
@@ -499,8 +499,9 @@ export const WalletWithdrawalForm: React.FC = () => {
                             defaultLabel=""
                             handleChangeInput={handleChangeAmount}
                             inputValue={amount}
+                            classNameGroup="m-0"
                             classNameLabel="d-none"
-                            classNameInput={`dark-bg-accent ${!blockchainKey && 'input-disable'} ${
+                            classNameInput={`dark-bg-accent mb-0 ${!blockchainKey && 'input-disable'} ${
                                 messageAmount && 'error'
                             }`}
                             autoFocus={false}
@@ -508,13 +509,13 @@ export const WalletWithdrawalForm: React.FC = () => {
                             isDisabled={!blockchainKey}
                         />
                         {messageAmount !== '' ? (
-                            <span className="text-xxs danger-text font-normal">{messageAmount}</span>
+                            <span className="text-xxs danger-text font-normal mb-16">{messageAmount}</span>
                         ) : (
                             ''
                         )}
                     </div>
                 </div>
-                <p className="text-sm grey-text-accent ">
+                <p className="text-sm grey-text-accent">
                     Amount available for withdrawal ≤ Account available assets - Unconfirmed digital assets.
                 </p>
                 <div className="d-flex justify-content-between mb-12">

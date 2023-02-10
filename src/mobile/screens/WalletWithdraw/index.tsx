@@ -12,6 +12,11 @@ import {
     beneficiariesActivate,
     selectBeneficiariesCreate,
     selectBeneficiariesCreateError,
+    selectWithdrawSum,
+    selectGroupMember,
+    selectMaxWithdrawLimit,
+    groupFetch,
+    withdrawSumFetch,
 } from '../../../modules';
 import { beneficiariesResendPin } from '../../../modules';
 import { useBeneficiariesFetch, useWithdrawLimits } from '../../../hooks';
@@ -26,10 +31,12 @@ import { KeyConfirmation } from 'src/mobile/assets/KeyConfirmation';
 import { selectWallets } from '../../../modules';
 import { useHistory } from 'react-router-dom';
 import { CircleCloseIcon } from 'src/assets/images/CircleCloseIcon';
+import { Decimal } from 'src/components';
 
 export const WalletWithdrawMobileScreen: React.FC = () => {
     useBeneficiariesFetch();
     useWithdrawLimits();
+
     const intl = useIntl();
     const { formatMessage } = useIntl();
     const dispatch = useDispatch();
@@ -46,26 +53,30 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
     const [seconds, setSeconds] = React.useState(TIME_RESEND);
     const beneficiariesError = useSelector(selectBeneficiariesCreateError);
     const [timerActive, setTimerActive] = React.useState(false);
-
+    const [messageAmount, setMessageAmount] = React.useState('');
     const [beneficiaryActivateId, setBeneficiaryActivateId] = React.useState(0);
     const [beneficiaryCode, setBeneficiaryCode] = React.useState('');
-
     const [address, setAddress] = React.useState('');
     const [otp, setOtp] = React.useState('');
 
     const { currency = '' } = useParams<{ currency?: string }>();
 
+    const withdrawLimits = useSelector(selectMaxWithdrawLimit);
+    const withdrawSum = useSelector(selectWithdrawSum);
+    const memberGroup = useSelector(selectGroupMember);
     const beneficiaries: Beneficiary[] = useSelector(selectBeneficiaries);
     const beneficiariesCreate = useSelector(selectBeneficiariesCreate);
     const beneficiariesList = beneficiaries.filter((item) => item.currency === currency);
     const currencies: Currency[] = useSelector(selectCurrencies);
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
     const wallets = useSelector(selectWallets);
-    const wallet = wallets.find((item) => item.currency === currency);
+    const wallet = wallets.length && wallets.find((item) => item.currency.toLowerCase() === currency.toLowerCase());
+    const balance = wallet && wallet.balance ? wallet.balance.toString() : '0';
 
-    const blockchainKeyValue =
-        currencyItem && currencyItem.networks.find((item) => item.blockchain_key === blockchainKey);
-    const fee = blockchainKeyValue && blockchainKeyValue.withdraw_fee;
+    React.useEffect(() => {
+        dispatch(groupFetch());
+        dispatch(withdrawSumFetch());
+    }, [dispatch]);
 
     React.useEffect(() => {
         let timer = null;
@@ -83,12 +94,6 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
             clearInterval(timer);
         };
     });
-    const handleChangeBeneficiaryId = (id: number, address: string, blockchainKey: string) => {
-        setBeneficiaryId(id);
-        setAddress(address);
-        setBlockchainKey(blockchainKey);
-        setShowModalBeneficiaryList(false);
-    };
 
     React.useEffect(() => {
         if (beneficiariesError != undefined) {
@@ -97,9 +102,31 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
         }
     }, [beneficiariesError]);
 
+    const myWithdrawLimit = withdrawLimits.find((group) => group?.group == memberGroup?.group);
+    const remainingWithdrawDaily = myWithdrawLimit
+        ? Number(myWithdrawLimit?.limit_24_hour) - Number(withdrawSum?.last_24_hours)
+        : 0;
+    const remainingWithdrawMothly = myWithdrawLimit
+        ? Number(myWithdrawLimit?.limit_1_month) - Number(withdrawSum?.last_1_month)
+        : 0;
+
+    const blockchainKeyValue =
+        currencyItem && currencyItem.networks.find((item) => item.blockchain_key === blockchainKey);
+    const fee = blockchainKeyValue && blockchainKeyValue.withdraw_fee;
+    const minWithdraw = blockchainKeyValue && blockchainKeyValue.min_withdraw_amount;
+    const withdrawRecive = Number(amount) - Number(fee);
+
+    const handleChangeBeneficiaryId = (id: number, address: string, blockchainKey: string) => {
+        setBeneficiaryId(id);
+        setAddress(address);
+        setBlockchainKey(blockchainKey);
+        setShowModalBeneficiaryList(false);
+    };
+
     const handleChangeAmount = (e) => {
         const value = e.replace(/[^0-9\.]/g, '');
         setAmount(value);
+        amountValidation(e);
     };
 
     const handleResendCode = () => {
@@ -164,8 +191,38 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
     };
 
     const disabledButton = () => {
-        if (currency === '' || amount === '' || otp === '' || beneficiaryId === 0 || address === '') {
+        if (currency == '') {
             return true;
+        } else if (otp.length < 6) {
+            return true;
+        } else if (!amount) {
+            return true;
+        } else if (!beneficiaryId) {
+            return true;
+        } else if (!address) {
+            return true;
+        } else if (withdrawRecive < 1) {
+            return true;
+        } else if (messageAmount) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const amountValidation = (e) => {
+        if (Number(e) > Number(balance)) {
+            setMessageAmount('Your balance is insufficient');
+            return true;
+        } else if (Number(e) > Number(remainingWithdrawDaily)) {
+            setMessageAmount('Exceeded the withdrawal limit today');
+            return true;
+        } else if (Number(e) > Number(remainingWithdrawMothly)) {
+            setMessageAmount(`Exceeded the current month's withdrawal limit`);
+            return true;
+        } else {
+            setMessageAmount('');
+            return false;
         }
     };
 
@@ -265,10 +322,19 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                             handleChangeInput={handleChangeAmount}
                                             inputValue={amount}
                                             classNameLabel="d-none"
-                                            classNameInput={`dark-bg-accent`}
+                                            // classNameInput={`dark-bg-accent`}
+                                            classNameInput={`dark-bg-accent mb-0 ${!blockchainKey && 'input-disable'} ${
+                                                messageAmount && 'error'
+                                            }`}
                                             autoFocus={false}
                                             labelVisible={false}
+                                            isDisabled={!blockchainKey}
                                         />
+                                        {messageAmount !== '' ? (
+                                            <span className="text-xxs danger-text font-normal">{messageAmount}</span>
+                                        ) : (
+                                            ''
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -299,7 +365,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="my-3">
+                        <div className="my-2">
                             <p className="grey-text-accent">
                                 <small>
                                     {formatMessage({
@@ -307,35 +373,69 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                     })}
                                 </small>
                             </p>
-                            <div className="my-3">
-                                <p className="mb-0 text-sm grey-text-accent">
-                                    {formatMessage({
-                                        id: 'page.mobile.withdraw.fee',
-                                    })}
-                                </p>
-                                <p className="mb-0  text-base grey-text-accent font-bold">
-                                    $ {fee !== undefined ? fee : '0'}
-                                </p>
-                            </div>
-                            {wallet !== undefined && (
-                                <div className="my-3">
-                                    <p className="mb-0 text-sm grey-text-accent">Balance</p>
-                                    <p className="mb-0 text-base grey-text-accent font-bold">
-                                        {wallet.balance} {currency?.toUpperCase()}
+                        </div>
+
+                        <div className="w-100 d-flex justify-content-between align-items-center gap-8">
+                            <div className="w-50">
+                                {wallet !== undefined && (
+                                    <div className="my-2">
+                                        <p className="mb-0 text-sm grey-text-accent">Your Balance</p>
+                                        <p className="mb-0 text-base grey-text-accent font-bold">
+                                            {wallet.balance} {currency?.toUpperCase()}
+                                        </p>
+                                    </div>
+                                )}
+
+                                <div className="my-2">
+                                    <p className="mb-0 text-sm grey-text-accent">
+                                        {formatMessage({
+                                            id: 'page.mobile.withdraw.fee',
+                                        })}
+                                    </p>
+                                    <p className="mb-0  text-base grey-text-accent font-bold">
+                                        $ {fee !== undefined ? fee : '0'}
                                     </p>
                                 </div>
-                            )}
-                            <div className="">
-                                <p className="mb-0 text-sm grey-text-accent">
-                                    {formatMessage({
-                                        id: 'page.mobile.withdraw.totalAmount',
-                                    })}
-                                </p>
-                                <p className="mb-0 text-base grey-text-accent font-bold">
-                                    {amount !== '' ? amount : '0'} {currency?.toUpperCase()}
-                                </p>
+
+                                <div className="my-2">
+                                    <p className="mb-0 text-sm grey-text-accent">
+                                        {formatMessage({
+                                            id: 'page.mobile.withdraw.totalAmount',
+                                        })}
+                                    </p>
+                                    <p className="mb-0 text-base grey-text-accent font-bold">
+                                        <Decimal fixed={currencyItem?.precision} thousSep=",">
+                                            {amount !== '' ? withdrawRecive : '0'}
+                                        </Decimal>{' '}
+                                        {currency.toUpperCase()}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="w-50">
+                                <div className="my-2">
+                                    <p className="mb-0 text-sm grey-text-accent">Daily Limit</p>
+                                    <p className="mb-0  text-base grey-text-accent font-bold">
+                                        {remainingWithdrawDaily} {currency.toUpperCase()}
+                                    </p>
+                                </div>
+
+                                <div className="my-2">
+                                    <p className="mb-0 text-sm grey-text-accent">Monthly Limit</p>
+                                    <p className="mb-0  text-base grey-text-accent font-bold">
+                                        {remainingWithdrawMothly} {currency.toUpperCase()}
+                                    </p>
+                                </div>
+
+                                <div className="my-2">
+                                    <p className="mb-0 text-sm grey-text-accent">Min Withdraw</p>
+                                    <p className="mb-0  text-base grey-text-accent font-bold">
+                                        $ {minWithdraw ? minWithdraw : '0'}
+                                    </p>
+                                </div>
                             </div>
                         </div>
+
                         <button
                             onClick={() => setShowModalConfirmation(!showModalConfirmation)}
                             type="button"
