@@ -480,17 +480,17 @@ export const TradingScreen: FC = (): ReactElement => {
                         {ord_type ? translate(`page.body.trade.header.openOrders.content.type.${ord_type}`) : '-'}
                     </span>,
                     <span style={{ color: setTradeColor(side).color }} key={id}>
-                        <Decimal fixed={priceFixed} thousSep=",">
+                        <Decimal fixed={priceFixed} thousSep={currentMarket?.quote_unit == 'idr' ? ',' : '.'}>
                             {price}
                         </Decimal>
                     </span>,
                     <span key={id}>
-                        <Decimal fixed={amountFixed} thousSep=",">
+                        <Decimal fixed={amountFixed} thousSep=".">
                             {+remaining_volume}
                         </Decimal>
                     </span>,
                     <span key={id}>
-                        <Decimal fixed={amountFixed} thousSep=",">
+                        <Decimal fixed={amountFixed} thousSep=".">
                             {+remaining_volume * +price}
                         </Decimal>{' '}
                         <span className="cr-text__opacity">{curMarket?.quote_unit?.toUpperCase()}</span>
@@ -501,7 +501,11 @@ export const TradingScreen: FC = (): ReactElement => {
                                 <span>{translate('page.body.trade.header.openOrders.lastPrice')}</span>&nbsp;
                                 {getTriggerSign(ord_type, side)}&nbsp;&nbsp;
                                 <span style={{ color: setTradeColor(side).color }}>
-                                    {Decimal.format(trigger_price, priceFixed, ',')}
+                                    {Decimal.format(
+                                        trigger_price,
+                                        priceFixed,
+                                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                                    )}
                                 </span>
                             </React.Fragment>
                         ) : (

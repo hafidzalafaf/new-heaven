@@ -109,11 +109,27 @@ const MarketsTableComponent = (props) => {
         ? currentBidUnitMarkets
               .map((market) => ({
                   ...market,
-                  last: Decimal.format(+(marketTickers[market.id] || defaultTicker).last, market.price_precision),
-                  open: Decimal.format(+(marketTickers[market.id] || defaultTicker).open, market.price_precision),
+                  last: Decimal.format(
+                      +(marketTickers[market.id] || defaultTicker).last,
+                      market.price_precision,
+                      market?.quote_unit == 'idr' ? ',' : '.'
+                  ),
+                  open: Decimal.format(
+                      +(marketTickers[market.id] || defaultTicker).open,
+                      market.price_precision,
+                      market?.quote_unit == 'idr' ? ',' : '.'
+                  ),
                   price_change_percent: marketTickers[market.id]?.price_change_percent,
-                  high: Decimal.format(+(marketTickers[market.id] || defaultTicker).high, market.price_precision),
-                  low: Decimal.format(+(marketTickers[market.id] || defaultTicker).low, market.price_precision),
+                  high: Decimal.format(
+                      +(marketTickers[market.id] || defaultTicker).high,
+                      market.price_precision,
+                      market?.quote_unit == 'idr' ? ',' : '.'
+                  ),
+                  low: Decimal.format(
+                      +(marketTickers[market.id] || defaultTicker).low,
+                      market.price_precision,
+                      market?.quote_unit == 'idr' ? ',' : '.'
+                  ),
                   volume: Decimal.format(+(marketTickers[market.id] || defaultTicker).volume, market.amount_precision),
                   currency: currencies.find((cur) => cur.id == market.base_unit),
               }))
@@ -121,7 +137,8 @@ const MarketsTableComponent = (props) => {
                   ...market,
                   change: Decimal.format(
                       (+market.last - +market.open).toFixed(market.price_precision),
-                      market.price_precision
+                      market.price_precision,
+                      market?.quote_unit == 'idr' ? ',' : '.'
                   ),
               }))
         : [];
@@ -158,7 +175,7 @@ const MarketsTableComponent = (props) => {
                                     <div key={index} className="market-item py-24 mx-4">
                                         <p className="mb-0 text-lg white-text font-bold mb-8">
                                             {item.name}
-
+                                            {console.log(item)}
                                             <span
                                                 className={` font-bold text-ms ml-2 ${
                                                     item.price_change_percent?.includes('-')
@@ -168,7 +185,9 @@ const MarketsTableComponent = (props) => {
                                                 {item.price_change_percent}
                                             </span>
                                         </p>
-                                        <p className="mb-0 text-lg white-text font-bold">$ {item.last}</p>
+                                        <p className="mb-0 text-lg white-text font-bold">
+                                            {item?.quote_unit == 'idr' ? 'Rp' : '$'} {item.last}
+                                        </p>
                                         <p className="mb-0 text-xs grey-text-accent">
                                             <span>Volume: </span>
                                             {item.volume}

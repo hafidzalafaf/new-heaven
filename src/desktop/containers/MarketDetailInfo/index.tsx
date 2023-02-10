@@ -7,6 +7,7 @@ import { InfoIcon } from 'src/assets/images/InfoIcon';
 import './MarketDetailInfo.pcss';
 import { numberFormat } from '../../../helpers';
 import { TradingChart } from '../../containers';
+import { Decimal } from 'src/components';
 
 export interface InfoMarketDetailProps {
     amount_precision: string;
@@ -58,7 +59,8 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
             </div>
             <div className="d-flex align-items-center mb-24">
                 <h3 className="white-text m-0 text-title-2 mr-24">
-                    $ {numberFormat(detail?.last, 'USD').toString().split('.')[0]}
+                    {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                    {Decimal.format(detail?.last, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')}
                 </h3>
                 <h6
                     className={`text-lg font-bold m-0 mr-24 ${
@@ -83,20 +85,14 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                 </h5>
                 <p className="grey-text-accent text-ms mb-24">
                     The live price of {detail && detail.currency && detail.currency.name} is ${' '}
-                    {
-                        numberFormat(detail && detail.last, 'USD')
-                            .toString()
-                            .split('.')[0]
-                    }{' '}
-                    per ({detail && detail.base_unit && detail.base_unit.toUpperCase()} / USD) . 24-hour trading volume
-                    is ${' '}
-                    {
-                        numberFormat(detail && detail.volume, 'USD')
-                            .toString()
-                            .split('.')[0]
-                    }{' '}
-                    USD.
-                    {detail && detail.base_unit && detail.base_unit.toUpperCase()} to USD price is updated in real-time.
+                    {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                    {Decimal.format(detail?.last, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')} per
+                    ({detail && detail.base_unit && detail.base_unit.toUpperCase()} /{' '}
+                    {detail?.quote_unit?.toUpperCase()}) . 24-hour trading volume is{' '}
+                    {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                    {Decimal.format(detail?.volume, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')}.
+                    {detail && detail.base_unit && detail.base_unit.toUpperCase()} to{' '}
+                    {detail?.quote_unit?.toUpperCase()} price is updated in real-time.
                     {detail && detail.currency && detail.currency.name} is &nbsp;
                     {detail && detail.price_change_percent} in the last 24 hours.
                 </p>
@@ -106,23 +102,23 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                 </p>
                 <div className="d-flex align-items-center mb-24">
                     <p className="grey-text-accent light mb-0">
-                        Low : ${' '}
-                        {
-                            numberFormat(detail && detail.min_price, 'USD')
-                                .toString()
-                                .split('.')[0]
-                        }
+                        Low : {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                        {Decimal.format(
+                            detail?.min_price,
+                            detail?.price_precision,
+                            detail?.quote_unit == 'idr' ? ',' : '.'
+                        )}
                     </p>
                     <div className="bar position-relative">
                         <div className="positive" style={{ width: '50%' }} />
                     </div>
                     <p className="grey-text-accent light mb-0">
-                        High : ${' '}
-                        {
-                            numberFormat(detail && detail.max_price, 'USD')
-                                .toString()
-                                .split('.')[0]
-                        }
+                        High : {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                        {Decimal.format(
+                            detail?.max_price,
+                            detail?.price_precision,
+                            detail?.quote_unit == 'idr' ? ',' : '.'
+                        )}
                     </p>
                 </div>
                 <div className="row px-3">
@@ -131,12 +127,12 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                             24 Low <InfoIcon />
                         </p>
                         <p className="mb-0 font-bold white-text">
-                            ${' '}
-                            {
-                                numberFormat(detail && detail.min_price, 'USD')
-                                    .toString()
-                                    .split('.')[0]
-                            }
+                            {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                            {Decimal.format(
+                                detail?.min_price,
+                                detail?.price_precision,
+                                detail?.quote_unit == 'idr' ? ',' : '.'
+                            )}
                         </p>
                     </div>
                     <div className="col-lg-4 px-0 box col-xl-3 col-sm-6 mb-24">
@@ -144,12 +140,12 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                             24 High <InfoIcon />
                         </p>
                         <p className="mb-0 font-bold white-text">
-                            ${' '}
-                            {
-                                numberFormat(detail && detail.max_price, 'USD')
-                                    .toString()
-                                    .split('.')[0]
-                            }
+                            {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                            {Decimal.format(
+                                detail?.max_price,
+                                detail?.price_precision,
+                                detail?.quote_unit == 'idr' ? ',' : '.'
+                            )}
                         </p>
                     </div>
 

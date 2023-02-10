@@ -302,7 +302,8 @@ class Head extends React.Component<Props, HeaderState> {
                                                 <p className=" font-bold mb-0 white-text text-sm">
                                                     {Decimal.format(
                                                         +ticker?.last,
-                                                        this.props.currentMarket?.price_precision
+                                                        this.props.currentMarket?.price_precision,
+                                                        this.props.currentMarket?.quote_unit == 'idr' ? ',' : '.'
                                                     )}
                                                 </p>
                                             </div>

@@ -51,11 +51,27 @@ export const MarketFavoriteTabs: FC = (): ReactElement => {
     const marketList = markets
         .map((market) => ({
             ...market,
-            last: Decimal.format(+(marketTickers[market.id] || defaultTicker).last, market.price_precision),
-            open: Decimal.format(+(marketTickers[market.id] || defaultTicker).open, market.price_precision),
+            last: Decimal.format(
+                +(marketTickers[market.id] || defaultTicker).last,
+                market.price_precision,
+                market?.quote_unit == 'idr' ? ',' : '.'
+            ),
+            open: Decimal.format(
+                +(marketTickers[market.id] || defaultTicker).open,
+                market.price_precision,
+                market?.quote_unit == 'idr' ? ',' : '.'
+            ),
             price_change_percent: marketTickers[market.id]?.price_change_percent,
-            high: Decimal.format(+(marketTickers[market.id] || defaultTicker).high, market.price_precision),
-            low: Decimal.format(+(marketTickers[market.id] || defaultTicker).low, market.price_precision),
+            high: Decimal.format(
+                +(marketTickers[market.id] || defaultTicker).high,
+                market.price_precision,
+                market?.quote_unit == 'idr' ? ',' : '.'
+            ),
+            low: Decimal.format(
+                +(marketTickers[market.id] || defaultTicker).low,
+                market.price_precision,
+                market?.quote_unit == 'idr' ? ',' : '.'
+            ),
             volume: Decimal.format(+(marketTickers[market.id] || defaultTicker).volume, market.amount_precision),
             currency: currencies.find((cur) => cur.id == market.base_unit),
         }))
@@ -105,14 +121,18 @@ export const MarketFavoriteTabs: FC = (): ReactElement => {
                 </div>
                 <p className="m-0 mr-24 white-text font-bold">{item.name && item.name.toUpperCase()}</p>
             </div>,
-            <p className="m-0 text-sm white-text">$ {item.last}</p>,
+            <p className="m-0 text-sm white-text">
+                {item?.quote_unit == 'idr' ? 'Rp' : '$'} {item.last}
+            </p>,
             <p className={`text-sm m-0 ${item.price_change_percent?.includes('-') ? 'danger-text' : 'green-text'}`}>
                 {item.price_change_percent}
             </p>,
-            <p className="text-sm m-0 grey-text-accent">$ {item.volume}</p>,
+            <p className="text-sm m-0 grey-text-accent">
+                {item?.quote_unit == 'idr' ? 'Rp' : '$'} {item.volume}
+            </p>,
             <div className="d-flex">
                 <div className="mr-3">
-                    <Link to={`/markets/detail/${item.base_unit}`}>
+                    <Link to={`/markets/detail/${item.id}`}>
                         <p className="m-0 text-sm font-bold gradient-text cursor-pointer">Detail</p>
                     </Link>
                 </div>
