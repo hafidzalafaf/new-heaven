@@ -105,7 +105,11 @@ const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
                                                     }`}>
                                                     <td>
                                                         <p className="text-sm danger-text font-bold m-0 p-0 text-left">
-                                                            {Decimal.format(+item[0], currentMarket?.price_precision)}
+                                                            {Decimal.format(
+                                                                +item[0],
+                                                                currentMarket?.price_precision,
+                                                                currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                                                            )}
                                                         </p>
                                                     </td>
                                                     <td>
@@ -117,7 +121,8 @@ const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
                                                         <p className="text-sm m-0 p-0 grey-text-accent font-bold text-right">
                                                             {Decimal.format(
                                                                 +item[0] * +item[1],
-                                                                currentMarket?.price_precision
+                                                                currentMarket?.price_precision,
+                                                                currentMarket?.quote_unit == 'idr' ? ',' : '.'
                                                             )}
                                                         </p>
                                                     </td>
@@ -132,7 +137,11 @@ const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
                                 className={`text-md font-bold m-0 p-0 ${
                                     lastTrade && +lastTrade.price_change > 0 ? 'green-text' : 'danger-text'
                                 }`}>
-                                {Decimal.format(lastTrade && +lastTrade.price, currentMarket?.price_precision)}
+                                {Decimal.format(
+                                    lastTrade && +lastTrade.price,
+                                    currentMarket?.price_precision,
+                                    currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                                )}
                                 {lastTrade && +lastTrade.price_change > 0 ? <TradeUp /> : <TradeDown />}
                             </h3>
                             {lastTrade?.price_change && (
@@ -142,7 +151,8 @@ const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
                                     }`}>
                                     {Decimal.format(
                                         lastTrade && +lastTrade.price_change,
-                                        currentMarket?.price_precision
+                                        currentMarket?.price_precision,
+                                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
                                     )}
                                 </p>
                             )}
@@ -178,7 +188,11 @@ const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
                                                 }`}>
                                                 <td>
                                                     <p className="text-sm green-text font-bold m-0 p-0 text-left">
-                                                        {Decimal.format(+item[0], currentMarket?.price_precision)}
+                                                        {Decimal.format(
+                                                            +item[0],
+                                                            currentMarket?.price_precision,
+                                                            currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                                                        )}
                                                     </p>
                                                 </td>
                                                 <td>
@@ -190,7 +204,8 @@ const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
                                                     <p className="text-sm m-0 p-0 grey-text-accent font-bold text-right">
                                                         {Decimal.format(
                                                             +item[0] * +item[1],
-                                                            currentMarket?.price_precision
+                                                            currentMarket?.price_precision,
+                                                            currentMarket?.quote_unit == 'idr' ? ',' : '.'
                                                         )}
                                                     </p>
                                                 </td>
