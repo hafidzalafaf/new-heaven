@@ -175,7 +175,6 @@ const MarketsTableComponent = (props) => {
                                     <div key={index} className="market-item py-24 mx-4">
                                         <p className="mb-0 text-lg white-text font-bold mb-8">
                                             {item.name}
-                                            {console.log(item)}
                                             <span
                                                 className={` font-bold text-ms ml-2 ${
                                                     item.price_change_percent?.includes('-')

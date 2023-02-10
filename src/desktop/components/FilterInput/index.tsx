@@ -3,6 +3,7 @@ import * as React from 'react';
 // import SearchIcon from './Search.svg';
 import './FilterInput.pcss';
 import { SearchIcon } from '../../../assets/images/ProfileIcon';
+import { CloseIconFilter } from '../../../assets/images/CloseIcon';
 
 interface OnChangeEvent {
     target: {
@@ -14,12 +15,12 @@ export interface FilterInputProps {
     /**
      * Data on which the search will be performed
      */
-    data: object[];
+    data?: object[];
     /**
      * filter function prop is used to filter data
      */
     // tslint:disable-next-line
-    filter: (item: any, term: string) => boolean;
+    filter?: (item: any, term: string) => boolean;
     /**
      * onFilter prop is called whenever input value changes
      */
@@ -80,7 +81,7 @@ export class FilterInput extends React.Component<FilterInputProps, SearchInputSt
                 <span
                     className="position-absolute cancel-icon cursor-pointer grey-text"
                     onClick={(e) => this.filterList()}>
-                    X
+                    <CloseIconFilter />
                 </span>
             </div>
         );

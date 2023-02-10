@@ -43,6 +43,8 @@ export const OrderP2PTable = () => {
         setData(filterredList);
     };
 
+    console.log(data);
+
     const optionQuote = [
         { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
         { label: <p className="m-0 text-sm grey-text-accent">IDR</p>, value: 'idr' },
@@ -81,8 +83,8 @@ export const OrderP2PTable = () => {
                 <p className="m-0 p-0 white-text text-xs">{moment(item?.created_at).format('DD-MM-YYYY hh:mm:ss')}</p>
             </div>,
             <div className="d-flex align-items-center">
-                <img src="/img/coin.png" alt={item?.fiat} className="mr-12" />
-                <p className="white-text text-sm font-semibold m-0 p-0">{item?.fiat}</p>
+                <img src={item?.fiat?.icon_url} alt={item?.fiat?.name} className="mr-12" />
+                <p className="white-text text-sm font-semibold m-0 p-0">{item?.fiat?.name}</p>
             </div>,
             <p className="m-0 p-0 grey-text text-sm font-semibold">{item.fiat_amount}</p>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{item.price}</p>,

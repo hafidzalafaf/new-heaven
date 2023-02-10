@@ -36,8 +36,6 @@ export interface MarketDetailCalculatorProps {
 export const MarketDetailCalculator: React.FC<MarketDetailCalculatorProps> = ({ detail }) => {
     const [inputCalc, setInputCalc] = useState('');
 
-    console.log(detail);
-
     return (
         <React.Fragment>
             <form className="cr-market-detail-calculator dark-bg-main w-100">

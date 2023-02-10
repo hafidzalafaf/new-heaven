@@ -44,3 +44,4 @@ export * from './CardP2PUserInfo';
 export * from './PercentageTransferP2P';
 export * from './TableOfferP2P';
 export * from './ModalUserLevel';
+export * from './ModalOptionPayment';

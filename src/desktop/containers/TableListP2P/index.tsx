@@ -32,7 +32,13 @@ import {
     DropdownIcon,
     InfoSecondaryIcon,
 } from 'src/assets/images/P2PIcon';
-import { CustomStylesSelect, ModalCreateOffer, TableOfferP2P, ModalUserLevel } from '../../../desktop/components';
+import {
+    CustomStylesSelect,
+    ModalCreateOffer,
+    TableOfferP2P,
+    ModalUserLevel,
+    ModalOptionPayment,
+} from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
 import { CustomStyleFiat } from './CustomStyleFiat';
@@ -74,6 +80,8 @@ export const TableListP2P = () => {
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
     const [showModalPrice, setShowModalPrice] = React.useState(false);
+    const [showModalOptionPayment, setShowModalOptionPayment] = React.useState(false);
+    const [showSelectedPayment, setShowSelectedPayment] = React.useState(false);
     const [showModalUserLevel, setShowModalUserLevel] = React.useState(false);
     const [title, setTitle] = React.useState('');
 
@@ -310,6 +318,21 @@ export const TableListP2P = () => {
         setSideOffer(e);
     };
     /* ============== FUNCTION CREATE OFFER END ============== */
+
+    /* ============== FUNCTION MODAL PAYMENT OPTION START ============== */
+
+    const handleSelectPayment = () => {
+        setShowSelectedPayment(true);
+    };
+
+    const handleConfirmSelectedPayment = () => {
+        setShowModalOptionPayment(false);
+    };
+
+    const handleCancelSelectedPayment = () => {
+        setShowSelectedPayment(false);
+    };
+    /* ============== FUNCTION MODAL PAYMENT OPTION END ============== */
 
     const renderModalPrice = () => {
         return (
@@ -639,6 +662,7 @@ export const TableListP2P = () => {
                         price={price}
                         amount={amount}
                         payment_order={payment_order}
+                        handleShowPaymentOption={() => setShowModalOptionPayment(true)}
                         handleChangePrice={handleChangePrice}
                         handleChangePaymentOrder={handleChangePaymentOrder}
                         handleCreacteOrder={handleCreacteOrder}
@@ -691,6 +715,18 @@ export const TableListP2P = () => {
                         onClose={() => setShowModalUserLevel(false)}
                     />
                 )}
+
+                {showModalOptionPayment && (
+                    <ModalOptionPayment
+                        show={showModalOptionPayment}
+                        showSelectedPayment={showSelectedPayment}
+                        onClose={() => setShowModalOptionPayment(false)}
+                        handleSelectPayment={handleSelectPayment}
+                        handleCancelSelectedPayment={handleCancelSelectedPayment}
+                        handleConfirmSelectedPayment={handleConfirmSelectedPayment}
+                    />
+                )}
+
                 <Modal show={showFilter} content={renderModalFilter()} />
                 <Modal show={showModalPrice} content={renderModalPrice()} />
                 <Modal show={showModalConfirmation} content={renderModalConfirmation()} />

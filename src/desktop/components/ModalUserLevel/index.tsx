@@ -41,7 +41,7 @@ export const ModalUserLevel: React.FunctionComponent<ModalUserLevelProps> = (pro
                 </p>
                 <div className="d-flex justify-content-center align-items-center w-100 mb-0 gap-8">
                     <Link className="w-50" to={`${user?.level == 1 ? '/profile' : '/profile/kyc'}`}>
-                        <button type="button" className="btn btn-primary">
+                        <button type="button" className="btn btn-primary w-100">
                             {user?.level == 1 ? 'Verify Phone Number' : 'Verify Document'}
                         </button>
                     </Link>
