@@ -244,9 +244,24 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
         setAmountBuy(orderType === 'market' ? market.toString() : limit.toString());
     }, [orderPercentageBuy, totalBuy, priceBuy]);
 
+    // // buat total buy
+    // React.useEffect(() => {
+    //     const market = Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.price_precision);
+
+    //     const limit =
+    //         orderPercentageBuy !== 0
+    //             ? Decimal.format((+usdt * +orderPercentageBuy) / 100, currentMarket?.price_precision)
+    //             : Decimal.format(+priceBuy * +amountBuy, currentMarket?.price_precision);
+
+    //     setTotalBuy(orderType === 'market' ? market : limit);
+    // }, [priceBuy, amountBuy, orderPercentageBuy]);
     // buat total buy
     React.useEffect(() => {
-        const market = Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.price_precision);
+        const safePrice = totalPrice / +amountBuy || tickerItem?.last;
+        const market =
+            orderPercentageBuy !== 0
+                ? Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.price_precision)
+                : Decimal.format(+safePrice * +amountBuy, currentMarket?.price_precision);
 
         const limit =
             orderPercentageBuy !== 0
