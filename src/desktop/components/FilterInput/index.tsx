@@ -3,6 +3,7 @@ import * as React from 'react';
 // import SearchIcon from './Search.svg';
 import './FilterInput.pcss';
 import { SearchIcon } from '../../../assets/images/ProfileIcon';
+import { CloseIconFilter } from '../../../assets/images/CloseIcon';
 
 interface OnChangeEvent {
     target: {
@@ -80,7 +81,7 @@ export class FilterInput extends React.Component<FilterInputProps, SearchInputSt
                 <span
                     className="position-absolute cancel-icon cursor-pointer grey-text"
                     onClick={(e) => this.filterList()}>
-                    X
+                    <CloseIconFilter />
                 </span>
             </div>
         );

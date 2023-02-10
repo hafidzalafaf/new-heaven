@@ -128,12 +128,20 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
             </h6>
             <ul className="pl-2 mb-24 text-center style-none">
                 <li className="text-ms grey-text-accent font-semibold">
-                    Sell in {amountSell} {currentMarket?.base_unit?.toUpperCase()} = $ {totalSell}
+                    Sell in {amountSell} {currentMarket?.base_unit?.toUpperCase()} ={' '}
+                    {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalSell}
                 </li>
-                <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalSell}</li>
+                <li className="text-ms grey-text-accent font-semibold">
+                    Total spent {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalSell}
+                </li>
                 <li className="text-ms grey-text-accent font-semibold">Fee {fee}%</li>
                 <li className="text-ms grey-text-accent font-semibold">
-                    Estimation receive = ${Decimal.format(willRecive, currentMarket?.price_precision)}
+                    Estimation receive = {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                    {Decimal.format(
+                        willRecive,
+                        currentMarket?.price_precision,
+                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                    )}
                 </li>
             </ul>
             <div className="d-flex justify-content-center">
@@ -154,12 +162,20 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
             </h6>
             <ul className="pl-2 mb-24 text-center style-none">
                 <li className="text-ms grey-text-accent font-semibold">
-                    Bought {amountBuy} {currentMarket?.base_unit?.toUpperCase()} = $ {totalBuy}
+                    Bought {amountBuy} {currentMarket?.base_unit?.toUpperCase()} ={' '}
+                    {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalBuy}
                 </li>
-                <li className="text-ms grey-text-accent font-semibold">Total spent $ {totalBuy}</li>
+                <li className="text-ms grey-text-accent font-semibold">
+                    Total spent {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalBuy}
+                </li>
                 <li className="text-ms grey-text-accent font-semibold">Fee {fee}%</li>
                 <li className="text-ms grey-text-accent font-semibold">
-                    Estimation payment = ${Decimal.format(willPay, currentMarket?.price_precision)}
+                    Estimation payment = {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                    {Decimal.format(
+                        willPay,
+                        currentMarket?.price_precision,
+                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                    )}
                 </li>
             </ul>
             <div className="d-flex justify-content-center">
