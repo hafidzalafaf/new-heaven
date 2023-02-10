@@ -1,28 +1,51 @@
 import * as React from 'react';
 import { useDocumentTitle } from '../../../hooks';
 import { useSelector, useDispatch } from 'react-redux';
+import { useBlogsFetch } from '../../../hooks';
 import { HeaderP2P, BannerP2P, TableListP2P } from '../../containers';
-import { selectUserLoggedIn } from 'src/modules';
+import { selectUserLoggedIn, selectBlogs } from 'src/modules';
 import { Modal } from 'src/desktop/components';
 import { Form } from 'react-bootstrap';
 import { p2pProfileFetch } from 'src/modules/user/p2pProfile';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 export const P2PScreen: React.FC = () => {
     useDocumentTitle('P2P');
+    useBlogsFetch({ tag: 'news' });
 
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(selectUserLoggedIn);
+    const blogs = useSelector(selectBlogs);
     const [showModalAnnouncement, setShowModalAnnouncement] = React.useState(false);
+    const [blog, setBlog] = React.useState<any[]>([]);
 
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
     }, [dispatch]);
 
     React.useEffect(() => {
+        if (blogs) {
+            setBlog(blogs);
+        }
+    }, [blogs]);
+
+    React.useEffect(() => {
         setTimeout(() => {
             setShowModalAnnouncement(true);
         }, 3000);
     }, []);
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        pauseOnHover: true,
+    };
 
     const renderModalAnnouncement = () => {
         return (
@@ -70,9 +93,27 @@ export const P2PScreen: React.FC = () => {
 
                 <div className="com-content-table-list-p2p-container">
                     <div className="d-flex justify-content-between align-items-center overflow-x-scroll mb-48">
-                        <img src="/img/p2pbanner.png" alt="adsense" className="px-6" />
-                        <img src="/img/p2pbanner.png" alt="adsense" className="px-6" />
-                        <img src="/img/p2pbanner.png" alt="adsense" className="px-6" />
+                        <Slider {...settings}>
+                            {blog?.map((item, key) => (
+                                <div className="px-6 radius-md" key={key}>
+                                    <a
+                                        href={item.url}
+                                        target="__blank"
+                                        rel="noopener noreferrer"
+                                        className="slider-item p-3">
+                                        <img
+                                            src={
+                                                item.feature_image !== null
+                                                    ? item.feature_image
+                                                    : '/img/landing-card.png'
+                                            }
+                                            alt={item.title}
+                                            className="w-100 rounded-lg announcement-slider-img"
+                                        />
+                                    </a>
+                                </div>
+                            ))}
+                        </Slider>
                     </div>
                     <TableListP2P />
                 </div>
