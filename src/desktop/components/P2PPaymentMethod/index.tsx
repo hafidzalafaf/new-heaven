@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { NoDataIcon } from '../../../assets/images/P2PIcon';
+import { p2pPaymentMethodsFetch } from 'src/modules';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 
 export const P2PPaymentMethod: React.FC = () => {
     const data = [{ id: 1 }, { id: 2 }];
     const [expandPayment, setExpandPayment] = React.useState(false);
+    const [bankData, setBankData] = React.useState([]);
     const banks = [
         { name: 'Bank Transfer', path: 'bank-transfer' },
         { name: 'Permata Me', path: 'permata-me' },
@@ -14,7 +18,24 @@ export const P2PPaymentMethod: React.FC = () => {
         { name: 'Gopay', path: 'gopay' },
         { name: 'Bank BCA', path: 'bank-bca' },
     ];
+    const dispatch = useDispatch();
 
+    React.useEffect(() => {
+        dispatch(p2pPaymentMethodsFetch());
+    }, [dispatch]);
+
+
+    const getDummy = async () => {
+        try {
+            const response = await axios.get('http://dev.heavenexchange.io/api/v2/p2p/public/payments/idr');
+            console.log(response);
+            setBankData(response.data);
+        }
+        catch (error) {
+            console.log(error);
+    }
+}
+    getDummy();
     return (
         <React.Fragment>
             <div className="com-p2p-payment-method">
@@ -38,13 +59,13 @@ export const P2PPaymentMethod: React.FC = () => {
 
                             {expandPayment && (
                                 <div className="position-absolute dropdown-payment w-100 dark-bg-main p-16 radius-lg">
-                                    {banks.map((bank, i) => (
+                                    {bankData.map((bank, i) => (
                                         <Link
-                                            to={`/p2p/payment-method/${bank.path}`}
+                                            to={`/p2p/payment-method/${bank.id}`}
                                             key={i}
                                             className="bank-payment-container d-flex align-items-center gap-6 cursor-pointer">
                                             <p className="payment-label text-sm font-extrabold blue-text m-0 p-0">I</p>
-                                            <p className="text-sm grey-text-accent m-0 p-0">{bank.name}</p>
+                                            <p className="text-sm grey-text-accent m-0 p-0">{bank.bank_name}</p>
                                         </Link>
                                     ))}
                                 </div>
