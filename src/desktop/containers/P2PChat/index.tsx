@@ -3,13 +3,14 @@ import * as React from 'react';
 import { ArrowDownMd, CheckFillIcon, AttachmentIcon, SendIcon } from 'src/assets/images/P2PIcon';
 
 export interface P2PChatProps {
+    detail: any;
     showChat: boolean;
     handleExpandChat: () => void;
     handleModalReport: () => void;
 }
 
 export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
-    const { showChat, handleExpandChat, handleModalReport } = props;
+    const { detail, showChat, handleExpandChat, handleModalReport } = props;
 
     return (
         <React.Fragment>
@@ -38,8 +39,10 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                             className="text-xs my-2 danger-text font-normal text-right cursor-pointer">
                             Report
                         </p>
-                        <p className="mb-1 grey-text-accent text-sm text-right">1,419</p>
-                        <p className="mb-1 grey-text-accent text-sm text-right">90,01%</p>
+                        <p className="mb-1 grey-text-accent text-sm text-right">{detail?.order?.stats?.mount_trade}</p>
+                        <p className="mb-1 grey-text-accent text-sm text-right">
+                            {detail?.order?.stats?.completed_rate} %
+                        </p>
                     </div>
                 </div>
                 {showChat && (

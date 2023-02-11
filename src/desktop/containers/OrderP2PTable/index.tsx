@@ -89,13 +89,14 @@ export const OrderP2PTable = () => {
             <p className="m-0 p-0 grey-text text-sm font-semibold">{item.fiat_amount}</p>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{item.price}</p>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{item?.amount}</p>,
-            <a
-                target="_blank"
-                rel="noreferrer"
-                href={'https://api.heavenexchange.io/'}
-                className="text-underline blue-text text-sm font-semibold">
-                {item.counter_party}
-            </a>,
+            // <a
+            //     target="_blank"
+            //     rel="noreferrer"
+            //     href={'https://api.heavenexchange.io/'}
+            //     className="text-underline blue-text text-sm font-semibold">
+            //     {item?.trades?.uid}
+            // </a>,
+            <p className="m-0 p-0 text-underline blue-text text-sm font-semibold">{item?.trades?.uid}</p>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{capitalizeFirstLetter(item?.state)}</p>,
             <div className="d-flex align-items-center">
                 <div

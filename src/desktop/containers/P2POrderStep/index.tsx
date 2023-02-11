@@ -55,9 +55,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Amount</span>
-                                    <p className="text-sm white-text font-semibold">
-                                        Rp {detail?.offer?.price * detail?.order?.amount}
-                                    </p>
+                                    <p className="text-sm white-text font-semibold">Rp {detail?.order?.amount}</p>
                                 </div>
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Price</span>
@@ -65,7 +63,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 </div>
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Quantity</span>
-                                    <p className="text-sm white-text font-semibold">{detail?.order?.amount} USDT</p>
+                                    <p className="text-sm white-text font-semibold">{detail?.order?.quantity} USDT</p>
                                 </div>
                             </div>
                         </div>
@@ -114,18 +112,10 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                     </div>
                                     <div className={`content-payment ${showPayment ? 'hide' : ''}`}>
                                         <div className="d-flex align-items-center justify-content-end flex-wrap ">
-                                            {bank.map((el, i) => (
+                                            {detail?.payment_user?.map((el, i) => (
                                                 <img
                                                     key={i}
-                                                    src={
-                                                        el.name === 'bca'
-                                                            ? '/img/logo-bca.png'
-                                                            : el.name === 'dana'
-                                                            ? '/img/logo-dana.png'
-                                                            : el.name === 'jago'
-                                                            ? '/img/logo-jago.png'
-                                                            : '/img/logo-shopee.png'
-                                                    }
+                                                    src={el?.logo === 'dummy' ? '/img/logo-bca.png' : el?.logo}
                                                     className="bank-logo mx-2"
                                                     alt="bank logo"
                                                 />
@@ -133,30 +123,24 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                         </div>
                                     </div>
                                     <div className={`content-payment-expand ${showPayment ? '' : 'hide'}`}>
-                                        {bank.map((el, i) => (
+                                        {detail?.payment_user?.map((el, i) => (
                                             <div
                                                 key={i}
-                                                onClick={() => handleChangePaymentMethod(el.name)}
+                                                onClick={() => handleChangePaymentMethod(el?.payment_user_id)}
                                                 className="payment-item cursor-pointer">
                                                 <div className="payment-item_title">
                                                     <img
-                                                        src={
-                                                            el.name === 'bca'
-                                                                ? '/img/logo-bca.png'
-                                                                : el.name === 'dana'
-                                                                ? '/img/logo-dana.png'
-                                                                : el.name === 'jago'
-                                                                ? '/img/logo-jago.png'
-                                                                : '/img/logo-shopee.png'
-                                                        }
+                                                        src={el?.logo === 'dummy' ? '/img/logo-bca.png' : el?.logo}
                                                         className="bank-logo"
                                                         alt=""
                                                     />
                                                 </div>
                                                 <p className="primary-text text-xs mb-1 font-semibold mt-3">
-                                                    AT. Ade Sumargo
+                                                    {el?.account_name}
                                                 </p>
-                                                <p className="primary-text text-xs font-semibold mb-0">00001111</p>
+                                                <p className="primary-text text-xs font-semibold mb-0">
+                                                    {el?.account_number}
+                                                </p>
                                             </div>
                                         ))}
                                     </div>
