@@ -3,7 +3,6 @@ import { alertPush, sendError } from '../../../';
 import { API, RequestOptions } from '../../../../api';
 import { getCsrfToken } from '../../../../helpers';
 import { OrderCreate, orderCreateData, orderCreateError } from '../actions';
-import axios from 'axios';
 
 const config = (csrfToken?: string): RequestOptions => {
     return {

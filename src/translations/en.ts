@@ -915,6 +915,7 @@ export const en = {
     'success.message.sent': 'Message was sent',
     'success.email.confirmed': 'Your email address has been successfully confirmed',
     'success.order.created': 'Order was created',
+    'success.order.confirm.payment': 'Payment method was confirmed',
     'success.order.done': 'Order successfully completed',
     'success.order.approve': 'Order successfully approved',
     'success.order.cancel': 'Order successfully cancelled',

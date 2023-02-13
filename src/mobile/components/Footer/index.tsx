@@ -68,28 +68,30 @@ const FooterComponent: React.FC = () => {
 
     return (
         <React.Fragment>
-            <nav className="fixed-bottom px-24 d-flex justify-content-between align-items-center dark-bg-accent">
-                {menu &&
-                    menu.map((item, key) => (
-                        <Link
-                            to={item.path}
-                            key={key}
-                            onClick={() => setMenuActive(item.name)}
-                            className="d-flex flex-column py-2 justify-content-center align-items-center active">
-                            {item.icon}
-                            <p
-                                className={`p-0 m-0 text-xs font-semibold text-capitalize ${
-                                    location.pathname == '/' && location.pathname.includes(item.url)
-                                        ? 'white-text'
-                                        : item.url != '/' && location.pathname.includes(item.url)
-                                        ? 'white-text'
-                                        : 'grey-text'
-                                }`}>
-                                {item.name}
-                            </p>
-                        </Link>
-                    ))}
-            </nav>
+            <div className="footer-mobile-container dark-bg-accent">
+                <nav className="container d-flex justify-content-between align-items-center">
+                    {menu &&
+                        menu.map((item, key) => (
+                            <Link
+                                to={item.path}
+                                key={key}
+                                onClick={() => setMenuActive(item.name)}
+                                className="d-flex flex-column py-2 justify-content-center align-items-center active">
+                                {item.icon}
+                                <p
+                                    className={`p-0 m-0 text-xs font-semibold text-capitalize ${
+                                        location.pathname == '/' && location.pathname.includes(item.url)
+                                            ? 'white-text'
+                                            : item.url != '/' && location.pathname.includes(item.url)
+                                            ? 'white-text'
+                                            : 'grey-text'
+                                    }`}>
+                                    {item.name}
+                                </p>
+                            </Link>
+                        ))}
+                </nav>
+            </div>
         </React.Fragment>
     );
 };

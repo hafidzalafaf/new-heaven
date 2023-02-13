@@ -109,7 +109,8 @@ export interface OrderConfirmError {
 export interface OrderConfirmPayment {
     type: typeof ORDER_CONFIRM_PAYMENT;
     payload: {
-        order_number: string;
+        order_number?: string;
+        payment_method?: string;
     };
 }
 

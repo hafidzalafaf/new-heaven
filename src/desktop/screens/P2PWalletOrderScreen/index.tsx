@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { orderDetailFetch, selectP2POrderDetail } from 'src/modules';
+import {
+    orderDetailFetch,
+    selectP2POrderDetail,
+    orderConfirmPayment,
+    selectP2PConfirmPaymentSuccess,
+} from 'src/modules';
 import { useDocumentTitle } from '../../../hooks';
 import { alertPush } from 'src/modules';
 import { HeaderP2P, BannerP2P, P2PFAQ, P2PChat, P2POrderStep } from 'src/desktop/containers';
@@ -19,15 +24,17 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const side = location.state?.side;
 
     const detail = useSelector(selectP2POrderDetail);
+    const paymentConfirmSuccess = useSelector(selectP2PConfirmPaymentSuccess);
+    console.log(detail);
 
     const [seconds, setSeconds] = React.useState(30000);
     const [timerActive, setTimerActive] = React.useState(false);
     const [showPayment, setShowPayment] = React.useState(false);
     const [showChat, setShowChat] = React.useState(true);
-    const [step, setStep] = React.useState(1);
     const [inputFile, setInputFile] = React.useState(null);
     const [fileName, setFileName] = React.useState('');
     const [paymentMethod, setPaymentMethod] = React.useState('');
+    const [paymentUser, setPaymentUser] = React.useState<any>();
     const [checkModalOne, setcheckModalOne] = React.useState(false);
     const [checkModalTwo, setcheckModalTwo] = React.useState(false);
     const [comment, setComment] = React.useState('');
@@ -38,7 +45,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
-    }, [dispatch, order_number]);
+    }, [dispatch, order_number, paymentConfirmSuccess]);
 
     React.useEffect(() => {
         let timer = null;
@@ -56,6 +63,15 @@ export const P2PWalletOrderScreen: React.FC = () => {
             clearInterval(timer);
         };
     });
+
+    const handleConfirmPaymentBuy = () => {
+        const payload = {
+            order_number: order_number,
+            payment_method: paymentMethod,
+        };
+
+        dispatch(orderConfirmPayment(payload));
+    };
 
     const bank = [
         {
@@ -77,12 +93,9 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     const disableButton = !checkModalOne || !checkModalTwo;
 
-    const handleChangePaymentMethod = (e: string) => {
+    const handleChangePaymentMethod = (e: string, el: any) => {
         setPaymentMethod(e);
-    };
-
-    const handleChangeStep = (e: number) => {
-        setStep(e);
+        setPaymentUser(el);
     };
 
     const handleChangeComment = (e: string) => {
@@ -239,7 +252,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     } text-sm py-3 btn btn-block`}
                     disabled={disableButton}
                     onClick={() => {
-                        setStep(3);
                         setShowModalConfirm(false);
                     }}>
                     Confirm
@@ -275,7 +287,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     onClick={() => {
                         if (side == 'buy') {
                             setShowModalBuyOrderCompleted(false);
-                            setStep(3);
                         }
                     }}
                     type="button"
@@ -351,16 +362,16 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
                 <div className="d-flex container justify-content-between mt-4 ">
                     <P2POrderStep
-                        step={step}
                         paymentMethod={paymentMethod}
+                        paymentUser={paymentUser}
                         showPayment={showPayment}
                         comment={comment}
                         side={side}
                         bank={bank}
                         detail={detail}
                         handleChangePaymentMethod={handleChangePaymentMethod}
-                        handleChangeStep={handleChangeStep}
                         handleChangeComment={handleChangeComment}
+                        handleConfirmPaymentBuy={handleConfirmPaymentBuy}
                         handleShowPayment={() => setShowPayment(!showPayment)}
                         handleShowModalBuyOrderCompleted={() =>
                             setShowModalBuyOrderCompleted(!showModalBuyOrderCompleted)

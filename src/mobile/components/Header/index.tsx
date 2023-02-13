@@ -52,8 +52,8 @@ const HeaderComponent: React.FC = () => {
     ];
     return (
         <div>
-            <div className="px-24 dark-bg-main">
-                <nav className="navbar-mobile fixed-top container py-3 dark-bg-main">
+            <div className="px-24 dark-bg-main navbar-mobile-container">
+                <nav className="navbar-mobile container py-3 dark-bg-main">
                     <Link to="/" className="navbar-brand">
                         <LogoIcon className={''} />
                     </Link>
