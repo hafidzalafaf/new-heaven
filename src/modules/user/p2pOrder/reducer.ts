@@ -10,14 +10,28 @@ import {
     ORDER_DATA,
     ORDER_ERROR,
     ORDER_FETCH,
+    ORDER_CANCEL,
+    ORDER_CANCEL_DATA,
+    ORDER_CANCEL_ERROR,
+    ORDER_CONFIRM,
+    ORDER_CONFIRM_DATA,
+    ORDER_CONFIRM_ERROR,
+    ORDER_CONFIRM_PAYMENT,
+    ORDER_CONFIRM_PAYMENT_DATA,
+    ORDER_CONFIRM_PAYMENT_ERROR,
 } from './constants';
-import { Order } from './types';
+import { Order, Confirm } from './types';
 
 const defaultOrder: Order = {
     offer_number: '',
     price: '',
     amount: '',
     payment_order: '',
+};
+
+const defaultConfirm: Confirm = {
+    is_confirm: '',
+    payment_method: '',
 };
 
 export interface OrderState {
@@ -39,6 +53,24 @@ export interface OrderState {
         success: boolean;
         error?: CommonError;
     };
+    cancel: {
+        data: Confirm;
+        fetching: boolean;
+        success: boolean;
+        error?: CommonError;
+    };
+    order_confirm: {
+        data: Confirm;
+        fetching: boolean;
+        success: boolean;
+        error?: CommonError;
+    };
+    payment_confirm: {
+        data: Confirm;
+        fetching: boolean;
+        success: boolean;
+        error?: CommonError;
+    };
 }
 
 export const initialOrderState: OrderState = {
@@ -54,6 +86,22 @@ export const initialOrderState: OrderState = {
     },
     fetch: {
         data: [],
+        fetching: false,
+        success: false,
+    },
+
+    cancel: {
+        data: defaultConfirm,
+        fetching: false,
+        success: false,
+    },
+    order_confirm: {
+        data: defaultConfirm,
+        fetching: false,
+        success: false,
+    },
+    payment_confirm: {
+        data: defaultConfirm,
         fetching: false,
         success: false,
     },
@@ -146,6 +194,93 @@ const orderCreateReducer = (state: OrderState['create'], action: OrderActions) =
     }
 };
 
+const orderCancelReducer = (state: OrderState['cancel'], action: OrderActions) => {
+    switch (action.type) {
+        case ORDER_CANCEL:
+            return {
+                ...state,
+                fetching: true,
+                success: false,
+                error: undefined,
+            };
+        case ORDER_CANCEL_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case ORDER_CANCEL_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+const orderConfirmReducer = (state: OrderState['order_confirm'], action: OrderActions) => {
+    switch (action.type) {
+        case ORDER_CONFIRM:
+            return {
+                ...state,
+                fetching: true,
+                success: false,
+                error: undefined,
+            };
+        case ORDER_CONFIRM_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case ORDER_CONFIRM_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+const orderConfirmPaymentReducer = (state: OrderState['payment_confirm'], action: OrderActions) => {
+    switch (action.type) {
+        case ORDER_CONFIRM_PAYMENT:
+            return {
+                ...state,
+                fetching: true,
+                success: false,
+                error: undefined,
+            };
+        case ORDER_CONFIRM_PAYMENT_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case ORDER_CONFIRM_PAYMENT_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
 export const orderReducer = (state = initialOrderState, action: OrderActions) => {
     switch (action.type) {
         case ORDER_FETCH:
@@ -171,6 +306,33 @@ export const orderReducer = (state = initialOrderState, action: OrderActions) =>
             return {
                 ...state,
                 create: orderCreateReducer(orderCreateState, action),
+            };
+
+        case ORDER_CANCEL:
+        case ORDER_CANCEL_DATA:
+        case ORDER_CANCEL_ERROR:
+            const orderCancel = { ...state.cancel };
+            return {
+                ...state,
+                cancel: orderCancelReducer(orderCancel, action),
+            };
+
+        case ORDER_CONFIRM:
+        case ORDER_CONFIRM_DATA:
+        case ORDER_CONFIRM_ERROR:
+            const orderConfirm = { ...state.order_confirm };
+            return {
+                ...state,
+                order_confirm: orderConfirmReducer(orderConfirm, action),
+            };
+
+        case ORDER_CONFIRM_PAYMENT:
+        case ORDER_CONFIRM_PAYMENT_DATA:
+        case ORDER_CONFIRM_PAYMENT_ERROR:
+            const orderConfirmPayment = { ...state.payment_confirm };
+            return {
+                ...state,
+                payment_confirm: orderConfirmPaymentReducer(orderConfirmPayment, action),
             };
 
         default:

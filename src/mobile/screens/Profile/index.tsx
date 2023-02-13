@@ -49,6 +49,9 @@ const ProfileMobileScreen: React.FC = () => {
     const [kycStatus, setKycStatus] = React.useState('');
     const [profilekycStatus, setProfileKycStatus] = React.useState('');
 
+    const label = user.labels;
+    const labelPhone = [...label].find((item) => item.key === 'phone');
+
     React.useEffect(() => {
         let timer = null;
         if (timerActive) {
@@ -389,21 +392,12 @@ const ProfileMobileScreen: React.FC = () => {
                                     <h4 className="mb-0 text-sm font-bold grey-text-accent">Phone</h4>
                                     <p
                                         className={`mb-0 text-xs ${
-                                            !user.labels[3] ||
-                                            (user.labels[3] && user.phones[0] && user.phones[0].validated_at === null)
-                                                ? 'danger-text'
-                                                : 'contrast-text'
+                                            labelPhone?.value === 'verified' ? 'contrast-text' : 'danger-text'
                                         }`}>
-                                        {!user.labels[3] ||
-                                        (user.labels[3] && user.phones[0] && user.phones[0].validated_at === null)
-                                            ? 'Unverified'
-                                            : 'Verified'}
+                                        {labelPhone?.value === 'verified' ? 'Verified' : 'Unverified'}
                                     </p>
                                 </div>
-                                {user.labels[3] &&
-                                    user.phones &&
-                                    user.phones[0] &&
-                                    user.phones[0].validated_at !== null && <CheckIcon className="check-icon" />}
+                                {labelPhone?.value === 'verified' && <CheckIcon className="check-icon" />}
                             </div>
                         </div>
                     </div>

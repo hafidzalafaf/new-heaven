@@ -436,7 +436,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                     <div className="profile-menu px-24 mb-24">
                         <div className="row">
                             <div className="col-6 col-lg-8">
-                                {accountVerified ? (
+                                {user.level == 3 ? (
                                     ''
                                 ) : (
                                     <div className="notification-warning alert show text-ms white-text font-normal position-relative mb-24">
@@ -532,31 +532,18 @@ export const ProfileScreen: FC = (): ReactElement => {
                                                     <p className="mb-1 text-ms font-normal white-text">Security</p>
                                                     <span
                                                         className={`d-block text-left text-xs font-normal ${
-                                                            !user.phones[0] ||
-                                                            (user.phones &&
-                                                                user.phones[0] &&
-                                                                user.phones[0].validated_at === null) ||
-                                                            !user.otp
-                                                                ? 'danger-text'
-                                                                : 'contrast-text'
+                                                            user.level == 3 && user.otp
+                                                                ? 'contrast-text'
+                                                                : 'danger-text'
                                                         }`}>
-                                                        {!user.phones[0] ||
-                                                        (user.phones &&
-                                                            user.phones[0] &&
-                                                            user.phones[0].validated_at === null) ||
-                                                        !user.otp
-                                                            ? 'Disabled'
-                                                            : 'Enabled'}
+                                                        {user.level == 3 && user.otp ? 'Enabled' : 'Disabled'}
                                                     </span>
                                                 </div>
-                                                {user.phones &&
-                                                    user.phones[0] &&
-                                                    user.phones[0].validated_at !== null &&
-                                                    user.otp && (
-                                                        <div className="check">
-                                                            <CheckIcon />
-                                                        </div>
-                                                    )}
+                                                {user.level == 3 && user.otp && (
+                                                    <div className="check">
+                                                        <CheckIcon />
+                                                    </div>
+                                                )}
                                             </div>
                                         </Link>
                                     </div>

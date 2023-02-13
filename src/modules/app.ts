@@ -51,11 +51,11 @@ import { p2pDisputeReducer } from './user/p2pDispute';
 import { feeGroupReducer } from './user/feeGroup';
 import { feedbackReducer } from './user/p2pFeedback';
 import { orderReducer } from './user/p2pOrder';
-import { orderConfirmReducer } from './user/p2pOrderConfirmation';
+import { groupMemberReducer } from './user/memberGroup';
 import { p2pOfferReducer } from './user/p2pOffer';
 import { p2pOfferAvailableReducer } from './user/p2pAvailableOffer';
-import { groupMemberReducer } from './user/memberGroup';
 import { p2pProfileReducer } from './user/p2pProfile';
+import { p2pUserSettingReducer } from './user/p2pUserSetting';
 import { p2pPaymentUserReducer } from './user/p2pPaymentUser/reducer';
 
 export const publicReducer = combineReducers({
@@ -115,14 +115,14 @@ export const userReducer = combineReducers({
     p2pOrders: p2pOrdersReducer,
     p2pDispute: p2pDisputeReducer,
     confirmationCode: confirmationCodeReducer,
+    memberGroup: groupMemberReducer,
     p2pFeedback: feedbackReducer,
     p2pOrder: orderReducer,
-    p2pOrderConfirm: orderConfirmReducer,
     p2pOffer: p2pOfferReducer,
     p2pOfferAvailable: p2pOfferAvailableReducer,
     p2pProfile: p2pProfileReducer,
+    p2pUserSetting: p2pUserSettingReducer,
     p2pPaymentUser: p2pPaymentUserReducer,
-    memberGroup: groupMemberReducer,
 });
 
 export const adminReducer = combineReducers({

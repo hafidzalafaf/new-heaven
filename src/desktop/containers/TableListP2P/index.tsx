@@ -20,6 +20,7 @@ import {
     selectP2PCurrenciesData,
     orderCreate,
     p2pOfferCreate,
+    selectUserInfo,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import {
@@ -31,7 +32,13 @@ import {
     DropdownIcon,
     InfoSecondaryIcon,
 } from 'src/assets/images/P2PIcon';
-import { CustomStylesSelect, ModalCreateOffer, TableOfferP2P } from '../../../desktop/components';
+import {
+    CustomStylesSelect,
+    ModalCreateOffer,
+    TableOfferP2P,
+    ModalUserLevel,
+    ModalOptionPayment,
+} from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
 import { CustomStyleFiat } from './CustomStyleFiat';
@@ -48,6 +55,7 @@ export const TableListP2P = () => {
     const list = useSelector(selectP2POffers);
     const fiats = useSelector(selectP2PFiatsData);
     const currenciesData = useSelector(selectP2PCurrenciesData);
+    const user = useSelector(selectUserInfo);
     const total = useSelector(selectP2POffersTotalNumber);
     const wallets = useSelector(selectWallets);
     const paymentMethods = useSelector(selectP2PPaymentMethodsData);
@@ -72,6 +80,10 @@ export const TableListP2P = () => {
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
     const [showModalPrice, setShowModalPrice] = React.useState(false);
+    const [showModalOptionPayment, setShowModalOptionPayment] = React.useState(false);
+    const [showSelectedPayment, setShowSelectedPayment] = React.useState(false);
+    const [showModalUserLevel, setShowModalUserLevel] = React.useState(false);
+    const [title, setTitle] = React.useState('');
 
     /* ========== ORDER CREATE STATE START ========== */
     const [price_actual, setPriceActual] = React.useState<string | number>();
@@ -160,8 +172,13 @@ export const TableListP2P = () => {
             amount,
         };
 
-        dispatch(orderCreate(side == 'buy' ? payloadBuy : payloadSell));
-        resetForm();
+        if (user?.level < 3) {
+            setShowModalUserLevel(true);
+            setTitle('Create Order');
+        } else {
+            dispatch(orderCreate(side == 'buy' ? payloadBuy : payloadSell));
+            resetForm();
+        }
     };
 
     const handleChangePrice = (e: string) => {
@@ -301,6 +318,21 @@ export const TableListP2P = () => {
         setSideOffer(e);
     };
     /* ============== FUNCTION CREATE OFFER END ============== */
+
+    /* ============== FUNCTION MODAL PAYMENT OPTION START ============== */
+
+    const handleSelectPayment = () => {
+        setShowSelectedPayment(true);
+    };
+
+    const handleConfirmSelectedPayment = () => {
+        setShowModalOptionPayment(false);
+    };
+
+    const handleCancelSelectedPayment = () => {
+        setShowSelectedPayment(false);
+    };
+    /* ============== FUNCTION MODAL PAYMENT OPTION END ============== */
 
     const renderModalPrice = () => {
         return (
@@ -582,9 +614,16 @@ export const TableListP2P = () => {
 
                         <button
                             type="button"
-                            onClick={() =>
-                                isLoggedIn ? setShowModalCreateOffer(!showModalCreateOffer) : history.push('/signin')
-                            }
+                            onClick={() => {
+                                if (isLoggedIn && user?.level < 3) {
+                                    setShowModalUserLevel(true);
+                                    setTitle('Create Offer');
+                                } else if (isLoggedIn && user?.level == 3) {
+                                    setShowModalCreateOffer(!showModalCreateOffer);
+                                } else {
+                                    history.push('/signin');
+                                }
+                            }}
                             className="btn-primary mb-24">
                             + Create Offers
                         </button>
@@ -623,6 +662,7 @@ export const TableListP2P = () => {
                         price={price}
                         amount={amount}
                         payment_order={payment_order}
+                        handleShowPaymentOption={() => setShowModalOptionPayment(true)}
                         handleChangePrice={handleChangePrice}
                         handleChangePaymentOrder={handleChangePaymentOrder}
                         handleCreacteOrder={handleCreacteOrder}
@@ -667,6 +707,26 @@ export const TableListP2P = () => {
                         handleCreateOffer={handleCreacteOffer}
                     />
                 )}
+
+                {showModalUserLevel && (
+                    <ModalUserLevel
+                        show={showModalUserLevel}
+                        title={title}
+                        onClose={() => setShowModalUserLevel(false)}
+                    />
+                )}
+
+                {showModalOptionPayment && (
+                    <ModalOptionPayment
+                        show={showModalOptionPayment}
+                        showSelectedPayment={showSelectedPayment}
+                        onClose={() => setShowModalOptionPayment(false)}
+                        handleSelectPayment={handleSelectPayment}
+                        handleCancelSelectedPayment={handleCancelSelectedPayment}
+                        handleConfirmSelectedPayment={handleConfirmSelectedPayment}
+                    />
+                )}
+
                 <Modal show={showFilter} content={renderModalFilter()} />
                 <Modal show={showModalPrice} content={renderModalPrice()} />
                 <Modal show={showModalConfirmation} content={renderModalConfirmation()} />

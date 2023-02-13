@@ -62,8 +62,15 @@ export const CardMarketDetail: React.FunctionComponent<CardMarketDetailProps> = 
                             <div>
                                 <p className="mb-8 text-sm white-text text-left font-bold" style={{ minWidth: 100 }}>
                                     {title == 'Top 3 Volumes'
-                                        ? `$ ${detail && detail.volume}`
-                                        : '$ ' + Decimal.format(detail && detail.last, detail.price_precision)}
+                                        ? `${detail?.quote_unit == 'idr' ? 'Rp' : '$'} ${detail && detail.volume}`
+                                        : detail?.quote_unit == 'idr'
+                                        ? 'Rp'
+                                        : '$ ' +
+                                          Decimal.format(
+                                              detail && detail.last,
+                                              detail.price_precision,
+                                              detail?.quote_unit == 'idr' ? ',' : '.'
+                                          )}
                                 </p>
                                 <p
                                     className={`m-0 text-xs ${

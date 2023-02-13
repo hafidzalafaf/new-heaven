@@ -24,6 +24,10 @@ import {
     Market,
     orderExecuteFetch,
     selectOrderExecuteLoading,
+    selectGroupMember,
+    selectTradingFee,
+    groupFetch,
+    withdrawSumFetch,
 } from '../../../modules';
 import { Decimal } from '../../../components';
 import { ModalFullScreenMobile } from 'src/mobile/components';
@@ -58,6 +62,8 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     const isMobileDevice = useSelector(selectMobileDeviceState);
     const tickers = useSelector(selectMarketTickers);
     const orderLoading = useSelector(selectOrderExecuteLoading);
+    const groupMember = useSelector(selectGroupMember);
+    const tradingFee = useSelector(selectTradingFee);
 
     const [showModalCancel, setShowModalCancel] = React.useState(false);
     const [showModalCancelAll, setShowModalCancelAll] = React.useState(false);
@@ -90,6 +96,16 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     useDocumentTitle('Trading');
     useOpenOrdersFetch(currentMarket, hideOtherPairs);
     useMarketsFetch();
+
+    React.useEffect(() => {
+        dispatch(groupFetch());
+        dispatch(withdrawSumFetch());
+    }, []);
+
+    const FeeTrading = tradingFee.find((level) => level.group == groupMember.group);
+    const willRecive = Number(totalSell) - (Number(FeeTrading?.taker) * 100 * Number(totalSell)) / 100;
+    const willPay = Number(totalBuy) + (Number(FeeTrading?.taker) * 100 * Number(totalBuy)) / 100;
+    const myTradingFee = Number(FeeTrading?.taker) * 100;
 
     const ask = [...asks].sort((a, b) => +b[0] - +a[0]);
     const bid = [...bids].sort((a, b) => +b[0] - +a[0]);
@@ -246,7 +262,11 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
 
     // buat total buy
     React.useEffect(() => {
-        const market = Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.price_precision);
+        const safePrice = totalPrice / +amountBuy || tickerItem?.last;
+        const market =
+            orderPercentageBuy !== 0
+                ? Decimal.format((+usdt * orderPercentageBuy) / 100, currentMarket?.price_precision)
+                : Decimal.format(+safePrice * +amountBuy, currentMarket?.price_precision);
 
         const limit =
             orderPercentageBuy !== 0
@@ -733,6 +753,9 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                         side={side}
                         handleChangeValueByButton={handleChangeValueByButton}
                         handleChangeValueAmountByButton={handleChangeValueAmountByButton}
+                        fee={myTradingFee.toString()}
+                        willRecive={willRecive}
+                        willPay={willPay}
                     />
 
                     <div className={`w-40 ${isMobileDevice && 'mobile-device order-book-mobile'}`}>

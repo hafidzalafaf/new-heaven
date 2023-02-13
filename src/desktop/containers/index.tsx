@@ -40,3 +40,5 @@ export * from './P2PUserTable';
 export * from './WalletOverviewP2P';
 export * from './P2PFAQ';
 export * from './FAQHeader';
+export * from './P2PChat';
+export * from './P2POrderStep';

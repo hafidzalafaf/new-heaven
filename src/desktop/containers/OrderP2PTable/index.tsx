@@ -10,6 +10,7 @@ import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon
 import { Link, useHistory } from 'react-router-dom';
 import { orderFetch, selectP2POrder } from 'src/modules';
 import { Modal } from '../../../desktop/components';
+import { capitalizeFirstLetter } from 'src/helpers';
 
 export const OrderP2PTable = () => {
     const history = useHistory();
@@ -42,6 +43,8 @@ export const OrderP2PTable = () => {
         setData(filterredList);
     };
 
+    console.log(data);
+
     const optionQuote = [
         { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
         { label: <p className="m-0 text-sm grey-text-accent">IDR</p>, value: 'idr' },
@@ -51,8 +54,12 @@ export const OrderP2PTable = () => {
 
     const optionStatus = [
         { label: <p className="m-0 text-sm grey-text-accent">All Status</p>, value: 'all' },
-        { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
-        { label: <p className="m-0 text-sm grey-text-accent">Done</p>, value: 'done' },
+        { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepared' },
+        { label: <p className="m-0 text-sm grey-text-accent">Waiting</p>, value: 'waiting' },
+        { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
+        { label: <p className="m-0 text-sm grey-text-accent">Success</p>, value: 'success' },
+        { label: <p className="m-0 text-sm grey-text-accent">Acepted</p>, value: 'acepted' },
     ];
 
     const optionType = [
@@ -69,30 +76,31 @@ export const OrderP2PTable = () => {
             <div>
                 <p
                     className={`m-0 p-0 text-ms font-bold mb-4 ${
-                        item.type === 'sell' ? 'danger-text' : 'contrast-text'
+                        item.side === 'sell' ? 'danger-text' : 'contrast-text'
                     }`}>
-                    {item.type === 'sell' ? 'Sell' : 'Buy'}
+                    {item.side === 'sell' ? 'Sell' : 'Buy'}
                 </p>
                 <p className="m-0 p-0 white-text text-xs">{moment(item?.created_at).format('DD-MM-YYYY hh:mm:ss')}</p>
             </div>,
             <div className="d-flex align-items-center">
-                <img src="/img/coin.png" alt={item?.fiat} className="mr-12" />
-                <p className="white-text text-sm font-semibold m-0 p-0">{item?.fiat}</p>
+                <img src={item?.fiat?.icon_url} alt={item?.fiat?.name} className="mr-12" />
+                <p className="white-text text-sm font-semibold m-0 p-0">{item?.fiat?.name}</p>
             </div>,
             <p className="m-0 p-0 grey-text text-sm font-semibold">{item.fiat_amount}</p>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{item.price}</p>,
-            <p className="m-0 p-0 white-text text-sm font-semibold">{item.crypto_amount}</p>,
-            <a
-                target="_blank"
-                rel="noreferrer"
-                href={'https://api.heavenexchange.io/'}
-                className="text-underline blue-text text-sm font-semibold">
-                {item.counter_party}
-            </a>,
-            <p className="m-0 p-0 white-text text-sm font-semibold">{item?.state}</p>,
+            <p className="m-0 p-0 white-text text-sm font-semibold">{item?.amount}</p>,
+            // <a
+            //     target="_blank"
+            //     rel="noreferrer"
+            //     href={'https://api.heavenexchange.io/'}
+            //     className="text-underline blue-text text-sm font-semibold">
+            //     {item?.trades?.uid}
+            // </a>,
+            <p className="m-0 p-0 text-underline blue-text text-sm font-semibold">{item?.trades?.uid}</p>,
+            <p className="m-0 p-0 white-text text-sm font-semibold">{capitalizeFirstLetter(item?.state)}</p>,
             <div className="d-flex align-items-center">
                 <div
-                    onClick={() => history.push('/p2p/wallet/order', { type: item.type })}
+                    onClick={() => history.push(`/p2p/wallet/order/${item?.order_number}`, { side: item?.side })}
                     className="d-flex align-items-center cursor-pointer mr-8">
                     <p className="m-0 p-0 mr-6 text-xs grey-text">Order</p>
                     <HideIcon />

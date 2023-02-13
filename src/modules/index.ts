@@ -58,13 +58,13 @@ import { WithdrawLimitsState, rootWithdrawLimitsSaga } from './public/withdrawLi
 import { ConfirmationCodeState, rootConfirmationCodeSaga } from './user/emailVerificationCode';
 import { FeedbackState, rootP2PFeedbackSaga } from './user/p2pFeedback';
 import { OrderState, rootP2POrderSaga } from './user/p2pOrder';
-import { OrderConfirmState, rootP2POrderConfirmationSaga } from './user/p2pOrderConfirmation';
 import { P2POfferState, rootP2POfferSaga } from './user/p2pOffer';
 import { P2POfferAvailableState, rootP2PAvailableOfferSaga } from './user/p2pAvailableOffer';
 import { P2PProfileState, rootP2PProfileSaga } from './user/p2pProfile';
 import { rootP2PPaymentUserSaga, P2PPaymentUserState } from './user/p2pPaymentUser';
 import { P2PUserSettingState } from './user/p2pUserSetting/reducer';
 import { GroupMemberState, rootMemberGroupSaga } from './user/memberGroup';
+import { rootP2PUserSettingSaga } from './user/p2pUserSetting';
 
 export * from './admin/config';
 export * from './admin/markets';
@@ -114,13 +114,13 @@ export * from './user/p2pOrders';
 export * from './user/p2pTransfers';
 export * from './user/p2pDispute';
 export * from './user/emailVerificationCode';
+export * from './user/memberGroup';
 export * from './user/p2pFeedback';
 export * from './user/p2pOrder';
-export * from './user/p2pOrderConfirmation';
 export * from './user/p2pOffer';
 export * from './user/p2pAvailableOffer';
-export * from './user/memberGroup';
 export * from './user/p2pProfile';
+export * from './user/p2pUserSetting';
 export * from './user/p2pPaymentUser';
 
 export interface RootState {
@@ -180,15 +180,14 @@ export interface RootState {
         p2pOrders: P2POrdersState;
         p2pDispute: P2PDisputeState;
         confirmationCode: ConfirmationCodeState;
+        memberGroup: GroupMemberState;
         p2pFeedback: FeedbackState;
         p2pOrder: OrderState;
-        p2pConfirm: OrderConfirmState;
         p2pOffer: P2POfferState;
         p2pOfferAvailable: P2POfferAvailableState;
         p2pProfile: P2PProfileState;
         p2pUserSetting: P2PUserSettingState;
         p2pPaymentUser: P2PPaymentUserState;
-        memberGroup: GroupMemberState;
     };
     admin: {
         configUpdate: ConfigUpdateState;
@@ -252,13 +251,13 @@ export function* rootSaga() {
         call(rootP2PDisputeSaga),
         call(rootConfigsSaga),
         call(rootConfirmationCodeSaga),
+        call(rootMemberGroupSaga),
         call(rootP2PFeedbackSaga),
         call(rootP2POrderSaga),
-        call(rootP2POrderConfirmationSaga),
         call(rootP2POfferSaga),
         call(rootP2PAvailableOfferSaga),
         call(rootP2PProfileSaga),
-        call(rootMemberGroupSaga),
+        call(rootP2PUserSettingSaga),
         call(rootP2PPaymentUserSaga),
     ]);
 }

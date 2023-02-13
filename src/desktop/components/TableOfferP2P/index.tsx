@@ -16,6 +16,7 @@ export interface TableOfferP2PProps {
     price: string;
     amount: string;
     payment_order?: string;
+    handleShowPaymentOption?: () => void;
     handleChangePrice: (e: string) => void;
     handleChangePaymentOrder?: (e: string) => void;
     handleCreacteOrder: () => void;
@@ -35,6 +36,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
         price,
         amount,
         payment_order,
+        handleShowPaymentOption,
         handleChangePrice,
         handleChangePaymentOrder,
         handleCreacteOrder,
@@ -150,7 +152,10 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                     </label>
                                                 </div>
 
-                                                <div className="position-relative mb-44">
+                                                <div
+                                                    className={`position-relative ${
+                                                        side == 'sell' ? 'mb-24' : 'mb-44'
+                                                    }`}>
                                                     <label className="white-text text-xs font-semibold mb-8">
                                                         I Will Recieve
                                                     </label>
@@ -181,6 +186,17 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                                 handleChangePaymentOrder(e.value);
                                                             }}
                                                         />
+
+                                                        {/* <div onClick={handleShowPaymentOption}>
+                                                            <input
+                                                                disabled
+                                                                type="text"
+                                                                placeholder={'Select payment method'}
+                                                                value={amount}
+                                                                required
+                                                                className="form-control input-p2p-form white-text"
+                                                            />
+                                                        </div> */}
                                                     </div>
                                                 )}
 

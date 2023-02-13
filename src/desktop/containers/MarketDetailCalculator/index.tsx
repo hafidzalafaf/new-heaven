@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { CustomInput } from 'src/desktop/components';
 import './MarketDetailCalculator.pcss';
 import { numberFormat } from '../../../helpers';
+import { Decimal } from 'src/components';
 
 export interface CalculatorMarketDetailProps {
     amount_precision: string;
@@ -46,7 +47,11 @@ export const MarketDetailCalculator: React.FC<MarketDetailCalculatorProps> = ({ 
                         <CustomInput
                             type="text"
                             label={'Buy'}
-                            placeholder={'0.0000000'}
+                            placeholder={Decimal.format(
+                                '0',
+                                detail?.price_precision,
+                                detail?.quote_unit == 'idr' ? ',' : '.'
+                            )}
                             defaultLabel={'Buy'}
                             handleChangeInput={(e) => setInputCalc(e)}
                             inputValue={inputCalc}
@@ -68,7 +73,15 @@ export const MarketDetailCalculator: React.FC<MarketDetailCalculatorProps> = ({ 
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-24 grey-text-accent text-ms font-bold">
                     <p className="m-0">Price</p>
-                    <p className="m-0">USD $ {numberFormat(+inputCalc * (detail && detail.last), 'USD').toString()}</p>
+                    <p className="m-0">
+                        {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                        {Decimal.format(
+                            +inputCalc * detail?.last,
+                            detail?.price_precision,
+                            detail?.quote_unit == 'idr' ? ',' : '.'
+                        )}
+                        {/* {numberFormat(+inputCalc * (detail && detail.last), 'USD').toString()} */}
+                    </p>
                 </div>
                 <Link to={`/markets/trading/${detail && detail.id}`}>
                     <button className="btn-primary w-100">Trade Now</button>

@@ -135,7 +135,11 @@ const MarketListTradeComponent = ({ handleRedirectToTrading }) => {
                                                     className={`text-xs my-auto  mb-0 text-right ${
                                                         item.last < item.open ? 'danger-text' : 'green-text'
                                                     }`}>
-                                                    {Decimal.format(item.last, item.price_precision)}
+                                                    {Decimal.format(
+                                                        item.last,
+                                                        item.price_precision,
+                                                        item?.quote_unit == 'idr' ? ',' : '.'
+                                                    )}
                                                 </p>
                                             </div>
                                         </td>

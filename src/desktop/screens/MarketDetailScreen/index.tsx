@@ -48,7 +48,7 @@ export const MarketDetailScreen: FC = (): ReactElement => {
         }));
 
     const detail = marketList.find((obj) => {
-        return obj.base_unit === currency;
+        return obj.id === currency;
     });
 
     const dataTranding = [...marketList].sort((a, b) => Number(+b.volume) - Number(+a.volume));
