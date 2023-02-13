@@ -1,7 +1,7 @@
-export const P2P_PAYMENT_USER_FETCH = 'paymentUser/FETCH';
-export const P2P_PAYMENT_USER_DATA = 'paymentUser/DATA';
-export const P2P_PAYMENT_USER_ERROR = 'paymentUser/ERROR';
+export const P2P_PAYMENT_USER_FETCH = 'p2pPaymentUser/FETCH';
+export const P2P_PAYMENT_USER_DATA = 'p2pPaymentUser/DATA';
+export const P2P_PAYMENT_USER_ERROR = 'p2pPaymentUser/ERROR';
 
-export const P2P_PAYMENT_USER_CREATE = 'paymentUser/CREATE';
-export const P2P_PAYMENT_USER_CREATE_DATA = 'paymentUser/CREATE_DATA';
-export const P2P_PAYMENT_USER_CREATE_ERROR = 'paymentUser/CREATE_ERROR';
+export const P2P_PAYMENT_USER_CREATE = 'p2pPaymentUser/CREATE';
+export const P2P_PAYMENT_USER_CREATE_DATA = 'p2pPaymentUser/CREATE_DATA';
+export const P2P_PAYMENT_USER_CREATE_ERROR = 'p2pPaymentUser/CREATE_ERROR';

@@ -22,13 +22,12 @@ export const P2PUserInfo: React.FC = () => {
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
         dispatch(p2pPaymentUserFetch());
-    }, []);
+    }, [dispatch]);
     const userP2P = useSelector(selectP2PProfile);
     const userP2PPayment = useSelector(selectP2PPaymentUser)
 
-    console.log(userP2P);
-    console.log(userP2PPayment);
-    
+    console.log(userP2P, 'userP2P');
+    console.log(userP2PPayment, 'userP2PPayment');
     const ModalChangeName = () => {
         return (
             <form onSubmit={()=> setShowChangeUsernameModal(false)} className='bg-black p-10 pt-20' hidden={!showChangeUsernameModal}>

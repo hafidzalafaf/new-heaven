@@ -29,6 +29,7 @@ export interface P2PPaymentUserFetch {
 
 export interface P2PPaymentUserData {
     type: typeof P2P_PAYMENT_USER_DATA;
+    payload: [];
 }
 
 export interface P2PPaymentUserError {
@@ -62,8 +63,9 @@ export const p2pPaymentUserFetch = (): P2PPaymentUserFetch => ({
     type: P2P_PAYMENT_USER_FETCH,
 });
 
-export const p2pPaymentUserData = (): P2PPaymentUserData => ({
+export const p2pPaymentUserData = (payload:P2PPaymentUserData['payload']): P2PPaymentUserData => ({
     type: P2P_PAYMENT_USER_DATA,
+    payload
 });
 
 export const p2pPaymentUserError = (error: CommonError): P2PPaymentUserError => ({

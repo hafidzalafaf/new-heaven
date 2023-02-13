@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { NoDataIcon } from '../../../assets/images/P2PIcon';
-import { p2pPaymentMethodsFetch, selectP2PPaymentMethodsData } from 'src/modules';
+import { p2pPaymentUserData, p2pPaymentUserFetch, selectP2PPaymentUser } from 'src/modules';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+
+interface P2PPaymentMethodProps {
+    name: string;
+    id: number;
+    account_number: string;
+}
 
 export const P2PPaymentMethod: React.FC = () => {
     const data = [{ id: 1 }, { id: 2 }];
@@ -11,15 +17,11 @@ export const P2PPaymentMethod: React.FC = () => {
     const [bankData, setBankData] = React.useState([]);
     const dispatch = useDispatch();
 
-    const paymentMethods = useSelector(selectP2PPaymentMethodsData);
-
     React.useEffect(() => {
-        dispatch(p2pPaymentMethodsFetch());
+        dispatch(p2pPaymentUserFetch());
     }, [dispatch]);
 
-
-
-    console.log(paymentMethods);
+    const paymentMethods:P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
 
     const getDummy = async () => {
         try {
@@ -31,7 +33,13 @@ export const P2PPaymentMethod: React.FC = () => {
             console.log(error);
     }
 }
-    getDummy();
+
+    React.useEffect(() => {
+        getDummy();
+    }, [paymentMethods]);
+
+    console.log(bankData);
+
     return (
         <React.Fragment>
             <div className="com-p2p-payment-method">
@@ -77,12 +85,12 @@ export const P2PPaymentMethod: React.FC = () => {
                     </div>
                 ) : (
                     <div className="data-container d-flex flex-column align-items-center justify-content-center gap-16">
-                        {data?.map((bank, i) => (
+                        {paymentMethods?.map((bank, i) => (
                             <div className="p-16 radius-sm data-row w-100">
                                 <div className="d-flex justify-content-between align-items- mb-16">
                                     <div className="d-flex align-items-center gap-16">
                                         <img src="/img/logo-bca.png" alt="logo" />
-                                        <p className="m-0 p-0 grey-text text-ms">Bank Transfer BCA</p>
+                                        <p className="m-0 p-0 grey-text text-ms">{bank.name}</p>
                                     </div>
 
                                     <div className="d-flex align-items-center gap-16">
@@ -101,7 +109,7 @@ export const P2PPaymentMethod: React.FC = () => {
 
                                             <div>
                                                 <p className="m-0 p-0 grey-text text-ms">Account Number</p>
-                                                <p className="m-0 p-0 grey-text text-ms">68809090001</p>
+                                                <p className="m-0 p-0 grey-text text-ms">{bank.account_number}</p>
                                             </div>
                                         </div>
                                     </div>
