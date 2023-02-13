@@ -98,7 +98,6 @@ export interface OrderConfirm {
 
 export interface OrderConfirmData {
     type: typeof ORDER_CONFIRM_DATA;
-    payload: Confirm;
 }
 
 export interface OrderConfirmError {
@@ -249,9 +248,8 @@ export const orderConfirm = (payload: OrderConfirm['payload']): OrderConfirm => 
     payload,
 });
 
-export const orderConfirmData = (payload: OrderConfirmData['payload']): OrderConfirmData => ({
+export const orderConfirmData = (): OrderConfirmData => ({
     type: ORDER_CONFIRM_DATA,
-    payload,
 });
 
 export const orderConfirmError = (error: CommonError): OrderConfirmError => ({

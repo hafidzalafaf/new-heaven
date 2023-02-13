@@ -14,6 +14,7 @@ export interface P2POrderStepProps {
     handleChangePaymentMethod: (e: string, el: any) => void;
     handleChangeComment: (e: string) => void;
     handleConfirmPaymentBuy: () => void;
+    handleConfirm: () => void;
     handleShowPayment: () => void;
     handleShowModalBuyOrderCompleted: () => void;
     handleShowModalConfirm: () => void;
@@ -32,6 +33,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleChangeComment,
         handleShowPayment,
         handleConfirmPaymentBuy,
+        handleConfirm,
         handleShowModalBuyOrderCompleted,
         handleShowModalConfirm,
     } = props;
@@ -240,17 +242,11 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                         </Link>
                                     </div>
                                 )
-                            ) : detail?.order?.payment !== null ? (
+                            ) : detail?.order?.payment !== null && side == 'sell' ? (
                                 <div className="d-flex gap-24">
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            if (side === 'buy') {
-                                                handleShowModalBuyOrderCompleted();
-                                            } else {
-                                                handleShowModalConfirm();
-                                            }
-                                        }}
+                                        onClick={() => handleShowModalConfirm()}
                                         className="btn btn-primary px-5 text-sm">
                                         Payment Received
                                     </button>
@@ -264,7 +260,11 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 <div className="d-flex gap-24">
                                     <button
                                         type="button"
-                                        onClick={handleConfirmPaymentBuy}
+                                        onClick={
+                                            detail?.order?.payment == null
+                                                ? handleConfirmPaymentBuy
+                                                : handleShowModalBuyOrderCompleted
+                                        }
                                         className="btn btn-primary px-5">
                                         Confirm
                                     </button>

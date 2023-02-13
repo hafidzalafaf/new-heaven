@@ -4,7 +4,10 @@ import {
     orderDetailFetch,
     selectP2POrderDetail,
     orderConfirmPayment,
+    orderConfirm,
     selectP2PConfirmPaymentSuccess,
+    selectP2PConfirmSuccess,
+    selectShouldFetchP2POrderDetail,
 } from 'src/modules';
 import { useDocumentTitle } from '../../../hooks';
 import { alertPush } from 'src/modules';
@@ -25,7 +28,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     const detail = useSelector(selectP2POrderDetail);
     const paymentConfirmSuccess = useSelector(selectP2PConfirmPaymentSuccess);
-    console.log(detail);
+    const confirmSuccess = useSelector(selectP2PConfirmSuccess);
+    const shouldFetchP2POrderDetail = useSelector(selectShouldFetchP2POrderDetail);
 
     const [seconds, setSeconds] = React.useState(30000);
     const [timerActive, setTimerActive] = React.useState(false);
@@ -45,7 +49,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
-    }, [dispatch, order_number, paymentConfirmSuccess]);
+    }, [dispatch, order_number, paymentConfirmSuccess, shouldFetchP2POrderDetail]);
 
     React.useEffect(() => {
         let timer = null;
@@ -71,6 +75,15 @@ export const P2PWalletOrderScreen: React.FC = () => {
         };
 
         dispatch(orderConfirmPayment(payload));
+    };
+
+    const handleConfirm = () => {
+        const payload = {
+            order_number: order_number,
+        };
+
+        dispatch(orderConfirm(payload));
+        setShowModalBuyOrderCompleted(false);
     };
 
     const bank = [
@@ -283,14 +296,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     </div>
                 </div>
 
-                <button
-                    onClick={() => {
-                        if (side == 'buy') {
-                            setShowModalBuyOrderCompleted(false);
-                        }
-                    }}
-                    type="button"
-                    className="btn-primary w-100">
+                <button onClick={() => handleConfirm()} className="btn-primary w-100">
                     Continue
                 </button>
             </React.Fragment>
@@ -372,6 +378,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         handleChangePaymentMethod={handleChangePaymentMethod}
                         handleChangeComment={handleChangeComment}
                         handleConfirmPaymentBuy={handleConfirmPaymentBuy}
+                        handleConfirm={handleConfirm}
                         handleShowPayment={() => setShowPayment(!showPayment)}
                         handleShowModalBuyOrderCompleted={() =>
                             setShowModalBuyOrderCompleted(!showModalBuyOrderCompleted)

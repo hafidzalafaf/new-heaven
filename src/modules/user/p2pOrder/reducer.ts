@@ -52,6 +52,7 @@ export interface OrderState {
         fetching: boolean;
         success: boolean;
         error?: CommonError;
+        timestamp?: number;
     };
     fetch: {
         data: Order[];
@@ -170,8 +171,9 @@ export const orderDetailReducer = (state: OrderState['detail'], action: OrderAct
             return {
                 ...state,
                 fetching: true,
-                success: false,
-                error: undefined,
+                // success: false,
+                // error: undefined,
+                timestamp: Math.floor(Date.now() / 1000),
             };
         case ORDER_DETAIL_DATA:
             return {
@@ -263,7 +265,7 @@ const orderConfirmReducer = (state: OrderState['order_confirm'], action: OrderAc
         case ORDER_CONFIRM_DATA:
             return {
                 ...state,
-                data: action.payload,
+                // data: action.payload,
                 fetching: false,
                 success: true,
                 error: undefined,

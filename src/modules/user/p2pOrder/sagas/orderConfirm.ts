@@ -10,16 +10,12 @@ const config = (csrfToken?: string): RequestOptions => {
         headers: { 'X-CSRF-Token': csrfToken },
     };
 };
-
+// /market/orders/confirm/:order_number
 export function* orderConfirmSaga(action: OrderConfirm) {
     try {
-        const payload = yield call(
-            API.put(config(getCsrfToken())),
-            `/market/orders/confirm/${action.payload.order_number}`,
-            action.payload
-        );
+        yield call(API.put(config(getCsrfToken())), `/market/orders/confirm/${action.payload.order_number}`);
 
-        yield put(orderConfirmData(payload));
+        yield put(orderConfirmData());
         yield put(alertPush({ message: ['success.order.confirm'], type: 'success' }));
     } catch (error) {
         yield put(
