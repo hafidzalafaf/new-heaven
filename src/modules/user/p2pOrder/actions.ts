@@ -18,6 +18,12 @@ import {
     ORDER_CONFIRM,
     ORDER_CONFIRM_DATA,
     ORDER_CONFIRM_ERROR,
+    ORDER_CHAT,
+    ORDER_CHAT_DATA,
+    ORDER_CHAT_ERROR,
+    ORDER_CHAT_CREATE,
+    ORDER_CHAT_CREATE_DATA,
+    ORDER_CHAT_CREATE_ERROR,
 } from './constants';
 import { Order, Confirm } from './types';
 
@@ -117,6 +123,39 @@ export interface OrderConfirmPaymentError {
     error: CommonError;
 }
 
+export interface OrderChat {
+    type: typeof ORDER_CHAT;
+    payload?: {
+        offer_number: string;
+    };
+}
+
+export interface OrderChatData {
+    type: typeof ORDER_CHAT_DATA;
+    payload: [];
+}
+
+export interface OrderChatError {
+    type: typeof ORDER_CHAT_ERROR;
+    error: CommonError;
+}
+
+export interface OrderChatCreate {
+    type: typeof ORDER_CHAT_CREATE;
+    payload?: {
+        offer_number: string;
+    };
+}
+
+export interface OrderChatCreateData {
+    type: typeof ORDER_CHAT_CREATE_DATA;
+}
+
+export interface OrderChatCreateError {
+    type: typeof ORDER_CHAT_CREATE_ERROR;
+    error: CommonError;
+}
+
 export type OrderActions =
     | OrderFetch
     | OrderData
@@ -138,7 +177,13 @@ export type OrderActions =
     | OrderConfirmPaymentError
     | OrderConfirm
     | OrderCancelData
-    | OrderConfirmError;
+    | OrderConfirmError
+    | OrderChat
+    | OrderChatData
+    | OrderChatError
+    | OrderChatCreate
+    | OrderChatCreateData
+    | OrderChatCreateError;
 
 export const orderFetch = (): OrderFetch => ({
     type: ORDER_FETCH,
@@ -225,5 +270,34 @@ export const orderConfirmPaymentData = (payload: OrderConfirmPaymentData['payloa
 
 export const orderConfirmPaymentError = (error: CommonError): OrderConfirmPaymentError => ({
     type: ORDER_CONFIRM_PAYMENT_ERROR,
+    error,
+});
+
+export const orderChat = (payload: OrderChat['payload']): OrderChat => ({
+    type: ORDER_CHAT,
+    payload,
+});
+
+export const orderChatData = (payload: OrderChatData['payload']): OrderChatData => ({
+    type: ORDER_CHAT_DATA,
+    payload,
+});
+
+export const orderChatError = (error: CommonError): OrderChatError => ({
+    type: ORDER_CHAT_ERROR,
+    error,
+});
+
+export const orderChatCreate = (payload: OrderChatCreate['payload']): OrderChatCreate => ({
+    type: ORDER_CHAT_CREATE,
+    payload,
+});
+
+export const orderChatCreateData = (): OrderChatCreateData => ({
+    type: ORDER_CHAT_CREATE_DATA,
+});
+
+export const orderChatCreateError = (error: CommonError): OrderChatCreateError => ({
+    type: ORDER_CHAT_CREATE_ERROR,
     error,
 });

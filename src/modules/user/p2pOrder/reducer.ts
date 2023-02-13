@@ -19,6 +19,12 @@ import {
     ORDER_CONFIRM_PAYMENT,
     ORDER_CONFIRM_PAYMENT_DATA,
     ORDER_CONFIRM_PAYMENT_ERROR,
+    ORDER_CHAT,
+    ORDER_CHAT_DATA,
+    ORDER_CHAT_ERROR,
+    ORDER_CHAT_CREATE,
+    ORDER_CHAT_CREATE_DATA,
+    ORDER_CHAT_CREATE_ERROR,
 } from './constants';
 import { Order, Confirm } from './types';
 
@@ -71,6 +77,18 @@ export interface OrderState {
         success: boolean;
         error?: CommonError;
     };
+    chat: {
+        data: Order[];
+        fetching: boolean;
+        success: boolean;
+        error?: CommonError;
+    };
+    chat_create: {
+        // data: Order;
+        fetching: boolean;
+        success: boolean;
+        error?: CommonError;
+    };
 }
 
 export const initialOrderState: OrderState = {
@@ -102,6 +120,16 @@ export const initialOrderState: OrderState = {
     },
     payment_confirm: {
         data: defaultConfirm,
+        fetching: false,
+        success: false,
+    },
+    chat: {
+        data: [],
+        fetching: false,
+        success: false,
+    },
+    chat_create: {
+        // data: defaultOrder,
         fetching: false,
         success: false,
     },
@@ -281,6 +309,64 @@ const orderConfirmPaymentReducer = (state: OrderState['payment_confirm'], action
     }
 };
 
+export const orderChatReducer = (state: OrderState['chat'], action: OrderActions) => {
+    switch (action.type) {
+        case ORDER_CHAT:
+            return {
+                ...state,
+                fetching: true,
+                success: false,
+                error: undefined,
+            };
+        case ORDER_CHAT_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case ORDER_CHAT_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+const orderChatCreateReducer = (state: OrderState['chat_create'], action: OrderActions) => {
+    switch (action.type) {
+        case ORDER_CHAT_CREATE:
+            return {
+                ...state,
+                fetching: true,
+                success: false,
+                error: undefined,
+            };
+        case ORDER_CHAT_CREATE_DATA:
+            return {
+                ...state,
+                // data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case ORDER_CHAT_CREATE_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
 export const orderReducer = (state = initialOrderState, action: OrderActions) => {
     switch (action.type) {
         case ORDER_FETCH:
@@ -333,6 +419,23 @@ export const orderReducer = (state = initialOrderState, action: OrderActions) =>
             return {
                 ...state,
                 payment_confirm: orderConfirmPaymentReducer(orderConfirmPayment, action),
+            };
+
+        case ORDER_CHAT:
+        case ORDER_CHAT_DATA:
+        case ORDER_CHAT_ERROR:
+            return {
+                ...state,
+                chat: orderChatReducer({ ...state.chat }, action),
+            };
+
+        case ORDER_CHAT_CREATE:
+        case ORDER_CHAT_CREATE_DATA:
+        case ORDER_CHAT_CREATE_ERROR:
+            const orderChatCreateState = { ...state.chat_create };
+            return {
+                ...state,
+                chat_create: orderChatCreateReducer(orderChatCreateState, action),
             };
 
         default:
