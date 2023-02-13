@@ -58,7 +58,6 @@ import { WithdrawLimitsState, rootWithdrawLimitsSaga } from './public/withdrawLi
 import { ConfirmationCodeState, rootConfirmationCodeSaga } from './user/emailVerificationCode';
 import { FeedbackState, rootP2PFeedbackSaga } from './user/p2pFeedback';
 import { OrderState, rootP2POrderSaga } from './user/p2pOrder';
-import { OrderConfirmState, rootP2POrderConfirmationSaga } from './user/p2pOrderConfirmation';
 import { P2POfferState, rootP2POfferSaga } from './user/p2pOffer';
 import { P2POfferAvailableState, rootP2PAvailableOfferSaga } from './user/p2pAvailableOffer';
 import { P2PProfileState, rootP2PProfileSaga } from './user/p2pProfile';
@@ -118,7 +117,6 @@ export * from './user/emailVerificationCode';
 export * from './user/memberGroup';
 export * from './user/p2pFeedback';
 export * from './user/p2pOrder';
-export * from './user/p2pOrderConfirmation';
 export * from './user/p2pOffer';
 export * from './user/p2pAvailableOffer';
 export * from './user/p2pProfile';
@@ -185,7 +183,6 @@ export interface RootState {
         memberGroup: GroupMemberState;
         p2pFeedback: FeedbackState;
         p2pOrder: OrderState;
-        p2pConfirm: OrderConfirmState;
         p2pOffer: P2POfferState;
         p2pOfferAvailable: P2POfferAvailableState;
         p2pProfile: P2PProfileState;
@@ -257,7 +254,6 @@ export function* rootSaga() {
         call(rootMemberGroupSaga),
         call(rootP2PFeedbackSaga),
         call(rootP2POrderSaga),
-        call(rootP2POrderConfirmationSaga),
         call(rootP2POfferSaga),
         call(rootP2PAvailableOfferSaga),
         call(rootP2PProfileSaga),

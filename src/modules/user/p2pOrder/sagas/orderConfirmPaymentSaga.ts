@@ -2,8 +2,7 @@ import { call, put } from 'redux-saga/effects';
 import { alertPush, sendError } from '../../../';
 import { API, RequestOptions } from '../../../../api';
 import { getCsrfToken } from '../../../../helpers';
-import { buildQueryString } from '../../../../helpers';
-import { OrderConfirmCreate, orderConfirmCreateData, orderConfirmCreateError } from '../actions';
+import { OrderConfirmPayment, orderConfirmPaymentData, orderConfirmPaymentError } from '../actions';
 
 const config = (csrfToken?: string): RequestOptions => {
     return {
@@ -12,27 +11,23 @@ const config = (csrfToken?: string): RequestOptions => {
     };
 };
 
-export function* orderConfirmCreateSaga(action: OrderConfirmCreate) {
+export function* orderConfirmPaymentSaga(action: OrderConfirmPayment) {
     try {
-        let params = '';
-        if (action.payload) {
-            params = `?${buildQueryString(action.payload)}`;
-        }
         const payload = yield call(
-            API.post(config(getCsrfToken())),
-            `/market/orders/payment_confirm/${params}`,
+            API.put(config(getCsrfToken())),
+            `/market/orders/payment_confirm/${action.payload.order_number}`,
             action.payload
         );
 
-        yield put(orderConfirmCreateData(payload));
-        yield put(alertPush({ message: ['success.order.confirm.created'], type: 'success' }));
+        yield put(orderConfirmPaymentData(payload));
+        yield put(alertPush({ message: ['success.order.confirm.payment'], type: 'success' }));
     } catch (error) {
         yield put(
             sendError({
                 error,
                 processingType: 'alert',
                 extraOptions: {
-                    actionError: orderConfirmCreateError,
+                    actionError: orderConfirmPaymentError,
                 },
             })
         );
