@@ -55,6 +55,7 @@ export const p2pPaymentUserFetchReducer = (state: P2PPaymentUserState['fetch'], 
         case P2P_PAYMENT_USER_DATA:
             return {
                 ...state,
+                data: action.payload,
                 fetching: false,
                 success: true,
                 error: undefined,
