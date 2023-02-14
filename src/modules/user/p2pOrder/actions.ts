@@ -142,7 +142,8 @@ export interface OrderChatError {
 export interface OrderChatCreate {
     type: typeof ORDER_CHAT_CREATE;
     payload?: {
-        offer_number: string;
+        offer_number?: string;
+        message?: string;
     };
 }
 

@@ -521,6 +521,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
                     <P2PChat
                         detail={detail}
+                        order_number={order_number}
                         showChat={showChat}
                         handleExpandChat={() => setShowChat(!showChat)}
                         handleModalReport={() => setShowModalReport(true)}

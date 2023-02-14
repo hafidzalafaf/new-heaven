@@ -1,16 +1,53 @@
 import * as React from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    selectP2PChat,
+    selectP2PChatLoading,
+    selectP2PChatSuccess,
+    selectP2PChatCreateLoading,
+    selectP2PChatCreateSuccess,
+    orderChat,
+    orderChatCreate,
+} from 'src/modules';
 import { ArrowDownMd, CheckFillIcon, AttachmentIcon, SendIcon } from 'src/assets/images/P2PIcon';
 
 export interface P2PChatProps {
     detail: any;
+    order_number: string;
     showChat: boolean;
     handleExpandChat: () => void;
     handleModalReport: () => void;
 }
 
 export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
-    const { detail, showChat, handleExpandChat, handleModalReport } = props;
+    const { detail, order_number, showChat, handleExpandChat, handleModalReport } = props;
+    const dispatch = useDispatch();
+    const p2pChat = useSelector(selectP2PChat);
+    const p2pChatLoading = useSelector(selectP2PChatLoading);
+    const p2pChatSuccess = useSelector(selectP2PChatSuccess);
+    const p2pChatCreateLoading = useSelector(selectP2PChatCreateLoading);
+    const p2pChatCreateSuccess = useSelector(selectP2PChatCreateSuccess);
+
+    const [message, setMessage] = React.useState('');
+
+    React.useEffect(() => {
+        dispatch(orderChat({ offer_number: order_number }));
+    }, [dispatch, p2pChatCreateSuccess]);
+
+    const handleSendChat = (e) => {
+        e.preventDefault();
+        const payload = {
+            message,
+            offer_number: order_number,
+        };
+
+        dispatch(orderChatCreate(payload));
+        if (p2pChatCreateSuccess) {
+            setMessage('');
+        }
+    };
+
+    console.log(p2pChat, 'chat');
 
     return (
         <React.Fragment>
@@ -130,20 +167,22 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                 <p className="mb-0 text-xs grey-text text-center">12-01-2022</p>
                             </div>
                         </div>
-                        <div className="chat-writing">
+                        <form onSubmit={handleSendChat} className="chat-writing">
                             <textarea
-                                placeholder="write a message"
+                                placeholder="write a message.."
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
                                 className="form-transparent white-text w-100"></textarea>
                             <div className="ml-0 d-flex align-items-center">
                                 <label htmlFor="attachment-file" className="cursor-pointer mb-0">
                                     <AttachmentIcon />
                                 </label>
                                 <input type="file" id="attachment-file" className="d-none" />
-                                <button type="button" className="btn btn-transparent p-0 ml-2">
+                                <button onClick={handleSendChat} type="button" className="btn btn-transparent p-0 ml-2">
                                     <SendIcon />
                                 </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 )}
             </div>
