@@ -403,7 +403,7 @@ export const TableListP2P = () => {
                         <div className="position-relative mb-16">
                             <label className="input-label-left text-sm grey-text position-absolute m-0 p-0">e.g</label>
                             <input
-                                type="text"
+                                type="number"
                                 required
                                 // value={min_order}
                                 // onChange={(e) => handleChangeMinOrder(e.target.value)}

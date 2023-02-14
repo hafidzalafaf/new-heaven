@@ -37,9 +37,6 @@ export const P2PUserInfo: React.FC = () => {
         setShowChangeUsernameModal(false);
     }
 
-    console.log(userP2P, 'userP2P');
-    console.log(userP2PPayment, 'userP2PPayment');
-
     const ModalChangeName = () => {
         return (
             <form onSubmit={changeUsername} className='bg-black p-10 pt-20' hidden={!showChangeUsernameModal}>

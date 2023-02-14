@@ -18,8 +18,6 @@ export const OrderP2PTable = () => {
 
     const order = useSelector(selectP2POrder);
 
-    console.log(order);
-
     const [endDate, setEndDate] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
     const [data, setData] = React.useState([]);
@@ -42,8 +40,6 @@ export const OrderP2PTable = () => {
         filterredList = temp.filter((item) => item.type === type);
         setData(filterredList);
     };
-
-    console.log(data);
 
     const optionQuote = [
         { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },

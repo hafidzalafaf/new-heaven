@@ -14,11 +14,7 @@ const config = (csrfToken?: string): RequestOptions => {
 
 export function* feedbackCreateSaga(action: FeedbackCreate) {
     try {
-        let params = '';
-        if (action.payload) {
-            params = `?${buildQueryString(action.payload.order_number)}`;
-        }
-        yield call(API.post(config(getCsrfToken())), `/market/feedback/${params}`, action.payload);
+        yield call(API.post(config(getCsrfToken())), `/market/feedback/${action.payload.order_number}`, action.payload);
         yield put(feedbackCreateData());
         yield put(alertPush({ message: ['success.feedback.created'], type: 'success' }));
     } catch (error) {

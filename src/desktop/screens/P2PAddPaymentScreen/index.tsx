@@ -19,8 +19,6 @@ export const P2PAddPaymentScreen: React.FC = () => {
     const [fileName, setFileName] = React.useState('');
     const bank: Bank = useParams();
 
-    console.log(bank.payment);
-
     const replacedDash = bank.payment.replace(/-/g, ' ');
     const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
 
@@ -32,7 +30,6 @@ export const P2PAddPaymentScreen: React.FC = () => {
         formData.append('file', inputFile);
         formData.append('type', type);
         formData.append('name', renderedWord);
-        console.log(formData);
 
     };
 
