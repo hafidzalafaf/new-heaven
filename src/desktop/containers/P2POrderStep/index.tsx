@@ -7,6 +7,7 @@ export interface P2POrderStepProps {
     paymentMethod: string;
     paymentUser: any;
     showPayment: boolean;
+    showModalCancel: boolean;
     comment: string;
     side: string;
     bank: any[];
@@ -14,10 +15,10 @@ export interface P2POrderStepProps {
     handleChangePaymentMethod: (e: string, el: any) => void;
     handleChangeComment: (e: string) => void;
     handleConfirmPaymentBuy: () => void;
-    handleConfirm: () => void;
     handleShowPayment: () => void;
     handleShowModalBuyOrderCompleted: () => void;
-    handleShowModalConfirm: () => void;
+    handleShowModalSellConfirm: () => void;
+    handleShowModalCancel: () => void;
 }
 
 export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) => {
@@ -25,6 +26,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         paymentMethod,
         paymentUser,
         showPayment,
+        showModalCancel,
         comment,
         side,
         bank,
@@ -33,9 +35,9 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleChangeComment,
         handleShowPayment,
         handleConfirmPaymentBuy,
-        handleConfirm,
         handleShowModalBuyOrderCompleted,
-        handleShowModalConfirm,
+        handleShowModalSellConfirm,
+        handleShowModalCancel,
     } = props;
 
     return (
@@ -246,7 +248,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 <div className="d-flex gap-24">
                                     <button
                                         type="button"
-                                        onClick={() => handleShowModalConfirm()}
+                                        onClick={() => handleShowModalSellConfirm()}
                                         className="btn btn-primary px-5 text-sm">
                                         Payment Received
                                     </button>
@@ -270,6 +272,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                     </button>
                                     <button
                                         type="button"
+                                        onClick={side == 'buy' && handleShowModalCancel}
                                         className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
                                         Cancel Order
                                     </button>

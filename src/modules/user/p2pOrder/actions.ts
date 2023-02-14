@@ -15,9 +15,9 @@ import {
     ORDER_CONFIRM_PAYMENT,
     ORDER_CONFIRM_PAYMENT_DATA,
     ORDER_CONFIRM_PAYMENT_ERROR,
-    ORDER_CONFIRM,
-    ORDER_CONFIRM_DATA,
-    ORDER_CONFIRM_ERROR,
+    ORDER_CONFIRM_SELL,
+    ORDER_CONFIRM_SELL_DATA,
+    ORDER_CONFIRM_SELL_ERROR,
     ORDER_CHAT,
     ORDER_CHAT_DATA,
     ORDER_CHAT_ERROR,
@@ -81,7 +81,6 @@ export interface OrderCancel {
 
 export interface OrderCancelData {
     type: typeof ORDER_CANCEL_DATA;
-    payload: Confirm;
 }
 
 export interface OrderCancelError {
@@ -89,19 +88,19 @@ export interface OrderCancelError {
     error: CommonError;
 }
 
-export interface OrderConfirm {
-    type: typeof ORDER_CONFIRM;
+export interface OrderConfirmSell {
+    type: typeof ORDER_CONFIRM_SELL;
     payload: {
         order_number: string;
     };
 }
 
-export interface OrderConfirmData {
-    type: typeof ORDER_CONFIRM_DATA;
+export interface OrderConfirmSellData {
+    type: typeof ORDER_CONFIRM_SELL_DATA;
 }
 
-export interface OrderConfirmError {
-    type: typeof ORDER_CONFIRM_ERROR;
+export interface OrderConfirmSellError {
+    type: typeof ORDER_CONFIRM_SELL_ERROR;
     error: CommonError;
 }
 
@@ -169,15 +168,12 @@ export type OrderActions =
     | OrderCancel
     | OrderCancelData
     | OrderCancelError
-    | OrderConfirm
-    | OrderConfirmData
-    | OrderConfirmError
+    | OrderConfirmSell
+    | OrderConfirmSellData
+    | OrderConfirmSellError
     | OrderConfirmPayment
     | OrderConfirmPaymentData
     | OrderConfirmPaymentError
-    | OrderConfirm
-    | OrderCancelData
-    | OrderConfirmError
     | OrderChat
     | OrderChatData
     | OrderChatError
@@ -233,9 +229,8 @@ export const orderCancel = (payload: OrderCancel['payload']): OrderCancel => ({
     payload,
 });
 
-export const orderCancelData = (payload: OrderCancelData['payload']): OrderCancelData => ({
+export const orderCancelData = (): OrderCancelData => ({
     type: ORDER_CANCEL_DATA,
-    payload,
 });
 
 export const orderCancelError = (error: CommonError): OrderCancelError => ({
@@ -243,17 +238,17 @@ export const orderCancelError = (error: CommonError): OrderCancelError => ({
     error,
 });
 
-export const orderConfirm = (payload: OrderConfirm['payload']): OrderConfirm => ({
-    type: ORDER_CONFIRM,
+export const orderConfirmSell = (payload: OrderConfirmSell['payload']): OrderConfirmSell => ({
+    type: ORDER_CONFIRM_SELL,
     payload,
 });
 
-export const orderConfirmData = (): OrderConfirmData => ({
-    type: ORDER_CONFIRM_DATA,
+export const orderConfirmSellData = (): OrderConfirmSellData => ({
+    type: ORDER_CONFIRM_SELL_DATA,
 });
 
-export const orderConfirmError = (error: CommonError): OrderConfirmError => ({
-    type: ORDER_CONFIRM_ERROR,
+export const orderConfirmSellError = (error: CommonError): OrderConfirmSellError => ({
+    type: ORDER_CONFIRM_SELL_ERROR,
     error,
 });
 

@@ -32,8 +32,6 @@ export const OrderP2PTable = () => {
         setData(order);
     }, [order]);
 
-    console.log(data);
-
     const filterredType = (type) => {
         let filterredList;
         let temp;

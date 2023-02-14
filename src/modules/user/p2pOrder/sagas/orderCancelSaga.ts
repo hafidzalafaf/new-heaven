@@ -13,13 +13,9 @@ const config = (csrfToken?: string): RequestOptions => {
 
 export function* orderCancelSaga(action: OrderCancel) {
     try {
-        const payload = yield call(
-            API.put(config(getCsrfToken())),
-            `/market/orders/cancel_order/${action.payload.order_number}`,
-            action.payload
-        );
+        yield call(API.put(config(getCsrfToken())), `/market/orders/cancel_order/${action.payload.order_number}`);
 
-        yield put(orderCancelData(payload));
+        yield put(orderCancelData());
         yield put(alertPush({ message: ['success.order.cancel'], type: 'success' }));
     } catch (error) {
         yield put(

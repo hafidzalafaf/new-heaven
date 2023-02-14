@@ -14,9 +14,9 @@ export const ORDER_CANCEL = 'order/CANCEL';
 export const ORDER_CANCEL_DATA = 'order/CANCEL_DATA';
 export const ORDER_CANCEL_ERROR = 'order/CANCEL_ERROR';
 
-export const ORDER_CONFIRM = 'order/CONFIRM';
-export const ORDER_CONFIRM_DATA = 'order/CONFIRM_DATA';
-export const ORDER_CONFIRM_ERROR = 'order/CONFIRM_ERROR';
+export const ORDER_CONFIRM_SELL = 'order/CONFIRM_SELL';
+export const ORDER_CONFIRM_SELL_DATA = 'order/CONFIRM_SELL_DATA';
+export const ORDER_CONFIRM_SELL_ERROR = 'order/CONFIRM_SELL_ERROR';
 
 export const ORDER_CONFIRM_PAYMENT = 'order/CONFIRM_PAYMENT';
 export const ORDER_CONFIRM_PAYMENT_DATA = 'order/CONFIRM_PAYMENT_DATA';

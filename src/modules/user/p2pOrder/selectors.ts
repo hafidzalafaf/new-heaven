@@ -17,4 +17,7 @@ export const selectShouldFetchP2POrderDetail = (state: RootState): boolean =>
 export const selectP2PConfirmPaymentSuccess = (state: RootState): boolean =>
     state.user.p2pOrder.payment_confirm.success;
 
-export const selectP2PConfirmSuccess = (state: RootState): boolean => state.user.p2pOrder.order_confirm.success;
+export const selectP2PConfirmSellSuccess = (state: RootState): boolean =>
+    state.user.p2pOrder.order_confirm_sell.success;
+
+export const selectP2PCancelSuccess = (state: RootState): boolean => state.user.p2pOrder.cancel.success;

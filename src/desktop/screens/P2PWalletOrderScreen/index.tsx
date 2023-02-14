@@ -4,9 +4,11 @@ import {
     orderDetailFetch,
     selectP2POrderDetail,
     orderConfirmPayment,
-    orderConfirm,
+    orderConfirmSell,
+    orderCancel,
     selectP2PConfirmPaymentSuccess,
-    selectP2PConfirmSuccess,
+    selectP2PConfirmSellSuccess,
+    selectP2PCancelSuccess,
     selectShouldFetchP2POrderDetail,
 } from 'src/modules';
 import { useDocumentTitle } from '../../../hooks';
@@ -28,7 +30,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     const detail = useSelector(selectP2POrderDetail);
     const paymentConfirmSuccess = useSelector(selectP2PConfirmPaymentSuccess);
-    const confirmSuccess = useSelector(selectP2PConfirmSuccess);
+    const confirmSellSuccess = useSelector(selectP2PConfirmSellSuccess);
+    const cancelSuccess = useSelector(selectP2PCancelSuccess);
     const shouldFetchP2POrderDetail = useSelector(selectShouldFetchP2POrderDetail);
 
     const [seconds, setSeconds] = React.useState(30000);
@@ -43,13 +46,15 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [checkModalTwo, setcheckModalTwo] = React.useState(false);
     const [comment, setComment] = React.useState('');
 
-    const [showModalConfirm, setShowModalConfirm] = React.useState(false);
+    const [showModalSellConfirm, setShowModalSellConfrim] = React.useState(false);
     const [showModalReport, setShowModalReport] = React.useState(false);
     const [showModalBuyOrderCompleted, setShowModalBuyOrderCompleted] = React.useState(false);
+    const [showModalCancel, setShowModalCancel] = React.useState(false);
+    const [active, setActive] = React.useState('');
 
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
-    }, [dispatch, order_number, paymentConfirmSuccess, shouldFetchP2POrderDetail]);
+    }, [dispatch, order_number, paymentConfirmSuccess, confirmSellSuccess, cancelSuccess, shouldFetchP2POrderDetail]);
 
     React.useEffect(() => {
         let timer = null;
@@ -77,13 +82,31 @@ export const P2PWalletOrderScreen: React.FC = () => {
         dispatch(orderConfirmPayment(payload));
     };
 
-    const handleConfirm = () => {
+    const handleConfirmSell = () => {
         const payload = {
             order_number: order_number,
         };
 
-        dispatch(orderConfirm(payload));
+        dispatch(orderConfirmSell(payload));
+        setShowModalSellConfrim(false);
+    };
+
+    const handleConfirmBuy = () => {
+        // const payload = {
+        //     order_number: order_number,
+        // };
+
+        // dispatch(orderConfirmSell(payload));
         setShowModalBuyOrderCompleted(false);
+    };
+
+    const handleCancelOrder = () => {
+        const payload = {
+            order_number: order_number,
+        };
+
+        dispatch(orderCancel(payload));
+        setShowModalCancel(false);
     };
 
     const bank = [
@@ -264,9 +287,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         disableButton ? 'button-grey white-text ' : 'btn-primary'
                     } text-sm py-3 btn btn-block`}
                     disabled={disableButton}
-                    onClick={() => {
-                        setShowModalConfirm(false);
-                    }}>
+                    onClick={handleConfirmSell}>
                     Confirm
                 </button>
             </div>
@@ -296,10 +317,121 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     </div>
                 </div>
 
-                <button onClick={() => handleConfirm()} className="btn-primary w-100">
+                <button onClick={() => handleConfirmBuy()} className="btn-primary w-100">
                     Continue
                 </button>
             </React.Fragment>
+        );
+    };
+
+    const renderModalCancel = () => {
+        return (
+            <div>
+                <div className="w-100 d-flex align-items-center justify-content-center">
+                    <img src="/img/warningp2p.png" alt="warning" width={68} height={68} className="mb-16" />
+                </div>
+
+                <p className="m-0 p-0 grey-text-accent text-sm">Tips</p>
+                <ul className="m-0 p-0 grey-text-accent text-sm mb-16 pl-16">
+                    <li>If you have already paid the seller, please do not cancel the order.</li>
+                    <li>
+                        If the seller cannot reply to the chat within 15 minutes, you will not be responsible for
+                        canceling this order. This will not affect your completion rate. You can make up to 5
+                        irresponsible cancellations in a day.
+                    </li>
+                    <li>
+                        Your account will be SUSPENDED for the day if you exceed 3 responsible cancellation times in a
+                        day.
+                    </li>
+                </ul>
+
+                <div className="p-16 mb-16">
+                    <p className="m-0 p-0 grey-text-accent text-sm">Why do you want to cancel the order?</p>
+                    <div className="d-flex flex-column gap-16">
+                        <div className="d-flex align-items-center gap-8">
+                            {active == 'I dont want to trade anymore' ? (
+                                <span onClick={() => setActive('')}>
+                                    <ActiveCheck />
+                                </span>
+                            ) : (
+                                <span onClick={() => setActive('I dont want to trade anymore')}>
+                                    <GreyCheck />
+                                </span>
+                            )}
+                            <p className="m-0 p-0 grey-text text-sm">I dont want to trade anymore</p>
+                        </div>
+                        <div className="d-flex align-items-center gap-8">
+                            {active ==
+                            'I did not comply with the obligations related to the advertising trade terms and conditions' ? (
+                                <span onClick={() => setActive('')}>
+                                    <ActiveCheck />
+                                </span>
+                            ) : (
+                                <span
+                                    onClick={() =>
+                                        setActive(
+                                            'I did not comply with the obligations related to the advertising trade terms and conditions'
+                                        )
+                                    }>
+                                    <GreyCheck />
+                                </span>
+                            )}
+                            <p className="m-0 p-0 grey-text text-sm">
+                                I did not comply with the obligations related to the advertising trade terms and
+                                conditions
+                            </p>
+                        </div>
+                        <div className="d-flex align-items-center gap-8">
+                            {active == 'The seller asked for additional fees' ? (
+                                <span onClick={() => setActive('')}>
+                                    <ActiveCheck />
+                                </span>
+                            ) : (
+                                <span onClick={() => setActive('The seller asked for additional fees')}>
+                                    <GreyCheck />
+                                </span>
+                            )}
+                            <p className="m-0 p-0 grey-text text-sm">The seller asked for additional fees</p>
+                        </div>
+                        <div className="d-flex align-items-center gap-8">
+                            {active ==
+                            'An issue with the sellers payment method resulted in an unsuccessful payment' ? (
+                                <span onClick={() => setActive('')}>
+                                    <ActiveCheck />
+                                </span>
+                            ) : (
+                                <span
+                                    onClick={() =>
+                                        setActive(
+                                            'An issue with the sellers payment method resulted in an unsuccessful payment'
+                                        )
+                                    }>
+                                    <GreyCheck />
+                                </span>
+                            )}
+                            <p className="m-0 p-0 grey-text text-sm">
+                                An issue with the sellers payment method resulted in an unsuccessful payment
+                            </p>
+                        </div>
+                        <div className="d-flex align-items-center gap-8">
+                            {active == 'Another reason' ? (
+                                <span onClick={() => setActive('')}>
+                                    <ActiveCheck />
+                                </span>
+                            ) : (
+                                <span onClick={() => setActive('Another reason')}>
+                                    <GreyCheck />
+                                </span>
+                            )}
+                            <p className="m-0 p-0 grey-text text-sm">Another reason</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onClick={handleCancelOrder} className="btn-primary w-100">
+                    Confirm
+                </button>
+            </div>
         );
     };
 
@@ -375,15 +507,16 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         side={side}
                         bank={bank}
                         detail={detail}
+                        showModalCancel={showModalCancel}
                         handleChangePaymentMethod={handleChangePaymentMethod}
                         handleChangeComment={handleChangeComment}
                         handleConfirmPaymentBuy={handleConfirmPaymentBuy}
-                        handleConfirm={handleConfirm}
                         handleShowPayment={() => setShowPayment(!showPayment)}
                         handleShowModalBuyOrderCompleted={() =>
                             setShowModalBuyOrderCompleted(!showModalBuyOrderCompleted)
                         }
-                        handleShowModalConfirm={() => setShowModalConfirm(!showModalConfirm)}
+                        handleShowModalSellConfirm={() => setShowModalSellConfrim(!showModalSellConfirm)}
+                        handleShowModalCancel={() => setShowModalCancel(!showModalCancel)}
                     />
 
                     <P2PChat
@@ -401,8 +534,9 @@ export const P2PWalletOrderScreen: React.FC = () => {
                 </div>
 
                 <Modal show={showModalReport} content={renderModalContent()} />
-                <Modal show={showModalConfirm} content={renderModalConfirmRelease()} />
+                <Modal show={showModalSellConfirm} content={renderModalConfirmRelease()} />
                 <Modal show={showModalBuyOrderCompleted} content={renderModalBuyOrderCompleted()} />
+                <Modal show={showModalCancel} content={renderModalCancel()} />
             </div>
         </React.Fragment>
     );
