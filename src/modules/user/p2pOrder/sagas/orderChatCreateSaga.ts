@@ -16,7 +16,7 @@ export function* orderChatCreateSaga(actionParam: OrderChatCreate) {
     try {
         yield call(API.post(config(getCsrfToken())), `/market/orders/information_chat/${offer_number}`, { message });
         yield put(orderChatCreateData());
-        yield put(alertPush({ message: ['success.order.created'], type: 'success' }));
+        yield put(alertPush({ message: ['success.order.chat'], type: 'success' }));
     } catch (error) {
         yield put(
             sendError({

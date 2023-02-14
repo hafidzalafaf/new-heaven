@@ -6,10 +6,13 @@ import {
     selectP2PChatSuccess,
     selectP2PChatCreateLoading,
     selectP2PChatCreateSuccess,
+    selectP2PProfile,
     orderChat,
     orderChatCreate,
+    p2pProfileFetch,
 } from 'src/modules';
 import { ArrowDownMd, CheckFillIcon, AttachmentIcon, SendIcon } from 'src/assets/images/P2PIcon';
+import moment from 'moment';
 
 export interface P2PChatProps {
     detail: any;
@@ -22,6 +25,7 @@ export interface P2PChatProps {
 export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
     const { detail, order_number, showChat, handleExpandChat, handleModalReport } = props;
     const dispatch = useDispatch();
+    const profile = useSelector(selectP2PProfile);
     const p2pChat = useSelector(selectP2PChat);
     const p2pChatLoading = useSelector(selectP2PChatLoading);
     const p2pChatSuccess = useSelector(selectP2PChatSuccess);
@@ -29,25 +33,42 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
     const p2pChatCreateSuccess = useSelector(selectP2PChatCreateSuccess);
 
     const [message, setMessage] = React.useState('');
+    const [chats, setChats] = React.useState([]);
+
+    React.useEffect(() => {
+        dispatch(p2pProfileFetch());
+    }, [dispatch]);
+
+    React.useEffect(() => {
+        setChats(p2pChat.reverse());
+    }, [p2pChat]);
 
     React.useEffect(() => {
         dispatch(orderChat({ offer_number: order_number }));
-    }, [dispatch, p2pChatCreateSuccess]);
-
-    const handleSendChat = (e) => {
-        e.preventDefault();
-        const payload = {
-            message,
-            offer_number: order_number,
-        };
-
-        dispatch(orderChatCreate(payload));
         if (p2pChatCreateSuccess) {
             setMessage('');
         }
-    };
+    }, [dispatch, p2pChatCreateSuccess]);
 
-    console.log(p2pChat, 'chat');
+    const handleSendChat = (e) => {
+        if (message) {
+            if (e.keyCode == 13 && e.shiftKey == false) {
+                e.preventDefault();
+                const payload = {
+                    message,
+                    offer_number: order_number,
+                };
+                dispatch(orderChatCreate(payload));
+            }
+            // } else {
+            //     const payload = {
+            //         message,
+            //         offer_number: order_number,
+            //     };
+            //     dispatch(orderChatCreate(payload));
+            // }
+        }
+    };
 
     return (
         <React.Fragment>
@@ -85,71 +106,28 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                 {showChat && (
                     <div className="chat-wrap position-relative">
                         <div className="chat">
-                            <div className="sender-chat">
-                                <p className="sender-name text-xxs text-white">Bambang</p>
-                                <div className="buble-chat">
-                                    <span className="white-text text-xs">Yowes aku pesen komodone 12 yo mas</span>
-                                    <div className="time grey-text-accent text-xxs">13.01</div>
-                                </div>
-                            </div>
-
-                            <div className="my-chat">
-                                <p className="sender-name text-xxs text-white">You</p>
-                                <div className="buble-chat">
-                                    <span className="white-text text-xs">Yowes deal mas, ditunggu 2 dino ya mas</span>
-                                    <div className="time grey-text-accent text-xxs">13.01</div>
-                                </div>
-                            </div>
-
-                            <div className="sender-chat">
-                                <p className="sender-name text-xxs text-white">Bambang</p>
-                                <div className="buble-chat">
-                                    <span className="white-text text-xs">Lahh pie to mas ?</span>
-                                    <div className="time grey-text-accent text-xxs">13.01</div>
-                                </div>
-                            </div>
-
-                            <div className="my-chat">
-                                <p className="sender-name text-xxs text-white">You</p>
-                                <div className="buble-chat">
-                                    <span className="white-text text-xs">
-                                        Siki aku dadi jasa travel komodo mas, menowo njenengan purun ?
-                                    </span>
-                                    <div className="time grey-text-accent text-xxs">13.01</div>
-                                </div>
-                            </div>
-
-                            <div className="my-chat">
-                                <p className="sender-name text-xxs text-white">You</p>
-                                <div className="buble-chat">
-                                    <span className="white-text text-xs">Lohh Ora sido mas, saiki aku ora dodolan</span>
-                                    <div className="time grey-text-accent text-xxs">13.01</div>
-                                </div>
-                            </div>
-
-                            <div className="sender-chat">
-                                <p className="sender-name text-xxs text-white">Bambang</p>
-                                <div className="buble-chat">
-                                    <span className="white-text text-xs">Ditunggu</span>
-                                    <div className="time grey-text-accent text-xxs">13.01</div>
-                                </div>
-                            </div>
-
-                            <div className="sender-chat">
-                                <p className="sender-name text-xxs text-white">Bambang</p>
-                                <div className="buble-chat">
-                                    <span className="white-text text-xs">Y</span>
-                                    <div className="time grey-text-accent text-xxs">13.01</div>
-                                </div>
-                            </div>
-
-                            <div className="my-chat">
-                                <p className="sender-name text-xxs text-white">You</p>
-                                <div className="buble-chat">
-                                    <span className="white-text text-xs">Sudah dikirim Ya Mas</span>
-                                    <div className="time grey-text-accent text-xxs">13.01</div>
-                                </div>
-                            </div>
+                            {chats?.map((chat, i) => (
+                                <React.Fragment key={i}>
+                                    <div
+                                        className={
+                                            chat?.p2p_user?.uid === profile?.member?.uid ? 'my-chat' : 'sender-chat'
+                                        }>
+                                        <p className="sender-name text-xxs text-white">
+                                            {chat?.p2p_user?.uid === profile?.member?.uid
+                                                ? 'You'
+                                                : chat?.p2p_user == 'Nusablocks'
+                                                ? chat?.p2p_user
+                                                : chat?.p2p_user?.email}
+                                        </p>
+                                        <div className="buble-chat">
+                                            <span className="white-text text-xs">{chat?.chat}</span>
+                                            <div className="time grey-text-accent text-xxs">
+                                                {moment(chat?.updated_at).format('HH:mm')}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </React.Fragment>
+                            ))}
 
                             <div className="chat-notification py-1 px-2 my-1">
                                 <p className="mb-0 text-xxs text-center font-normal primary-text">
@@ -167,8 +145,9 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                 <p className="mb-0 text-xs grey-text text-center">12-01-2022</p>
                             </div>
                         </div>
-                        <form onSubmit={handleSendChat} className="chat-writing">
+                        <form className="chat-writing">
                             <textarea
+                                onKeyDown={handleSendChat}
                                 placeholder="write a message.."
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
