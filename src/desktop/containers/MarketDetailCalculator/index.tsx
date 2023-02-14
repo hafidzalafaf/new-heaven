@@ -74,7 +74,6 @@ export const MarketDetailCalculator: React.FC<MarketDetailCalculatorProps> = ({ 
                 <div className="d-flex justify-content-between align-items-center mb-24 grey-text-accent text-ms font-bold">
                     <p className="m-0">Price</p>
                     <p className="m-0">
-                        {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
                         {Decimal.format(
                             +inputCalc * detail?.last,
                             detail?.price_precision,

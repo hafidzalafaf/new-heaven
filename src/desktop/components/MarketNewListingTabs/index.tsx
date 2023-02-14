@@ -98,15 +98,11 @@ export const MarketNewListingTabs: FC = (): ReactElement => {
                 <img src={item.currency && item.currency.icon_url} alt="coin" className="mr-12 small-coin-icon" />
                 <p className="m-0 mr-24 white-text font-bold">{item.name && item.name.toUpperCase()}</p>
             </div>,
-            <p className="m-0 text-sm white-text">
-                {item?.quote_unit == 'idr' ? 'Rp' : '$'} {item.last}
-            </p>,
+            <p className="m-0 text-sm white-text">{item.last}</p>,
             <p className={`text-sm m-0 ${item.price_change_percent.includes('-') ? 'danger-text' : 'green-text'}`}>
                 {item.price_change_percent}
             </p>,
-            <p className="text-sm m-0 grey-text-accent">
-                {item?.quote_unit == 'idr' ? 'Rp' : '$'} {item.volume}
-            </p>,
+            <p className="text-sm m-0 grey-text-accent">{item.volume}</p>,
             <div className="d-flex">
                 <div className="mr-3">
                     <Link to={`/markets/detail/${item.id}`}>
