@@ -38,8 +38,6 @@ export const P2PPaymentMethod: React.FC = () => {
         getDummy();
     }, [paymentMethods]);
 
-    console.log(bankData);
-
     return (
         <React.Fragment>
             <div className="com-p2p-payment-method">

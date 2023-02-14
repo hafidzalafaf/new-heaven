@@ -11,8 +11,6 @@ export function* p2pFetchPaymentUserSaga(action: P2PPaymentUserFetch) {
     try {
         const feedback = yield call(API.get(config), `/account/payment`);
         yield put(p2pPaymentUserData(feedback));
-        console.log('feedback', feedback);
-
     } catch (error) {
         yield put(
             sendError({

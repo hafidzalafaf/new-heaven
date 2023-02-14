@@ -917,6 +917,7 @@ export const en = {
     'success.order.created': 'Order was created',
     'success.order.confirm.payment': 'Payment method was confirmed',
     'success.order.confirm': 'Order successfull completed',
+    'success.username.changed': 'Username was changed',
     'success.order.done': 'Order successfully completed',
     'success.order.approve': 'Order successfully approved',
     'success.order.cancel': 'Order successfully cancelled',

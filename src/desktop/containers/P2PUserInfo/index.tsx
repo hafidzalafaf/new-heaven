@@ -9,28 +9,37 @@ import {
 } from '../../../assets/images/P2PIcon';
 import { CardP2PUserInfo } from '../../../desktop/components';
 import { useSelector } from 'react-redux';
-import { p2pProfileFetch, selectP2PProfile } from 'src/modules/user/p2pProfile';
+import { p2pProfileFetch, P2PProfileFetchInterface, selectP2PProfile } from 'src/modules/user/p2pProfile';
 import { FormControl, Modal } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { p2pPaymentUserFetch, selectP2PPaymentUser } from 'src/modules';
+import { p2pPaymentUserFetch, selectP2PPaymentUser, p2pProfileChangeUsername, selectP2PProfileChangeUsernameSuccess } from 'src/modules';
 export const P2PUserInfo: React.FC = () => {
     const dispatch = useDispatch();
-    const [username, setUsername] = React.useState('Nusatech Exchange');
     const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
 
+
+
+    const userP2P: P2PProfileFetchInterface = useSelector(selectP2PProfile);
+    const userP2PPayment = useSelector(selectP2PPaymentUser)
+    const changeUsernameSuccess = useSelector(selectP2PProfileChangeUsernameSuccess);
+    const [username, setUsername] = React.useState(userP2P?.trader_name);
 
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
         dispatch(p2pPaymentUserFetch());
-    }, [dispatch]);
-    const userP2P = useSelector(selectP2PProfile);
-    const userP2PPayment = useSelector(selectP2PPaymentUser)
+    }, [dispatch, changeUsernameSuccess]);
 
-    console.log(userP2P, 'userP2P');
-    console.log(userP2PPayment, 'userP2PPayment');
+    const changeUsername = () => {
+        const payload = {
+            username,
+        };
+        dispatch(p2pProfileChangeUsername(payload));
+        setShowChangeUsernameModal(false);
+    }
+
     const ModalChangeName = () => {
         return (
-            <form onSubmit={()=> setShowChangeUsernameModal(false)} className='bg-black p-10 pt-20' hidden={!showChangeUsernameModal}>
+            <form onSubmit={changeUsername} className='bg-black p-10 pt-20' hidden={!showChangeUsernameModal}>
                 <div className='d-flex justify-content-between'>
                     <h6 className='text-white my-20'>Set Nickname</h6>
                     <svg onClick={()=> setShowChangeUsernameModal(false)} className='cursor-pointer' width="20px" height="20px" viewBox="0 0 24 24" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">
@@ -52,7 +61,7 @@ export const P2PUserInfo: React.FC = () => {
                     />
                     <label className='text-char'>{username.length}/20</label>
                 </div>
-                <div className='text-center cursor-pointer btn-primary' onClick={()=> setShowChangeUsernameModal(false)}>OK</div>
+                <div className='text-center cursor-pointer btn-primary' onClick={changeUsername}>OK</div>
             </form>
         )
     }
@@ -65,9 +74,9 @@ export const P2PUserInfo: React.FC = () => {
                 </Modal>
                 <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
                     <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
-                        {username.slice(0, 1).toUpperCase()}
+                        {userP2P?.trader_name ? userP2P?.trader_name?.slice(0, 1).toUpperCase() : userP2P?.member?.email?.slice(0, 1).toUpperCase()}
                     </div>
-                    <p className="m-0 p-0 text-ms font-extrabold grey-text-accent">{username}</p>
+                    <p className="m-0 p-0 text-ms font-extrabold grey-text-accent">{userP2P?.trader_name ? userP2P?.trader_name : userP2P?.member?.email}</p>
                     <RenameIcon
                         onClick={() => setShowChangeUsernameModal(!showChangeUsernameModal)}
                         className="cursor-pointer"
