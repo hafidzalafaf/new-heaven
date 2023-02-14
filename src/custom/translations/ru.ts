@@ -925,6 +925,7 @@ export const ru: LangType = {
     'success.order.chat': 'сообщение было отправлено',
     'success.order.confirm.payment': 'Способ оплаты подтвержден',
     'success.order.confirm': 'Заказ успешно выполнен',
+    'success.username.changed': 'Имя пользователя изменено',
     'success.order.done': 'Запрос успешно завершён',
     'success.order.approve': 'Order successfully approved',
     'success.order.cancel': 'Order successfully cancelled',
