@@ -27,6 +27,7 @@ export interface Market {
     min_amount: string;
     amount_precision: number;
     price_precision: number;
+    total_precision?: number;
     state?: string;
     filters?: MarketFilter[];
     type?: string;

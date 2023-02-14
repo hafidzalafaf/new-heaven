@@ -59,7 +59,6 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
             </div>
             <div className="d-flex align-items-center mb-24">
                 <h3 className="white-text m-0 text-title-2 mr-24">
-                    {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
                     {Decimal.format(detail?.last, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')}
                 </h3>
                 <h6
@@ -85,11 +84,9 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                 </h5>
                 <p className="grey-text-accent text-ms mb-24">
                     The live price of {detail && detail.currency && detail.currency.name} is ${' '}
-                    {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
                     {Decimal.format(detail?.last, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')} per
                     ({detail && detail.base_unit && detail.base_unit.toUpperCase()} /{' '}
                     {detail?.quote_unit?.toUpperCase()}) . 24-hour trading volume is{' '}
-                    {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
                     {Decimal.format(detail?.volume, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')}.
                     {detail && detail.base_unit && detail.base_unit.toUpperCase()} to{' '}
                     {detail?.quote_unit?.toUpperCase()} price is updated in real-time.
@@ -102,7 +99,7 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                 </p>
                 <div className="d-flex align-items-center mb-24">
                     <p className="grey-text-accent light mb-0">
-                        Low : {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                        Low :
                         {Decimal.format(
                             detail?.min_price,
                             detail?.price_precision,
@@ -113,7 +110,7 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                         <div className="positive" style={{ width: '50%' }} />
                     </div>
                     <p className="grey-text-accent light mb-0">
-                        High : {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                        High :
                         {Decimal.format(
                             detail?.max_price,
                             detail?.price_precision,
@@ -127,7 +124,6 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                             24 Low <InfoIcon />
                         </p>
                         <p className="mb-0 font-bold white-text">
-                            {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
                             {Decimal.format(
                                 detail?.min_price,
                                 detail?.price_precision,
@@ -140,7 +136,6 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                             24 High <InfoIcon />
                         </p>
                         <p className="mb-0 font-bold white-text">
-                            {detail?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
                             {Decimal.format(
                                 detail?.max_price,
                                 detail?.price_precision,

@@ -184,9 +184,7 @@ const MarketsTableComponent = (props) => {
                                                 {item.price_change_percent}
                                             </span>
                                         </p>
-                                        <p className="mb-0 text-lg white-text font-bold">
-                                            {item?.quote_unit == 'idr' ? 'Rp' : '$'} {item.last}
-                                        </p>
+                                        <p className="mb-0 text-lg white-text font-bold">{item.last}</p>
                                         <p className="mb-0 text-xs grey-text-accent">
                                             <span>Volume: </span>
                                             {item.volume}

@@ -31,10 +31,8 @@ export const CardMarket: React.FunctionComponent<CardMarketProps> = (props) => {
                             </td>
                             <td className="white-text pr-8">
                                 {title == 'Top Volume Coins'
-                                    ? `${el?.quote_unit == 'idr' ? 'Rp' : '$'} ${
-                                          el?.volume?.length >= 8 ? `${el.volume.slice(0, 7)}..` : el.volume
-                                      }`
-                                    : `${el?.quote_unit == 'idr' ? 'Rp' : '$'} ${
+                                    ? ` ${el?.volume?.length >= 8 ? `${el.volume.slice(0, 7)}..` : el.volume}`
+                                    : ` ${
                                           Decimal.format(
                                               el && el.last,
                                               el.price_precision,
