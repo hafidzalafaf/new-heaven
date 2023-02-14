@@ -44,14 +44,8 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
         <React.Fragment>
             <div className="com-market-detail-info mb-24 d-flex justify-content-between align-items-center">
                 <div className="name d-flex align-items-center position-relative">
-                    <img
-                        src={detail && detail.currency && detail.currency.icon_url}
-                        alt="icon"
-                        className="icon mr-24"
-                    />
-                    <h2 className="white-text m-0 text-title-2 mr-24">
-                        {detail && detail.currency && detail.currency.name} Price
-                    </h2>
+                    <img src={detail?.currency?.icon_url} alt="icon" className="icon mr-24" />
+                    <h2 className="white-text m-0 text-title-2 mr-24">{detail?.currency?.name} Price</h2>
                     <span className="grey-text-accent text-ms font-extrabold">
                         ({detail && detail.base_unit && detail.base_unit.toUpperCase()})
                     </span>
@@ -63,11 +57,9 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                 </h3>
                 <h6
                     className={`text-lg font-bold m-0 mr-24 ${
-                        detail && detail.price_change_percent && detail.price_change_percent?.includes('-')
-                            ? 'danger-text'
-                            : 'contrast-text'
+                        detail?.price_change_percent?.includes('-') ? 'danger-text' : 'contrast-text'
                     }`}>
-                    {detail && detail.price_change_percent}
+                    {detail?.price_change_percent}
                 </h6>
                 <span className="text-ms grey-text font-normal">(1D)</span>
             </div>
@@ -79,19 +71,17 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
             </div>
 
             <div className="information">
-                <h5 className=" white-text text-xl ">
-                    {detail && detail.base_unit && detail.base_unit.toUpperCase()} Information
-                </h5>
+                <h5 className=" white-text text-xl ">{detail?.base_unit?.toUpperCase()} Information</h5>
                 <p className="grey-text-accent text-ms mb-24">
-                    The live price of {detail && detail.currency && detail.currency.name} is ${' '}
+                    The live price of {detail?.currency?.name} is ${' '}
                     {Decimal.format(detail?.last, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')} per
-                    ({detail && detail.base_unit && detail.base_unit.toUpperCase()} /{' '}
-                    {detail?.quote_unit?.toUpperCase()}) . 24-hour trading volume is{' '}
+                    ({detail?.base_unit?.toUpperCase()} / {detail?.quote_unit?.toUpperCase()}) . 24-hour trading volume
+                    is{' '}
                     {Decimal.format(detail?.volume, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')}.
-                    {detail && detail.base_unit && detail.base_unit.toUpperCase()} to{' '}
-                    {detail?.quote_unit?.toUpperCase()} price is updated in real-time.
-                    {detail && detail.currency && detail.currency.name} is &nbsp;
-                    {detail && detail.price_change_percent} in the last 24 hours.
+                    {detail?.base_unit?.toUpperCase()} to {detail?.quote_unit?.toUpperCase()} price is updated in
+                    real-time.
+                    {detail?.currency?.name} is &nbsp;
+                    {detail?.price_change_percent} in the last 24 hours.
                 </p>
                 <p className="grey-text-accent light mb-3">
                     24 Low &amp; High
@@ -150,52 +140,43 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
                         </p>
                         <p
                             className={`text-sm font-bold m-0 mr-24 ${
-                                detail && detail.price_change_percent && detail.price_change_percent?.includes('-')
-                                    ? 'danger-text'
-                                    : 'contrast-text'
+                                detail?.price_change_percent?.includes('-') ? 'danger-text' : 'contrast-text'
                             }`}>
-                            {detail && detail.price_change_percent}
+                            {detail?.price_change_percent}
                         </p>
                     </div>
                     <div className="col-lg-4 px-0 box col-xl-3 col-sm-6 mb-24">
                         <p className="grey-text-accent mb-12 light">
                             Popularity <InfoIcon />
                         </p>
-                        <p className="mb-0 font-bold white-text">
-                            #{detail && detail.currency && detail.currency.position}
-                        </p>
+                        <p className="mb-0 font-bold white-text">#{detail?.currency?.position}</p>
                     </div>
                 </div>
             </div>
             <div className={`about-coin mt-4  ${showDetailDesc ? 'show' : ''}`}>
                 <h5 className="text-lg white-text">
-                    About {detail && detail.currency && detail.currency.name} (
-                    {detail && detail.base_unit && detail.base_unit.toUpperCase()})
+                    About {detail?.currency?.name} ({detail?.base_unit?.toUpperCase()})
                 </h5>
                 <p className="text-ms grey-text-accent mb-24">
-                    {detail && detail.currency && detail.currency.name} is one of the most popular cryptocurrencies in
-                    the market. First introduced in 2009 by Satoshi Nakamoto,{' '}
-                    {detail && detail.currency && detail.currency.name} has held the crypto market’s number one spot
-                    according to market capitalization. {detail && detail.currency && detail.currency.name} paved the
-                    way for many existing altcoins in the market and marked a pivotal moment for digital payment
-                    solutions. As the world’s first cryptocurrency, {detail && detail.currency && detail.currency.name}{' '}
-                    has come a long way in terms of its value. However, one does not have to buy an entire bitcoin as
-                    bitcoins can be divided into small units called satoshis, named after the creator. A satoshi is
-                    equivalent to 0.00000001 bitcoin. token so you can think of bitcoin as digital money.{' '}
-                    {detail && detail.currency && detail.currency.name}
+                    {detail?.currency?.name} is one of the most popular cryptocurrencies in the market. First introduced
+                    in 2009 by Satoshi Nakamoto, {detail?.currency?.name} has held the crypto market’s number one spot
+                    according to market capitalization. {detail?.currency?.name} paved the way for many existing
+                    altcoins in the market and marked a pivotal moment for digital payment solutions. As the world’s
+                    first cryptocurrency, {detail?.currency?.name} has come a long way in terms of its value. However,
+                    one does not have to buy an entire bitcoin as bitcoins can be divided into small units called
+                    satoshis, named after the creator. A satoshi is equivalent to 0.00000001 bitcoin. token so you can
+                    think of bitcoin as digital money. {detail?.currency?.name}
                     transactions are fully transparent and can’t be censored. You can send money
                 </p>
                 <p className="text-ms grey-text-accent  mb-36">
-                    {detail && detail.currency && detail.currency.name} is one of the most popular cryptocurrencies in
-                    the market. First introduced in 2009 by Satoshi Nakamoto,{' '}
-                    {detail && detail.currency && detail.currency.name} has held the crypto market’s number one spot
-                    according to market capitalization. {detail && detail.currency && detail.currency.name} paved the
-                    way for many existing altcoins in the market and marked a pivotal moment for digital payment
-                    solutions. As the world’s first cryptocurrency, {detail && detail.currency && detail.currency.name}{' '}
-                    has come a long way in terms of its value. However, one does not have to buy an entire bitcoin as
-                    bitcoins can be divided into small units called satoshis, named after the creator. A satoshi is
-                    equivalent to 0.00000001 bitcoin. token so you can think of bitcoin as digital money.{' '}
-                    {detail && detail.currency && detail.currency.name}
+                    {detail?.currency?.name} is one of the most popular cryptocurrencies in the market. First introduced
+                    in 2009 by Satoshi Nakamoto, {detail?.currency?.name} has held the crypto market’s number one spot
+                    according to market capitalization. {detail?.currency?.name} paved the way for many existing
+                    altcoins in the market and marked a pivotal moment for digital payment solutions. As the world’s
+                    first cryptocurrency, {detail?.currency?.name} has come a long way in terms of its value. However,
+                    one does not have to buy an entire bitcoin as bitcoins can be divided into small units called
+                    satoshis, named after the creator. A satoshi is equivalent to 0.00000001 bitcoin. token so you can
+                    think of bitcoin as digital money. {detail?.currency?.name}
                     transactions are fully transparent and can’t be censored. You can send money
                 </p>
                 <div

@@ -158,7 +158,7 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
                     <input
                         type="text"
                         placeholder={
-                            total.includes('NaN')
+                            total?.includes('NaN')
                                 ? Decimal.format('0', currentMarket?.price_precision)
                                 : Decimal.format(+total, currentMarket?.price_precision)
                         }

@@ -95,7 +95,7 @@ export const MarketSpotTabs: FC = (): ReactElement => {
     }, [localStorage.getItem('favourites')]);
 
     const handleFavorite = (data) => {
-        const isFavorite = favoriteMarket.includes(data);
+        const isFavorite = favoriteMarket?.includes(data);
         const favorite = JSON.parse(localStorage.getItem('favourites') || '[]');
         if (!isFavorite) {
             const newStorageItem = [...favoriteMarket, data];
@@ -114,7 +114,7 @@ export const MarketSpotTabs: FC = (): ReactElement => {
 
     const searchFilter = (row, searchKey) => {
         setFilterValue(searchKey);
-        return row ? row.name?.toLowerCase().includes(searchKey.toLowerCase()) : false;
+        return row ? row.name?.toLowerCase()?.includes(searchKey.toLowerCase()) : false;
     };
 
     const getTableData = (data) => {
@@ -128,15 +128,15 @@ export const MarketSpotTabs: FC = (): ReactElement => {
             <div key={i} className="d-flex align-items-center text-sm">
                 <div className="mr-2 cursor-pointer">
                     <Favorite
-                        fillColor={favoriteMarket.includes(item.name) ? '#EF8943' : '#23262F'}
-                        strokeColor={favoriteMarket.includes(item.name) ? '#EF8943' : '#B5B3BC'}
+                        fillColor={favoriteMarket?.includes(item.name) ? '#EF8943' : '#23262F'}
+                        strokeColor={favoriteMarket?.includes(item.name) ? '#EF8943' : '#B5B3BC'}
                         onClick={() => handleFavorite(item.name)}
                     />
                 </div>
                 <p className="m-0 mr-24 white-text font-bold">{item.name && item.name.toUpperCase()}</p>
             </div>,
             <p className="m-0 text-sm white-text">{item.last}</p>,
-            <p className={`text-sm m-0 ${item.price_change_percent.includes('-') ? 'danger-text' : 'green-text'}`}>
+            <p className={`text-sm m-0 ${item?.price_change_percent?.includes('-') ? 'danger-text' : 'green-text'}`}>
                 {item.price_change_percent}
             </p>,
             <p className="text-sm m-0 grey-text-accent">{item.volume}</p>,

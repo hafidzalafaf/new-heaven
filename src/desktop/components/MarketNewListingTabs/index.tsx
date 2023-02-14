@@ -95,12 +95,12 @@ export const MarketNewListingTabs: FC = (): ReactElement => {
         }
         return newListingData.map((item, i) => [
             <div key={i} className="d-flex align-items-center text-sm">
-                <img src={item.currency && item.currency.icon_url} alt="coin" className="mr-12 small-coin-icon" />
-                <p className="m-0 mr-24 white-text font-bold">{item.name && item.name.toUpperCase()}</p>
+                <img src={item?.currency?.icon_url} alt="coin" className="mr-12 small-coin-icon" />
+                <p className="m-0 mr-24 white-text font-bold">{item?.name?.toUpperCase()}</p>
             </div>,
             <p className="m-0 text-sm white-text">{item.last}</p>,
-            <p className={`text-sm m-0 ${item.price_change_percent.includes('-') ? 'danger-text' : 'green-text'}`}>
-                {item.price_change_percent}
+            <p className={`text-sm m-0 ${item?.price_change_percent?.includes('-') ? 'danger-text' : 'green-text'}`}>
+                {item?.price_change_percent}
             </p>,
             <p className="text-sm m-0 grey-text-accent">{item.volume}</p>,
             <div className="d-flex">

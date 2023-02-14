@@ -43,41 +43,31 @@ export const CardMarketDetail: React.FunctionComponent<CardMarketDetailProps> = 
                         <div key={i} className="d-flex justify-content-between align-items-start mb-24">
                             <div className="d-flex">
                                 <span className="mr-8">
-                                    <img
-                                        src={detail && detail.currency && detail.currency.icon_url}
-                                        alt="icon"
-                                        className="small-coin-icon"
-                                    />
+                                    <img src={detail?.currency?.icon_url} alt="icon" className="small-coin-icon" />
                                 </span>
                                 <div>
                                     <p className="mb-8 text-sm white-text font-bold">
-                                        {detail && detail.base_unit && detail.base_unit.toUpperCase()}
+                                        {detail?.base_unit?.toUpperCase()}
                                     </p>
-                                    <p className="m-0 text-xs grey-text-accent">
-                                        {detail && detail.currency && detail.currency.name}
-                                    </p>
+                                    <p className="m-0 text-xs grey-text-accent">{detail?.currency?.name}</p>
                                 </div>
                             </div>
 
                             <div>
                                 <p className="mb-8 text-sm white-text text-left font-bold" style={{ minWidth: 100 }}>
                                     {title == 'Top 3 Volumes'
-                                        ? ` ${detail && detail.volume}`
+                                        ? ` ${detail?.volume}`
                                         : Decimal.format(
-                                              detail && detail.last,
-                                              detail.price_precision,
+                                              detail?.last,
+                                              detail?.price_precision,
                                               detail?.quote_unit == 'idr' ? ',' : '.'
                                           )}
                                 </p>
                                 <p
                                     className={`m-0 text-xs ${
-                                        detail &&
-                                        detail.price_change_percent &&
-                                        detail.price_change_percent.includes('-')
-                                            ? 'danger-text'
-                                            : 'green-text'
+                                        detail?.price_change_percent?.includes('-') ? 'danger-text' : 'green-text'
                                     }`}>
-                                    {detail && detail.price_change_percent}
+                                    {detail?.price_change_percent}
                                 </p>
                             </div>
                         </div>

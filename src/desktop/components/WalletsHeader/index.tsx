@@ -34,8 +34,8 @@ export const WalletsHeader: React.FunctionComponent<ParentProps> = (props: Paren
     const searchFilter = (row: Wallet, searchKey: string) => {
         props.setFilterValue(searchKey);
         return row
-            ? row.name?.toLowerCase().includes(searchKey.toLowerCase()) ||
-                  row.currency?.toLowerCase().includes(searchKey.toLowerCase())
+            ? row.name?.toLowerCase()?.includes(searchKey.toLowerCase()) ||
+                  row.currency?.toLowerCase()?.includes(searchKey.toLowerCase())
             : false;
     };
 
