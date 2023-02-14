@@ -922,6 +922,7 @@ export const ru: LangType = {
     'success.message.sent': 'Письмо было успешно отправлено',
     'success.email.confirmed': 'Email был успешно подтвержден',
     'success.order.created': 'Запрос успешно создан',
+    'success.username.changed': 'Имя пользователя изменено',
     'success.order.done': 'Запрос успешно завершён',
     'success.order.approve': 'Order successfully approved',
     'success.order.cancel': 'Order successfully cancelled',
