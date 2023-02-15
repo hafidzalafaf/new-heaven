@@ -152,8 +152,9 @@ class ApiListMobileScreenComponent extends React.Component<Props, ProfileApiKeys
                     </div>
 
                     {!user.otp && (
-                        <div className="px-24">
-                            <p className="mt-4  warning-text font-semibold text-md">
+                        <div className="px-48 d-flex flex-column justify-content-center align-items-center gap-8">
+                            <img src="/img/warning.png" alt="icon" />
+                            <p className="warning-text font-semibold text-md">
                                 {this.t('page.mobile.profile.apiKeys.noOtp')}
                             </p>{' '}
                         </div>
