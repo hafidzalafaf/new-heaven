@@ -121,7 +121,11 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                               className="d-flex justify-content-start align-items-center td-coin">
                               <img
                                   alt={currency?.toUpperCase()}
-                                  src={iconUrl}
+                                  src={
+                                      iconUrl !== '-' && iconUrl !== null && iconUrl !== 'null'
+                                          ? iconUrl
+                                          : '/img/dummycoin.png'
+                                  }
                                   style={{ height: '24px', marginRight: '16px' }}
                               />
                           </Link>,

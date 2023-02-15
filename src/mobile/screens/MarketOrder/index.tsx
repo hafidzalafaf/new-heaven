@@ -78,7 +78,6 @@ const MarketOrderMobileScreen: React.FC = () => {
     const firstElementIndex = useSelector((state: RootState) => selectOrdersFirstElemIndex(state, 5));
     const lastElementIndex = useSelector((state: RootState) => selectOrdersLastElemIndex(state, 5));
     const nextPageExists = useSelector((state: RootState) => selectOrdersNextPageExists(state));
-
     const page = useSelector(selectCurrentPageIndex);
     const orders = useSelector(selectOrdersHistory);
     const shouldFetchCancelAll = useSelector(selectShouldFetchCancelAll);

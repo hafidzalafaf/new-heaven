@@ -214,7 +214,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             <div className="d-flex justify-content-center align-items-stretch">
                 <img
                     className="icon-history mr-3 rounded-full"
-                    src={item.dataCurrency && item.dataCurrency.icon_url}
+                    src={item?.dataCurrency?.icon_url ? item?.dataCurrency?.icon_url : '/img/dummycoin.png'}
                     alt="icon"
                 />
                 {/* <p className="m-0 mr-24 white-text font-bold">{item.currency.toUpperCase()}</p> */}
@@ -262,7 +262,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             <div className="d-flex justify-content-center align-items-stretch">
                 <img
                     className="icon-history mr-3 rounded-full"
-                    src={item.dataCurrency && item.dataCurrency.icon_url}
+                    src={item?.dataCurrency?.icon_url ? item?.dataCurrency?.icon_url : '/img/dummycoin.png'}
                     alt="icon"
                 />
             </div>,
@@ -345,7 +345,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             <div className="d-flex justify-content-center align-items-stretch">
                 <img
                     className="icon-history mr-3 rounded-full"
-                    src={item.dataCurrency && item.dataCurrency.icon_url}
+                    src={item?.dataCurrency?.icon_url ? item?.dataCurrency?.icon_url : '/img/dummycoin.png'}
                     alt="icon"
                 />
             </div>,

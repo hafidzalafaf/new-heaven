@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Modal } from 'react-bootstrap';
-import { selectUserInfo, resendCode, sendCode, verifyPhone } from '../../../modules';
+import { selectUserInfo, resendCode, sendCode, verifyPhone, alertPush } from '../../../modules';
 import { selectApiKeys } from 'src/modules/user/apiKeys/selectors';
+import { CopyableTextField } from '../../../components';
 import moment from 'moment';
 import {
     EmailProfileIcon,
@@ -317,18 +318,32 @@ const ProfileMobileScreen: React.FC = () => {
                             Hi, {user && user.username !== null ? user.username : 'The Awesome Member'}
                         </h1>
                         <p className="badge badge-warning white-text mb-0 ml-3">
-                            {user &&
-                                user.labels &&
-                                user.labels[0] &&
-                                user.labels[0].value &&
-                                titleCase(user.labels[0].value)}
+                            {user?.level == 3 ? 'Verified' : 'Unverified'}
                         </p>
                     </div>
                 </div>
                 <div className="mb-5">
                     <div className="d-flex flex-column mb-12">
-                        <h5 className="grey-text font-bold text-xs mb-0">User ID</h5>
-                        <h3 className="grey-text-accent font-bold text-sm">{user && user.uid}</h3>
+                        <h5 className="grey-text font-bold text-xs m-0 p-0">User ID</h5>
+                        {/* <h3 className="grey-text-accent font-bold text-sm">{user && user.uid}</h3> */}
+
+                        <div className="d-flex align-items-center grey-text-accent font-bold text-sm m-0 p-0">
+                            <span
+                                onClick={() =>
+                                    dispatch(
+                                        alertPush({
+                                            message: [`UID copied`],
+                                            type: 'success',
+                                        })
+                                    )
+                                }>
+                                <CopyableTextField
+                                    value={user && user.uid}
+                                    className="grey-text-accent font-bold text-sm"
+                                    fieldId="referral-code"
+                                />
+                            </span>
+                        </div>
                     </div>
 
                     <div className="d-flex flex-column mb-12">

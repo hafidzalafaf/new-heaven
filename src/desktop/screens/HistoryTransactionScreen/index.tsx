@@ -40,8 +40,6 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const [status, setStatus] = React.useState('');
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
-    const [startDateTransfer, setStartDateTransfer] = React.useState(new Date().toISOString().slice(0, 10));
-    const [endDateTransfer, setEndDateTransfer] = React.useState(new Date().toISOString().slice(0, 10));
     const [loading, setLoading] = React.useState(false);
 
     const firstElemIndex = useSelector((state: RootState) => selectFirstElemIndex(state, DEFAULT_LIMIT));
@@ -60,8 +58,6 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         setType(e);
         setCurrency('');
         setStatus('');
-        setStartDateTransfer('');
-        setEndDateTransfer('');
     };
 
     const onClickPrevPage = () => {
@@ -81,21 +77,112 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         }
     };
 
+    const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
+    const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
+
     React.useEffect(() => {
         const defaultPayload = {
-            type,
+            type: type,
             page: currentPage,
             limit: DEFAULT_LIMIT,
         };
 
-        const currencyPayload = {
-            type,
+        const marketPayload = {
+            type: type,
             page: currentPage,
             limit: DEFAULT_LIMIT,
             currency: currency,
         };
 
-        dispatch(fetchHistory(currency ? currencyPayload : defaultPayload));
+        const statePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            state: status,
+        };
+
+        const marketStatePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            state: status,
+            currency: currency,
+        };
+        // JANGAN DIHAPUS
+        // var datePayload;
+        // if (type == 'transfers') {
+        //     datePayload = {
+        //         type: type,
+        //         page: currentPage,
+        //         limit: DEFAULT_LIMIT,
+        //         from: time_from,
+        //         to: time_to,
+        //     };
+        // } else {
+        //     datePayload = {
+        //         type: type,
+        //         page: currentPage,
+        //         limit: DEFAULT_LIMIT,
+        //         time_from: time_from,
+        //         time_to: time_to,
+        //     };
+        // }
+
+        const datePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+        };
+
+        const dateStatePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            state: status,
+        };
+
+        const dateAssetPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            currency: currency,
+        };
+
+        const marketDateStatusPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            currency: currency,
+            time_from: time_from,
+            time_to: time_to,
+            state: status,
+        };
+
+        dispatch(
+            fetchHistory(
+                startDate && endDate && status && currency
+                    ? marketDateStatusPayload
+                    : startDate && endDate && status
+                    ? dateStatePayload
+                    : startDate && endDate && currency
+                    ? dateAssetPayload
+                    : currency && status
+                    ? marketStatePayload
+                    : startDate && endDate
+                    ? datePayload
+                    : currency
+                    ? marketPayload
+                    : status
+                    ? statePayload
+                    : defaultPayload
+            )
+        );
     }, [startDate, endDate, currency, currentPage, status, type]);
 
     React.useEffect(() => {
@@ -109,16 +196,16 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         setHistorys(list);
     }, [list]);
 
-    React.useEffect(() => {
-        if (startDateTransfer != '' && endDateTransfer != '') {
-            const filterredList = list.filter(
-                (item) =>
-                    moment(item.created_at).format() >= moment(startDateTransfer).format() &&
-                    moment(item.created_at).format() <= moment(endDateTransfer).format()
-            );
-            setHistorys(filterredList);
-        }
-    }, [startDateTransfer, endDateTransfer]);
+    // React.useEffect(() => {
+    //     if (startDateTransfer != '' && endDateTransfer != '') {
+    //         const filterredList = list.filter(
+    //             (item) =>
+    //                 moment(item.created_at).format() >= moment(startDateTransfer).format() &&
+    //                 moment(item.created_at).format() <= moment(endDateTransfer).format()
+    //         );
+    //         setHistorys(filterredList);
+    //     }
+    // }, [startDateTransfer, endDateTransfer]);
 
     const getTableData = (data) => {
         return data.map((item) => [
@@ -136,12 +223,10 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                     : ''}
             </p>,
             <div className="d-flex align-items-center text-sm">
-                {/* <span className="mr-12">{item.icon}</span> */}
                 <p className="m-0 mr-12 white-text font-bold">{item?.currency?.toUpperCase()}</p>
             </div>,
             <p className="m-0 text-sm white-text">{item.amount}</p>,
             <p className="m-0 text-sm white-text text-italic">
-                {/* {type == 'deposits' && `${item.txid?.slice(0, 15)}...`} */}
                 {type == 'deposits' &&
                     (item.txid ? (
                         <fieldset onClick={() => navigator.clipboard.writeText(item.txid)}>
@@ -200,17 +285,29 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         ]);
     };
 
-    const optionStatusWithdraw = [
-        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'pending' },
-        { label: <p className="m-0 text-sm grey-text-accent">Success</p>, value: 'succeed' },
-        { label: <p className="m-0 text-sm grey-text-accent">Error</p>, value: 'errored' },
-        { label: <p className="m-0 text-sm grey-text-accent">Failed</p>, value: 'failed' },
+    const optionStatusDeposit = [
+        { label: <p className="m-0 text-sm grey-text-accent">Submitted</p>, value: 'submitted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
+        { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Collected</p>, value: 'collected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
+        { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
+        { label: <p className="m-0 text-sm grey-text-accent">Fee Processing</p>, value: 'fee_processing' },
     ];
 
-    const optionStatusDeposit = [
-        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'pending' },
-        { label: <p className="m-0 text-sm grey-text-accent">Collected</p>, value: 'collected' },
-        { label: <p className="m-0 text-sm grey-text-accent">Error</p>, value: 'errored' },
+    const optionStatusWithdraw = [
+        { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepared' },
+        { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
+        { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
+        { label: <p className="m-0 text-sm grey-text-accent">Succeed</p>, value: 'succeed' },
+        { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
+        { label: <p className="m-0 text-sm grey-text-accent">Failed</p>, value: 'failed' },
+        { label: <p className="m-0 text-sm grey-text-accent">Errored</p>, value: 'errored' },
+        { label: <p className="m-0 text-sm grey-text-accent">Confirming</p>, value: 'confirming' },
+        { label: <p className="m-0 text-sm grey-text-accent">Under Review</p>, value: 'under_review' },
     ];
 
     const optionAssets = currencies.map((item) => {
@@ -238,10 +335,10 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                         type="date"
                         className="form-control mb-24"
                         onChange={(e) => {
-                            type == 'transfers' ? setStartDateTransfer(e.target.value) : setStartDate(e.target.value);
+                            setStartDate(e.target.value);
                         }}
-                        value={type == 'transfers' ? startDateTransfer : startDate}
-                        defaultValue={type !== 'transfers' && new Date().toISOString().slice(0, 10)}
+                        value={startDate}
+                        defaultValue={new Date().toISOString().slice(0, 10)}
                     />
                 </div>
 
@@ -251,10 +348,10 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                         type="date"
                         className="form-control mb-24"
                         onChange={(e) => {
-                            type == 'transfers' ? setEndDateTransfer(e.target.value) : setEndDate(e.target.value);
+                            setEndDate(e.target.value);
                         }}
-                        value={type == 'transfers' ? endDateTransfer : endDate}
-                        defaultValue={type !== 'transfers' && new Date().toISOString().slice(0, 10)}
+                        value={endDate}
+                        defaultValue={new Date().toISOString().slice(0, 10)}
                     />
                 </div>
 
