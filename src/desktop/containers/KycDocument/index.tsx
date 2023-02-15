@@ -318,6 +318,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
                                                             label="ID Number"
                                                             placeholder="ID Number"
                                                             type="text"
+                                                            maxLength={18}
                                                             labelVisible
                                                             classNameLabel="white-text text-sm"
                                                             inputValue={idNumber}
