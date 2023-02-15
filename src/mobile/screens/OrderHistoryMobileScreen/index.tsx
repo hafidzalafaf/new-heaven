@@ -17,6 +17,7 @@ import {
     selectLastElemIndex,
     selectNextPageExists,
     selectHistory,
+    selectMarkets,
 } from '../../../modules';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -47,6 +48,7 @@ interface MarketOrderMobileScreenProps {
 const OrderHistoryMobileScreen: React.FC = () => {
     const history = useHistory();
     const dispatch = useDispatch();
+    useMarketsFetch();
 
     const [tab, setTab] = React.useState('close');
     const [currentPageIndex, setPageIndex] = React.useState(0);
@@ -59,6 +61,7 @@ const OrderHistoryMobileScreen: React.FC = () => {
         {} as MarketOrderMobileScreenProps
     );
 
+    const markets = useSelector(selectMarkets);
     const page = useSelector(selectCurrentPage);
     const orders = useSelector(selectHistory);
     const currencies: Currency[] = useSelector(selectCurrencies);
@@ -70,10 +73,15 @@ const OrderHistoryMobileScreen: React.FC = () => {
 
     useHistoryFetch({ page: currentPageIndex, type: 'trades', limit: 8 });
 
-    const dataListWithIcon = orders.map((item) => ({
-        ...item,
-        dataCurrency: currencies.find(({ id }) => id == item.fee_currency),
-    }));
+    const dataListWithIcon = orders
+        .map((item) => ({
+            ...item,
+            markets: markets.find((market_item) => market_item.id == item.market),
+        }))
+        .map((order_item) => ({
+            ...order_item,
+            dataCurrency: currencies.find(({ id }) => id == order_item?.markets?.base_unit),
+        }));
 
     const onClickPrevPage = () => {
         setPageIndex(currentPageIndex - 1);
@@ -98,7 +106,7 @@ const OrderHistoryMobileScreen: React.FC = () => {
                     height={30}
                     width={30}
                     className="icon-history mr-3 rounded-full"
-                    src={item.dataCurrency && item.dataCurrency.icon_url}
+                    src={item?.dataCurrency?.icon_url !== null ? item?.dataCurrency?.icon_url : '/img/dummycoin.png'}
                     alt="icon"
                 />
             </div>,
