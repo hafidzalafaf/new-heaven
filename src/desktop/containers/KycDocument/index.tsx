@@ -265,7 +265,6 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
                                                     onChange={(e) => {
                                                         this.handleChangeBirthDate(e);
                                                     }}
-                                                    // HEEREEEEEE
                                                 />
                                             </div>
                                             <div className="col-md-6">
