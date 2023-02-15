@@ -79,17 +79,17 @@ const HeaderComponent: React.FC = () => {
                                         <div className="user-info d-flex justify-content-between align-items-center ml-2 w-100">
                                             <div>
                                                 <div className="user-name d-flex align-items-center">
-                                                    <h1 className="gradient-text text-md font-bold mb-2">
+                                                    <h1 className="gradient-text text-md font-bold mb-0">
                                                         Hi,{' '}
                                                         {user && user.username !== null
                                                             ? user.username
                                                             : 'The Awesome Member'}
                                                     </h1>
                                                     <p className="badge badge-warning white-text mb-0 ml-3">
-                                                        Unverifed
+                                                        {user?.level == 3 ? 'Verified' : 'Unverified'}
                                                     </p>
                                                 </div>
-                                                <div className="user-id d-flex align-items-center">
+                                                {/* <div className="user-id d-flex align-items-center">
                                                     <h3 className="text-sm grey-text d-flex align-items-center">
                                                         UID :{' '}
                                                         <span
@@ -108,7 +108,7 @@ const HeaderComponent: React.FC = () => {
                                                             />
                                                         </span>
                                                     </h3>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>

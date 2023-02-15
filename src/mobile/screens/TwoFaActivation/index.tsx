@@ -4,25 +4,17 @@ import { ArrowLeft } from '../../assets/Arrow';
 import { Form } from 'react-bootstrap';
 import { selectUserInfo } from 'src/modules';
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const TwoFaActivationMobileScreen: React.FC = () => {
     const history = useHistory();
     const user = useSelector(selectUserInfo);
 
-    const handleActivateTwoFa = () => {
-        user.otp ? history.push('/two-fa') : history.push('/two-fa-authentication');
-    };
-
-    const [state, setState] = React.useState(user.otp);
-    const handleTwoFa = () => {
-        setState(!state);
-        window.location.reload()
-    };
     return (
         <React.Fragment>
             <div className="mobile-container two-fa-mobile no-header pt-5 home-screen dark-bg-main">
                 <div className="head-container mb-36 mt-50 d-flex flex-row gap-10 justifycontent-around">
-                    <div onClick={()=>history.goBack()} className="cursor-pointer">
+                    <div onClick={() => history.goBack()} className="cursor-pointer">
                         <ArrowLeft className={'back'} />
                     </div>
                     <h1 className="text-center text-md grey-text-accent font-bold">Two-factor Authentication</h1>
@@ -36,15 +28,15 @@ const TwoFaActivationMobileScreen: React.FC = () => {
                             </h5>
                         </div>
                         <Form>
-                            <Form.Check
-                                type="switch"
-                                id={`two-fa`}
-                                label=""
-                                onClick={handleActivateTwoFa}
-                                onChange={handleTwoFa}
-                                checked={state}
-                                className="cursor-pointer"
-                            />
+                            <Link to={user.otp ? '/two-fa' : '/two-fa-authentication'}>
+                                <Form.Check
+                                    type="switch"
+                                    id={`two-fa`}
+                                    label=""
+                                    checked={user.otp}
+                                    className="cursor-pointer"
+                                />
+                            </Link>
                         </Form>
                     </div>
                 </div>
