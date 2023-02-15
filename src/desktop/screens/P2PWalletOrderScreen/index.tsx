@@ -10,6 +10,8 @@ import {
     selectP2PConfirmSellSuccess,
     selectP2PCancelSuccess,
     selectShouldFetchP2POrderDetail,
+    feedbackCreate,
+    selectP2PCreateFeedbackSuccess,
 } from 'src/modules';
 import { useDocumentTitle } from '../../../hooks';
 import { alertPush } from 'src/modules';
@@ -19,7 +21,14 @@ import { copy } from '../../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'src/desktop/components';
 import moment from 'moment';
-import { CheckFillIcon, UploadIcon, CommentIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
+import {
+    CheckFillIcon,
+    CheckOutlineIcon,
+    UploadIcon,
+    CommentIcon,
+    GreyCheck,
+    ActiveCheck,
+} from '../../../assets/images/P2PIcon';
 
 export const P2PWalletOrderScreen: React.FC = () => {
     useDocumentTitle('P2P || Order');
@@ -33,9 +42,12 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const confirmSellSuccess = useSelector(selectP2PConfirmSellSuccess);
     const cancelSuccess = useSelector(selectP2PCancelSuccess);
     const shouldFetchP2POrderDetail = useSelector(selectShouldFetchP2POrderDetail);
+    const createFeedbackSuccess = useSelector(selectP2PCreateFeedbackSuccess);
 
-    const [seconds, setSeconds] = React.useState(30000);
-    const [timerActive, setTimerActive] = React.useState(false);
+    const [firstCoundown, setFirstCountdown] = React.useState(0);
+    const [firstCoundownActive, setFirstCountdownActive] = React.useState(true);
+    const [secondCountdown, setSecondCountdown] = React.useState(0);
+    const [secondCoundownActive, setSecondCountdownActive] = React.useState(true);
     const [showPayment, setShowPayment] = React.useState(false);
     const [showChat, setShowChat] = React.useState(true);
     const [inputFile, setInputFile] = React.useState(null);
@@ -44,8 +56,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [paymentUser, setPaymentUser] = React.useState<any>();
     const [checkModalOne, setcheckModalOne] = React.useState(false);
     const [checkModalTwo, setcheckModalTwo] = React.useState(false);
-    const [comment, setComment] = React.useState('');
 
+    const [comment, setComment] = React.useState('');
     const [showModalSellConfirm, setShowModalSellConfrim] = React.useState(false);
     const [showModalReport, setShowModalReport] = React.useState(false);
     const [showModalBuyOrderCompleted, setShowModalBuyOrderCompleted] = React.useState(false);
@@ -54,24 +66,62 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
+        if (detail?.order?.first_approve) {
+            let a = Math.floor(new Date(detail?.order?.first_approve).getTime() / 1000);
+            let timeArr: any;
+            timeArr = moment(a).format('HH:mm:ss').split(':');
+            let timeInMilliseconds = timeArr[0] * 3600000 + timeArr[1] * 60000;
+            setFirstCountdown(timeInMilliseconds - Date.now());
+        }
+
+        if (detail?.order?.second_approve) {
+            let a = Math.floor(new Date(detail?.order?.second_approve).getTime() / 1000);
+            let timeArr: any;
+            timeArr = moment(a).format('HH:mm:ss').split(':');
+            let timeInMilliseconds = timeArr[0] * 3600000 + timeArr[1] * 60000;
+            setSecondCountdown(timeInMilliseconds - Date.now());
+        }
     }, [dispatch, order_number, paymentConfirmSuccess, confirmSellSuccess, cancelSuccess, shouldFetchP2POrderDetail]);
 
     React.useEffect(() => {
-        let timer = null;
-        if (timerActive) {
-            timer = setInterval(() => {
-                setSeconds((seconds) => seconds - 1000);
+        if (detail?.order?.state == 'prepare') {
+            let timer = null;
+            if (firstCoundownActive) {
+                timer = setInterval(() => {
+                    setFirstCountdown((firstCoundown) => firstCoundown - 1000);
 
-                if (seconds === 0) {
-                    setTimerActive(false);
-                    setSeconds(30000);
-                }
-            }, 1000);
+                    if (firstCoundown === 0) {
+                        setFirstCountdown(0);
+                        setFirstCountdownActive(false);
+                    }
+                }, 1000);
+            }
+            return () => {
+                clearInterval(timer);
+            };
         }
-        return () => {
-            clearInterval(timer);
-        };
+
+        if (detail?.order?.state == 'waiting') {
+            let timer = null;
+            if (secondCoundownActive) {
+                timer = setInterval(() => {
+                    setSecondCountdown((secondCountdown) => secondCountdown - 1000);
+
+                    if (secondCountdown === 0) {
+                        setSecondCountdown(0);
+                        setSecondCountdownActive(false);
+                    }
+                }, 1000);
+            }
+            return () => {
+                clearInterval(timer);
+            };
+        }
     });
+
+    React.useEffect(() => {
+        setComment('');
+    }, [createFeedbackSuccess]);
 
     const handleConfirmPaymentBuy = () => {
         const payload = {
@@ -109,19 +159,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
         setShowModalCancel(false);
     };
 
-    const bank = [
-        {
-            id: 1,
-            name: 'jago',
-        },
-        { id: 2, name: 'bca' },
-        {
-            id: 3,
-            name: 'shopee',
-        },
-        { id: 4, name: 'dana' },
-    ];
-
     const doCopyNumber = () => {
         copy('kid-code');
         dispatch(alertPush({ message: ['Order Number copied'], type: 'success' }));
@@ -132,6 +169,26 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const handleChangePaymentMethod = (e: string, el: any) => {
         setPaymentMethod(e);
         setPaymentUser(el);
+    };
+
+    const handleSendFeedbackPositive = () => {
+        const payload = {
+            order_number,
+            comment,
+            assesment: 'positive',
+        };
+
+        dispatch(feedbackCreate(payload));
+    };
+
+    const handleSendFeedbackNegative = () => {
+        const payload = {
+            order_number,
+            comment,
+            assesment: 'negative',
+        };
+
+        dispatch(feedbackCreate(payload));
     };
 
     const handleChangeComment = (e: string) => {
@@ -146,7 +203,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         <img src="/img/coin.png" className="icon-lg" alt="" />
                         <div className="ml-3">
                             <p className="text-ms mb-2 white-text font-normal">
-                                USDT CRYPTO <CheckFillIcon />
+                                {detail?.offer?.fiat} CRYPTO <CheckFillIcon />
                             </p>
                             <p className="mb-1 grey-text-accent text-sm">30D Trades</p>
                             <p className="mb-1 grey-text-accent text-sm">30D Completetition Rate</p>
@@ -154,8 +211,10 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     </div>
                     <div className="ml-2">
                         <></>
-                        <p className="mb-1 grey-text-accent text-sm text-right">1,419</p>
-                        <p className="mb-1 grey-text-accent text-sm text-right">90,01%</p>
+                        <p className="mb-1 grey-text-accent text-sm text-right">{detail?.order?.stats?.mount_trade}</p>
+                        <p className="mb-1 grey-text-accent text-sm text-right">
+                            {detail?.order?.stats?.completed_rate} %
+                        </p>
                     </div>
                 </div>
 
@@ -305,15 +364,15 @@ export const P2PWalletOrderScreen: React.FC = () => {
                 <div className="d-flex justify-content-between align-items-center gap-48 mb-24">
                     <div>
                         <p className="m-0 p-0 grey-text-accent text-xs font-semibold">Amount</p>
-                        <p className="m-0 p-0 white-text text-ms font-semibold">Rp 150,000.00</p>
+                        <p className="m-0 p-0 white-text text-ms font-semibold">Rp {detail?.order?.amount}</p>
                     </div>
                     <div>
                         <p className="m-0 p-0 grey-text-accent text-xs font-semibold">Price</p>
-                        <p className="m-0 p-0 white-text text-ms font-semibold">Rp 15,755.00</p>
+                        <p className="m-0 p-0 white-text text-ms font-semibold">Rp {detail?.offer?.price}</p>
                     </div>
                     <div>
                         <p className="m-0 p-0 grey-text-accent text-xs font-semibold">Quantity</p>
-                        <p className="m-0 p-0 white-text text-ms font-semibold">9.52 USDT</p>
+                        <p className="m-0 p-0 white-text text-ms font-semibold">9.52 {detail?.offer?.fiat}</p>
                     </div>
                 </div>
 
@@ -447,38 +506,113 @@ export const P2PWalletOrderScreen: React.FC = () => {
                 </div>
 
                 <div className="container dark-bg-main d-flex justify-content-between align-items-center p-4">
-                    <div>
-                        <p className="mb-2 text-lg white-text font-bold">
-                            {side === 'sell' ? 'Sell' : 'Buy'} USDT from USDT CRYPTO
-                        </p>
-                        <p className="mb-0 text-sm grey-text">
-                            Order has been made. Please wait for system confirmation.
-                        </p>
-                    </div>
-                    <div className="d-flex flex-column align-items-end">
-                        <div className="d-flex align-items-center">
-                            <div className="second radius-sm mx-1">
-                                <p className="mb-0 text-md font-bold white-text text">
-                                    {moment(seconds).format('mm:ss').slice(0, 1)}
-                                </p>
+                    {detail?.order?.state == 'accepted' ? (
+                        <div>
+                            <div className="d-flex justify-content-start align-items-center gap-8 mb-2">
+                                <p className="text-lg white-text font-bold m-0">Order Completed</p>
+                                <CheckOutlineIcon />
                             </div>
-                            <div className="second radius-sm mx-1">
-                                <p className="mb-0 text-md font-bold white-text text">
-                                    {moment(seconds).format('mm:ss').slice(1, 2)}
-                                </p>
-                            </div>
-                            <p className="dots grey-text-accent mb-0 white-text">:</p>
-                            <div className="second radius-sm mx-1">
-                                <p className="mb-0 text-md font-bold white-text text">
-                                    {moment(seconds).format('mm:ss').slice(3, 4)}
-                                </p>
-                            </div>
-                            <div className="second radius-sm mx-1">
-                                <p className="mb-0 text-md font-bold white-text text">
-                                    {moment(seconds).format('mm:ss').slice(4, 5)}
-                                </p>
-                            </div>
+                            <p className="mb-0 text-sm grey-text">
+                                Successfully {side == 'sell' ? 'sold' : 'buy'} {detail?.order?.quantity}{' '}
+                                {detail?.offer?.fiat}
+                            </p>
                         </div>
+                    ) : (
+                        <div>
+                            <p className="mb-2 text-lg white-text font-bold">
+                                {side === 'sell' ? 'Sell' : 'Buy'} {detail?.offer?.fiat} from{' '}
+                                {detail?.order?.trades?.email}
+                            </p>
+                            <p className="mb-0 text-sm grey-text">
+                                Order has been made. Please wait for system confirmation.
+                            </p>
+                        </div>
+                    )}
+                    <div className="d-flex flex-column align-items-end">
+                        {(detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting') && (
+                            <div className="d-flex align-items-center">
+                                <div className="second radius-sm mx-1">
+                                    <p className="mb-0 text-md font-bold white-text text">
+                                        {moment(
+                                            detail?.order?.state == 'prepare'
+                                                ? firstCoundown
+                                                : detail?.order?.state == 'waiting'
+                                                ? secondCountdown
+                                                : 0
+                                        )
+                                            .format('hh:mm:ss')
+                                            .slice(0, 1)}
+                                    </p>
+                                </div>
+                                <div className="second radius-sm mx-1">
+                                    <p className="mb-0 text-md font-bold white-text text">
+                                        {moment(
+                                            detail?.order?.state == 'prepare'
+                                                ? firstCoundown
+                                                : detail?.order?.state == 'waiting'
+                                                ? secondCountdown
+                                                : 0
+                                        )
+                                            .format('hh:mm:ss')
+                                            .slice(1, 2)}
+                                    </p>
+                                </div>
+                                <p className="dots grey-text-accent mb-0 white-text">:</p>
+                                <div className="second radius-sm mx-1">
+                                    <p className="mb-0 text-md font-bold white-text text">
+                                        {moment(
+                                            detail?.order?.state == 'prepare'
+                                                ? firstCoundown
+                                                : detail?.order?.state == 'waiting'
+                                                ? secondCountdown
+                                                : 0
+                                        )
+                                            .format('hh:mm:ss')
+                                            .slice(3, 4)}
+                                    </p>
+                                </div>
+                                <div className="second radius-sm mx-1">
+                                    <p className="mb-0 text-md font-bold white-text text">
+                                        {moment(
+                                            detail?.order?.state == 'prepare'
+                                                ? firstCoundown
+                                                : detail?.order?.state == 'waiting'
+                                                ? secondCountdown
+                                                : 0
+                                        )
+                                            .format('hh:mm:ss')
+                                            .slice(4, 5)}
+                                    </p>
+                                </div>
+                                <p className="dots grey-text-accent mb-0 white-text">:</p>
+                                <div className="second radius-sm mx-1">
+                                    <p className="mb-0 text-md font-bold white-text text">
+                                        {moment(
+                                            detail?.order?.state == 'prepare'
+                                                ? firstCoundown
+                                                : detail?.order?.state == 'waiting'
+                                                ? secondCountdown
+                                                : 0
+                                        )
+                                            .format('hh:mm:ss')
+                                            .slice(6, 7)}
+                                    </p>
+                                </div>
+                                <div className="second radius-sm mx-1">
+                                    <p className="mb-0 text-md font-bold white-text text">
+                                        {moment(
+                                            detail?.order?.state == 'prepare'
+                                                ? firstCoundown
+                                                : detail?.order?.state == 'waiting'
+                                                ? secondCountdown
+                                                : 0
+                                        )
+                                            .format('hh:mm:ss')
+                                            .slice(7, 8)}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
                         <div className="d-flex align-items-center">
                             <span className="grey-text text-sm">Order number</span>
                             <fieldset onClick={doCopyNumber}>
@@ -505,8 +639,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         showPayment={showPayment}
                         comment={comment}
                         side={side}
-                        bank={bank}
                         detail={detail}
+                        order_number={order_number}
                         showModalCancel={showModalCancel}
                         handleChangePaymentMethod={handleChangePaymentMethod}
                         handleChangeComment={handleChangeComment}
@@ -517,6 +651,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         }
                         handleShowModalSellConfirm={() => setShowModalSellConfrim(!showModalSellConfirm)}
                         handleShowModalCancel={() => setShowModalCancel(!showModalCancel)}
+                        handleSendFeedbackPositive={handleSendFeedbackPositive}
+                        handleSendFeedbackNegative={handleSendFeedbackNegative}
                     />
 
                     <P2PChat

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { P2PBlockedUser, P2PFeedback, P2PPaymentMethod } from 'src/desktop/components';
 import { Tabs, Tab } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { p2pProfileFetch, P2PProfileFetchInterface, selectP2PProfile } from 'src/modules/user/p2pProfile';
+import { p2pProfileFetch, P2PProfileFetchInterface, selectP2PProfile, feedbackFetch } from 'src/modules';
 
 export const P2PUserTable: React.FC = () => {
     const dispatch = useDispatch();
@@ -10,7 +10,9 @@ export const P2PUserTable: React.FC = () => {
 
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
+        dispatch(feedbackFetch());
     }, [dispatch]);
+
     return (
         <React.Fragment>
             <div className="container-p2p-user-table">

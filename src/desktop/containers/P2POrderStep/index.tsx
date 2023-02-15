@@ -10,8 +10,8 @@ export interface P2POrderStepProps {
     showModalCancel: boolean;
     comment: string;
     side: string;
-    bank: any[];
     detail: any;
+    order_number: string;
     handleChangePaymentMethod: (e: string, el: any) => void;
     handleChangeComment: (e: string) => void;
     handleConfirmPaymentBuy: () => void;
@@ -19,6 +19,8 @@ export interface P2POrderStepProps {
     handleShowModalBuyOrderCompleted: () => void;
     handleShowModalSellConfirm: () => void;
     handleShowModalCancel: () => void;
+    handleSendFeedbackPositive: () => void;
+    handleSendFeedbackNegative: () => void;
 }
 
 export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) => {
@@ -29,8 +31,8 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         showModalCancel,
         comment,
         side,
-        bank,
         detail,
+        order_number,
         handleChangePaymentMethod,
         handleChangeComment,
         handleShowPayment,
@@ -38,6 +40,8 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleShowModalBuyOrderCompleted,
         handleShowModalSellConfirm,
         handleShowModalCancel,
+        handleSendFeedbackPositive,
+        handleSendFeedbackNegative,
     } = props;
 
     return (
@@ -46,12 +50,12 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                 <p className="mb-3 text-sm font-bold white-text">Order Steps</p>
                 <div className="d-flex align-items-center justofy-content-between mb-3">
                     <div className={`arrow arrow-right active`}>Transfers Payment To Seller</div>
-                    <div className={`arrow arrow-right ${detail?.order?.payment !== null && 'active'}`}>
+                    <div className={`arrow arrow-right ${detail?.order?.state !== 'prepare' && 'active'}`}>
                         Pending Seller to Release Cryptos
                     </div>
                     <div
                         className={`arrow arrow-right ${
-                            detail?.order?.first_approve !== null && detail?.order?.second_approve !== null && 'active'
+                            detail?.order?.state !== 'waiting' && detail?.order?.state !== 'prepare' && 'active'
                         }`}>
                         {' '}
                         Completed Order
@@ -73,7 +77,9 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 </div>
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Quantity</span>
-                                    <p className="text-sm white-text font-semibold">{detail?.order?.quantity} USDT</p>
+                                    <p className="text-sm white-text font-semibold">
+                                        {detail?.order?.quantity} {detail?.offer?.fiat}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -126,9 +132,11 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                 Payment Methods
                                             </span>
                                         </p>
-                                        <div className={`${showPayment ? 'rotate-180' : ''}`}>
-                                            <ArrowDown />
-                                        </div>
+                                        {detail?.order?.state == 'prepare' && (
+                                            <div className={`${showPayment ? 'rotate-180' : ''}`}>
+                                                <ArrowDown />
+                                            </div>
+                                        )}
                                     </div>
                                     {detail?.order?.payment !== null || paymentUser ? (
                                         <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold">
@@ -210,11 +218,11 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 </div>
                             )}
                         </div>
-                        <div className=" payment-form last">
+                        <div className="payment-form last">
                             <p className="mb-3 text-ms font-semibold white-text">
                                 After transferring funds. Click the button "Confirm"
                             </p>
-                            {detail?.order?.second_approve !== null ? (
+                            {detail?.order?.state == 'success' || detail?.order?.state == 'accepted' ? (
                                 side === 'buy' ? (
                                     <div className="d-flex gap-24">
                                         <Link
@@ -281,8 +289,8 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                         </div>
                     </div>
                 </div>
-                {detail?.order?.second_approve && (
-                    <div className="">
+                {(detail?.order?.state == 'success' || detail?.order?.state == 'accepted') && (
+                    <div className="mb-5">
                         <CustomInput
                             inputValue={comment}
                             type="text"
@@ -297,13 +305,15 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                         <div className="d-flex justify-content-between">
                             <button
                                 type="button"
+                                onClick={handleSendFeedbackPositive}
                                 className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
                                 Positive <LikeSuccessIcon />{' '}
                             </button>
                             <button
                                 type="button"
+                                onClick={handleSendFeedbackNegative}
                                 className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
-                                Positive <UnLikeDangerIcon />{' '}
+                                Negative <UnLikeDangerIcon />{' '}
                             </button>
                         </div>
                     </div>
