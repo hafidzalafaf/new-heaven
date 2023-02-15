@@ -138,25 +138,39 @@ export const P2PUserInfo: React.FC = () => {
                     <CardP2PUserInfo
                         title="Positive Feedback"
                         type="feedback"
-                        percent={`${userP2P?.positif_feedback?.total}%`}
-                        amount={`${userP2P?.positif_feedback?.total}`}
+                        percent={`${Math.floor((userP2P?.feedback?.positive / userP2P?.feedback?.total) * 100)}%`}
+                        amount={`${userP2P?.feedback?.total}`}
                     />
 
                     <div className="d-flex flex-column justify-content-center gap-8">
                         <div className="d-flex justify-content-between align-items-center gap-4">
                             <div className="progress-bar">
-                                <div className="progress" style={{ width: '80%' }} />
+                                <div
+                                    className="progress"
+                                    style={{
+                                        width: `${Math.floor(
+                                            (userP2P?.feedback?.positive / userP2P?.feedback?.total) * 100
+                                        ).toString()}%`,
+                                    }}
+                                />
                             </div>
                             <LikeIcon />
-                            <p className="m-0 p-0 grey-text text-sm">{userP2P?.positif_feedback?.positif}</p>
+                            <p className="m-0 p-0 grey-text text-sm">{userP2P?.feedback?.positive}</p>
                         </div>
 
                         <div className="d-flex justify-content-between align-items-center gap-4">
                             <div className="progress-bar">
-                                <div className="progress" style={{ width: '20%' }} />
+                                <div
+                                    className="progress"
+                                    style={{
+                                        width: `${Math.floor(
+                                            (userP2P?.feedback?.negative / userP2P?.feedback?.total) * 100
+                                        ).toString()}%`,
+                                    }}
+                                />
                             </div>
                             <UnLikeIcon />
-                            <p className="m-0 p-0 grey-text text-sm">{userP2P?.positif_feedback?.negatif}</p>
+                            <p className="m-0 p-0 grey-text text-sm">{userP2P?.feedback?.negative}</p>
                         </div>
                     </div>
 

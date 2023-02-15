@@ -22,6 +22,7 @@ export const OrderP2PTable = () => {
     const [startDate, setStartDate] = React.useState('');
     const [data, setData] = React.useState([]);
     const [active, setActive] = React.useState('');
+    const [tab, setTab] = React.useState('all');
     const [showModalCancel, setShowModalCancel] = React.useState(false);
 
     React.useEffect(() => {
@@ -29,8 +30,18 @@ export const OrderP2PTable = () => {
     }, [dispatch]);
 
     React.useEffect(() => {
-        setData(order);
-    }, [order]);
+        setData(
+            tab == 'done'
+                ? order.filter((item) => item.state == 'accepted')
+                : tab == 'processing'
+                ? order.filter((item) => item.state == 'success' || item.state == 'waiting' || item.state == 'prepare')
+                : order
+        );
+    }, [order, tab]);
+
+    const handleSelect = (k) => {
+        setTab(k);
+    };
 
     const filterredType = (type) => {
         let filterredList;
@@ -84,7 +95,9 @@ export const OrderP2PTable = () => {
             </div>,
             <p className="m-0 p-0 grey-text text-sm font-semibold">{item.fiat_amount}</p>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{item.price}</p>,
-            <p className="m-0 p-0 white-text text-sm font-semibold">{item?.amount}</p>,
+            <p className="m-0 p-0 white-text text-sm font-semibold">
+                {item?.amount} {item?.currency?.name?.toUpperCase()}
+            </p>,
             // <a
             //     target="_blank"
             //     rel="noreferrer"
@@ -296,7 +309,13 @@ export const OrderP2PTable = () => {
             <div className="com-order-p2p-table">
                 <div className="d-flex justify-content-between align-items-start mb-24">
                     <div className="position-relative w-100">
-                        <Tabs defaultActiveKey="all" id="fill-tab-example" className="mb-3" fill>
+                        <Tabs
+                            defaultActiveKey="all"
+                            activeKey={tab}
+                            onSelect={(k) => handleSelect(k)}
+                            id="fill-tab-example"
+                            className="mb-3"
+                            fill>
                             <Tab eventKey="all" title="All Orders">
                                 <div className="w-100">{renderFilter()}</div>
                                 <Table header={getTableHeaders()} data={getTableData(data)} />
