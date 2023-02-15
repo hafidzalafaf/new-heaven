@@ -1,4 +1,4 @@
-const USE_SSL = true;
+const USE_SSL = window.location.protocol === 'https:'
 // const BASE_URL = 'dev.heavenexchange.io';
 const BASE_URL = 'api.heavenexchange.io';
 
