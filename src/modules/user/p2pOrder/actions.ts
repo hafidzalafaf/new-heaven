@@ -15,9 +15,15 @@ import {
     ORDER_CONFIRM_PAYMENT,
     ORDER_CONFIRM_PAYMENT_DATA,
     ORDER_CONFIRM_PAYMENT_ERROR,
-    ORDER_CONFIRM,
-    ORDER_CONFIRM_DATA,
-    ORDER_CONFIRM_ERROR,
+    ORDER_CONFIRM_SELL,
+    ORDER_CONFIRM_SELL_DATA,
+    ORDER_CONFIRM_SELL_ERROR,
+    ORDER_CHAT,
+    ORDER_CHAT_DATA,
+    ORDER_CHAT_ERROR,
+    ORDER_CHAT_CREATE,
+    ORDER_CHAT_CREATE_DATA,
+    ORDER_CHAT_CREATE_ERROR,
 } from './constants';
 import { Order, Confirm } from './types';
 
@@ -75,7 +81,6 @@ export interface OrderCancel {
 
 export interface OrderCancelData {
     type: typeof ORDER_CANCEL_DATA;
-    payload: Confirm;
 }
 
 export interface OrderCancelError {
@@ -83,27 +88,27 @@ export interface OrderCancelError {
     error: CommonError;
 }
 
-export interface OrderConfirm {
-    type: typeof ORDER_CONFIRM;
+export interface OrderConfirmSell {
+    type: typeof ORDER_CONFIRM_SELL;
     payload: {
         order_number: string;
     };
 }
 
-export interface OrderConfirmData {
-    type: typeof ORDER_CONFIRM_DATA;
-    payload: Confirm;
+export interface OrderConfirmSellData {
+    type: typeof ORDER_CONFIRM_SELL_DATA;
 }
 
-export interface OrderConfirmError {
-    type: typeof ORDER_CONFIRM_ERROR;
+export interface OrderConfirmSellError {
+    type: typeof ORDER_CONFIRM_SELL_ERROR;
     error: CommonError;
 }
 
 export interface OrderConfirmPayment {
     type: typeof ORDER_CONFIRM_PAYMENT;
     payload: {
-        order_number: string;
+        order_number?: string;
+        payment_method?: string;
     };
 }
 
@@ -114,6 +119,40 @@ export interface OrderConfirmPaymentData {
 
 export interface OrderConfirmPaymentError {
     type: typeof ORDER_CONFIRM_PAYMENT_ERROR;
+    error: CommonError;
+}
+
+export interface OrderChat {
+    type: typeof ORDER_CHAT;
+    payload?: {
+        offer_number: string;
+    };
+}
+
+export interface OrderChatData {
+    type: typeof ORDER_CHAT_DATA;
+    payload: [];
+}
+
+export interface OrderChatError {
+    type: typeof ORDER_CHAT_ERROR;
+    error: CommonError;
+}
+
+export interface OrderChatCreate {
+    type: typeof ORDER_CHAT_CREATE;
+    payload?: {
+        offer_number?: string;
+        message?: string;
+    };
+}
+
+export interface OrderChatCreateData {
+    type: typeof ORDER_CHAT_CREATE_DATA;
+}
+
+export interface OrderChatCreateError {
+    type: typeof ORDER_CHAT_CREATE_ERROR;
     error: CommonError;
 }
 
@@ -130,15 +169,18 @@ export type OrderActions =
     | OrderCancel
     | OrderCancelData
     | OrderCancelError
-    | OrderConfirm
-    | OrderConfirmData
-    | OrderConfirmError
+    | OrderConfirmSell
+    | OrderConfirmSellData
+    | OrderConfirmSellError
     | OrderConfirmPayment
     | OrderConfirmPaymentData
     | OrderConfirmPaymentError
-    | OrderConfirm
-    | OrderCancelData
-    | OrderConfirmError;
+    | OrderChat
+    | OrderChatData
+    | OrderChatError
+    | OrderChatCreate
+    | OrderChatCreateData
+    | OrderChatCreateError;
 
 export const orderFetch = (): OrderFetch => ({
     type: ORDER_FETCH,
@@ -188,9 +230,8 @@ export const orderCancel = (payload: OrderCancel['payload']): OrderCancel => ({
     payload,
 });
 
-export const orderCancelData = (payload: OrderCancelData['payload']): OrderCancelData => ({
+export const orderCancelData = (): OrderCancelData => ({
     type: ORDER_CANCEL_DATA,
-    payload,
 });
 
 export const orderCancelError = (error: CommonError): OrderCancelError => ({
@@ -198,18 +239,17 @@ export const orderCancelError = (error: CommonError): OrderCancelError => ({
     error,
 });
 
-export const orderConfirm = (payload: OrderConfirm['payload']): OrderConfirm => ({
-    type: ORDER_CONFIRM,
+export const orderConfirmSell = (payload: OrderConfirmSell['payload']): OrderConfirmSell => ({
+    type: ORDER_CONFIRM_SELL,
     payload,
 });
 
-export const orderConfirmData = (payload: OrderConfirmData['payload']): OrderConfirmData => ({
-    type: ORDER_CONFIRM_DATA,
-    payload,
+export const orderConfirmSellData = (): OrderConfirmSellData => ({
+    type: ORDER_CONFIRM_SELL_DATA,
 });
 
-export const orderConfirmError = (error: CommonError): OrderConfirmError => ({
-    type: ORDER_CONFIRM_ERROR,
+export const orderConfirmSellError = (error: CommonError): OrderConfirmSellError => ({
+    type: ORDER_CONFIRM_SELL_ERROR,
     error,
 });
 
@@ -225,5 +265,34 @@ export const orderConfirmPaymentData = (payload: OrderConfirmPaymentData['payloa
 
 export const orderConfirmPaymentError = (error: CommonError): OrderConfirmPaymentError => ({
     type: ORDER_CONFIRM_PAYMENT_ERROR,
+    error,
+});
+
+export const orderChat = (payload: OrderChat['payload']): OrderChat => ({
+    type: ORDER_CHAT,
+    payload,
+});
+
+export const orderChatData = (payload: OrderChatData['payload']): OrderChatData => ({
+    type: ORDER_CHAT_DATA,
+    payload,
+});
+
+export const orderChatError = (error: CommonError): OrderChatError => ({
+    type: ORDER_CHAT_ERROR,
+    error,
+});
+
+export const orderChatCreate = (payload: OrderChatCreate['payload']): OrderChatCreate => ({
+    type: ORDER_CHAT_CREATE,
+    payload,
+});
+
+export const orderChatCreateData = (): OrderChatCreateData => ({
+    type: ORDER_CHAT_CREATE_DATA,
+});
+
+export const orderChatCreateError = (error: CommonError): OrderChatCreateError => ({
+    type: ORDER_CHAT_CREATE_ERROR,
     error,
 });

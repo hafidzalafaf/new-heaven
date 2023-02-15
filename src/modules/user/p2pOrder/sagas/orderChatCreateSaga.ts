@@ -2,7 +2,7 @@ import { call, put } from 'redux-saga/effects';
 import { alertPush, sendError } from '../../../';
 import { API, RequestOptions } from '../../../../api';
 import { getCsrfToken } from '../../../../helpers';
-import { OrderCancel, orderCancelData, orderCancelError } from '../actions';
+import { OrderChatCreate, orderChatCreateData, orderChatCreateError } from '../actions';
 
 const config = (csrfToken?: string): RequestOptions => {
     return {
@@ -11,19 +11,19 @@ const config = (csrfToken?: string): RequestOptions => {
     };
 };
 
-export function* orderCancelSaga(action: OrderCancel) {
+export function* orderChatCreateSaga(actionParam: OrderChatCreate) {
+    const { offer_number, message } = actionParam.payload;
     try {
-        yield call(API.put(config(getCsrfToken())), `/market/orders/cancel_order/${action.payload.order_number}`);
-
-        yield put(orderCancelData());
-        yield put(alertPush({ message: ['success.order.cancel'], type: 'success' }));
+        yield call(API.post(config(getCsrfToken())), `/market/orders/information_chat/${offer_number}`, { message });
+        yield put(orderChatCreateData());
+        yield put(alertPush({ message: ['success.order.chat'], type: 'success' }));
     } catch (error) {
         yield put(
             sendError({
                 error,
                 processingType: 'alert',
                 extraOptions: {
-                    actionError: orderCancelError,
+                    actionError: orderChatCreateError,
                 },
             })
         );

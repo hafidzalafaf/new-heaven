@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCurrentMarket, selectLastRecentTrade, selectUserLoggedIn } from '../../../modules';
+import { selectCurrentMarket, selectLastRecentTrade, selectUserLoggedIn, Market } from '../../../modules';
 import { useParams } from 'react-router-dom';
 import { useOpenOrdersFetch, useDepthFetch, usePrevious } from '../../../hooks';
 import { TradeDown, TradeUp } from '../../../assets/images/TradeIcon';
@@ -121,7 +121,7 @@ const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
                                                         <p className="text-sm m-0 p-0 grey-text-accent font-bold text-right">
                                                             {Decimal.format(
                                                                 +item[0] * +item[1],
-                                                                currentMarket?.price_precision,
+                                                                currentMarket?.total_precision,
                                                                 currentMarket?.quote_unit == 'idr' ? ',' : '.'
                                                             )}
                                                         </p>
@@ -204,7 +204,7 @@ const OrderBookComponent: React.FunctionComponent<OrderBookProps> = (props) => {
                                                     <p className="text-sm m-0 p-0 grey-text-accent font-bold text-right">
                                                         {Decimal.format(
                                                             +item[0] * +item[1],
-                                                            currentMarket?.price_precision,
+                                                            currentMarket?.total_precision,
                                                             currentMarket?.quote_unit == 'idr' ? ',' : '.'
                                                         )}
                                                     </p>

@@ -1,8 +1,8 @@
 import { call, put } from 'redux-saga/effects';
-import { alertPush, sendError } from '../../../';
+import { alertPush, sendError } from '../../..';
 import { API, RequestOptions } from '../../../../api';
 import { getCsrfToken } from '../../../../helpers';
-import { OrderConfirm, orderConfirmData, orderConfirmError } from '../actions';
+import { OrderConfirmSell, orderConfirmSellData, orderConfirmSellError } from '../actions';
 
 const config = (csrfToken?: string): RequestOptions => {
     return {
@@ -11,15 +11,11 @@ const config = (csrfToken?: string): RequestOptions => {
     };
 };
 
-export function* orderConfirmSaga(action: OrderConfirm) {
+export function* orderConfirmSellSaga(action: OrderConfirmSell) {
     try {
-        const payload = yield call(
-            API.put(config(getCsrfToken())),
-            `/market/orders/confirm/${action.payload.order_number}`,
-            action.payload
-        );
+        yield call(API.put(config(getCsrfToken())), `/market/orders/confirm/${action.payload.order_number}`);
 
-        yield put(orderConfirmData(payload));
+        yield put(orderConfirmSellData());
         yield put(alertPush({ message: ['success.order.confirm'], type: 'success' }));
     } catch (error) {
         yield put(
@@ -27,7 +23,7 @@ export function* orderConfirmSaga(action: OrderConfirm) {
                 error,
                 processingType: 'alert',
                 extraOptions: {
-                    actionError: orderConfirmError,
+                    actionError: orderConfirmSellError,
                 },
             })
         );

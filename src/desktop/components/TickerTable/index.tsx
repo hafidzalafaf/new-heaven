@@ -55,27 +55,19 @@ export const TickerTable: React.FC<Props> = ({
                         </div>
                     </td>
                     <td>
-                        <span>
-                            {market?.quote_unit == 'idr' ? 'Rp' : '$'} {market.last}
-                        </span>
+                        <span>{market.last}</span>
                     </td>
                     <td>
                         <span className={marketChangeColor}>{market.price_change_percent}</span>
                     </td>
                     <td>
-                        <span>
-                            {market?.quote_unit == 'idr' ? 'Rp' : '$'} {market.high}
-                        </span>
+                        <span>{market.high}</span>
                     </td>
                     <td>
-                        <span>
-                            {market?.quote_unit == 'idr' ? 'Rp' : '$'} {market.low}
-                        </span>
+                        <span>{market.low}</span>
                     </td>
                     <td>
-                        <span>
-                            {market?.quote_unit == 'idr' ? 'Rp' : '$'} {market.volume}
-                        </span>
+                        <span>{market.volume}</span>
                     </td>
                     <td>
                         <div className="d-flex">

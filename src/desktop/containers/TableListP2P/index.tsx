@@ -23,15 +23,7 @@ import {
     selectUserInfo,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
-import {
-    RefreshIcon,
-    CheckIcon,
-    CloseIcon,
-    NoDataIcon,
-    FilterIcon,
-    DropdownIcon,
-    InfoSecondaryIcon,
-} from 'src/assets/images/P2PIcon';
+import { RefreshIcon, FilterIcon, DropdownIcon, InfoSecondaryIcon } from 'src/assets/images/P2PIcon';
 import {
     CustomStylesSelect,
     ModalCreateOffer,

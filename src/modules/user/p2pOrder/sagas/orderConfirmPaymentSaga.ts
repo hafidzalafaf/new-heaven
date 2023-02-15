@@ -11,13 +11,12 @@ const config = (csrfToken?: string): RequestOptions => {
     };
 };
 
-export function* orderConfirmPaymentSaga(action: OrderConfirmPayment) {
+export function* orderConfirmPaymentSaga(actionParam: OrderConfirmPayment) {
     try {
-        const payload = yield call(
-            API.put(config(getCsrfToken())),
-            `/market/orders/payment_confirm/${action.payload.order_number}`,
-            action.payload
-        );
+        const { order_number, payment_method } = actionParam.payload;
+        const payload = yield call(API.put(config(getCsrfToken())), `/market/orders/payment_confirm/${order_number}`, {
+            payment_method,
+        });
 
         yield put(orderConfirmPaymentData(payload));
         yield put(alertPush({ message: ['success.order.confirm.payment'], type: 'success' }));
