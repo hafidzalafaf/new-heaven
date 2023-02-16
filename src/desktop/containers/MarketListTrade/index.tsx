@@ -115,7 +115,7 @@ const MarketListTradeComponent = ({ handleRedirectToTrading }) => {
                                                 <div className="mr-0 d-flex align-items-center">
                                                     <span className="cr-crypto-icon">
                                                         <img
-                                                            src={item.currency && item.currency.icon_url}
+                                                            src={item?.logo_url}
                                                             className="small-coin-icon"
                                                             alt="btc icon"
                                                         />

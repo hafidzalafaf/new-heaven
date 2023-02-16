@@ -141,15 +141,17 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                 i.currency?.toLocaleLowerCase().includes(filterValue.toLowerCase())
         );
 
-        return !filteredList[0] && !filterValue && !nonZeroSelected
+        return !filteredList && !filterValue && !nonZeroSelected
             ? [[[''], [''], <Loading />, [''], [''], ['']]]
-            : !filteredList[0] && !loading
+            : !filteredList && !loading
             ? [['no data found']]
             : filteredList.map((item, index) => {
                   const { currency, iconUrl, name, fixed, spotBalance, spotLocked, p2pBalance, p2pLocked } = item;
                   const totalBalance =
                       Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
                   const estimatedValue = item?.last !== null ? item.last * totalBalance : '0';
+                  const disableDeposit = item?.network?.filter((net) => net.deposit_enabled == true);
+                  const disableWithdrawal = item?.network?.filter((net) => net.withdrawal_enabled == true);
 
                   return [
                       <div key={index} className="d-flex">
@@ -180,29 +182,31 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                       <div key={index} className="ml-auto">
                           <button
                               onClick={() => {
-                                  item && item.network && item.network[0] ? handleClickDeposit(currency) : null;
+                                  item.network && item.network[0] && disableDeposit?.length > 0
+                                      ? handleClickDeposit(currency)
+                                      : null;
                               }}
                               className={`bg-transparent border-none mr-24 ${
-                                  item && item.network && item.network[0] ? 'blue-text' : 'grey-text'
+                                  item.network && item.network[0] && disableDeposit?.length > 0
+                                      ? 'blue-text'
+                                      : 'grey-text'
                               }`}>
-                              {item && item.network && item.network[0]
+                              {item.network && item.network[0] && disableDeposit?.length > 0
                                   ? translate('page.body.wallets.overview.action.deposit')
                                   : 'Disabled'}
                           </button>
                           <button
                               onClick={() => {
-                                  item &&
-                                      item.network &&
-                                      item.network[0] &&
-                                      item.network[0].withdrawal_enabled &&
-                                      handleClickWithdraw(currency);
+                                  item.network && item.network[0] && disableWithdrawal?.length > 0
+                                      ? handleClickWithdraw(currency)
+                                      : null;
                               }}
                               className={`bg-transparent border-none ${
-                                  item && item.network && item.network[0] && item.network[0].withdrawal_enabled
+                                  item.network && item.network[0] && disableWithdrawal?.length > 0
                                       ? 'danger-text'
                                       : 'grey-text'
                               }`}>
-                              {item && item.network && item.network[0] && item.network[0].withdrawal_enabled
+                              {item.network && item.network[0] && disableWithdrawal?.length > 0
                                   ? translate('page.body.wallets.overview.action.withdraw')
                                   : 'Disabled'}
                           </button>

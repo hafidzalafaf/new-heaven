@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectBlogs } from 'src/modules';
 import moment from 'moment';
 import { FAQHeader } from 'src/desktop/containers';
+import { NoData } from 'src/desktop/components';
 
 export const FAQScreen: FC = (): ReactElement => {
     useDocumentTitle('FAQ');
@@ -28,8 +29,8 @@ export const FAQScreen: FC = (): ReactElement => {
                         <div className="row justify-content-center">
                             <div className="col-xl-11">
                                 <div className="row">
-                                    {faq &&
-                                        faq.map((item, key) => (
+                                    {faq.length > 0 ? (
+                                        faq?.map((item, key) => (
                                             <div key={key} className="col-md-4 col-sm-6 col-12 mb-4">
                                                 <div className="article-item p-4 radius-md dark-bg-main">
                                                     <Logo className="mb-24" />
@@ -50,7 +51,12 @@ export const FAQScreen: FC = (): ReactElement => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        ))}
+                                        ))
+                                    ) : (
+                                        <div className="mx-3 w-100 d-flex justify-content-center aloign-items-center">
+                                            <NoData text="No FAQ yet" />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

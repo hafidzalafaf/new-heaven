@@ -44,7 +44,7 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
         <React.Fragment>
             <div className="com-market-detail-info mb-24 d-flex justify-content-between align-items-center">
                 <div className="name d-flex align-items-center position-relative">
-                    <img src={detail?.currency?.icon_url} alt="icon" className="icon mr-24" />
+                    <img src={detail?.logo_url} alt="icon" className="icon mr-24" />
                     <h2 className="white-text m-0 text-title-2 mr-24">{detail?.currency?.name} Price</h2>
                     <span className="grey-text-accent text-ms font-extrabold">
                         ({detail && detail.base_unit && detail.base_unit.toUpperCase()})

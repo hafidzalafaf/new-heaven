@@ -22,6 +22,7 @@ export interface CustomInputProps {
     autoComplete?: string;
     name?: string;
     classNameGroup?: string;
+    maxLength?: number;
 }
 
 interface OnChangeEvent {
@@ -76,7 +77,7 @@ class CustomInput extends React.Component<Props, State> {
                         <FormControl
                             size="lg"
                             type={this.state.inputType}
-                            value={inputValue.toString()}
+                            value={inputValue?.toString()}
                             placeholder={placeholder}
                             autoFocus={autoFocus}
                             onFocus={this.props.handleFocusInput}
@@ -89,6 +90,7 @@ class CustomInput extends React.Component<Props, State> {
                             onKeyPress={onKeyPress}
                             autoComplete={'off'}
                             name={name}
+                            maxLength={this.props.maxLength}
                             className={classNameInput}
                         />
 

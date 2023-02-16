@@ -272,7 +272,7 @@ class Head extends React.Component<Props, HeaderState> {
                                         <li className="nav-item dropdown market-dropdown ">
                                             <div className="d-flex align-items-center">
                                                 <img
-                                                    src={currencyItem && currencyItem.icon_url}
+                                                    src={this.props.currentMarket?.logo_url}
                                                     alt="coin"
                                                     className="small-coin-icon mr-8"
                                                 />
