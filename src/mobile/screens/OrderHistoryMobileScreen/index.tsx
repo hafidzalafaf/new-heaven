@@ -106,7 +106,7 @@ const OrderHistoryMobileScreen: React.FC = () => {
                     height={30}
                     width={30}
                     className="icon-history mr-3 rounded-full"
-                    src={item?.dataCurrency?.icon_url !== null ? item?.dataCurrency?.icon_url : '/img/dummycoin.png'}
+                    src={item?.logo_url !== null ? item?.logo_url : '/img/dummycoin.png'}
                     alt="icon"
                 />
             </div>,

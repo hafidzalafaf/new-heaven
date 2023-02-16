@@ -143,11 +143,9 @@ const HomeMobileScreen: React.FC = () => {
             <Link
                 to={item && item.type == 'spot' ? `/trading/${item && item.id}` : `/trading-future/${item && item.id}`}
                 className="d-flex align-items-center text-sm">
-                <img src={item && item.currency && item.currency.icon_url} alt="coin" className="small-coin-icon" />
-                <p className="mb-0 white-text text-sm ml-2">{item && item.currency && item.currency.name}</p>
-                <p className="mb-0 grey-text text-xs ml-2">
-                    {item && item.currency && item.currency.id && item.currency.id.toUpperCase()}
-                </p>
+                <img src={item?.logo_url} alt="coin" className="small-coin-icon" />
+                <p className="mb-0 white-text text-sm ml-2">{item?.fullname}</p>
+                <p className="mb-0 grey-text text-xs ml-2">{item?.base_unit?.toUpperCase()}</p>
             </Link>,
             <>
                 <ChartLandingMobile
@@ -174,126 +172,123 @@ const HomeMobileScreen: React.FC = () => {
 
     return (
         <>
-
-                <div className="mobile-container home-screen dark-bg-main">
-                    <div>
-                        <div id="heros" className="content-container w-100 mb-3">
-                            <Slider {...settings}>
-                                {news &&
-                                    news.map((item, key) => (
-                                        <div className="heroid" key={key}>
-                                            <a
-                                                href={item.url}
-                                                target="__blank"
-                                                rel="noopener noreferrer"
-                                                className="slider-ite">
+            <div className="mobile-container home-screen dark-bg-main">
+                <div>
+                    <div id="heros" className="content-container w-100 mb-3">
+                        <Slider {...settings}>
+                            {news &&
+                                news.map((item, key) => (
+                                    <div className="heroid" key={key}>
+                                        <a
+                                            href={item.url}
+                                            target="__blank"
+                                            rel="noopener noreferrer"
+                                            className="slider-ite">
+                                            <img
+                                                src={
+                                                    item?.feature_image === null
+                                                        ? '/img/announcement-big.png'
+                                                        : item.feature_image
+                                                }
+                                                alt={item.title}
+                                                className="banner-image rounded-lg"
+                                            />
+                                        </a>
+                                    </div>
+                                ))}
+                        </Slider>
+                    </div>
+                    <div className="beginner-wrapper mb-3">
+                        <h5 className="text-ms font-bold grey-text-accent">For Beginners</h5>
+                        <h6 className="mb-3 text-xs grey-text font-normal">
+                            Most popular and widely known coin for early investment
+                        </h6>
+                        <Slider {...settings2}>
+                            {blog &&
+                                blog.map((item, key) => (
+                                    <a
+                                        href={item.url}
+                                        target="__blank"
+                                        rel="noopener noreferrer"
+                                        className="slider-ite"
+                                        key={key}>
+                                        <div className="card-item position-relative">
+                                            <div className="small-thumbnail-cover mb-8">
                                                 <img
                                                     src={
                                                         item?.feature_image === null
                                                             ? '/img/announcement-big.png'
                                                             : item.feature_image
                                                     }
-                                                    alt={item.title}
-                                                    className="banner-image rounded-lg"
+                                                    alt="card"
+                                                    className="small-thumbnail"
                                                 />
-                                            </a>
-                                        </div>
-                                    ))}
-                            </Slider>
-                        </div>
-                        <div className="beginner-wrapper mb-3">
-                            <h5 className="text-ms font-bold grey-text-accent">For Beginners</h5>
-                            <h6 className="mb-3 text-xs grey-text font-normal">
-                                Most popular and widely known coin for early investment
-                            </h6>
-                            <Slider {...settings2}>
-                                {blog &&
-                                    blog.map((item, key) => (
-                                        <a
-                                            href={item.url}
-                                            target="__blank"
-                                            rel="noopener noreferrer"
-                                            className="slider-ite"
-                                            key={key}>
-                                            <div className="card-item position-relative">
-                                                <div className="small-thumbnail-cover mb-8">
-                                                    <img
-                                                        src={
-                                                            item?.feature_image === null
-                                                                ? '/img/announcement-big.png'
-                                                                : item.feature_image
-                                                        }
-                                                        alt="card"
-                                                        className="small-thumbnail"
-                                                    />
-                                                </div>
-                                                <div className="cover-thumbnail d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <p className="text-xxs grey-text mb-0">
-                                                            {moment(item.published_at).startOf('day').fromNow()}
-                                                        </p>
-                                                        <h5 className="text-xxs white-text font-bold mb-0">
-                                                            {item.title}
-                                                        </h5>
-                                                    </div>
-                                                    <ArrowRight className={''} />
-                                                </div>
                                             </div>
-                                        </a>
-                                    ))}
-                            </Slider>
-                        </div>
-                        <Tabs
-                            defaultActiveKey="all"
-                            id="controlled-tab-example"
-                            onSelect={(e) => handleChangeType(e)}
-                            className="mb-3">
-                            <Tab eventKey="all" title="All" className="mb-3">
-                                {!marketList[0] || marketList === null ? (
-                                    <div className="empty-chart-data">
-                                        <ChartEmpty className="icon-empty text-secondary mb-2" />
-                                        <h6 className="text-secondary">No data show</h6>
-                                    </div>
-                                ) : (
-                                    <Table data={renderDataTable(marketList)} />
-                                )}
-                            </Tab>
-                            <Tab eventKey="tranding" title="Tranding" className="mb-3">
-                                {!dataTranding[0] || dataTranding === null ? (
-                                    <div className="empty-chart-data">
-                                        <ChartEmpty className="icon-empty text-secondary mb-2" />
-                                        <h6 className="text-secondary">There is no market data</h6>
-                                    </div>
-                                ) : (
-                                    <Table data={renderDataTable(dataTranding)} />
-                                )}
-                            </Tab>
-                            <Tab eventKey="gainers" title="Gainers" className="mb-3">
-                                {!dataGainers[0] || dataGainers === null ? (
-                                    <div className="empty-chart-data">
-                                        <ChartEmpty className="icon-empty text-secondary mb-2" />
-                                        <h6 className="text-secondary">There is no market data</h6>
-                                    </div>
-                                ) : (
-                                    <Table data={renderDataTable(dataGainers)} />
-                                )}
-                            </Tab>
-
-                            <Tab eventKey="loser" title="Loser" className="mb-3">
-                                <div className="table-mobile-wrapper">
-                                    {!dataLosers[0] || dataLosers === null ? (
-                                        <div className="empty-chart-data">
-                                            <ChartEmpty className="icon-empty text-secondary mb-2" />
-                                            <h6 className="text-secondary">There is no market data</h6>
+                                            <div className="cover-thumbnail d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <p className="text-xxs grey-text mb-0">
+                                                        {moment(item.published_at).startOf('day').fromNow()}
+                                                    </p>
+                                                    <h5 className="text-xxs white-text font-bold mb-0">{item.title}</h5>
+                                                </div>
+                                                <ArrowRight className={''} />
+                                            </div>
                                         </div>
-                                    ) : (
-                                        <Table data={renderDataTable(dataLosers)} />
-                                    )}
-                                </div>
-                            </Tab>
-                        </Tabs>
+                                    </a>
+                                ))}
+                        </Slider>
                     </div>
+                    <Tabs
+                        defaultActiveKey="all"
+                        id="controlled-tab-example"
+                        onSelect={(e) => handleChangeType(e)}
+                        className="mb-3">
+                        <Tab eventKey="all" title="All" className="mb-3">
+                            {!marketList[0] || marketList === null ? (
+                                <div className="empty-chart-data">
+                                    <ChartEmpty className="icon-empty text-secondary mb-2" />
+                                    <h6 className="text-secondary">No data show</h6>
+                                </div>
+                            ) : (
+                                <Table data={renderDataTable(marketList)} />
+                            )}
+                        </Tab>
+                        <Tab eventKey="tranding" title="Tranding" className="mb-3">
+                            {!dataTranding[0] || dataTranding === null ? (
+                                <div className="empty-chart-data">
+                                    <ChartEmpty className="icon-empty text-secondary mb-2" />
+                                    <h6 className="text-secondary">There is no market data</h6>
+                                </div>
+                            ) : (
+                                <Table data={renderDataTable(dataTranding)} />
+                            )}
+                        </Tab>
+                        <Tab eventKey="gainers" title="Gainers" className="mb-3">
+                            {!dataGainers[0] || dataGainers === null ? (
+                                <div className="empty-chart-data">
+                                    <ChartEmpty className="icon-empty text-secondary mb-2" />
+                                    <h6 className="text-secondary">There is no market data</h6>
+                                </div>
+                            ) : (
+                                <Table data={renderDataTable(dataGainers)} />
+                            )}
+                        </Tab>
+
+                        <Tab eventKey="loser" title="Loser" className="mb-3">
+                            <div className="table-mobile-wrapper">
+                                {!dataLosers[0] || dataLosers === null ? (
+                                    <div className="empty-chart-data">
+                                        <ChartEmpty className="icon-empty text-secondary mb-2" />
+                                        <h6 className="text-secondary">There is no market data</h6>
+                                    </div>
+                                ) : (
+                                    <Table data={renderDataTable(dataLosers)} />
+                                )}
+                            </div>
+                        </Tab>
+                    </Tabs>
                 </div>
+            </div>
         </>
     );
 };

@@ -49,7 +49,7 @@ export const CardMarketDetail: React.FunctionComponent<CardMarketDetailProps> = 
                                     <p className="mb-8 text-sm white-text font-bold">
                                         {detail?.base_unit?.toUpperCase()}
                                     </p>
-                                    <p className="m-0 text-xs grey-text-accent">{detail?.currency?.name}</p>
+                                    <p className="m-0 text-xs grey-text-accent">{detail?.name?.toUpperCase()}</p>
                                 </div>
                             </div>
 

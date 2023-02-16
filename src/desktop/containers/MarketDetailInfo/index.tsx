@@ -45,7 +45,7 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
             <div className="com-market-detail-info mb-24 d-flex justify-content-between align-items-center">
                 <div className="name d-flex align-items-center position-relative">
                     <img src={detail?.logo_url} alt="icon" className="icon mr-24" />
-                    <h2 className="white-text m-0 text-title-2 mr-24">{detail?.currency?.name} Price</h2>
+                    <h2 className="white-text m-0 text-title-2 mr-24">{detail?.name?.toUpperCase()} Price</h2>
                     <span className="grey-text-accent text-ms font-extrabold">
                         ({detail && detail.base_unit && detail.base_unit.toUpperCase()})
                     </span>
@@ -73,14 +73,14 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
             <div className="information">
                 <h5 className=" white-text text-xl ">{detail?.base_unit?.toUpperCase()} Information</h5>
                 <p className="grey-text-accent text-ms mb-24">
-                    The live price of {detail?.currency?.name} is ${' '}
+                    The live price of {detail?.base_unit?.toUpperCase()} is ${' '}
                     {Decimal.format(detail?.last, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')} per
                     ({detail?.base_unit?.toUpperCase()} / {detail?.quote_unit?.toUpperCase()}) . 24-hour trading volume
                     is{' '}
                     {Decimal.format(detail?.volume, detail?.price_precision, detail?.quote_unit == 'idr' ? ',' : '.')}.
                     {detail?.base_unit?.toUpperCase()} to {detail?.quote_unit?.toUpperCase()} price is updated in
                     real-time.
-                    {detail?.currency?.name} is &nbsp;
+                    {detail?.base_unit?.toUpperCase()} is &nbsp;
                     {detail?.price_change_percent} in the last 24 hours.
                 </p>
                 <p className="grey-text-accent light mb-3">
@@ -155,28 +155,30 @@ export const MarketDetailInfo: React.FC<MarketDetailInfoProps> = ({ detail }) =>
             </div>
             <div className={`about-coin mt-4  ${showDetailDesc ? 'show' : ''}`}>
                 <h5 className="text-lg white-text">
-                    About {detail?.currency?.name} ({detail?.base_unit?.toUpperCase()})
+                    About {detail?.base_unit?.toUpperCase()} ({detail?.base_unit?.toUpperCase()})
                 </h5>
                 <p className="text-ms grey-text-accent mb-24">
-                    {detail?.currency?.name} is one of the most popular cryptocurrencies in the market. First introduced
-                    in 2009 by Satoshi Nakamoto, {detail?.currency?.name} has held the crypto market’s number one spot
-                    according to market capitalization. {detail?.currency?.name} paved the way for many existing
-                    altcoins in the market and marked a pivotal moment for digital payment solutions. As the world’s
-                    first cryptocurrency, {detail?.currency?.name} has come a long way in terms of its value. However,
-                    one does not have to buy an entire bitcoin as bitcoins can be divided into small units called
-                    satoshis, named after the creator. A satoshi is equivalent to 0.00000001 bitcoin. token so you can
-                    think of bitcoin as digital money. {detail?.currency?.name}
+                    {detail?.base_unit?.toUpperCase()} is one of the most popular cryptocurrencies in the market. First
+                    introduced in 2009 by Satoshi Nakamoto, {detail?.base_unit?.toUpperCase()} has held the crypto
+                    market’s number one spot according to market capitalization. {detail?.base_unit?.toUpperCase()}{' '}
+                    paved the way for many existing altcoins in the market and marked a pivotal moment for digital
+                    payment solutions. As the world’s first cryptocurrency, {detail?.base_unit?.toUpperCase()} has come
+                    a long way in terms of its value. However, one does not have to buy an entire bitcoin as bitcoins
+                    can be divided into small units called satoshis, named after the creator. A satoshi is equivalent to
+                    0.00000001 bitcoin. token so you can think of bitcoin as digital money.{' '}
+                    {detail?.base_unit?.toUpperCase()}
                     transactions are fully transparent and can’t be censored. You can send money
                 </p>
                 <p className="text-ms grey-text-accent  mb-36">
-                    {detail?.currency?.name} is one of the most popular cryptocurrencies in the market. First introduced
-                    in 2009 by Satoshi Nakamoto, {detail?.currency?.name} has held the crypto market’s number one spot
-                    according to market capitalization. {detail?.currency?.name} paved the way for many existing
-                    altcoins in the market and marked a pivotal moment for digital payment solutions. As the world’s
-                    first cryptocurrency, {detail?.currency?.name} has come a long way in terms of its value. However,
-                    one does not have to buy an entire bitcoin as bitcoins can be divided into small units called
-                    satoshis, named after the creator. A satoshi is equivalent to 0.00000001 bitcoin. token so you can
-                    think of bitcoin as digital money. {detail?.currency?.name}
+                    {detail?.base_unit?.toUpperCase()} is one of the most popular cryptocurrencies in the market. First
+                    introduced in 2009 by Satoshi Nakamoto, {detail?.base_unit?.toUpperCase()} has held the crypto
+                    market’s number one spot according to market capitalization. {detail?.base_unit?.toUpperCase()}{' '}
+                    paved the way for many existing altcoins in the market and marked a pivotal moment for digital
+                    payment solutions. As the world’s first cryptocurrency, {detail?.base_unit?.toUpperCase()} has come
+                    a long way in terms of its value. However, one does not have to buy an entire bitcoin as bitcoins
+                    can be divided into small units called satoshis, named after the creator. A satoshi is equivalent to
+                    0.00000001 bitcoin. token so you can think of bitcoin as digital money.{' '}
+                    {detail?.base_unit?.toUpperCase()}
                     transactions are fully transparent and can’t be censored. You can send money
                 </p>
                 <div
