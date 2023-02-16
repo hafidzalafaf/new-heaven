@@ -31,6 +31,7 @@ export interface Market {
     state?: string;
     filters?: MarketFilter[];
     type?: string;
+    logo_url?: string;
 }
 
 export interface Ticker {

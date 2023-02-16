@@ -24,11 +24,15 @@ import { NoData } from '../../components';
 import { copy, Loading } from '../../../components';
 import { CopyableTextField } from '../../../components';
 import './HistoryTransactionScreen.pcss';
+import { capitalizeFirstLetter } from 'src/helpers/capitalizeFirstLetter.';
+import { useLocation } from 'react-router';
 
 const DEFAULT_LIMIT = 5;
 export const HistoryTransactionScreen: FC = (): ReactElement => {
     const currencies: Currency[] = useSelector(selectCurrencies);
     const dispatch = useDispatch();
+    const location = useLocation<{ types?: string }>();
+
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
     const historyLoading = useSelector(selectHistoryLoading);
@@ -36,7 +40,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const [historys, setHistorys] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [currency, setCurrency] = React.useState('');
-    const [type, setType] = React.useState('withdraws');
+    const [type, setType] = React.useState(location?.state?.types ? location?.state?.types : 'withdraws');
     const [status, setStatus] = React.useState('');
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
@@ -71,11 +75,13 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         if (type == 'withdraws') {
             return ['Date', 'Type', 'Asset', 'Amount', `TXID`, `Address`, 'Status'];
         } else if (type == 'deposits') {
-            return ['Date', 'Type', 'Asset', 'Amount', `TXID`, 'TID', 'Status'];
+            return ['Date', 'Type', 'Asset', 'Amount', `TXID`, 'Status'];
         } else {
             return ['Date', 'Type', 'Asset', 'Amount', `Receiver ID`, 'Sender ID', 'Status'];
         }
     };
+
+    const getTableHeadersDeposit = (data) => ['Date', 'Type', 'Asset', 'Amount', `TXID`, 'Status'];
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
@@ -196,17 +202,6 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
         setHistorys(list);
     }, [list]);
 
-    // React.useEffect(() => {
-    //     if (startDateTransfer != '' && endDateTransfer != '') {
-    //         const filterredList = list.filter(
-    //             (item) =>
-    //                 moment(item.created_at).format() >= moment(startDateTransfer).format() &&
-    //                 moment(item.created_at).format() <= moment(endDateTransfer).format()
-    //         );
-    //         setHistorys(filterredList);
-    //     }
-    // }, [startDateTransfer, endDateTransfer]);
-
     const getTableData = (data) => {
         return data.map((item) => [
             <p className="m-0 text-sm white-text">{moment(item.created_at).format('DD-MM-YYYY HH:mm:ss')}</p>,
@@ -251,7 +246,6 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
             </p>,
             <React.Fragment>
                 {type == 'withdraws' && <p className="m-0 text-sm white-text">{item.rid?.slice(0, 15)}...</p>}
-                {type == 'deposits' && <p className="m-0 text-sm white-text">{item.tid}</p>}
                 {type == 'transfers' && <p className="m-0 text-sm white-text">{item.sender_uid}</p>}
             </React.Fragment>,
             <p
@@ -281,6 +275,49 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                     : item.state == 'failed'
                     ? 'Failed'
                     : ''}
+            </p>,
+        ]);
+    };
+
+    const getTableDataDeposit = (data) => {
+        return data.map((item) => [
+            <p className="m-0 text-sm white-text">{moment(item.created_at).format('DD-MM-YYYY HH:mm:ss')}</p>,
+            <p className={`m-0 text-sm font-bold contrast-text`}>Deposit</p>,
+            <div className="d-flex align-items-center text-sm">
+                <p className="m-0 mr-12 white-text font-bold">{item?.currency?.toUpperCase()}</p>
+            </div>,
+            <p className="m-0 text-sm white-text">{item.amount}</p>,
+            <p className="m-0 text-sm white-text text-italic">
+                {item?.txid !== null ? (
+                    <fieldset onClick={() => doCopy('depo' + item?.txid)}>
+                        <CopyableTextField
+                            value={item?.txid}
+                            fieldId={'depo' + item?.id?.toString()}
+                            className="white-text"
+                        />
+                    </fieldset>
+                ) : (
+                    <fieldset onClick={() => doCopy('depos' + type == 'deposits' && item?.tid)}>
+                        <CopyableTextField
+                            value={type == 'deposits' && item?.tid}
+                            fieldId={'depos' + item?.id?.toString()}
+                            className="white-text"
+                        />
+                    </fieldset>
+                )}
+            </p>,
+            <p
+                className={`m-0 text-sm ${
+                    item?.state === 'processing' || item?.state === 'fee_processing'
+                        ? 'warning-text'
+                        : item?.state === 'errored' ||
+                          item?.state === 'canceled' ||
+                          item?.state === 'skipped' ||
+                          item?.state === 'rejected'
+                        ? 'danger-text'
+                        : 'green-text'
+                }`}>
+                {type === 'deposits' ? capitalizeFirstLetter(item?.state) : '-'}
             </p>,
         ]);
     };
@@ -403,7 +440,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                 <div className="pg-history-transaction-screen__content-wrapper dark-bg-accent">
                     <div className="transaction-history-tabs">
                         <Tabs
-                            defaultActiveKey="withdraws"
+                            defaultActiveKey={type}
                             onSelect={(e) => handleChangeType(e)}
                             id="uncontrolled-tab-example"
                             className="mb-3">
@@ -428,7 +465,10 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                             <Tab eventKey="deposits" title="Deposit" className="mb-24">
                                 <div className="mt-24">
                                     {renderFilter()}
-                                    <Table header={getTableHeaders(historys)} data={getTableData(historys)} />
+                                    <Table
+                                        header={getTableHeadersDeposit(historys)}
+                                        data={getTableDataDeposit(historys)}
+                                    />
                                     {historys[0] && (
                                         <Pagination
                                             firstElemIndex={firstElemIndex}

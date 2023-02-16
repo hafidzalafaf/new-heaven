@@ -64,11 +64,7 @@ export const MarketDetailCalculator: React.FC<MarketDetailCalculatorProps> = ({ 
                         />
                     </div>
                     <span>
-                        <img
-                            src={detail && detail.currency && detail.currency.icon_url}
-                            alt="icon"
-                            className="calculator-wrapper__icon"
-                        />
+                        <img src={detail?.logo_url} alt="icon" className="calculator-wrapper__icon" />
                     </span>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-24 grey-text-accent text-ms font-bold">

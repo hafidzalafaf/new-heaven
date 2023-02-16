@@ -77,7 +77,7 @@ class CustomInput extends React.Component<Props, State> {
                         <FormControl
                             size="lg"
                             type={this.state.inputType}
-                            value={inputValue.toString()}
+                            value={inputValue?.toString()}
                             placeholder={placeholder}
                             autoFocus={autoFocus}
                             onFocus={this.props.handleFocusInput}
