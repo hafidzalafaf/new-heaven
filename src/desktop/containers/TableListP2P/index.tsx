@@ -567,7 +567,9 @@ export const TableListP2P = () => {
                         </div>
 
                         <div className="d-flex align-items-center mb-24">
-                            <input type="text" placeholder="00.00" className="input-filter-fiat dark-bg-accent" />
+                            <input style={{
+                                color: 'white',
+                            }} type="text" placeholder="00.00" className="input-filter-fiat dark-bg-accent filter-input" />
                             <div className="mr-16">
                                 <Select
                                     value={optionFiats?.filter(function (option) {
