@@ -143,11 +143,9 @@ const HomeMobileScreen: React.FC = () => {
             <Link
                 to={item && item.type == 'spot' ? `/trading/${item && item.id}` : `/trading-future/${item && item.id}`}
                 className="d-flex align-items-center text-sm">
-                <img src={item && item.currency && item.currency.icon_url} alt="coin" className="small-coin-icon" />
-                <p className="mb-0 white-text text-sm ml-2">{item && item.currency && item.currency.name}</p>
-                <p className="mb-0 grey-text text-xs ml-2">
-                    {item && item.currency && item.currency.id && item.currency.id.toUpperCase()}
-                </p>
+                <img src={item?.logo_url} alt="coin" className="small-coin-icon" />
+                <p className="mb-0 white-text text-sm ml-2">{item?.fullname}</p>
+                <p className="mb-0 grey-text text-xs ml-2">{item?.base_unit?.toUpperCase()}</p>
             </Link>,
             <>
                 <ChartLandingMobile
@@ -206,38 +204,37 @@ const HomeMobileScreen: React.FC = () => {
                             Most popular and widely known coin for early investment
                         </h6>
                         <Slider {...settings2}>
-                            {blog &&
-                                blog?.map((item, key) => (
-                                    <a
-                                        href={item.url}
-                                        target="__blank"
-                                        rel="noopener noreferrer"
-                                        className="slider-ite"
-                                        key={key}>
-                                        <div className="card-item position-relative">
-                                            <div className="small-thumbnail-cover mb-8">
-                                                <img
-                                                    src={
-                                                        item?.feature_image === null
-                                                            ? '/img/announcement-big.png'
-                                                            : item.feature_image
-                                                    }
-                                                    alt="card"
-                                                    className="small-thumbnail"
-                                                />
-                                            </div>
-                                            <div className="cover-thumbnail d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <p className="text-xxs grey-text mb-0">
-                                                        {moment(item.published_at).startOf('day').fromNow()}
-                                                    </p>
-                                                    <h5 className="text-xxs white-text font-bold mb-0">{item.title}</h5>
-                                                </div>
-                                                <ArrowRight className={''} />
-                                            </div>
+                            {blog?.map((item, key) => (
+                                <a
+                                    href={item.url}
+                                    target="__blank"
+                                    rel="noopener noreferrer"
+                                    className="slider-ite"
+                                    key={key}>
+                                    <div className="card-item position-relative">
+                                        <div className="small-thumbnail-cover mb-8">
+                                            <img
+                                                src={
+                                                    item?.feature_image === null
+                                                        ? '/img/announcement-big.png'
+                                                        : item.feature_image
+                                                }
+                                                alt="card"
+                                                className="small-thumbnail"
+                                            />
                                         </div>
-                                    </a>
-                                ))}
+                                        <div className="cover-thumbnail d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <p className="text-xxs grey-text mb-0">
+                                                    {moment(item.published_at).startOf('day').fromNow()}
+                                                </p>
+                                                <h5 className="text-xxs white-text font-bold mb-0">{item.title}</h5>
+                                            </div>
+                                            <ArrowRight className={''} />
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
                         </Slider>
                     </div>
                     <Tabs

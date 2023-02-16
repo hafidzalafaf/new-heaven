@@ -186,11 +186,7 @@ const MarketListlMobileScreen: React.FC = () => {
                     </div>
                 ) : (
                     <div className="d-flex align-items-center text-sm" key={key}>
-                        <img
-                            src={item && item.currency && item.currency.icon_url}
-                            alt="coin"
-                            className="small-coin-icon"
-                        />
+                        <img src={item?.logo_url} alt="coin" className="small-coin-icon" />
                         <div className="ml-1">
                             <p className="mb-0 grey-text-accent mb-0 text-sm ml-2 text-nowrap">
                                 {item && item.base_unit && item.base_unit.toUpperCase()} /
