@@ -19,7 +19,7 @@ export interface P2PProfileFetchInterface {
         group: string;
     }
     offer: number;
-    positif_feedback: {
+    feedback: {
         negatif: number;
         positif: number;
         total: number;
@@ -59,7 +59,7 @@ export const initialP2PProfileState: P2PProfileState = {
                 group: '',
             },
             offer: 0,
-            positif_feedback: {
+            feedback: {
                 negatif: 0,
                 positif: 0,
                 total: 0,

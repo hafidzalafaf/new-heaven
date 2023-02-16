@@ -18,7 +18,7 @@ export const P2PUserTable: React.FC = () => {
                     <Tab eventKey="payment" title="Payment Methods P2P">
                         <P2PPaymentMethod />
                     </Tab>
-                    <Tab eventKey="feedback" title={`Feedback (${userP2P.positif_feedback.total})`}>
+                    <Tab eventKey="feedback" title={`Feedback (${userP2P?.feedback?.total})`}>
                         <P2PFeedback />
                     </Tab>
                     <Tab eventKey="block" title="Blocked User">
