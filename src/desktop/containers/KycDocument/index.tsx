@@ -514,7 +514,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
             birthDate: moment(e.target.value).format('DD/MM/YYYY'),
             birthYear: Number(moment(e.target.value).format('YYYY')),
         });
-        const birthYear = this.state.birthYear;
+        const birthYear = Number(moment(e.target.value).format('YYYY'));
         const minYear = moment().subtract(18, 'years').format('YYYY');
         Number(minYear) < Number(birthYear) ? this.props.fetchAlert({ message : ['You must be at least 18 years old to use this service'], type: 'error' }) : null;
     };
