@@ -75,12 +75,9 @@ const ProfileMobileScreen: React.FC = () => {
         if (kycData.key == 'document') {
             const kycStatus = kycData.value;
             setKycStatus(kycStatus);
-            console.log('kycStatus', kycStatus);
         } else {
             setKycStatus('');
         }
-        console.log('kycStatus', kycData);
-        console.log('user', user);
         setProfileKycStatus(user.profiles[0]?.state);
     }, []);
 
