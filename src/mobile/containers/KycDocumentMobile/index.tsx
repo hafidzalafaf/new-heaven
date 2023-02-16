@@ -300,7 +300,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
                                                     <div className="col-12">
                                                         <div className="mt-3">
                                                             <button
-                                                                disabled={Number(this.state.birthYear) > Number(moment().subtract(18, 'years').format('YYYY')) ? true : false}
+                                                                disabled={(Number(this.state.birthYear) > Number(moment().subtract(18, 'years').format('YYYY'))) || this.handleNextButtonDisabled() ? true : false}
                                                                 type="button"
                                                                 className="btn btn-block btn-lg btn-primary"
                                                                 onClick={() => this.setState({ step: 'document' })}>
@@ -638,6 +638,32 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
             selfieFileSizeErrorMessage === '';
 
         return !this.handleValidateInput('idNumber', idNumber) || !filesValid || !profileValid;
+    };
+
+    private handleNextButtonDisabled = () => {
+        const {
+            address,
+            birthDate,
+            city,
+            country,
+            district,
+            name,
+            province,
+            placeBirth,
+        } = this.state;
+
+        const profileValid =
+            address !== '' &&
+            birthDate !== '' &&
+            city !== '' &&
+            country !== '' &&
+            district !== '' &&
+            name !== '' &&
+            province !== '' &&
+            placeBirth !== '';
+
+
+        return !profileValid;
     };
 
     private sendDocuments = async () => {
