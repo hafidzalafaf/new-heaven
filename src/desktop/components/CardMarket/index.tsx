@@ -23,7 +23,7 @@ export const CardMarket: React.FunctionComponent<CardMarketProps> = (props) => {
                                 <div className="mr-8">
                                     <img src={el?.logo_url} alt="coin" className="coin rounded-pill" />
                                 </div>
-                                <p className="white-text m-0">{el && el.currency && el.currency.id.toUpperCase()}</p>
+                                <p className="white-text m-0">{el?.base_unit?.toUpperCase()}</p>
                             </td>
                             <td className="white-text pr-8">
                                 {title == 'Top Volume Coins'
