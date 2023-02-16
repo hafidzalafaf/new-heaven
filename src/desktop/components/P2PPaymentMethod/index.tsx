@@ -18,7 +18,6 @@ interface P2PPaymentMethodProps {
 }
 
 export const P2PPaymentMethod: React.FC = () => {
-    const data = [{ id: 1 }, { id: 2 }];
     const [expandPayment, setExpandPayment] = React.useState(false);
     const [fiat, setFiat] = React.useState('IDR');
     const [bankData, setBankData] = React.useState([]);
@@ -77,7 +76,7 @@ export const P2PPaymentMethod: React.FC = () => {
                     </div>
                 </div>
 
-                {!data[0] ? (
+                {!paymentMethods[0] ? (
                     <div className="d-flex flex-column justify-content-center align-items-center gap-24 no-data-container">
                         <NoDataIcon />
                         <p className="m-0 p-0 grey-text text-sm font-bold">No payment method yet</p>

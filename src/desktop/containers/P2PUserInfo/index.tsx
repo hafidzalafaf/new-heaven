@@ -18,6 +18,8 @@ import {
     p2pProfileChangeUsername,
     selectP2PProfileChangeUsernameSuccess,
 } from 'src/modules';
+import moment from 'moment';
+
 export const P2PUserInfo: React.FC = () => {
     const dispatch = useDispatch();
     const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
@@ -38,6 +40,11 @@ export const P2PUserInfo: React.FC = () => {
         };
         dispatch(p2pProfileChangeUsername(payload));
         setShowChangeUsernameModal(false);
+    };
+
+    const convertDurationtoMilliseconds = (duration: string) => {
+        const [hours, minutes, seconds] = duration.split(':');
+        return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
     };
 
     const ModalChangeName = () => {
@@ -138,7 +145,11 @@ export const P2PUserInfo: React.FC = () => {
                     <CardP2PUserInfo
                         title="Positive Feedback"
                         type="feedback"
-                        percent={`${Math.floor((userP2P?.feedback?.positive / userP2P?.feedback?.total) * 100)}%`}
+                        percent={`${
+                            userP2P?.feedback?.positive !== 0
+                                ? Math.floor((userP2P?.feedback?.positive / userP2P?.feedback?.total) * 100)
+                                : 0
+                        }%`}
                         amount={`${userP2P?.feedback?.total}`}
                     />
 
@@ -148,9 +159,13 @@ export const P2PUserInfo: React.FC = () => {
                                 <div
                                     className="progress"
                                     style={{
-                                        width: `${Math.floor(
-                                            (userP2P?.feedback?.positive / userP2P?.feedback?.total) * 100
-                                        ).toString()}%`,
+                                        width: `${
+                                            userP2P?.feedback?.positive !== 0
+                                                ? Math.floor(
+                                                      (userP2P?.feedback?.positive / userP2P?.feedback?.total) * 100
+                                                  ).toString()
+                                                : '0'
+                                        }%`,
                                     }}
                                 />
                             </div>
@@ -163,9 +178,13 @@ export const P2PUserInfo: React.FC = () => {
                                 <div
                                     className="progress"
                                     style={{
-                                        width: `${Math.floor(
-                                            (userP2P?.feedback?.negative / userP2P?.feedback?.total) * 100
-                                        ).toString()}%`,
+                                        width: `${
+                                            userP2P?.feedback?.negative !== 0
+                                                ? Math.floor(
+                                                      (userP2P?.feedback?.negative / userP2P?.feedback?.total) * 100
+                                                  ).toString()
+                                                : '0'
+                                        }%`,
                                     }}
                                 />
                             </div>
@@ -184,9 +203,17 @@ export const P2PUserInfo: React.FC = () => {
                     <CardP2PUserInfo
                         title="Avg. Release Time"
                         type="release"
-                        minutes={`${userP2P?.trade?.release_time}`}
+                        minutes={`${moment
+                            .utc(convertDurationtoMilliseconds(userP2P?.trade?.release_time))
+                            .format('m.ss')} Minute(s)`}
                     />
-                    <CardP2PUserInfo title="30d Pay Time" type="pay" minutes={`${userP2P?.trade?.release_time}`} />
+                    <CardP2PUserInfo
+                        title="30d Pay Time"
+                        type="pay"
+                        minutes={`${moment
+                            .utc(convertDurationtoMilliseconds(userP2P?.trade?.pay_time))
+                            .format('m.ss')} Minute(s)`}
+                    />
                 </div>
             </div>
         </React.Fragment>

@@ -31,7 +31,7 @@ export const P2PFeedback: React.FC = () => {
 
     const renderData = (data) => {
         return data.map((item, i) => (
-            <div key={i} className="d-flex justify-content-between align-item-center mb-16 p-10 data-row">
+            <div key={i} className="d-flex justify-content-between align-items-center mb-16 p-10 data-row">
                 <div className="d-flex align-items-start justify-content-start gap-8">
                     <div className="d-flex justify-content-center align-items-center grey-text-accent text-xxs font-bold ava-container">
                         {item?.member?.email?.slice(0, 1).toUpperCase()}
@@ -47,8 +47,8 @@ export const P2PFeedback: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="text-white">
-                    <p>{item?.timer}</p>
+                <div>
+                    <p className="grey-text font-bold m-0 p-0 text-xxs">{item?.timer}</p>
                 </div>
                 <div key={i} className="label-bank">
                     <img src="/dummy" alt="this is a test" />

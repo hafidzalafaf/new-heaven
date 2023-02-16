@@ -64,6 +64,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [showModalCancel, setShowModalCancel] = React.useState(false);
     const [active, setActive] = React.useState('');
 
+    console.log(paymentUser);
+
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
         if (detail?.order?.first_approve) {
@@ -169,6 +171,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const handleChangePaymentMethod = (e: string, el: any) => {
         setPaymentMethod(e);
         setPaymentUser(el);
+        setShowPayment(!showPayment);
     };
 
     const handleSendFeedbackPositive = () => {

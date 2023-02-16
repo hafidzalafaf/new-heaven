@@ -111,6 +111,8 @@ const WalletDepositBody = () => {
         }
     }, [currencyItem]);
 
+    console.log(currencyItem);
+
     const getTableHeaders = () => {
         return ['Date', 'Transacsion ID', 'Amount', 'Type Transaction', 'Status', 'Confirmation'];
     };

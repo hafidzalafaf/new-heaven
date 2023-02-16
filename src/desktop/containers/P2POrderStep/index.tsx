@@ -44,6 +44,8 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleSendFeedbackNegative,
     } = props;
 
+    console.log(showPayment);
+
     return (
         <React.Fragment>
             <div className="mb-4 left-side">
@@ -91,7 +93,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 Heaven only supports real-name verified payment methods
                             </p>
                             {side == 'sell' ? (
-                                <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold">
+                                <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold mt-3">
                                     {detail?.order?.payment !== null && side == 'sell' && (
                                         <img
                                             src={
@@ -105,7 +107,19 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                     )}
 
                                     <div>
-                                        {detail?.order?.payment !== null && side == 'sell' ? (
+                                        {detail?.order?.state == 'prepare' &&
+                                        detail?.order?.payment == null &&
+                                        side == 'sell' ? (
+                                            <p className="m-0 p-0 text-center font-semibold text-xs">
+                                                Waiting buyer to choose a payment method
+                                            </p>
+                                        ) : detail?.order?.state !== 'prepare' &&
+                                          detail?.order?.payment == null &&
+                                          side == 'sell' ? (
+                                            <React.Fragment>
+                                                <p className="m-0 p-0 font-semibold text-xs">Transaction end.</p>
+                                            </React.Fragment>
+                                        ) : (
                                             <React.Fragment>
                                                 <p className="m-0 p-0 mb-8 font-semibold text-xs">
                                                     {detail?.order?.payment?.account_number}
@@ -114,10 +128,6 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                     {detail?.order?.payment?.account_name}
                                                 </p>
                                             </React.Fragment>
-                                        ) : (
-                                            <p className="m-0 p-0 text-center font-semibold text-xs">
-                                                Waiting buyer to choose a payment method
-                                            </p>
                                         )}
                                     </div>
                                 </div>
@@ -138,60 +148,54 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                             </div>
                                         )}
                                     </div>
-                                    {detail?.order?.payment !== null || paymentUser ? (
-                                        <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold">
-                                            {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
-                                                <img
-                                                    src={
-                                                        paymentUser?.logo || detail?.order?.payment?.logo === 'dummy'
-                                                            ? '/img/logo-bca.png'
-                                                            : detail?.order?.payment !== null
-                                                            ? detail?.order?.payment?.logo
-                                                            : paymentUser?.logo
-                                                    }
-                                                    className="bank-logo mx-2"
-                                                    alt="bank logo"
-                                                />
-                                            )}
-
-                                            <div>
-                                                {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
-                                                    <React.Fragment>
-                                                        <p className="m-0 p-0 mb-8 font-semibold text-xs">
-                                                            {detail?.order?.payment !== null
-                                                                ? detail?.order?.payment?.account_number
-                                                                : paymentUser?.account_number}
-                                                        </p>
-                                                        <p className="m-0 p-0 font-semibold text-xs">
-                                                            {detail?.order?.payment !== null
-                                                                ? detail?.order?.payment?.account_name
-                                                                : paymentUser?.account_name}
-                                                        </p>
-                                                    </React.Fragment>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ) : (
+                                    {paymentUser ? (
                                         <React.Fragment>
-                                            <div className={`content-payment ${showPayment ? 'hide' : ''}`}>
-                                                <div className="d-flex align-items-center justify-content-end flex-wrap ">
-                                                    {detail?.payment_user?.map((el, i) => (
-                                                        <img
-                                                            key={i}
-                                                            src={el?.logo === 'dummy' ? '/img/logo-bca.png' : el?.logo}
-                                                            className="bank-logo mx-2"
-                                                            alt="bank logo"
-                                                        />
-                                                    ))}
+                                            <div
+                                                className={`payment-method content-payment ${
+                                                    showPayment ? 'hide' : ''
+                                                }  py-3 d-flex justify-content-between align-items-center text-xs font-semibold`}>
+                                                {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
+                                                    <img
+                                                        src={
+                                                            paymentUser?.logo ||
+                                                            detail?.order?.payment?.logo === 'dummy'
+                                                                ? '/img/logo-bca.png'
+                                                                : detail?.order?.payment !== null
+                                                                ? detail?.order?.payment?.logo
+                                                                : paymentUser?.logo
+                                                        }
+                                                        className="bank-logo mx-2"
+                                                        alt="bank logo"
+                                                    />
+                                                )}
+
+                                                <div>
+                                                    {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
+                                                        <React.Fragment>
+                                                            <p className="m-0 p-0 mb-8 font-semibold text-xs">
+                                                                {detail?.order?.payment !== null
+                                                                    ? detail?.order?.payment?.account_number
+                                                                    : paymentUser?.account_number}
+                                                            </p>
+                                                            <p className="m-0 p-0 font-semibold text-xs">
+                                                                {detail?.order?.payment !== null
+                                                                    ? detail?.order?.payment?.account_name
+                                                                    : paymentUser?.account_name}
+                                                            </p>
+                                                        </React.Fragment>
+                                                    )}
                                                 </div>
                                             </div>
+
                                             <div className={`content-payment-expand ${showPayment ? '' : 'hide'}`}>
                                                 {detail?.payment_user?.map((el, i) => (
                                                     <div
                                                         key={i}
-                                                        onClick={() =>
-                                                            handleChangePaymentMethod(el?.payment_user_id, el)
-                                                        }
+                                                        onClick={() => {
+                                                            if (el !== undefined) {
+                                                                handleChangePaymentMethod(el?.payment_user_id, el);
+                                                            }
+                                                        }}
                                                         className="payment-item cursor-pointer">
                                                         <div className="payment-item_title">
                                                             <img
@@ -201,7 +205,64 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                                         : el?.logo
                                                                 }
                                                                 className="bank-logo"
-                                                                alt=""
+                                                                alt="bank"
+                                                            />
+                                                        </div>
+                                                        <p className="primary-text text-xs mb-1 font-semibold mt-3">
+                                                            {el?.account_name}
+                                                        </p>
+                                                        <p className="primary-text text-xs font-semibold mb-0">
+                                                            {el?.account_number}
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </React.Fragment>
+                                    ) : detail?.order?.state !== 'prepare' && detail?.order?.payment == null ? (
+                                        <React.Fragment>
+                                            <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold">
+                                                <p className="m-0 p-0 font-semibold text-xs">Transaction end.</p>
+                                            </div>
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            <div className={`content-payment ${showPayment ? 'hide' : ''}`}>
+                                                <div className="d-flex align-items-center justify-content-end flex-wrap ">
+                                                    {detail?.payment_user?.slice(0, 14).map((el, i) => (
+                                                        <div className="mb-4">
+                                                            <img
+                                                                key={i}
+                                                                src={
+                                                                    el?.logo === 'dummy'
+                                                                        ? '/img/logo-bca.png'
+                                                                        : el?.logo
+                                                                }
+                                                                className="bank-logo mx-2"
+                                                                alt="bank logo"
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className={`content-payment-expand ${showPayment ? '' : 'hide'}`}>
+                                                {detail?.payment_user?.map((el, i) => (
+                                                    <div
+                                                        key={i}
+                                                        onClick={() => {
+                                                            if (el !== undefined) {
+                                                                handleChangePaymentMethod(el?.payment_user_id, el);
+                                                            }
+                                                        }}
+                                                        className="payment-item cursor-pointer">
+                                                        <div className="payment-item_title">
+                                                            <img
+                                                                src={
+                                                                    el?.logo === 'dummy'
+                                                                        ? '/img/logo-bca.png'
+                                                                        : el?.logo
+                                                                }
+                                                                className="bank-logo"
+                                                                alt="bank"
                                                             />
                                                         </div>
                                                         <p className="primary-text text-xs mb-1 font-semibold mt-3">
@@ -252,18 +313,14 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                         </Link>
                                     </div>
                                 )
-                            ) : detail?.order?.payment !== null && side == 'sell' ? (
+                            ) : (detail?.order?.state !== 'success' || detail?.order?.state !== 'accepted') &&
+                              side == 'sell' ? (
                                 <div className="d-flex gap-24">
                                     <button
                                         type="button"
                                         onClick={() => handleShowModalSellConfirm()}
-                                        className="btn btn-primary px-5 text-sm">
+                                        className="btn btn-secondary px-5 text-sm">
                                         Payment Received
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-transparent btn-inline w-auto font-semibold grey-text text-sm">
-                                        Transaction Issue; appeal after (00:00)
                                     </button>
                                 </div>
                             ) : (
