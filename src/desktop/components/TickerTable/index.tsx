@@ -46,11 +46,7 @@ export const TickerTable: React.FC<Props> = ({
                 <tr key={index}>
                     <td>
                         <div className="d-flex align-items-center">
-                            <img
-                                src={market && market.currency && market.currency.icon_url}
-                                className="small-coin-icon"
-                                alt=""
-                            />
+                            <img src={market?.logo_url} className="small-coin-icon" alt="" />
                             <div className="font-bold ml-2 text-uppercase">{market && market.name.toUpperCase()}</div>
                         </div>
                     </td>

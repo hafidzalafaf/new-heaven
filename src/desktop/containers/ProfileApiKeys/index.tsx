@@ -103,8 +103,8 @@ class ProfileApiKeysComponent extends React.Component<Props, ProfileApiKeysState
 
         const renderModalContentCancel = () => (
             <React.Fragment>
-                <h6 className="text-md white-text font-semibold mb-24  text-center">Are you sure to Delete Api Key?</h6>
-                <p className="text-sm grey-text-accent m-0 p-0 mb-24  text-center">
+                <h6 className="text-md white-text font-semibold mb-24 text-center">Are you sure to Delete Api Key?</h6>
+                <p className="text-sm grey-text-accent m-0 p-0 mb-24 text-center">
                     The API Key you made will be deleted
                 </p>
                 <div className="d-flex  justify-content-center">
@@ -166,8 +166,9 @@ class ProfileApiKeysComponent extends React.Component<Props, ProfileApiKeysState
                     </div>
 
                     {!user.otp && (
-                        <div className="px-24">
-                            <p className="mt-4  warning-text font-semibold text-md">
+                        <div className="px-24 d-flex flex-column justify-content-center align-items-center">
+                            <img src="/img/warning.png" alt="icon" />
+                            <p className=" warning-text font-semibold text-md">
                                 {this.t('page.body.profile.apiKeys.noOtp')}
                             </p>
                         </div>

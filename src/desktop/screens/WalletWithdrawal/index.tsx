@@ -36,6 +36,10 @@ export const WalletWitdrawal: React.FC = () => {
         dispatch(alertPush({ message: ['Link has been copied'], type: 'success' }));
     };
 
+    const handleViewAll = () => {
+        history.push('/history-transaction', { types: 'withdraws' });
+    };
+
     const getTableHeaders = () => {
         return ['Date', 'Transaction ID', 'Amount', 'Type Transaction', 'Address', 'Status', 'Confirmation'];
     };
@@ -104,9 +108,11 @@ export const WalletWitdrawal: React.FC = () => {
                         {historys.length < 1 && <NoData text="No Data Yet" />}
                         {historys.length > 0 && (
                             <div className="d-flex justify-content-center mt-3">
-                                <Link to="/history-transaction" className="font-bold text-center gradient-text text-sm">
+                                <p
+                                    onClick={handleViewAll}
+                                    className="font-bold text-center gradient-text text-sm cursor-pointer">
                                     View All
-                                </Link>
+                                </p>
                             </div>
                         )}
                     </div>

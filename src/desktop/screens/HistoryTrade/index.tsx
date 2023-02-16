@@ -141,7 +141,7 @@ export const HistoryTrade: FC = (): ReactElement => {
     const optionAssets = formattedMarkets.map((item) => {
         const customLabel = (
             <div className="d-flex align-items-center">
-                <img src={item.currency?.icon_url} alt="icon" className="mr-12 small-coin-icon" />
+                <img src={item?.logo_url} alt="icon" className="mr-12 small-coin-icon" />
                 <div>
                     <p className="m-0 text-sm grey-text-accent">{item.name.toUpperCase()}</p>
                     <p className="m-0 text-xs grey-text-accent">{item.currency?.name}</p>

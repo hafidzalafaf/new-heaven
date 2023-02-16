@@ -26,7 +26,7 @@ import {
     selectBlogs,
 } from '../../../modules';
 import { selectApiKeys } from 'src/modules/user/apiKeys/selectors';
-import { Modal, CustomInput } from '../../components';
+import { Modal, CustomInput, NoData } from '../../components';
 import { ModalCloseIcon } from '../../../assets/images/CloseIcon';
 import { CircleCloseDangerLargeIcon } from '../../../assets/images/CircleCloseIcon';
 import moment from 'moment';
@@ -593,8 +593,8 @@ export const ProfileScreen: FC = (): ReactElement => {
                                     <h6 className="text-ms white-text font-semibold mb-3">Explore</h6>
                                 </div>
                                 <div className="document">
-                                    {news &&
-                                        news.slice(0, 5).map((item, i) => (
+                                    {news.length > 0 ? (
+                                        news?.slice(0, 5).map((item, i) => (
                                             <a href={item.url} key={i} target="__blank" rel="noopener noreferrer">
                                                 <div className="doc-item">
                                                     <div className="mr-2">
@@ -603,14 +603,21 @@ export const ProfileScreen: FC = (): ReactElement => {
                                                     <p className="text-sm grey-text font-normal mb-0">{item.title}</p>
                                                 </div>
                                             </a>
-                                        ))}
+                                        ))
+                                    ) : (
+                                        <div className="my-3">
+                                            <NoData text="No FAQ yet" />
+                                        </div>
+                                    )}
                                 </div>
 
-                                <div className="d-flex justify-content-center mt-3">
-                                    <Link to="/faq" className="font-bold text-center gradient-text text-sm">
-                                        View More
-                                    </Link>
-                                </div>
+                                {news?.length == 5 && (
+                                    <div className="d-flex justify-content-center mt-3">
+                                        <Link to="/faq" className="font-bold text-center gradient-text text-sm">
+                                            View More
+                                        </Link>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

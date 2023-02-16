@@ -35,12 +35,13 @@ const WalletDepositBody = () => {
         min_confirmations: 6,
         deposit_enabled: false,
     };
+    const enableDesposit = currencyItem?.networks?.filter((item) => item.deposit_enabled == true);
 
     useWalletsFetch();
     useHistoryFetch({ type: 'deposits', currency: currency, limit: 3, page: 0 });
 
-    const [active, setActive] = useState(currencyItem?.networks ? currencyItem?.networks[0]?.protocol : '');
-    const [tab, setTab] = useState(currencyItem?.networks ? currencyItem?.networks[0]?.blockchain_key : '');
+    const [active, setActive] = useState(enableDesposit ? enableDesposit[0]?.protocol : '');
+    const [tab, setTab] = useState(enableDesposit ? enableDesposit[0]?.blockchain_key : '');
     const [currentTabIndex, setCurrentTabIndex] = useState(0);
     const [address, setAddress] = React.useState('');
     const [show, setShow] = useState(false);
@@ -57,12 +58,12 @@ const WalletDepositBody = () => {
         dispatch(alertPush({ message: ['Link has been copied'], type: 'success' }));
     };
 
-    const blockchain = (active && currencyItem && currencyItem.networks.find((n) => n.protocol === active)) || {
+    const blockchain = (active && currencyItem?.networks.find((n) => n.protocol === active)) || {
         blockchain_key: null,
     };
 
-    const blockchainKey = blockchain && blockchain.blockchain_key;
-    const minDepositAmount = (blockchain && blockchain.min_deposit_amount) || '0';
+    const blockchainKey = blockchain?.blockchain_key;
+    const minDepositAmount = blockchain?.min_deposit_amount || '0';
 
     const depositAddress =
         (wallet &&
@@ -71,13 +72,13 @@ const WalletDepositBody = () => {
         null;
 
     useEffect(() => {
-        setActive(currencyItem?.networks ? currencyItem?.networks[0]?.blockchain_key?.toUpperCase() : '');
+        setActive(enableDesposit ? enableDesposit[0]?.blockchain_key?.toUpperCase() : '');
         setCurrentTabIndex(0);
     }, [wallet.currency]);
 
     React.useEffect(() => {
-        if (depositAddress && depositAddress.address !== null) {
-            setAddress(depositAddress && depositAddress.address);
+        if (depositAddress?.address !== null) {
+            setAddress(depositAddress?.address);
         }
     }, [depositAddress]);
 
@@ -97,22 +98,18 @@ const WalletDepositBody = () => {
     };
 
     useEffect(() => {
-        if (currencyItem && currencyItem.networks && currencyItem.networks[0] && currencyItem.type !== 'fiat') {
-            setActive(
-                currencyItem && currencyItem.networks && currencyItem.networks[0] && currencyItem.networks[0].protocol
-            );
-
-            setTab(
-                currencyItem &&
-                    currencyItem.networks &&
-                    currencyItem.networks[0] &&
-                    currencyItem.networks[0].blockchain_key
-            );
+        if (currencyItem?.networks && currencyItem.networks[0] && currencyItem?.type !== 'fiat') {
+            setActive(enableDesposit && enableDesposit[0]?.protocol);
+            setTab(enableDesposit && enableDesposit[0]?.blockchain_key);
         }
     }, [currencyItem]);
 
+    const handleViewAll = () => {
+        history.push('/history-transaction', { types: 'deposits' });
+    };
+
     const getTableHeaders = () => {
-        return ['Date', 'Transacsion ID', 'Amount', 'Type Transaction', 'Status', 'Confirmation'];
+        return ['Date', 'TXID', 'Amount', 'Type Transaction', 'Status', 'Confirmation'];
     };
 
     const getTableData = (data) => {
@@ -143,7 +140,7 @@ const WalletDepositBody = () => {
                         <div className="w-50">
                             <h1 className="white-text text-ms font-extrabold mb-16">Deposit Payment</h1>
                             <p className="font-sm grey-text-accent mb-24">
-                                Please don't deposit any other digital assets except {currency.toUpperCase()} to the
+                                Please don't deposit any other digital assets except {currency?.toUpperCase()} to the
                                 address below. Otherwise, you may lose your assets permanently.
                             </p>
                             <div className="d-flex align-items-start select-container mb-24">
@@ -151,17 +148,15 @@ const WalletDepositBody = () => {
                                 <div className="w-75">
                                     <div className="w-100 d-flex align-items-center coin-selected mb-8">
                                         <img
-                                            src={currencyItem && currencyItem.icon_url}
+                                            src={currencyItem?.icon_url}
                                             alt="icon"
                                             className="mr-12 small-coin-icon"
                                         />
                                         <div>
                                             <p className="m-0 text-sm grey-text-accent">
-                                                {currencyItem && currencyItem.id && currencyItem.id.toUpperCase()}
+                                                {currencyItem?.id?.toUpperCase()}
                                             </p>
-                                            <p className="m-0 text-xs grey-text-accent">
-                                                {currencyItem && currencyItem.name}
-                                            </p>
+                                            <p className="m-0 text-xs grey-text-accent">{currencyItem?.name}</p>
                                         </div>
                                     </div>
                                     <p className="m-0 text-sm grey-text">Min Deposit : {minDepositAmount}</p>
@@ -176,10 +171,10 @@ const WalletDepositBody = () => {
                                 <div>
                                     <p className="mb-2 text-xs white-text">Minimum Deposit</p>
                                     <p className="mb-2 text-sm white-text font-bold">
-                                        <Decimal fixed={wallet.fixed} thousSep=",">
+                                        <Decimal fixed={wallet?.fixed} thousSep=",">
                                             {minDepositAmount?.toString()}
                                         </Decimal>
-                                        &nbsp;{wallet.currency?.toUpperCase()}
+                                        &nbsp;{wallet?.currency?.toUpperCase()}
                                     </p>
                                 </div>
                             </div>
@@ -188,7 +183,7 @@ const WalletDepositBody = () => {
                                     Send only {currency.toUpperCase()} to this deposit address.
                                 </li>
                                 <li className="white-text text-sm mb-8">
-                                    Ensure the network is BNB Smart Chain (BEP20).
+                                    Ensure the network is {currency.toUpperCase()} Smart Chain ({active}).
                                 </li>
                                 <li className="white-text text-sm mb-8">Do not send NFTs to this address.</li>
                             </ul>
@@ -196,30 +191,23 @@ const WalletDepositBody = () => {
 
                         <div className="network-container w-50">
                             <h1 className="white-text text-ms font-extrabold mb-16">
-                                {currencyItem &&
-                                    currencyItem.networks &&
-                                    currencyItem.networks.length > 1 &&
-                                    'Select Network :'}
+                                {enableDesposit?.length > 1 && 'Select Network :'}
                             </h1>
 
                             <div className="navbar position-relative navbar-expand-lg mb-24">
                                 <div className="collapse navbar-collapse">
                                     <ul className="navbar-nav">
-                                        {currencyItem &&
-                                            currencyItem.networks &&
-                                            currencyItem.networks.map((network) => (
-                                                <li
-                                                    className={`nav-item ${
-                                                        active === network.protocol ? 'active' : ''
-                                                    }`}
-                                                    key={network.blockchain_key}
-                                                    onClick={() => {
-                                                        setActive(network.protocol);
-                                                        setTab(network.blockchain_key);
-                                                    }}>
-                                                    <div className="nav-link">{network.protocol}</div>
-                                                </li>
-                                            ))}
+                                        {enableDesposit?.map((network) => (
+                                            <li
+                                                className={`nav-item ${active === network?.protocol ? 'active' : ''}`}
+                                                key={network?.blockchain_key}
+                                                onClick={() => {
+                                                    setActive(network?.protocol);
+                                                    setTab(network?.blockchain_key);
+                                                }}>
+                                                <div className="nav-link">{network?.protocol}</div>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                             </div>
@@ -228,23 +216,22 @@ const WalletDepositBody = () => {
                                 <button
                                     onClick={(e) => handleGenerateAddress(e)}
                                     className="w-100 btn-primary cursor-pointer"
-                                    disabled={depositAddress && depositAddress.state === 'pending' ? true : false}
+                                    disabled={depositAddress?.state === 'pending' ? true : false}
                                     type="button">
                                     {'Generate Address'}
                                 </button>
                             ) : (
-                                depositAddress &&
-                                depositAddress.address === null && (
+                                depositAddress?.address === null && (
                                     <button
                                         className="w-100 btn-primary cursor-pointer"
-                                        disabled={depositAddress && depositAddress.state === 'pending' ? true : false}
+                                        disabled={depositAddress?.state === 'pending' ? true : false}
                                         type="button">
                                         {'Creating ...'}
                                     </button>
                                 )
                             )}
 
-                            {depositAddress && depositAddress.address !== null && (
+                            {depositAddress !== null && depositAddress?.address !== null && (
                                 <React.Fragment>
                                     <h3 className="white-text text-sm font-bold">Address</h3>
                                     <input
@@ -256,21 +243,13 @@ const WalletDepositBody = () => {
                                         <button
                                             className="btn-primary mr-12"
                                             type="button"
-                                            disabled={
-                                                depositAddress &&
-                                                depositAddress.address &&
-                                                depositAddress.address === null
-                                            }
+                                            disabled={depositAddress?.address === null}
                                             onClick={() => doCopy('address')}>
                                             Copy Address
                                         </button>
                                         <button
                                             type="button"
-                                            disabled={
-                                                depositAddress &&
-                                                depositAddress.address &&
-                                                depositAddress.address === null
-                                            }
+                                            disabled={depositAddress?.address === null}
                                             className="btn-primary"
                                             onClick={handleShow}>
                                             Show QRCode
@@ -287,9 +266,11 @@ const WalletDepositBody = () => {
                         {historys.length < 1 && <NoData text="No Data Yet" />}
                         {historys.length > 0 && (
                             <div className="d-flex justify-content-center mt-3">
-                                <Link to="/history-transaction" className="font-bold text-center gradient-text text-sm">
+                                <p
+                                    onClick={handleViewAll}
+                                    className="font-bold text-center gradient-text text-sm cursor-pointer">
                                     View All
-                                </Link>
+                                </p>
                             </div>
                         )}
                     </div>
@@ -297,14 +278,14 @@ const WalletDepositBody = () => {
                     <Modal show={show} onHide={handleClose} centered>
                         <Modal.Body>
                             <div className="text-center">
-                                <QRCode dimensions={255} data={depositAddress && depositAddress.address} />
+                                <QRCode dimensions={255} data={depositAddress?.address} />
                             </div>
                         </Modal.Body>
                         <Modal.Footer className="border-none d-flex flex-column justify-content-center align-items-center">
                             <input
                                 id="address-modal"
                                 className="text-ms blue-text text-center font-extrabold mb-24 address"
-                                defaultValue={depositAddress && depositAddress.address}
+                                defaultValue={depositAddress?.address}
                             />
                             <button className="btn-primary mr-12" type="button" onClick={() => doCopy('address-modal')}>
                                 Copy Address
@@ -321,6 +302,7 @@ const WalletDepositBody = () => {
         minDepositAmount,
         depositAddress,
         handleGenerateAddress,
+        handleViewAll,
         currencyItem,
         active,
         blockchain,
