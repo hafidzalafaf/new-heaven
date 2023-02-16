@@ -9,7 +9,6 @@ import {
     P2P_PROFILE_CHANGE_USERNAME_ERROR,
 } from './constants';
 
-
 export interface P2PProfileFetchInterface {
     banned_state: boolean;
     logo: string;
@@ -17,13 +16,13 @@ export interface P2PProfileFetchInterface {
         email: string;
         uid: string;
         group: string;
-    }
+    };
     offer: number;
     feedback: {
-        negatif: number;
-        positif: number;
+        negative: number;
+        positive: number;
         total: number;
-    }
+    };
     success_rate: number;
     trade: {
         completed_rate: string;
@@ -31,7 +30,7 @@ export interface P2PProfileFetchInterface {
         pay_time: string;
         release_time: string;
         total: number;
-    }
+    };
     trader_name: string;
 }
 export interface P2PProfileState {
@@ -60,8 +59,8 @@ export const initialP2PProfileState: P2PProfileState = {
             },
             offer: 0,
             feedback: {
-                negatif: 0,
-                positif: 0,
+                negative: 0,
+                positive: 0,
                 total: 0,
             },
             success_rate: 0,

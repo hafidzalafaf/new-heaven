@@ -1,37 +1,73 @@
 import * as React from 'react';
 import { useDocumentTitle } from '../../../hooks';
 import { HeaderP2P } from '../../../desktop/containers';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    selectP2PCurrenciesData,
+    p2pCurrenciesFetch,
+    p2pPaymentUserCreate,
+    selectP2PPaymentUserCreateSuccess,
+} from 'src/modules';
 import Select from 'react-select';
 import { CustomStylesSelect } from '../../../desktop/components';
 import { InfoWarningIcon, QRIcon } from '../../../assets/images/P2PIcon';
-import { useParams } from 'react-router';
+import { useParams, useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 interface Bank {
     payment: string;
 }
 
-
 export const P2PAddPaymentScreen: React.FC = () => {
     useDocumentTitle('P2P || Add Payment');
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const currenciesData = useSelector(selectP2PCurrenciesData);
+    const createPaymentSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
 
     const [type, setType] = React.useState('bank');
     const [inputFile, setInputFile] = React.useState(null);
     const [fileName, setFileName] = React.useState('');
+    const [fiat, setFiat] = React.useState('IDR');
+
+    const [account_number, setAccountNumber] = React.useState('');
+    const [full_name, setFullName] = React.useState('');
+    const [bankData, setBankData] = React.useState([]);
+    const [bankName, setBankName] = React.useState<any>();
     const bank: Bank = useParams();
 
     const replacedDash = bank.payment.replace(/-/g, ' ');
-    const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+    const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
 
+    React.useEffect(() => {
+        dispatch(p2pCurrenciesFetch({ fiat }));
+    }, [dispatch, fiat]);
+
+    React.useEffect(() => {
+        setBankData(currenciesData?.payment);
+        setBankName(currenciesData?.payment?.find((item) => item.id == bank.payment));
+    }, [currenciesData]);
+
+    React.useEffect(() => {
+        if (createPaymentSuccess) {
+            history.push('/p2p/profile');
+        }
+    }, [createPaymentSuccess]);
+
+    const handleCreatePayment = () => {
+        const payload = { account_number, full_name, payment_method: bank.payment };
+
+        dispatch(p2pPaymentUserCreate(payload));
+    };
 
     //post data to backend
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('file', inputFile);
-        formData.append('type', type);
-        formData.append('name', renderedWord);
-
-    };
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     const formData = new FormData();
+    //     formData.append('file', inputFile);
+    //     formData.append('type', type);
+    //     formData.append('name', renderedWord);
+    // };
 
     return (
         <React.Fragment>
@@ -54,17 +90,19 @@ export const P2PAddPaymentScreen: React.FC = () => {
                         <div className="mb-24">
                             <label className="m-0 p-0 mb-16 white-text text-ms">Payment Method</label>
                             <input
-                                    type="text"
-                                    className="custom-input-add-payment w-100 white-text"
-                                    value={renderedWord}
-                                    disabled
-                                />
+                                type="text"
+                                className="custom-input-add-payment w-100 white-text"
+                                value={bankName?.bank_name}
+                                disabled
+                            />
                         </div>
 
                         {type === 'bank' ? (
                             <div className="mb-24">
                                 <label className="m-0 p-0 mb-16 white-text text-ms">Full Name</label>
                                 <input
+                                    value={full_name}
+                                    onChange={(e) => setFullName(e.target.value)}
                                     type="text"
                                     placeholder="Enter Full Name"
                                     className="custom-input-add-payment w-100 white-text"
@@ -85,6 +123,8 @@ export const P2PAddPaymentScreen: React.FC = () => {
                             <div className="mb-24">
                                 <label className="m-0 p-0 mb-16 white-text text-ms">Account Number</label>
                                 <input
+                                    value={account_number}
+                                    onChange={(e) => setAccountNumber(e.target.value)}
                                     type="text"
                                     placeholder="Enter Account Number"
                                     className="custom-input-add-payment w-100 white-text"
@@ -132,8 +172,12 @@ export const P2PAddPaymentScreen: React.FC = () => {
                         </div>
 
                         <div className="d-flex justify-content-between align-items-center gap-24">
-                            <button className="btn-secondary w-49 radius-sm">Cancel</button>
-                            <button onClick={()=>handleSubmit} className="btn-primary w-49">Confirm</button>
+                            <Link to={`/p2p/profile`} type="button" className="btn-secondary w-49 radius-sm">
+                                Cancel
+                            </Link>
+                            <button type="button" onClick={handleCreatePayment} className="btn-primary w-49">
+                                Confirm
+                            </button>
                         </div>
                     </form>
                 </div>

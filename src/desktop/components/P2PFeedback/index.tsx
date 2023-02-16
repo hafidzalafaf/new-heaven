@@ -1,45 +1,60 @@
 import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { feedbackFetch, selectP2PFeedbackUser } from 'src/modules';
 import { NoDataIcon, LikeSuccessIcon, UnLikeDangerIcon } from '../../../assets/images/P2PIcon';
 import { Tabs, Tab } from 'react-bootstrap';
-import { truncateMiddle } from '../../../helpers';
 import moment from 'moment';
 
 export const P2PFeedback: React.FC = () => {
-    const data = [
-        { id: 1, timer: '9:45', payment_method: '/img/logo-jago.png', positive: true, name: 'Nusatech Exchange' },
-        { id: 2, timer: '9:45', payment_method: '/img/logo-dana.png', positive: false, name: 'Nusatech Exchange' },
-    ];
+    const dispatch = useDispatch();
+    const feedbacks = useSelector(selectP2PFeedbackUser);
+    const [data, setData] = React.useState([]);
+    const [tab, setTab] = React.useState('all');
 
-    const dataPositive = data.filter((item) => item.positive === true);
-    const dataNegative = data.filter((item) => item.positive === false);
+    React.useEffect(() => {
+        dispatch(feedbackFetch());
+    }, [dispatch]);
+
+    React.useEffect(() => {
+        setData(
+            tab == 'positive'
+                ? feedbacks.filter((item) => item.assesment == 'positive')
+                : tab == 'negative'
+                ? feedbacks.filter((item) => item.assesment == 'negative')
+                : feedbacks
+        );
+    }, [feedbacks, tab]);
+
+    const handleSelect = (k) => {
+        setTab(k);
+    };
 
     const renderData = (data) => {
         return data.map((item, i) => (
-            <div key={i} className="d-flex justify-content-between align-item-center mb-16 p-10 data-row">
+            <div key={i} className="d-flex justify-content-between align-items-center mb-16 p-10 data-row">
                 <div className="d-flex align-items-start justify-content-start gap-8">
                     <div className="d-flex justify-content-center align-items-center grey-text-accent text-xxs font-bold ava-container">
-                        {item.name?.slice(0, 1).toUpperCase()}
+                        {item?.member?.email?.slice(0, 1).toUpperCase()}
                     </div>
 
                     <div className="d-flex flex-column gap-4">
-                        <p className="m-0 p-0 text-xxs font-bold grey-text-accent">
-                            {truncateMiddle(item.name, 10, '****')}
-                        </p>
+                        <p className="m-0 p-0 text-xxs font-bold grey-text-accent">{item?.member?.email}</p>
                         <p className="m-0 p-0 text-xxs font-bold grey-text">
-                            2022-12-28{'  '}|{'  '}Bank Transfer
+                            {moment(item?.date_transaction_start).format('YYYY-MM-DD')}
+                            {'  '}|{'  '}Bank Transfer
                         </p>
-                        <p className="m-0 p-0 text-xxs font-bold white-text">Transaksi cepat, Sopan dan Ramah</p>
+                        <p className="m-0 p-0 text-xxs font-bold white-text">{item?.comment}</p>
                     </div>
                 </div>
 
-                <div className='text-white'>
-                    <p>{item.timer}</p>
+                <div>
+                    <p className="grey-text font-bold m-0 p-0 text-xxs">{item?.timer}</p>
                 </div>
                 <div key={i} className="label-bank">
-                    <img src='/dummy' alt='this is a test' />
+                    <img src="/dummy" alt="this is a test" />
                 </div>
 
-                <span>{item.positive ? <LikeSuccessIcon /> : <UnLikeDangerIcon />}</span>
+                <span>{item.assesment == 'positive' ? <LikeSuccessIcon /> : <UnLikeDangerIcon />}</span>
             </div>
         ));
     };
@@ -49,24 +64,30 @@ export const P2PFeedback: React.FC = () => {
             <div className="com-p2p-feedback">
                 <div className="d-flex justify-content-between align-items-center mb-16">
                     <p className="m-0 p-0 grey-text text-ms">Feedback</p>
-                    <p className="m-0 p-0 grey-text text-ms">{data?.length} Review</p>
+                    <p className="m-0 p-0 grey-text text-ms">{feedbacks?.length} Review</p>
                 </div>
 
-                {!data[0] ? (
+                {!feedbacks[0] ? (
                     <div className="d-flex flex-column justify-content-center align-items-center gap-24 no-data-container">
                         <NoDataIcon />
                         <p className="m-0 p-0 grey-text text-sm font-bold">No Comments</p>
                     </div>
                 ) : (
-                    <Tabs defaultActiveKey="all" transition={false} id="noanim-tab-example" className="mb-3">
+                    <Tabs
+                        defaultActiveKey="all"
+                        activeKey={tab}
+                        onSelect={(k) => handleSelect(k)}
+                        transition={false}
+                        id="noanim-tab-example"
+                        className="mb-3">
                         <Tab eventKey="all" title="All">
                             {renderData(data)}
                         </Tab>
-                        <Tab eventKey="positie" title="Positive">
-                            {renderData(dataPositive)}
+                        <Tab eventKey="positive" title="Positive">
+                            {renderData(data)}
                         </Tab>
                         <Tab eventKey="negative" title="Negative">
-                            {renderData(dataNegative)}
+                            {renderData(data)}
                         </Tab>
                     </Tabs>
                 )}

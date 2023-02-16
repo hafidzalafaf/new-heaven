@@ -15,7 +15,7 @@ export function* p2pCreatePaymentUserSaga(action: P2PPaymentUserCreate) {
     try {
         yield call(API.post(config(getCsrfToken())), `/account/payment`, action.payload);
         yield put(p2pPaymentUserCreateData());
-        yield put(alertPush({ message: ['success.feedback.created'], type: 'success' }));
+        yield put(alertPush({ message: ['success.payment.method.created'], type: 'success' }));
     } catch (error) {
         yield put(
             sendError({

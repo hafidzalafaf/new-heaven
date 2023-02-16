@@ -42,7 +42,7 @@ const defaultConfirm: Confirm = {
 
 export interface OrderState {
     create: {
-        // data: Order;
+        data: any;
         fetching: boolean;
         success: boolean;
         error?: CommonError;
@@ -94,6 +94,7 @@ export interface OrderState {
 
 export const initialOrderState: OrderState = {
     create: {
+        data: {},
         fetching: false,
         success: false,
     },
@@ -206,7 +207,7 @@ const orderCreateReducer = (state: OrderState['create'], action: OrderActions) =
         case ORDER_CREATE_DATA:
             return {
                 ...state,
-                // data: action.payload,
+                data: action.payload,
                 fetching: false,
                 success: true,
                 error: undefined,

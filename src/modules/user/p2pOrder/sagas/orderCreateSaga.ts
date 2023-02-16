@@ -13,8 +13,8 @@ const config = (csrfToken?: string): RequestOptions => {
 
 export function* orderCreateSaga(action: OrderCreate) {
     try {
-        yield call(API.post(config(getCsrfToken())), `/market/orders`, action.payload);
-        yield put(orderCreateData());
+        const response = yield call(API.post(config(getCsrfToken())), `/market/orders`, action.payload);
+        yield put(orderCreateData(response));
         yield put(alertPush({ message: ['success.order.created'], type: 'success' }));
     } catch (error) {
         yield put(

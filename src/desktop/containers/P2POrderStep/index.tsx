@@ -10,8 +10,8 @@ export interface P2POrderStepProps {
     showModalCancel: boolean;
     comment: string;
     side: string;
-    bank: any[];
     detail: any;
+    order_number: string;
     handleChangePaymentMethod: (e: string, el: any) => void;
     handleChangeComment: (e: string) => void;
     handleConfirmPaymentBuy: () => void;
@@ -19,6 +19,8 @@ export interface P2POrderStepProps {
     handleShowModalBuyOrderCompleted: () => void;
     handleShowModalSellConfirm: () => void;
     handleShowModalCancel: () => void;
+    handleSendFeedbackPositive: () => void;
+    handleSendFeedbackNegative: () => void;
 }
 
 export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) => {
@@ -29,8 +31,8 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         showModalCancel,
         comment,
         side,
-        bank,
         detail,
+        order_number,
         handleChangePaymentMethod,
         handleChangeComment,
         handleShowPayment,
@@ -38,7 +40,11 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleShowModalBuyOrderCompleted,
         handleShowModalSellConfirm,
         handleShowModalCancel,
+        handleSendFeedbackPositive,
+        handleSendFeedbackNegative,
     } = props;
+
+    console.log(showPayment);
 
     return (
         <React.Fragment>
@@ -46,12 +52,12 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                 <p className="mb-3 text-sm font-bold white-text">Order Steps</p>
                 <div className="d-flex align-items-center justofy-content-between mb-3">
                     <div className={`arrow arrow-right active`}>Transfers Payment To Seller</div>
-                    <div className={`arrow arrow-right ${detail?.order?.payment !== null && 'active'}`}>
+                    <div className={`arrow arrow-right ${detail?.order?.state !== 'prepare' && 'active'}`}>
                         Pending Seller to Release Cryptos
                     </div>
                     <div
                         className={`arrow arrow-right ${
-                            detail?.order?.first_approve !== null && detail?.order?.second_approve !== null && 'active'
+                            detail?.order?.state !== 'waiting' && detail?.order?.state !== 'prepare' && 'active'
                         }`}>
                         {' '}
                         Completed Order
@@ -73,7 +79,9 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 </div>
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Quantity</span>
-                                    <p className="text-sm white-text font-semibold">{detail?.order?.quantity} USDT</p>
+                                    <p className="text-sm white-text font-semibold">
+                                        {detail?.order?.quantity} {detail?.offer?.fiat}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -85,7 +93,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 Heaven only supports real-name verified payment methods
                             </p>
                             {side == 'sell' ? (
-                                <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold">
+                                <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold mt-3">
                                     {detail?.order?.payment !== null && side == 'sell' && (
                                         <img
                                             src={
@@ -99,7 +107,19 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                     )}
 
                                     <div>
-                                        {detail?.order?.payment !== null && side == 'sell' ? (
+                                        {detail?.order?.state == 'prepare' &&
+                                        detail?.order?.payment == null &&
+                                        side == 'sell' ? (
+                                            <p className="m-0 p-0 text-center font-semibold text-xs">
+                                                Waiting buyer to choose a payment method
+                                            </p>
+                                        ) : detail?.order?.state !== 'prepare' &&
+                                          detail?.order?.payment == null &&
+                                          side == 'sell' ? (
+                                            <React.Fragment>
+                                                <p className="m-0 p-0 font-semibold text-xs">Transaction end.</p>
+                                            </React.Fragment>
+                                        ) : (
                                             <React.Fragment>
                                                 <p className="m-0 p-0 mb-8 font-semibold text-xs">
                                                     {detail?.order?.payment?.account_number}
@@ -108,10 +128,6 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                     {detail?.order?.payment?.account_name}
                                                 </p>
                                             </React.Fragment>
-                                        ) : (
-                                            <p className="m-0 p-0 text-center font-semibold text-xs">
-                                                Waiting buyer to choose a payment method
-                                            </p>
                                         )}
                                     </div>
                                 </div>
@@ -126,64 +142,60 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                 Payment Methods
                                             </span>
                                         </p>
-                                        <div className={`${showPayment ? 'rotate-180' : ''}`}>
-                                            <ArrowDown />
-                                        </div>
-                                    </div>
-                                    {detail?.order?.payment !== null || paymentUser ? (
-                                        <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold">
-                                            {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
-                                                <img
-                                                    src={
-                                                        paymentUser?.logo || detail?.order?.payment?.logo === 'dummy'
-                                                            ? '/img/logo-bca.png'
-                                                            : detail?.order?.payment !== null
-                                                            ? detail?.order?.payment?.logo
-                                                            : paymentUser?.logo
-                                                    }
-                                                    className="bank-logo mx-2"
-                                                    alt="bank logo"
-                                                />
-                                            )}
-
-                                            <div>
-                                                {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
-                                                    <React.Fragment>
-                                                        <p className="m-0 p-0 mb-8 font-semibold text-xs">
-                                                            {detail?.order?.payment !== null
-                                                                ? detail?.order?.payment?.account_number
-                                                                : paymentUser?.account_number}
-                                                        </p>
-                                                        <p className="m-0 p-0 font-semibold text-xs">
-                                                            {detail?.order?.payment !== null
-                                                                ? detail?.order?.payment?.account_name
-                                                                : paymentUser?.account_name}
-                                                        </p>
-                                                    </React.Fragment>
-                                                )}
+                                        {detail?.order?.state == 'prepare' && (
+                                            <div className={`${showPayment ? 'rotate-180' : ''}`}>
+                                                <ArrowDown />
                                             </div>
-                                        </div>
-                                    ) : (
+                                        )}
+                                    </div>
+                                    {paymentUser ? (
                                         <React.Fragment>
-                                            <div className={`content-payment ${showPayment ? 'hide' : ''}`}>
-                                                <div className="d-flex align-items-center justify-content-end flex-wrap ">
-                                                    {detail?.payment_user?.map((el, i) => (
-                                                        <img
-                                                            key={i}
-                                                            src={el?.logo === 'dummy' ? '/img/logo-bca.png' : el?.logo}
-                                                            className="bank-logo mx-2"
-                                                            alt="bank logo"
-                                                        />
-                                                    ))}
+                                            <div
+                                                className={`payment-method content-payment ${
+                                                    showPayment ? 'hide' : ''
+                                                }  py-3 d-flex justify-content-between align-items-center text-xs font-semibold`}>
+                                                {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
+                                                    <img
+                                                        src={
+                                                            paymentUser?.logo ||
+                                                            detail?.order?.payment?.logo === 'dummy'
+                                                                ? '/img/logo-bca.png'
+                                                                : detail?.order?.payment !== null
+                                                                ? detail?.order?.payment?.logo
+                                                                : paymentUser?.logo
+                                                        }
+                                                        className="bank-logo mx-2"
+                                                        alt="bank logo"
+                                                    />
+                                                )}
+
+                                                <div>
+                                                    {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
+                                                        <React.Fragment>
+                                                            <p className="m-0 p-0 mb-8 font-semibold text-xs">
+                                                                {detail?.order?.payment !== null
+                                                                    ? detail?.order?.payment?.account_number
+                                                                    : paymentUser?.account_number}
+                                                            </p>
+                                                            <p className="m-0 p-0 font-semibold text-xs">
+                                                                {detail?.order?.payment !== null
+                                                                    ? detail?.order?.payment?.account_name
+                                                                    : paymentUser?.account_name}
+                                                            </p>
+                                                        </React.Fragment>
+                                                    )}
                                                 </div>
                                             </div>
+
                                             <div className={`content-payment-expand ${showPayment ? '' : 'hide'}`}>
                                                 {detail?.payment_user?.map((el, i) => (
                                                     <div
                                                         key={i}
-                                                        onClick={() =>
-                                                            handleChangePaymentMethod(el?.payment_user_id, el)
-                                                        }
+                                                        onClick={() => {
+                                                            if (el !== undefined) {
+                                                                handleChangePaymentMethod(el?.payment_user_id, el);
+                                                            }
+                                                        }}
                                                         className="payment-item cursor-pointer">
                                                         <div className="payment-item_title">
                                                             <img
@@ -193,7 +205,64 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                                         : el?.logo
                                                                 }
                                                                 className="bank-logo"
-                                                                alt=""
+                                                                alt="bank"
+                                                            />
+                                                        </div>
+                                                        <p className="primary-text text-xs mb-1 font-semibold mt-3">
+                                                            {el?.account_name}
+                                                        </p>
+                                                        <p className="primary-text text-xs font-semibold mb-0">
+                                                            {el?.account_number}
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </React.Fragment>
+                                    ) : detail?.order?.state !== 'prepare' && detail?.order?.payment == null ? (
+                                        <React.Fragment>
+                                            <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold">
+                                                <p className="m-0 p-0 font-semibold text-xs">Transaction end.</p>
+                                            </div>
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            <div className={`content-payment ${showPayment ? 'hide' : ''}`}>
+                                                <div className="d-flex align-items-center justify-content-end flex-wrap ">
+                                                    {detail?.payment_user?.slice(0, 14).map((el, i) => (
+                                                        <div className="mb-4">
+                                                            <img
+                                                                key={i}
+                                                                src={
+                                                                    el?.logo === 'dummy'
+                                                                        ? '/img/logo-bca.png'
+                                                                        : el?.logo
+                                                                }
+                                                                className="bank-logo mx-2"
+                                                                alt="bank logo"
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className={`content-payment-expand ${showPayment ? '' : 'hide'}`}>
+                                                {detail?.payment_user?.map((el, i) => (
+                                                    <div
+                                                        key={i}
+                                                        onClick={() => {
+                                                            if (el !== undefined) {
+                                                                handleChangePaymentMethod(el?.payment_user_id, el);
+                                                            }
+                                                        }}
+                                                        className="payment-item cursor-pointer">
+                                                        <div className="payment-item_title">
+                                                            <img
+                                                                src={
+                                                                    el?.logo === 'dummy'
+                                                                        ? '/img/logo-bca.png'
+                                                                        : el?.logo
+                                                                }
+                                                                className="bank-logo"
+                                                                alt="bank"
                                                             />
                                                         </div>
                                                         <p className="primary-text text-xs mb-1 font-semibold mt-3">
@@ -210,11 +279,11 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 </div>
                             )}
                         </div>
-                        <div className=" payment-form last">
+                        <div className="payment-form last">
                             <p className="mb-3 text-ms font-semibold white-text">
                                 After transferring funds. Click the button "Confirm"
                             </p>
-                            {detail?.order?.second_approve !== null ? (
+                            {detail?.order?.state == 'success' || detail?.order?.state == 'accepted' ? (
                                 side === 'buy' ? (
                                     <div className="d-flex gap-24">
                                         <Link
@@ -244,18 +313,14 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                         </Link>
                                     </div>
                                 )
-                            ) : detail?.order?.payment !== null && side == 'sell' ? (
+                            ) : (detail?.order?.state !== 'success' || detail?.order?.state !== 'accepted') &&
+                              side == 'sell' ? (
                                 <div className="d-flex gap-24">
                                     <button
                                         type="button"
                                         onClick={() => handleShowModalSellConfirm()}
-                                        className="btn btn-primary px-5 text-sm">
+                                        className="btn btn-secondary px-5 text-sm">
                                         Payment Received
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-transparent btn-inline w-auto font-semibold grey-text text-sm">
-                                        Transaction Issue; appeal after (00:00)
                                     </button>
                                 </div>
                             ) : (
@@ -281,8 +346,8 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                         </div>
                     </div>
                 </div>
-                {detail?.order?.second_approve && (
-                    <div className="">
+                {(detail?.order?.state == 'success' || detail?.order?.state == 'accepted') && (
+                    <div className="mb-5">
                         <CustomInput
                             inputValue={comment}
                             type="text"
@@ -297,13 +362,15 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                         <div className="d-flex justify-content-between">
                             <button
                                 type="button"
+                                onClick={handleSendFeedbackPositive}
                                 className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
                                 Positive <LikeSuccessIcon />{' '}
                             </button>
                             <button
                                 type="button"
+                                onClick={handleSendFeedbackNegative}
                                 className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
-                                Positive <UnLikeDangerIcon />{' '}
+                                Negative <UnLikeDangerIcon />{' '}
                             </button>
                         </div>
                     </div>

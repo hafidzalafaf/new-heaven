@@ -129,6 +129,8 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
         [history]
     );
 
+    console.log(filteredWallets);
+
     const retrieveData = useCallback(() => {
         const list = nonZeroSelected
             ? filteredWallets.filter((i) => i.balance && Number(i.balance) > 0)
@@ -155,7 +157,11 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                       <div key={index} className="d-flex">
                           <img
                               alt={currency?.toUpperCase()}
-                              src={iconUrl}
+                              src={
+                                  iconUrl !== '-' && iconUrl !== null && iconUrl !== 'null'
+                                      ? iconUrl
+                                      : '/img/dummycoin.png'
+                              }
                               style={{ height: '24px', marginRight: '16px' }}
                           />
                           <p className="text-sm white-text">{currency.toUpperCase()}</p>

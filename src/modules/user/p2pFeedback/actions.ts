@@ -30,7 +30,9 @@ export interface FeedbackError {
 export interface FeedbackCreate {
     type: typeof FEEDBACK_CREATE;
     payload: {
-        order_number: string;
+        order_number?: string;
+        comment?: string;
+        assesment?: string;
     };
 }
 

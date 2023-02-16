@@ -85,7 +85,7 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                         <img src="/img/coin.png" className="icon-lg" alt="" />
                         <div className="ml-3">
                             <p className="text-ms mb-2 white-text font-normal">
-                                USDT CRYPTO <CheckFillIcon />
+                                {detail?.order?.trades?.email} <CheckFillIcon />
                             </p>
                             <p className="mb-1 grey-text-accent text-sm">30D Trades</p>
                             <p className="mb-1 grey-text-accent text-sm">30D Completetition Rate</p>
@@ -116,7 +116,7 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                             {chat?.p2p_user?.uid === profile?.member?.uid
                                                 ? 'You'
                                                 : chat?.p2p_user == 'Nusablocks'
-                                                ? chat?.p2p_user
+                                                ? 'Nusablocks'
                                                 : chat?.p2p_user?.email}
                                         </p>
                                         <div className="buble-chat">

@@ -4,6 +4,10 @@ import { Order } from './types';
 
 export const selectP2POrder = (state: RootState): any[] => state.user.p2pOrder.fetch.data;
 
+export const selectP2POrderCreateData = (state: RootState): any => state.user.p2pOrder.create.data;
+
+export const selectP2POrderCreateSuccess = (state: RootState): boolean => state.user.p2pOrder.create.success;
+
 export const selectP2POrderDetail = (state: RootState): any => state.user.p2pOrder.detail.data;
 
 export const selectP2POrderDetailLoading = (state: RootState): boolean => state.user.p2pOrder.detail.fetching;
