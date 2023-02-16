@@ -78,11 +78,7 @@ const MarketDetailMobileScreen: React.FC = () => {
                 <div className="d-flex flex-column align-items-center justify-content-center detail-card-coin w-100 mb-3">
                     <div className="d-flex justify-content-between align-items-center card-coin-head w-100">
                         <div className="d-flex align-items-center justify-content-start card-coin-price">
-                            <img
-                                src={detail && detail.currency && detail.currency.icon_url}
-                                alt="coin"
-                                className="small-coin-icon"
-                            />
+                            <img src={detail?.logo_url} alt="coin" className="small-coin-icon" />
                             <h3 className="p-0 m-0">
                                 {detail && detail.currency && detail.currency.name} Price{' '}
                                 <span className="p-0 m-0">
