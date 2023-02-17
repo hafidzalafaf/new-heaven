@@ -13,7 +13,6 @@ import { Table } from '../../../components';
 import { NoData } from '../../components';
 import { copy } from '../../../components';
 import { CopyableTextField } from '../../../components';
-import { CopyButton } from '../../../assets/images/CopyButton';
 import moment from 'moment';
 
 export const WalletWitdrawal: React.FC = () => {

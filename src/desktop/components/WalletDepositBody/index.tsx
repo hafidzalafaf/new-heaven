@@ -183,7 +183,7 @@ const WalletDepositBody = () => {
                                     Send only {currency.toUpperCase()} to this deposit address.
                                 </li>
                                 <li className="white-text text-sm mb-8">
-                                    Ensure the network is {currency.toUpperCase()} Smart Chain ({active}).
+                                    Ensure the network is {currency.toUpperCase()} ({active}).
                                 </li>
                                 <li className="white-text text-sm mb-8">Do not send NFTs to this address.</li>
                             </ul>

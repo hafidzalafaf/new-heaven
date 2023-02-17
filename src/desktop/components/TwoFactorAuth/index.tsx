@@ -8,6 +8,7 @@ import { signInRequire2FA } from '../../../modules';
 export interface TwoFactorAuthProps {
     isMobile?: boolean;
     isLoading?: boolean;
+    signInLoading?: boolean;
     onSubmit: () => void;
     title: string;
     buttonLabel: string;
@@ -22,6 +23,7 @@ export const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
     isLoading,
     otpCode,
     buttonLabel,
+    signInLoading,
     onSubmit,
     handleOtpCodeChange,
 }) => {
@@ -59,7 +61,12 @@ export const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
                     <div className="w-100 mb-24 text-right text-xs grey-text">Lost Your 2FA?</div>
                 </Link>
 
-                <Button disabled={isLoading || otpCode.length < 6} onClick={onSubmit} size="lg" variant="primary" block>
+                <Button
+                    disabled={isLoading || signInLoading || otpCode.length < 6}
+                    onClick={onSubmit}
+                    size="lg"
+                    variant="primary"
+                    block>
                     {isLoading ? 'Loading...' : buttonLabel ? buttonLabel : 'Sign in'}
                 </Button>
             </form>
