@@ -67,6 +67,7 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
     const [coinDescription, setCoinDescription] = React.useState('');
     const [coinDestinationTag, setCoinDestinationTag] = React.useState('');
     const [currencyID, setCurrencyID] = React.useState('');
+    const [protocol, setProtocol] = React.useState('');
     const wallet: Wallet = wallets.find((item) => item.currency === currency) || DEFAULT_WALLET;
     const balance = wallet && wallet.balance ? wallet.balance.toString() : '0';
     const selectedFixed = (wallet || { fixed: 0 }).fixed;
@@ -142,19 +143,17 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
 
     const isDisabled = !coinAddress || !coinBeneficiaryName || !coinAddressValid || !coinBlockchainName.blockchainKey;
 
-    const optionNetworks =
-        currencyItem &&
-        currencyItem.networks.map((item) => {
-            const customLabel = (
-                <div className="d-flex align-items-center">
-                    <p className="m-0 grey-text-accent text-sm">{item.blockchain_key}</p>
-                </div>
-            );
-            return {
-                label: customLabel,
-                value: item.blockchain_key,
-            };
-        });
+    const optionNetworks = currencyItem?.networks?.map((item) => {
+        const customLabel = (
+            <div onClick={() => setProtocol(item?.protocol)} className="d-flex align-items-center">
+                <p className="m-0 grey-text-accent text-sm">{item?.protocol}</p>
+            </div>
+        );
+        return {
+            label: customLabel,
+            value: item.blockchain_key,
+        };
+    });
 
     const renderHeaderModalAddBeneficiary = () => {
         return (
@@ -200,9 +199,9 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
                                 value={optionNetworks.filter(function (option) {
                                     return option.value === coinBlockchainName.blockchainKey;
                                 })}
-                                onChange={(e) =>
-                                    setCoinBlockchainName({ ...coinBlockchainName, blockchainKey: e.value })
-                                }
+                                onChange={(e) => {
+                                    setCoinBlockchainName({ ...coinBlockchainName, blockchainKey: e.value });
+                                }}
                             />
                         </div>
                         <div>
@@ -224,10 +223,13 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
                                     <span className="text-xs danger-text">Invalid Address</span>
                                 )}
                             </div>
-                            <p className="mb-16 text-xs grey-text ">
-                                Do not send Tether USD unless you are certain the destination supports TRC-20
-                                transactions. If it does not, you could permanently lose access to your coins.
-                            </p>
+                            {protocol && (
+                                <p className="mb-16 text-xs grey-text ">
+                                    Do not send {currency?.toUpperCase()} unless you are certain the destination
+                                    supports {protocol?.toUpperCase()} transactions. If it does not, you could
+                                    permanently lose access to your coins.
+                                </p>
+                            )}
                         </div>
 
                         <div>

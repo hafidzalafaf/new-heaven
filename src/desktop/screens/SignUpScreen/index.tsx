@@ -35,6 +35,7 @@ import {
     selectRecaptchaSuccess,
     selectSignUpError,
     selectSignUpRequireVerification,
+    selectSignUpLoading,
     signUp,
 } from '../../../modules';
 import './SignUpScreen.pcss';
@@ -46,6 +47,7 @@ interface ReduxProps {
     captcha_response?: string | GeetestCaptchaResponse;
     reCaptchaSuccess: boolean;
     geetestCaptchaSuccess: boolean;
+    signUpLoading: boolean;
 }
 
 interface DispatchProps {
@@ -213,6 +215,7 @@ class SignUp extends React.Component<Props> {
                                             refId={refId}
                                             handleChangeRefId={this.handleChangeRefId}
                                             isLoading={loading}
+                                            signUpLoading={this.props.signUpLoading}
                                             onSignIn={this.handleSignIn}
                                             onSignUp={this.handleSignUp}
                                             username={username}
@@ -479,6 +482,7 @@ const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> = (state) => (
     captcha_response: selectCaptchaResponse(state),
     reCaptchaSuccess: selectRecaptchaSuccess(state),
     geetestCaptchaSuccess: selectGeetestCaptchaSuccess(state),
+    signUpLoading: selectSignUpLoading(state),
 });
 
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, {}> = (dispatch) => ({
