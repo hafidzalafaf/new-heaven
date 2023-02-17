@@ -17,6 +17,7 @@ export interface SignInProps {
     receiveConfirmationLabel?: string;
     forgotPasswordLabel?: string;
     isLoading?: boolean;
+    signInLoading?: boolean;
     title?: string;
     onForgotPassword: (email?: string) => void;
     onConfirmationResend?: (email?: string) => void;
@@ -53,6 +54,7 @@ const SignIn: React.FC<SignInProps> = ({
     passwordError,
     passwordPlaceholder,
     isLoading,
+    signInLoading,
     onSignUp,
     labelSignIn,
     labelSignUp,
@@ -204,7 +206,7 @@ const SignIn: React.FC<SignInProps> = ({
                 <Button
                     block={true}
                     type="button"
-                    disabled={isLoading || !email.match(EMAIL_REGEX) || !password || isButtonDisabled}
+                    disabled={isLoading || !email.match(EMAIL_REGEX) || !password || isButtonDisabled || signInLoading}
                     onClick={handleClick as any}
                     size="lg"
                     variant="primary">

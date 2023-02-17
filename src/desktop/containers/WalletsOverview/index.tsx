@@ -143,9 +143,11 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                 i.currency?.toLocaleLowerCase().includes(filterValue.toLowerCase())
         );
 
-        return !filteredList && !filterValue && !nonZeroSelected
+        // const filteredList = [];
+
+        return !filteredWallets && !filterValue && !nonZeroSelected
             ? [[[''], [''], <Loading />, [''], [''], ['']]]
-            : !filteredList && !loading
+            : !filteredWallets && !loading
             ? [['no data found']]
             : filteredList.map((item, index) => {
                   const { currency, iconUrl, name, fixed, spotBalance, spotLocked, p2pBalance, p2pLocked } = item;

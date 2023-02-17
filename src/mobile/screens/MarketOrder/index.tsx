@@ -105,8 +105,6 @@ const MarketOrderMobileScreen: React.FC = () => {
                 setData(orders);
             }
         }
-
-        console.log(orders);
     }, [orders, tab]);
 
     const dataListWithIcon = data.map((item) => ({
@@ -263,8 +261,6 @@ const MarketOrderMobileScreen: React.FC = () => {
             value: item.id,
         };
     });
-
-    console.log(dataListWithIcon);
 
     const renderModalContentCancel = () => (
         <React.Fragment>

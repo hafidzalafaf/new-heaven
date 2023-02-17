@@ -22,6 +22,7 @@ import {
     selectGeetestCaptchaSuccess,
     selectCaptchaResponse,
     resetCaptchaState,
+    selectSignInLoading,
     selectCaptchaDataObjectLoading,
 } from '../../../modules';
 
@@ -49,6 +50,7 @@ export const SignInScreen: React.FC = () => {
     const geetestCaptchaSuccess = useReduxSelector(selectGeetestCaptchaSuccess);
     const captcha_response = useReduxSelector(selectCaptchaResponse);
     const isMobileDevice = useReduxSelector(selectMobileDeviceState);
+    const signInLoading = useReduxSelector(selectSignInLoading);
 
     useEffect(() => {
         if (errorSignIn && errorSignIn.message[0] != '') {
@@ -217,6 +219,7 @@ export const SignInScreen: React.FC = () => {
                                     <TwoFactorAuth
                                         isMobile={isMobileDevice}
                                         isLoading={loading}
+                                        signInLoading={signInLoading}
                                         onSubmit={handle2FASignIn}
                                         title={formatMessage({ id: 'page.password2fa' })}
                                         buttonLabel={formatMessage({ id: 'page.header.signIn' })}
@@ -263,6 +266,7 @@ export const SignInScreen: React.FC = () => {
                                         captcha_response={captcha_response}
                                         classNameEmail={emailClassname}
                                         classNamePassword={passwordClassname}
+                                        signInLoading={signInLoading}
                                         // captchaLoading={captchaLoading}
                                     />
                                 </React.Fragment>

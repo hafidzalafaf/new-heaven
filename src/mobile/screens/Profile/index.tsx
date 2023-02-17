@@ -78,7 +78,6 @@ const ProfileMobileScreen: React.FC = () => {
         } else {
             setKycStatus('');
         }
-
         setProfileKycStatus(user.profiles[0]?.state);
     }, []);
 
@@ -382,7 +381,9 @@ const ProfileMobileScreen: React.FC = () => {
                             {user && user.email && <CheckIcon className="check-icon" />}
                         </div>
                     </div>
-                    <Link to={kycStatus == 'verified' ? '/profile' : '/profile/kyc'}>
+                    {
+                        user.level == 2 ? 
+                        <Link to={kycStatus == 'verified' ? '/profile' : '/profile/kyc'}>
                         <div className=" d-flex align-items-center mb-24 cursor-pointer">
                             <div className="mr-3">
                                 <KycProfileIcon className="profile-icon" />
@@ -397,6 +398,22 @@ const ProfileMobileScreen: React.FC = () => {
                             </div>
                         </div>
                     </Link>
+                    :
+                    <div onClick={()=> dispatch(alertPush( user.level === 1 ? {message: ['You have to verify your phone number first'], type: 'error'} : {message: ['You already passed all verifications'], type: 'success'}))} className=" d-flex align-items-center mb-24 cursor-pointer">
+                        <div className="mr-3">
+                            <KycProfileIcon className="profile-icon" />
+                        </div>
+                        <div className="d-flex justify-content-between align-items-center w-100">
+                            <div>
+                                <h4 className="mb-0 text-sm font-bold grey-text-accent">KYC Verification</h4>
+                                <p className="mb-0 text-xs green-text">{renderKycStatus()}</p>
+                            </div>
+
+                            {kycStatus === 'verified' && <CheckIcon className="check-icon" />}
+                        </div>
+                    </div>
+                    }
+
                     <div onClick={() => handleModalChangePhone()}>
                         <div className=" d-flex align-items-center mb-24 cursor-pointer">
                             <div className="mr-3">

@@ -20,6 +20,7 @@ import 'react-phone-input-2/lib/style.css';
 
 export interface SignUpFormProps {
     isLoading?: boolean;
+    signUpLoading?: boolean;
     title?: string;
     type?: string;
     onSignUp: () => void;
@@ -83,6 +84,7 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
     onSignIn,
     image,
     isLoading,
+    signUpLoading,
     labelSignIn,
     labelSignUp,
     usernameLabel,
@@ -137,6 +139,7 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
 
         if (
             // !hasConfirmed ||
+            signUpLoading ||
             !passwordErrorFirstSolved ||
             !passwordErrorSecondSolved ||
             !passwordErrorThirdSolved ||
