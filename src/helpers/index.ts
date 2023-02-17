@@ -50,3 +50,4 @@ export * from './titleCase';
 export * from './convertSecondToMinute';
 export * from './getCountDownDate';
 export * from './numberFormat';
+export * from './capitalizeFirstLetter';
