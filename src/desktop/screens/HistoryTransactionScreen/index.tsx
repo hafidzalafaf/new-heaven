@@ -24,7 +24,7 @@ import { NoData } from '../../components';
 import { copy, Loading } from '../../../components';
 import { CopyableTextField } from '../../../components';
 import './HistoryTransactionScreen.pcss';
-import { capitalizeFirstLetter } from 'src/helpers/capitalizeFirstLetter.';
+import { capitalizeFirstLetter } from 'src/helpers/capitalizeFirstLetter';
 import { useLocation } from 'react-router';
 
 const DEFAULT_LIMIT = 5;
@@ -256,25 +256,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                         ? 'danger-text'
                         : 'green-text'
                 }`}>
-                {item.status === 'pending'
-                    ? 'Pending'
-                    : item.status === 'canceled'
-                    ? 'Canceled'
-                    : item.status === 'completed'
-                    ? 'Completed'
-                    : item.state === 'collected'
-                    ? 'Collected'
-                    : item.state === 'processing'
-                    ? 'Processing'
-                    : item.state === 'confirming'
-                    ? 'Success'
-                    : item.state === 'errored'
-                    ? 'Error'
-                    : item.state == 'succeed'
-                    ? 'Success'
-                    : item.state == 'failed'
-                    ? 'Failed'
-                    : ''}
+                {capitalizeFirstLetter(type == 'withdraws' ? item?.state : item?.status)}
             </p>,
         ]);
     };
