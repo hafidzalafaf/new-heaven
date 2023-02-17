@@ -4,7 +4,7 @@ import { Tabs, Tab, Dropdown } from 'react-bootstrap';
 import '../../../styles/colors.pcss';
 import Select from 'react-select';
 import moment from 'moment';
-import { CustomStylesSelect } from '../../../desktop/components';
+import { CustomStylesSelect, NoData } from '../../../desktop/components';
 import { Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
@@ -319,14 +319,17 @@ export const OrderP2PTable = () => {
                             <Tab eventKey="all" title="All Orders">
                                 <div className="w-100">{renderFilter()}</div>
                                 <Table header={getTableHeaders()} data={getTableData(data)} />
+                                {(!data || !data[0]) && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="processing" title="Processing">
                                 <div className="w-100">{renderFilter()}</div>
                                 <Table header={getTableHeaders()} data={getTableData(data)} />
+                                {(!data || !data[0]) && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="done" title="Transaction Done">
                                 <div className="w-100">{renderFilter()}</div>
                                 <Table header={getTableHeaders()} data={getTableData(data)} />
+                                {(!data || !data[0]) && <NoData text="No Order Yet" />}
                             </Tab>
                         </Tabs>
 

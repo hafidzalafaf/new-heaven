@@ -64,7 +64,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [showModalCancel, setShowModalCancel] = React.useState(false);
     const [active, setActive] = React.useState('');
 
-    console.log(paymentUser);
+    console.log(paymentUser, 'payment user');
 
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
