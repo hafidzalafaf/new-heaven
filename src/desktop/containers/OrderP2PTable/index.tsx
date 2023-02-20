@@ -8,7 +8,7 @@ import { CustomStylesSelect } from '../../../desktop/components';
 import { Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
-import { orderFetch, selectP2POrder } from 'src/modules';
+import { orderFetch, selectP2POrder, selectP2POrderLoading } from 'src/modules';
 import { Modal } from '../../../desktop/components';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -17,6 +17,7 @@ export const OrderP2PTable = () => {
     const dispatch = useDispatch();
 
     const order = useSelector(selectP2POrder);
+    const loading = useSelector(selectP2POrderLoading)
 
     const [endDate, setEndDate] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
