@@ -158,7 +158,7 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                   const disableWithdrawal = item?.network?.filter((net) => net.withdrawal_enabled == true);
 
                   return [
-                      <div key={index} className="d-flex">
+                      <div key={index} className="d-flex align-items-center">
                           <img
                               alt={currency?.toUpperCase()}
                               src={
@@ -168,8 +168,8 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                               }
                               style={{ height: '24px', marginRight: '16px' }}
                           />
-                          <p className="text-sm white-text">{currency.toUpperCase()}</p>
-                          <p className="ml-1 text-sm grey-text-accent">{name}</p>
+                          <p className="text-sm white-text m-0">{currency.toUpperCase()}</p>
+                          <p className="ml-1 text-sm grey-text-accent m-0">{name}</p>
                       </div>,
                       <Decimal key={index} fixed={fixed} thousSep=",">
                           {totalBalance ? totalBalance.toString() : '0'}
