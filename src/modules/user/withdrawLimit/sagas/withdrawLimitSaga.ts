@@ -12,14 +12,26 @@ export function* withdrawLimitSaga(action: WithdrawLimitFetch) {
         const withdrawLimit = yield call(API.get(withdrawOption), '/private/withdraws');
         yield put(withdrawLimitData(withdrawLimit));
     } catch (error) {
-        yield put(
-            sendError({
-                error,
-                processingType: 'alert',
-                extraOptions: {
-                    actionError: withdrawLimitError,
-                },
-            })
-        );
+        if (error && error.message && error.message[0] == 'account.withdraw.not_permitted') {
+            yield put(
+                sendError({
+                    error,
+                    processingType: 'console',
+                    extraOptions: {
+                        actionError: withdrawLimitError,
+                    },
+                })
+            );
+        } else {
+            yield put(
+                sendError({
+                    error,
+                    processingType: 'alert',
+                    extraOptions: {
+                        actionError: withdrawLimitError,
+                    },
+                })
+            );
+        }
     }
 }
