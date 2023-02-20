@@ -8,7 +8,7 @@ import { CustomStylesSelect, NoData } from '../../../desktop/components';
 import { Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
-import { orderFetch, selectP2POrder } from 'src/modules';
+import { orderFetch, selectP2POrder, selectP2POrderLoading } from 'src/modules';
 import { Modal } from '../../../desktop/components';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -17,6 +17,7 @@ export const OrderP2PTable = () => {
     const dispatch = useDispatch();
 
     const order = useSelector(selectP2POrder);
+    const loading = useSelector(selectP2POrderLoading)
 
     const [endDate, setEndDate] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
@@ -27,6 +28,13 @@ export const OrderP2PTable = () => {
 
     React.useEffect(() => {
         dispatch(orderFetch());
+        const fetchInterval = setInterval(()=>{
+        dispatch(orderFetch());
+        }, 5000)
+
+        return ()=> {
+            clearInterval(fetchInterval)
+        }
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -90,7 +98,7 @@ export const OrderP2PTable = () => {
                 <p className="m-0 p-0 white-text text-xs">{moment(item?.created_at).format('DD-MM-YYYY hh:mm:ss')}</p>
             </div>,
             <div className="d-flex align-items-center">
-                <img src={item?.fiat?.icon_url} alt={item?.fiat?.name} className="mr-12" />
+                <img src={item?.fiat?.icon_url} alt={item?.fiat?.name} className="mr-12" height={32} width={32} />
                 <p className="white-text text-sm font-semibold m-0 p-0">{item?.fiat?.name}</p>
             </div>,
             <p className="m-0 p-0 grey-text text-sm font-semibold">{item.fiat_amount}</p>,
