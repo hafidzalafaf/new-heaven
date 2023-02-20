@@ -20,7 +20,6 @@ import { CopyableTextField } from '../../../components';
 import { copy } from '../../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'src/desktop/components';
-import moment from 'moment';
 import {
     CheckFillIcon,
     CheckOutlineIcon,
@@ -29,6 +28,8 @@ import {
     GreyCheck,
     ActiveCheck,
 } from '../../../assets/images/P2PIcon';
+import ReactMomentCountDown from 'react-moment-countdown';
+import moment from 'moment';
 
 export const P2PWalletOrderScreen: React.FC = () => {
     useDocumentTitle('P2P || Order');
@@ -65,6 +66,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [active, setActive] = React.useState('');
 
     console.log(paymentUser, 'payment user');
+
+    const dateInFuture = moment('2023-02-21 23:59:59');
 
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
@@ -616,6 +619,12 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                 </div>
                             </div>
                         )}
+
+                        <ReactMomentCountDown
+                            toDate={dateInFuture}
+                            sourceFormatMask="YYYY-MM-DD HH:mm:ss"
+                            targetFormatMask="DDDD:HH:mm:ss"
+                        />
                         <div className="d-flex align-items-center">
                             <span className="grey-text text-sm">Order number</span>
                             <fieldset onClick={doCopyNumber}>
