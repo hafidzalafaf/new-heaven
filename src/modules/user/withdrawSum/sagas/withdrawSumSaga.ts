@@ -12,14 +12,26 @@ export function* withdrawSumSaga(action: WithdrawSumFetch) {
         const withdrawSum = yield call(API.get(withdrawOption), '/account/withdraws/sums');
         yield put(withdrawSumData(withdrawSum));
     } catch (error) {
-        yield put(
-            sendError({
-                error,
-                processingType: 'alert',
-                extraOptions: {
-                    actionError: withdrawSumError,
-                },
-            })
-        );
+        if (error && error.message && error.message[0] == 'account.withdraw.not_permitted') {
+            yield put(
+                sendError({
+                    error,
+                    processingType: 'console',
+                    extraOptions: {
+                        actionError: withdrawSumError,
+                    },
+                })
+            );
+        } else {
+            yield put(
+                sendError({
+                    error,
+                    processingType: 'alert',
+                    extraOptions: {
+                        actionError: withdrawSumError,
+                    },
+                })
+            );
+        }
     }
 }

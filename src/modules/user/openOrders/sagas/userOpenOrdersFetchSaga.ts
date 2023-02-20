@@ -18,12 +18,26 @@ export function* userOpenOrdersFetchSaga(action: UserOpenOrdersFetch) {
         const list = yield call(API.get(ordersOptions), `/market/orders?${buildQueryString(payload)}`);
         yield put(userOpenOrdersData(list));
     } catch (error) {
-        yield put(sendError({
-            error,
-            processingType: 'alert',
-            extraOptions: {
-                actionError: userOpenOrdersError,
-            },
-        }));
+        if (error && error.message && error.message[0] == 'market.trade.not_permitted') {
+            yield put(
+                sendError({
+                    error,
+                    processingType: 'console',
+                    extraOptions: {
+                        actionError: userOpenOrdersError,
+                    },
+                })
+            );
+        } else {
+            yield put(
+                sendError({
+                    error,
+                    processingType: 'alert',
+                    extraOptions: {
+                        actionError: userOpenOrdersError,
+                    },
+                })
+            );
+        }
     }
 }
