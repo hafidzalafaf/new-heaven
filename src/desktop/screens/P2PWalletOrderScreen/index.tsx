@@ -63,14 +63,15 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [showModalReport, setShowModalReport] = React.useState(false);
     const [showModalBuyOrderCompleted, setShowModalBuyOrderCompleted] = React.useState(false);
     const [showModalCancel, setShowModalCancel] = React.useState(false);
+    const [date, setDate] = React.useState<any>();
     const [active, setActive] = React.useState('');
 
-    console.log(paymentUser, 'payment user');
-
-    const dateInFuture = moment('2023-02-21 23:59:59');
+    const dateInFuture = moment(detail?.order?.first_approve).format('YYYY-MM-DD HH:mm:ss');
+    console.log(date);
 
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
+        setDate(moment(detail?.order?.first_approve).format('YYYY-MM-DD HH:mm:ss'));
         if (detail?.order?.first_approve) {
             let a = Math.floor(new Date(detail?.order?.first_approve).getTime() / 1000);
             let timeArr: any;
@@ -535,7 +536,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         </div>
                     )}
                     <div className="d-flex flex-column align-items-end">
-                        {(detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting') && (
+                        {/* {(detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting') && (
                             <div className="d-flex align-items-center">
                                 <div className="second radius-sm mx-1">
                                     <p className="mb-0 text-md font-bold white-text text">
@@ -618,13 +619,16 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                     </p>
                                 </div>
                             </div>
-                        )}
+                        )} */}
 
-                        <ReactMomentCountDown
-                            toDate={dateInFuture}
-                            sourceFormatMask="YYYY-MM-DD HH:mm:ss"
-                            targetFormatMask="DDDD:HH:mm:ss"
-                        />
+                        <div className="text-xl font-bold white-text text countdown-container">
+                            <ReactMomentCountDown
+                                toDate={dateInFuture}
+                                sourceFormatMask="YYYY-MM-DD HH:mm:ss"
+                                targetFormatMask="HH:mm:ss"
+                            />
+                        </div>
+
                         <div className="d-flex align-items-center">
                             <span className="grey-text text-sm">Order number</span>
                             <fieldset onClick={doCopyNumber}>
