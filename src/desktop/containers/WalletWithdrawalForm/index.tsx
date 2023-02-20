@@ -26,6 +26,8 @@ import {
     selectWallets,
     walletsWithdrawCcyFetch,
     selectWithdrawSuccess,
+    memberLevelsFetch,
+    selectMemberLevels,
 } from '../../../modules';
 import { GLOBAL_PLATFORM_CURRENCY, DEFAULT_FIAT_PRECISION } from '../../../constants';
 import { Decimal, Tooltip } from '../../../components';
@@ -77,6 +79,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     const withdrawLimits = useSelector(selectMaxWithdrawLimit);
     const withdrawSum = useSelector(selectWithdrawSum);
     const memberGroup = useSelector(selectGroupMember);
+    const memberLevel = useSelector(selectMemberLevels);
     const beneficiariesList = beneficiaries.filter((item) => item.currency === currency);
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
     const wallet = wallets.length && wallets.find((item) => item.currency.toLowerCase() === currency.toLowerCase());
@@ -88,6 +91,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     React.useEffect(() => {
         dispatch(groupFetch());
         dispatch(withdrawSumFetch());
+        dispatch(memberLevelsFetch());
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -115,7 +119,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     }, [beneficiariesError]);
 
     React.useEffect(() => {
-        if (beneficiaryPermited || withdrawPermited) {
+        if (beneficiaryPermited || withdrawPermited || user?.level < memberLevel?.withdraw?.minimum_level) {
             setShowModalLocked(true);
         }
     });
