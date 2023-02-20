@@ -498,10 +498,10 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
     // handle sendCode (POST)
     public handleSendCodePhone = () => {
         if (this.props.user.phones[0]?.validated_at === null && !this.state.isChangeNumber) {
-            this.props.resendCode({ phone_number: `+${this.state.phone[0].number}` });
+            this.props.resendCode({ phone_number: `+${this.state.phone[0].number}`, channel: 'whatsapp' });
             this.setState({ timerActive: true, resendCodeActive: true });
         } else {
-            this.props.sendCode({ phone_number: this.state.newPhone });
+            this.props.sendCode({ phone_number: this.state.newPhone, channel: 'whatsapp' });
             this.setState({ timerActive: true, resendCodeActive: true });
         }
     };
@@ -512,11 +512,13 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
             this.props.verifyPhone({
                 phone_number: `+${this.state.phone[0].number}`,
                 verification_code: this.state.verificationCode,
+                channel: 'whatsapp',
             });
         } else {
             this.props.verifyPhone({
                 phone_number: this.state.newPhone,
                 verification_code: this.state.verificationCode,
+                channel: 'whatsapp',
             });
         }
     };

@@ -15,6 +15,7 @@ export interface SendCodeFetch {
     type: typeof PHONE_SEND_CODE_FETCH;
     payload: {
         phone_number: string;
+        channel?: string;
     };
 }
 
@@ -31,6 +32,7 @@ export interface ResendCodeFetch {
     type: typeof PHONE_RESEND_CODE_FETCH;
     payload: {
         phone_number: string;
+        channel?: string;
     };
 }
 
@@ -48,6 +50,7 @@ export interface VerifyPhoneFetch {
     payload: {
         phone_number: string;
         verification_code: string;
+        channel?: string;
     };
 }
 
@@ -63,7 +66,8 @@ export interface VerifyPhoneError {
     error: CommonError;
 }
 
-export type PhoneAction = SendCodeFetch
+export type PhoneAction =
+    | SendCodeFetch
     | SendCodeData
     | SendCodeError
     | VerifyPhoneFetch

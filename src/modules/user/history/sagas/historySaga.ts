@@ -43,12 +43,26 @@ export function* historySaga(action: HistoryFetch) {
 
         yield put(successHistory({ list: updatedData, page, nextPageExists }));
     } catch (error) {
-        yield put(sendError({
-            error,
-            processingType: 'alert',
-            extraOptions: {
-                actionError: failHistory,
-            },
-        }));
+        if (error && error.message && error.message[0] == 'account.withdraw.not_permitted') {
+            yield put(
+                sendError({
+                    error,
+                    processingType: 'console',
+                    extraOptions: {
+                        actionError: failHistory,
+                    },
+                })
+            );
+        } else {
+            yield put(
+                sendError({
+                    error,
+                    processingType: 'alert',
+                    extraOptions: {
+                        actionError: failHistory,
+                    },
+                })
+            );
+        }
     }
 }

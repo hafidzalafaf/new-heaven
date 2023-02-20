@@ -24,6 +24,7 @@ import {
     resendCode,
     verifyPhone,
     selectBlogs,
+    userFetch,
 } from '../../../modules';
 import { selectApiKeys } from 'src/modules/user/apiKeys/selectors';
 import { Modal, CustomInput, NoData } from '../../components';
@@ -106,11 +107,11 @@ export const ProfileScreen: FC = (): ReactElement => {
 
     const handleSendCodePhone = () => {
         if (phone[0]?.validated_at === null && !isChangeNumber) {
-            dispatch(resendCode({ phone_number: `+${phone[0].number}` }));
+            dispatch(resendCode({ phone_number: `+${phone[0].number}`, channel: 'whatsapp' }));
             setTimerActive(true);
             setResendCodeActive(true);
         } else {
-            dispatch(sendCode({ phone_number: newPhoneValue }));
+            dispatch(sendCode({ phone_number: newPhoneValue, channel: 'whatsapp' }));
             setTimerActive(true);
             setResendCodeActive(true);
         }
@@ -118,9 +119,19 @@ export const ProfileScreen: FC = (): ReactElement => {
 
     const handleChangePhone = () => {
         if (phone[0]?.validated_at === null && !isChangeNumber) {
-            dispatch(verifyPhone({ phone_number: `+${phone[0].number}`, verification_code: verificationCode }));
+            dispatch(
+                verifyPhone({
+                    phone_number: `+${phone[0].number}`,
+                    verification_code: verificationCode,
+                    channel: 'whatsapp',
+                })
+            );
+            dispatch(userFetch());
         } else {
-            dispatch(verifyPhone({ phone_number: newPhoneValue, verification_code: verificationCode }));
+            dispatch(
+                verifyPhone({ phone_number: newPhoneValue, verification_code: verificationCode, channel: 'whatsapp' })
+            );
+            dispatch(userFetch());
         }
     };
 
