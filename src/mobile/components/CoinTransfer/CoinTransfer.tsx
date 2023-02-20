@@ -5,7 +5,7 @@ import { useWalletsFetch } from 'src/hooks';
 import { useSelector } from 'react-redux';
 import { selectWallets, Currency, selectCurrencies } from 'src/modules';
 import { Table } from '../../../components';
-import { FilterInput } from 'src/desktop/components';
+import { FilterInput, NoData } from 'src/desktop/components';
 import { CircleCloseModalNetworkIcon } from '../../../assets/images/CircleCloseIcon';
 import { InfoModalNetworkIcon } from '../../../assets/images/InfoIcon';
 
@@ -158,7 +158,7 @@ export const CoinTransfer: React.FC<CoinTransferProps> = (props) => {
                             </p>
                         </div>
 
-                        {currencyItem &&
+                        {currencyItem && currencyItem.networks[0] ?
                             currencyItem.networks.map((item, i) => (
                                 <div
                                     onClick={() =>
@@ -169,7 +169,10 @@ export const CoinTransfer: React.FC<CoinTransferProps> = (props) => {
                                     <h3 className="p-0 m-0 text-ms grey-text-accent">{item && item.protocol}</h3>
                                     <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p>
                                 </div>
-                            ))}
+                            ))
+                            : 
+                            <NoData text='There is no network available' />
+                            }
                     </div>
                 </div>
             </div>
