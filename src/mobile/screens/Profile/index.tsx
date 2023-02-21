@@ -3,7 +3,15 @@ import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Modal } from 'react-bootstrap';
-import { selectUserInfo, resendCode, sendCode, verifyPhone, alertPush } from '../../../modules';
+import {
+    selectUserInfo,
+    resendCode,
+    sendCode,
+    verifyPhone,
+    alertPush,
+    selectVerifyPhoneSuccess,
+    userFetch,
+} from '../../../modules';
 import { selectApiKeys } from 'src/modules/user/apiKeys/selectors';
 import { CopyableTextField } from '../../../components';
 import moment from 'moment';
@@ -34,6 +42,7 @@ const ProfileMobileScreen: React.FC = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectUserInfo);
     const apiKey = useSelector(selectApiKeys);
+    const verifyPhoneSuccess = useSelector(selectVerifyPhoneSuccess);
 
     const TIME_RESEND = 30000;
 
@@ -52,6 +61,13 @@ const ProfileMobileScreen: React.FC = () => {
 
     const label = user.labels;
     const labelPhone = [...label].find((item) => item.key === 'phone');
+
+    React.useEffect(() => {
+        if (verifyPhoneSuccess) {
+            setShowModalPhone(false);
+            dispatch(userFetch());
+        }
+    }, [verifyPhoneSuccess]);
 
     React.useEffect(() => {
         let timer = null;
@@ -88,22 +104,32 @@ const ProfileMobileScreen: React.FC = () => {
     }, []);
 
     const handleSendCodePhone = () => {
-        if (user.phones[0] && !isChangeNumber) {
-            dispatch(resendCode({ phone_number: `+${phone[0].number}` }));
+        if (phone[0]?.validated_at === null && !isChangeNumber) {
+            dispatch(resendCode({ phone_number: `+${phone[0].number}`, channel: 'whatsapp' }));
             setTimerActive(true);
             setResendCodeActive(true);
         } else {
-            dispatch(sendCode({ phone_number: newPhoneValue }));
+            dispatch(sendCode({ phone_number: newPhoneValue, channel: 'whatsapp' }));
             setTimerActive(true);
             setResendCodeActive(true);
         }
     };
 
     const handleChangePhone = () => {
-        if (user.phones[0] && !isChangeNumber) {
-            dispatch(verifyPhone({ phone_number: `+${phone[0].number}`, verification_code: verificationCode }));
+        if (phone[0]?.validated_at === null && !isChangeNumber) {
+            dispatch(
+                verifyPhone({
+                    phone_number: `+${phone[0].number}`,
+                    verification_code: verificationCode,
+                    channel: 'whatsapp',
+                })
+            );
+            dispatch(userFetch());
         } else {
-            dispatch(verifyPhone({ phone_number: newPhoneValue, verification_code: verificationCode }));
+            dispatch(
+                verifyPhone({ phone_number: newPhoneValue, verification_code: verificationCode, channel: 'whatsapp' })
+            );
+            dispatch(userFetch());
         }
     };
 
@@ -194,10 +220,10 @@ const ProfileMobileScreen: React.FC = () => {
                         'You already add phone number, please verify by click send code button to get OTP number'
                     ) : (user.phones[0] && isChangeNumber) || user.phones[0] !== null ? (
                         <p className="danger-text">
-                            {user.phones.length === 4 && isChangeNumber
+                            {user?.phones?.length === 5 && isChangeNumber
                                 ? `Sorry, you run out of time for changing your phone number`
-                                : user.phones.length < 4 && isChangeNumber
-                                ? `You only have ${4 - user.phones.length} chances to change your phone number`
+                                : isChangeNumber || (phone[0] && phone[0].validated_at !== null)
+                                ? `You only have ${5 - user.phones.length} chances to change your phone number`
                                 : `Please verify your phone number`}
                         </p>
                     ) : (
@@ -210,7 +236,7 @@ const ProfileMobileScreen: React.FC = () => {
 
                 {/* Input change phone */}
                 <div className="form">
-                    {(isChangeNumber || !user.phones[0]) && (
+                    {(isChangeNumber || !phone[0] || phone[0]?.validated_at !== null) && (
                         <div className="form-group mb-24">
                             <label htmlFor="" className="text-sm white-text">{`${
                                 !user.phones[0] ? '' : 'New'
@@ -220,7 +246,7 @@ const ProfileMobileScreen: React.FC = () => {
                                 value={newPhoneValue}
                                 onChange={(e) => handleChangePhoneValue(e)}
                                 placeholder={''}
-                                disabled={user.phones.length === 4}
+                                disabled={user.phones.length === 5}
                             />
                         </div>
                     )}
@@ -238,7 +264,7 @@ const ProfileMobileScreen: React.FC = () => {
                                 classNameLabel="d-none"
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
-                                isDisabled={isChangeNumber && user.phones.length === 4}
+                                isDisabled={isChangeNumber && user.phones.length === 5}
                                 handleChangeInput={(e) => handleChangeVerificationCodeValue(e)}
                             />
                             <button
@@ -258,7 +284,7 @@ const ProfileMobileScreen: React.FC = () => {
                                 }`}>
                                 {moment(seconds).format('mm:ss')}
                             </p>
-                            {(!isChangeNumber || !user.phones[0]) && (
+                            {(!isChangeNumber || !user.phones[0]) && phone[0]?.validated_at === null && (
                                 <p
                                     onClick={() => {
                                         setIsChangeNumber(true);
@@ -281,8 +307,8 @@ const ProfileMobileScreen: React.FC = () => {
                         data-dismiss="modal">
                         {!user.phones[0]
                             ? 'Add'
-                            : user.phones[0].validated_at === null && !isChangeNumber
-                            ? 'Veify'
+                            : isChangeNumber || (phone[0] && phone[0].validated_at !== null)
+                            ? 'Verify'
                             : 'Change'}
                     </button>
                 </div>
@@ -381,10 +407,34 @@ const ProfileMobileScreen: React.FC = () => {
                             {user && user.email && <CheckIcon className="check-icon" />}
                         </div>
                     </div>
-                    {
-                        user.level == 2 ? 
+                    {user.level == 2 ? (
                         <Link to={kycStatus == 'verified' ? '/profile' : '/profile/kyc'}>
-                        <div className=" d-flex align-items-center mb-24 cursor-pointer">
+                            <div className=" d-flex align-items-center mb-24 cursor-pointer">
+                                <div className="mr-3">
+                                    <KycProfileIcon className="profile-icon" />
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center w-100">
+                                    <div>
+                                        <h4 className="mb-0 text-sm font-bold grey-text-accent">KYC Verification</h4>
+                                        <p className="mb-0 text-xs green-text">{renderKycStatus()}</p>
+                                    </div>
+
+                                    {kycStatus === 'verified' && <CheckIcon className="check-icon" />}
+                                </div>
+                            </div>
+                        </Link>
+                    ) : (
+                        <div
+                            onClick={() =>
+                                dispatch(
+                                    alertPush(
+                                        user.level === 1
+                                            ? { message: ['You have to verify your phone number first'], type: 'error' }
+                                            : { message: ['You already passed all verifications'], type: 'success' }
+                                    )
+                                )
+                            }
+                            className=" d-flex align-items-center mb-24 cursor-pointer">
                             <div className="mr-3">
                                 <KycProfileIcon className="profile-icon" />
                             </div>
@@ -397,22 +447,7 @@ const ProfileMobileScreen: React.FC = () => {
                                 {kycStatus === 'verified' && <CheckIcon className="check-icon" />}
                             </div>
                         </div>
-                    </Link>
-                    :
-                    <div onClick={()=> dispatch(alertPush( user.level === 1 ? {message: ['You have to verify your phone number first'], type: 'error'} : {message: ['You already passed all verifications'], type: 'success'}))} className=" d-flex align-items-center mb-24 cursor-pointer">
-                        <div className="mr-3">
-                            <KycProfileIcon className="profile-icon" />
-                        </div>
-                        <div className="d-flex justify-content-between align-items-center w-100">
-                            <div>
-                                <h4 className="mb-0 text-sm font-bold grey-text-accent">KYC Verification</h4>
-                                <p className="mb-0 text-xs green-text">{renderKycStatus()}</p>
-                            </div>
-
-                            {kycStatus === 'verified' && <CheckIcon className="check-icon" />}
-                        </div>
-                    </div>
-                    }
+                    )}
 
                     <div onClick={() => handleModalChangePhone()}>
                         <div className=" d-flex align-items-center mb-24 cursor-pointer">
