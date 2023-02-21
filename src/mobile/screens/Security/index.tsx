@@ -507,24 +507,29 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
 
     // handle sendCode (POST)
     public handleSendCodePhone = () => {
-        if (this.props.user.phones[0] && !this.state.isChangeNumber) {
-            this.props.resendCode({ phone_number: `+${this.state.phone[0].number}` });
+        if (this.state.phone[0] && !this.state.isChangeNumber) {
+            this.props.resendCode({ phone_number: `+${this.state.phone[0].number}`, channel: 'whatsapp' });
             this.setState({ timerActive: true, resendCodeActive: true });
         } else {
-            this.props.sendCode({ phone_number: this.state.newPhone });
+            this.props.sendCode({ phone_number: this.state.newPhone, channel: 'whatsapp' });
             this.setState({ timerActive: true, resendCodeActive: true });
         }
     };
 
     // handle submit change  add phone
     public handleChangePhone = () => {
-        if (this.props.user.phones[0] && !this.state.isChangeNumber) {
+        if (this.state.phone[0] && !this.state.isChangeNumber) {
             verifyPhone({
                 phone_number: `+${this.state.phone[0].number}`,
                 verification_code: this.state.confirmationCode,
+                channel: 'whatsapp',
             });
         } else {
-            verifyPhone({ phone_number: this.state.newPhone, verification_code: this.state.confirmationCode });
+            verifyPhone({
+                phone_number: this.state.newPhone,
+                verification_code: this.state.confirmationCode,
+                channel: 'whatsapp',
+            });
         }
     };
 

@@ -262,10 +262,10 @@ export const ProfileScreen: FC = (): ReactElement => {
                         'You already add phone number, please verify by click send code button to get OTP number'
                     ) : (user.phones[0] && isChangeNumber) || user.phones[0] !== null ? (
                         <p className="danger-text">
-                            {user.phones.length === 4 && isChangeNumber
+                            {user?.phones?.length === 5 && isChangeNumber
                                 ? `Sorry, you run out of time for changing your phone number`
-                                : user.phones.length < 4 && isChangeNumber
-                                ? `You only have ${4 - user.phones.length} chances to change your phone number`
+                                : isChangeNumber || (phone[0] && phone[0].validated_at !== null)
+                                ? `You only have ${5 - user.phones.length} chances to change your phone number`
                                 : `Please verify your phone number`}
                         </p>
                     ) : (
@@ -305,7 +305,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 classNameLabel="d-none"
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
-                                isDisabled={isChangeNumber && user.phones.length === 4}
+                                isDisabled={isChangeNumber && user.phones.length === 5}
                                 handleChangeInput={(e) => handleChangeVerificationCodeValue(e)}
                             />
                             <button

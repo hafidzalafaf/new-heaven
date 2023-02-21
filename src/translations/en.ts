@@ -951,6 +951,9 @@ export const en = {
     'resource.phone.number_exist': 'Phone number already exists',
     'resource.phone.verification_invalid': 'Phone is not found or verification code is invalid',
     'resource.phone.too_many_unverified': 'Too many unverified phone numbers',
+    'resource.phone.resource.phone.whatsapp_number_is_invalid_or_does_not_exists':
+        'WhatsApp number is invalid or already use or  does not exists',
+    'resource.phone.code_sent_too_fast': 'Verification code sent too fast',
     'resource.documents.limit_reached': 'Maximum number of documents already reached',
     'resource.documents.limit_will_be_reached': 'Documents amount will reach limit by this upload',
     'resource.otp.already_enabled': '2FA has been already enabled for this account',

@@ -358,11 +358,12 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                     ) : (this.props.user.phones[0] && this.state.isChangeNumber) ||
                       this.props.user.phones[0].validated_at !== null ? (
                         <p className="danger-text">
-                            {this.props.user.phones.length === 4 && this.state.isChangeNumber
+                            {this.props.user.phones.length === 5 && this.state.isChangeNumber
                                 ? `Sorry, you run out of time for changing your phone number`
-                                : this.props.user.phones.length < 4 && this.state.isChangeNumber
+                                : this.state.isChangeNumber ||
+                                  (this.state.phone[0] && this.state.phone[0].validated_at !== null)
                                 ? `You only have ${
-                                      4 - this.props.user.phones.length
+                                      5 - this.props.user.phones.length
                                   } chances to change your phone number`
                                 : `Please verify your phone number`}
                         </p>
@@ -409,7 +410,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
                                 handleChangeInput={(e) => this.handleChangeVerificationCodeValue(e)}
-                                isDisabled={this.state.isChangeNumber && this.props.user?.phones?.length === 4}
+                                isDisabled={this.state.isChangeNumber && this.props.user?.phones?.length === 5}
                             />
                             <button
                                 type="submit"
@@ -497,7 +498,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
 
     // handle sendCode (POST)
     public handleSendCodePhone = () => {
-        if (this.props.user.phones[0]?.validated_at === null && !this.state.isChangeNumber) {
+        if (this.state.phone[0]?.validated_at === null && !this.state.isChangeNumber) {
             this.props.resendCode({ phone_number: `+${this.state.phone[0].number}`, channel: 'whatsapp' });
             this.setState({ timerActive: true, resendCodeActive: true });
         } else {
