@@ -98,7 +98,7 @@ export const TradingScreen: FC = (): ReactElement => {
         dispatch(groupFetch());
         dispatch(withdrawSumFetch());
         dispatch(memberLevelsFetch());
-    }, []);
+    }, [dispatch]);
 
     const FeeTrading = tradingFee.find((level) => level.group == groupMember.group);
     const willRecive = Number(totalSell) - (Number(FeeTrading?.taker) * 100 * Number(totalSell)) / 100;
