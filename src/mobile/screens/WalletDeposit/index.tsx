@@ -2,9 +2,18 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Link, useHistory, useParams, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { alertPush, Currency, selectCurrencies, walletsAddressFetch, selectWallets, Wallet } from '../../../modules';
+import {
+    alertPush,
+    Currency,
+    selectCurrencies,
+    walletsAddressFetch,
+    selectWallets,
+    Wallet,
+    memberLevelsFetch,
+    selectMemberLevels,
+    selectUserInfo,
+} from '../../../modules';
 import { useWalletsFetch, useDocumentTitle } from '../../../hooks';
-//import { QRCode } from '../../../components';
 import { copy } from '../../../helpers';
 import { DEFAULT_WALLET } from '../../../constants';
 import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow';
@@ -13,10 +22,11 @@ import { CopyButton } from '../../../assets/images/CopyButton';
 import { HelpIcon } from 'src/mobile/assets/Help';
 import { ModalMobile } from 'src/mobile/components';
 import { Modal } from 'react-bootstrap';
+import { Modal as ModalComponent } from 'src/desktop/components';
 import QRCode from 'react-qr-code';
 
 import { ModalFullScreenMobile } from 'src/mobile/components';
-import { CircleCloseModalNetworkIcon } from 'src/assets/images/CircleCloseIcon';
+import { CircleCloseModalNetworkIcon, CircleCloseDangerLargeIcon } from 'src/assets/images/CircleCloseIcon';
 
 type LocationProps = {
     state: {
@@ -41,7 +51,9 @@ const WalletDepositMobileScreen: React.FC = () => {
     const [showFAQ, setShowFAQ] = React.useState(false);
     const [showFAQDetail, setShowFAQDetail] = React.useState(false);
     const [showNetworkModal, setShowNetworkModal] = React.useState(false);
-
+    const [showModalLocked, setShowModalLocked] = React.useState(false);
+    const memberLevel = useSelector(selectMemberLevels);
+    const user = useSelector(selectUserInfo);
     const wallet: Wallet = wallets.find((item) => item.currency === currency) || DEFAULT_WALLET;
     const currencies: Currency[] = useSelector(selectCurrencies);
     const currencyItem: Currency | any = (currencies && currencies.find((item) => item.id === wallet.currency)) || {
@@ -49,10 +61,20 @@ const WalletDepositMobileScreen: React.FC = () => {
         deposit_enabled: false,
     };
 
+    React.useEffect(() => {
+        dispatch(memberLevelsFetch());
+    }, [dispatch]);
+
+    React.useEffect(() => {
+        if (user?.level < memberLevel?.deposit?.minimum_level) {
+            setShowModalLocked(true);
+        }
+    }, [user, memberLevel]);
+
     const handleSelectNetwork = (blockchain_key, protocol) => {
         history.push(`/wallets/${currencyItem.id}/deposit`, { blockchain_key: blockchain_key, protocol: protocol });
     };
-    
+
     const blockchain = (protocol &&
         currencyItem &&
         currencyItem.networks &&
@@ -120,14 +142,16 @@ const WalletDepositMobileScreen: React.FC = () => {
 
     const handleSelectChangeNetwork = (item) => {
         handleSelectNetwork(item && item.blockchain_key, item && item.protocol);
-        setShowNetworkModal(false)
+        setShowNetworkModal(false);
     };
 
     const renderContentFAQMobile = () => {
         return (
             <>
                 <div className="list-faq grey-text-accent">
-                    <div onClick={openFAQDetail} className="d-flex justify-content-between cursor-pointer mb-3 align-items-start pb-1 text-sm">
+                    <div
+                        onClick={openFAQDetail}
+                        className="d-flex justify-content-between cursor-pointer mb-3 align-items-start pb-1 text-sm">
                         <span>How To Deposit</span>
                         <span>
                             <ArrowRight className={''} />
@@ -228,6 +252,36 @@ const WalletDepositMobileScreen: React.FC = () => {
         );
     };
 
+    const renderHeaderModalLocked = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-center align-items-center w-100">
+                    <CircleCloseDangerLargeIcon />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const renderContentModalLocked = () => {
+        return (
+            <React.Fragment>
+                <h1 className="white-text text-lg mb-24 text-center ">Deposit Locked</h1>
+                <p className="grey-text text-ms font-extrabold mb-24 text-center">
+                    {user?.level == 1
+                        ? 'For deposit you must verified your phone number and document first'
+                        : 'For deposit you must verified your document first'}
+                </p>
+                <div className="d-flex justify-content-center align-items-center w-100 mb-0">
+                    <Link to={`${user?.level == 1 ? '/profile' : '/profile/kyc'}`}>
+                        <button type="button" className="btn btn-primary sm px-5 mr-3">
+                            {user?.level == 1 ? 'Verify Phone Number' : 'Verify Document'}
+                        </button>
+                    </Link>
+                </div>
+            </React.Fragment>
+        );
+    };
+
     return (
         <React.Fragment>
             <section className="wallet-deposit-mobile-screen pb-5 dark-bg-main">
@@ -269,8 +323,8 @@ const WalletDepositMobileScreen: React.FC = () => {
                                         {currencyItem && currencyItem.id && currencyItem.id.toUpperCase()}
                                     </h3>
                                 </div>
-                                <div className='cursor-pointer' onClick={()=> setShowNetworkModal(!showNetworkModal)}>
-                                <ArrowRight className={''} />
+                                <div className="cursor-pointer" onClick={() => setShowNetworkModal(!showNetworkModal)}>
+                                    <ArrowRight className={''} />
                                 </div>
                             </div>
                             <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mb-8">Address</h2>
@@ -404,11 +458,11 @@ const WalletDepositMobileScreen: React.FC = () => {
             </section>
 
             {showFAQ && (
-                <div className="modal-benericary-list-mobile"
-                style={{
-                    zIndex: 10
-                }}
-                >
+                <div
+                    className="modal-benericary-list-mobile"
+                    style={{
+                        zIndex: 10,
+                    }}>
                     <ModalFullScreenMobile
                         show={showFAQ}
                         header={renderHeaderFAQMobile()}
@@ -418,57 +472,66 @@ const WalletDepositMobileScreen: React.FC = () => {
             )}
 
             {showFAQDetail && (
-                <div className="modal-benericary-list-mobile"
-                style={{
-                    zIndex: 9999
-                }}
-                >
-                    <ModalMobile show={showFAQDetail} header={renderFAQDetailHeader()} content={renderFAQDetailContent()} />
+                <div
+                    className="modal-benericary-list-mobile"
+                    style={{
+                        zIndex: 9999,
+                    }}>
+                    <ModalMobile
+                        show={showFAQDetail}
+                        header={renderFAQDetailHeader()}
+                        content={renderFAQDetailContent()}
+                    />
                 </div>
             )}
 
-            {
-                showNetworkModal && (
-                    <Modal
-                    dialogClassName="modal-transfer-fullscreen"
-                        show={showNetworkModal}
-                    >
+            {showNetworkModal && (
+                <Modal dialogClassName="modal-transfer-fullscreen" show={showNetworkModal}>
                     <div className={`position-relative dark-bg-main`}>
-                    <div className={`modal-deposit-wallet ${showNetworkModal ? ' show ' : ''}`}>
-                        <div className="modal-deposit-wallet__content fixed-bottom off-canvas-content-container overflow-auto">
-                            <div className="d-flex justify-content-between align-items-center mb-12">
-                                <h3 className="p-0 m-0 text-ms grey-text-accent">Select Network</h3>
-                                <span onClick={() => setShowNetworkModal(false)} className="cursor-pointer">
-                                    <CircleCloseModalNetworkIcon />
-                                </span>
+                        <div className={`modal-deposit-wallet ${showNetworkModal ? ' show ' : ''}`}>
+                            <div className="modal-deposit-wallet__content fixed-bottom off-canvas-content-container overflow-auto">
+                                <div className="d-flex justify-content-between align-items-center mb-12">
+                                    <h3 className="p-0 m-0 text-ms grey-text-accent">Select Network</h3>
+                                    <span onClick={() => setShowNetworkModal(false)} className="cursor-pointer">
+                                        <CircleCloseModalNetworkIcon />
+                                    </span>
+                                </div>
+
+                                <div className="d-flex justify-content-start align-items-start mb-24">
+                                    <span className="mr-8 curspr-pointer">
+                                        <InfoModalNetworkIcon />
+                                    </span>
+                                    <p className="m-0 p-0 grey-text text-xxs">
+                                        Ensure that the selected network is consistent with your method of withdrawal,
+                                        Otherwise you are at risk losing your assets,
+                                    </p>
+                                </div>
+
+                                {currencyItem &&
+                                    currencyItem.networks.map((item, i) => (
+                                        <div
+                                            onClick={() => handleSelectChangeNetwork(item)}
+                                            key={i}
+                                            className={`${
+                                                protocol === item.protocol ? `border border-info` : `border border-dark`
+                                            } rounded-lg cursor-pointer mb-8 p-2`}>
+                                            <h3 className="p-0 m-0 text-ms grey-text-accent">
+                                                {item && item.protocol}
+                                            </h3>
+                                            <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p>
+                                        </div>
+                                    ))}
                             </div>
-    
-                            <div className="d-flex justify-content-start align-items-start mb-24">
-                                <span className="mr-8 curspr-pointer">
-                                    <InfoModalNetworkIcon />
-                                </span>
-                                <p className="m-0 p-0 grey-text text-xxs">
-                                    Ensure that the selected network is consistent with your method of withdrawal, Otherwise
-                                    you are at risk losing your assets,
-                                </p>
-                            </div>
-    
-                            {currencyItem &&
-                                currencyItem.networks.map((item, i) => (
-                                    <div
-                                        onClick={()=>handleSelectChangeNetwork(item)}
-                                        key={i}
-                                        className={`${protocol === item.protocol ? `border border-info` : `border border-dark`} rounded-lg cursor-pointer mb-8 p-2`}>
-                                        <h3 className="p-0 m-0 text-ms grey-text-accent">{item && item.protocol}</h3>
-                                        <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p>
-                                    </div>
-                                ))}
                         </div>
                     </div>
-                </div>
                 </Modal>
-                )
-            }
+            )}
+
+            <ModalComponent
+                show={showModalLocked}
+                header={renderHeaderModalLocked()}
+                content={renderContentModalLocked()}
+            />
         </React.Fragment>
     );
 };
