@@ -1452,6 +1452,9 @@ export const en = {
     'page.body.wallets.transfers.note.message':
         'Internal transfers are free and instant. You can use them to manage your funds between different accounts on the platform',
 
+    // p2p
+    'p2p_user.payment_user.payment_user_is_exists': 'Payment method already exists',
+
     // p2p success messages
     'success.p2p.transfer.created': 'Transfer was created',
     'success.payment_method.deleted': 'Payment Method: successfully deleted',

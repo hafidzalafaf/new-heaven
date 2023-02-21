@@ -8,7 +8,7 @@ import { CustomStylesSelect, NoData } from '../../../desktop/components';
 import { Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
-import { orderFetch, selectP2POrder, selectP2POrderLoading } from 'src/modules';
+import { orderFetch, selectP2POrder, selectP2POrderLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
 import { Modal } from '../../../desktop/components';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -17,7 +17,8 @@ export const OrderP2PTable = () => {
     const dispatch = useDispatch();
 
     const order = useSelector(selectP2POrder);
-    const loading = useSelector(selectP2POrderLoading)
+    const loading = useSelector(selectP2POrderLoading);
+    const fiats = useSelector(selectP2PFiatsData);
 
     const [endDate, setEndDate] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
@@ -27,14 +28,18 @@ export const OrderP2PTable = () => {
     const [showModalCancel, setShowModalCancel] = React.useState(false);
 
     React.useEffect(() => {
-        dispatch(orderFetch());
-        const fetchInterval = setInterval(()=>{
-        dispatch(orderFetch());
-        }, 5000)
+        dispatch(p2pFiatFetch());
+    }, [dispatch]);
 
-        return ()=> {
-            clearInterval(fetchInterval)
-        }
+    React.useEffect(() => {
+        dispatch(orderFetch());
+        const fetchInterval = setInterval(() => {
+            dispatch(orderFetch());
+        }, 5000);
+
+        return () => {
+            clearInterval(fetchInterval);
+        };
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -60,6 +65,8 @@ export const OrderP2PTable = () => {
         setData(filterredList);
     };
 
+    // fiat, side, state, from, to
+
     const optionQuote = [
         { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
         { label: <p className="m-0 text-sm grey-text-accent">IDR</p>, value: 'idr' },
@@ -70,7 +77,7 @@ export const OrderP2PTable = () => {
     const optionStatus = [
         { label: <p className="m-0 text-sm grey-text-accent">All Status</p>, value: 'all' },
         { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepared' },
-        { label: <p className="m-0 text-sm grey-text-accent">Waiting</p>, value: 'waiting' },
+        { label: <p className="m-0 text-sm grey-text-accent">Waiting Seller Confirmation</p>, value: 'waiting' },
         { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
         { label: <p className="m-0 text-sm grey-text-accent">Success</p>, value: 'success' },

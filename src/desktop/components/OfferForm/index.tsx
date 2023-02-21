@@ -63,6 +63,8 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
         handleCreateOffer,
     } = props;
 
+    console.log(optionPayment);
+
     return (
         <React.Fragment>
             <form className="com-form-crete-offer">
