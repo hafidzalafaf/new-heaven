@@ -23,10 +23,13 @@ const WalletDeposit: React.FC = () => {
 
     React.useEffect(() => {
         dispatch(memberLevelsFetch());
+    }, [dispatch]);
+
+    React.useEffect(() => {
         if (user?.level < memberLevel?.deposit?.minimum_level) {
             setShowModalLocked(true);
         }
-    }, [dispatch, user, memberLevel]);
+    }, [user, memberLevel]);
 
     const renderHeaderModalLocked = () => {
         return (
