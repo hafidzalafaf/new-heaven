@@ -43,13 +43,13 @@ export const CardMarketDetail: React.FunctionComponent<CardMarketDetailProps> = 
                         <div key={i} className="d-flex justify-content-between align-items-start mb-24">
                             <div className="d-flex">
                                 <span className="mr-8">
-                                    <img src={detail?.currency?.icon_url} alt="icon" className="small-coin-icon" />
+                                    <img src={detail?.logo_url} alt="icon" className="small-coin-icon" />
                                 </span>
                                 <div>
                                     <p className="mb-8 text-sm white-text font-bold">
                                         {detail?.base_unit?.toUpperCase()}
                                     </p>
-                                    <p className="m-0 text-xs grey-text-accent">{detail?.currency?.name}</p>
+                                    <p className="m-0 text-xs grey-text-accent">{detail?.name?.toUpperCase()}</p>
                                 </div>
                             </div>
 

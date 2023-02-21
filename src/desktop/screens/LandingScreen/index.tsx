@@ -72,33 +72,6 @@ class Landing extends React.Component<Props> {
                                     </a>
                                 </div>
                             </div>
-                            <div className="mt-4">
-                                <div className="d-flex new-coin justify-content-center">
-                                    <div className="new-coin-content">
-                                        <p className="mb-0 text-md white-text font-semibold mb-24 text-center">
-                                            {this.translate('page.body.landing.new.coins')}
-                                        </p>
-                                        <div className="d-flex">
-                                            <p className="mb-0 font-semibold white-text mr-4">
-                                                <BtcIcon className="mr-2 small-coin-icon" />
-                                                BTC
-                                            </p>
-                                            <p className="mb-0 font-semibold white-text mr-4">
-                                                <BnbIcon className="mr-2 small-coin-icon" />
-                                                BNB
-                                            </p>
-                                            <p className="mb-0 font-semibold white-text mr-4">
-                                                <DogeIcon className="mr-2 small-coin-icon" />
-                                                DOGE
-                                            </p>
-                                            <p className="mb-0 font-semibold white-text mr-4">
-                                                <TronIcon className="mr-2 small-coin-icon" />
-                                                TRX
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </section>
 

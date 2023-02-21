@@ -16,17 +16,18 @@ import {
     selectNextPageExists,
     RootState,
     alertPush,
+    fetchHistory,
 } from '../../../modules';
 import { FilterIcon } from 'src/mobile/assets/Wallet';
 import Tabs from 'react-bootstrap/Tabs';
 import { useDocumentTitle } from 'src/hooks';
 import { copy, CopyableTextField, Table } from '../../../components';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
-import { BtcIcon } from '../../../assets/images/CoinIcon';
 import { NoData } from 'src/desktop/components';
 import { PaginationMobile } from 'src/mobile/components';
 import { Link } from 'react-router-dom';
 import { CopyButton } from 'src/assets/images/CopyButton';
+import { capitalizeFirstLetter } from 'src/helpers';
 
 interface TransactionHistoryMobileScreenProps {
     sender_uid: string;
@@ -42,8 +43,11 @@ interface TransactionHistoryMobileScreenProps {
     state: string;
     rid: string;
     txid: string;
+    tid: string;
     status: string;
     blockchain_txid: string;
+    currency: string;
+    logo_url: string;
     dataCurrency: {
         id: any;
         currency: string;
@@ -51,7 +55,7 @@ interface TransactionHistoryMobileScreenProps {
         icon_url: string;
     };
 }
-
+const DEFAULT_LIMIT = 5;
 const HistoryTransactionMobileScreen: React.FC = () => {
     const intl = useIntl();
     const { formatMessage } = useIntl();
@@ -69,9 +73,12 @@ const HistoryTransactionMobileScreen: React.FC = () => {
         {} as TransactionHistoryMobileScreenProps
     );
     const [status, setStatus] = React.useState('');
-    const [startDate, setStartDate] = React.useState('');
-    const [endDate, setEndDate] = React.useState('');
+    const [startDate, setStartDate] = React.useState<string | number>();
+    const [endDate, setEndDate] = React.useState<string | number>();
     const [showFilter, setShowFilter] = React.useState(false);
+
+    const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
+    const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
 
     // Handle get item pagination
     const firstElementIndex = useSelector((state: RootState) => selectFirstElemIndex(state, 5));
@@ -79,8 +86,113 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     const nextPageExists = useSelector((state: RootState) => selectNextPageExists(state, 5));
 
     useDocumentTitle('History Transaction');
-    useHistoryFetch({ type: type, limit: 5, currency, page: currentPage });
+    // useHistoryFetch({ type: type, limit: 5, currency, page: currentPage });
     useWalletsFetch();
+
+    React.useEffect(() => {
+        const defaultPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+        };
+
+        const marketPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            currency: currency,
+        };
+
+        const statePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            state: status,
+        };
+
+        const marketStatePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            state: status,
+            currency: currency,
+        };
+        // JANGAN DIHAPUS
+        // var datePayload;
+        // if (type == 'transfers') {
+        //     datePayload = {
+        //         type: type,
+        //         page: currentPage,
+        //         limit: DEFAULT_LIMIT,
+        //         from: time_from,
+        //         to: time_to,
+        //     };
+        // } else {
+        //     datePayload = {
+        //         type: type,
+        //         page: currentPage,
+        //         limit: DEFAULT_LIMIT,
+        //         time_from: time_from,
+        //         time_to: time_to,
+        //     };
+        // }
+
+        const datePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+        };
+
+        const dateStatePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            state: status,
+        };
+
+        const dateAssetPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            currency: currency,
+        };
+
+        const marketDateStatusPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            currency: currency,
+            time_from: time_from,
+            time_to: time_to,
+            state: status,
+        };
+
+        dispatch(
+            fetchHistory(
+                startDate && endDate && status && currency
+                    ? marketDateStatusPayload
+                    : startDate && endDate && status
+                    ? dateStatePayload
+                    : startDate && endDate && currency
+                    ? dateAssetPayload
+                    : currency && status
+                    ? marketStatePayload
+                    : startDate && endDate
+                    ? datePayload
+                    : currency
+                    ? marketPayload
+                    : status
+                    ? statePayload
+                    : defaultPayload
+            )
+        );
+    }, [startDate, endDate, currency, currentPage, status, type]);
 
     // ====== Handle type navigation
     const handleChangeType = (e) => {
@@ -117,7 +229,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     const getTypeClassnameHistoryTransaction = (typeClassTransaction: string) => {
         switch (typeClassTransaction) {
             case 'deposits':
-                return 'contrast-text';
+                return 'gradient-text';
             case 'withdraws':
                 return 'danger-text';
             default:
@@ -142,13 +254,25 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     // Handle status class history transaction
     const getStatusClassTransaction = (statusCode: string) => {
         switch (statusCode) {
-            case 'Pending':
+            case 'pending':
                 return 'warning-text';
-            case 'Canceled':
+            case 'processing':
+                return 'warning-text';
+            case 'fee_processing':
+                return 'warning-text';
+            case 'prepared':
+                return 'warning-text';
+            case 'under_review':
+                return 'warning-text';
+            case 'canceled':
                 return 'danger-text';
-            case 'completed':
-                return 'success-text';
+            case 'skipped':
+                return 'danger-text';
             case 'errored':
+                return 'danger-text';
+            case 'failed':
+                return 'danger-text';
+            case 'rejected':
                 return 'danger-text';
 
             default:
@@ -214,7 +338,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             <div className="d-flex justify-content-center align-items-stretch">
                 <img
                     className="icon-history mr-3 rounded-full"
-                    src={item?.dataCurrency?.icon_url ? item?.dataCurrency?.icon_url : '/img/dummycoin.png'}
+                    src={item?.logo_url ? item?.logo_url : '/img/dummycoin.png'}
                     alt="icon"
                 />
                 {/* <p className="m-0 mr-24 white-text font-bold">{item.currency.toUpperCase()}</p> */}
@@ -262,7 +386,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             <div className="d-flex justify-content-center align-items-stretch">
                 <img
                     className="icon-history mr-3 rounded-full"
-                    src={item?.dataCurrency?.icon_url ? item?.dataCurrency?.icon_url : '/img/dummycoin.png'}
+                    src={item?.logo_url ? item?.logo_url : '/img/dummycoin.png'}
                     alt="icon"
                 />
             </div>,
@@ -279,39 +403,8 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                     {getTypeHistoryTransaction(type)}
                 </p>
             </div>,
-            // <div className='d-flex flex-row w-1/2'>
-            //     <fieldset className={`m-0 text-xs font-bold text-nowrap text-truncate ${getTypeClassnameHistoryTransaction(type)}`}>
-            //        {item?.txid?.length > 10 ? item.txid.slice(0, 10) + '...' : item.txid}
-            //     </fieldset>
-            //     <div className='cursor-pointer' onClick={()=> navigator.clipboard.writeText(item.txid)}>
-            //         <CopyButton className="copy-icon" />
-            //     </div>
-            // </div>,
-            //     <div>
-            //         <p className={`m-0 text-xs font-bold text-nowrap`}>
-            //         {item.tid}
-            //         </p>
-            // </div>,
             <p className={`m-0 text-sm ${getStatusClassTransaction(item.state)}`}>
-                {item.status === 'pending'
-                    ? 'Pending'
-                    : item.status === 'canceled'
-                    ? 'Canceled'
-                    : item.status === 'completed'
-                    ? 'Completed'
-                    : item.state === 'collected'
-                    ? 'Collected'
-                    : item.state === 'processing'
-                    ? 'Processing'
-                    : item.state === 'confirming'
-                    ? 'Success'
-                    : item.state === 'errored'
-                    ? 'Error'
-                    : item.state == 'succeed'
-                    ? 'Success'
-                    : item.state == 'failed'
-                    ? 'Failed'
-                    : ''}
+                {capitalizeFirstLetter(item?.state)}
             </p>,
             <div className="cursor-pointer" onClick={() => handleItemDetail(data[index])}>
                 <p className={`m-0 text-xs font-bold text-nowrap`}>Detail</p>
@@ -345,7 +438,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             <div className="d-flex justify-content-center align-items-stretch">
                 <img
                     className="icon-history mr-3 rounded-full"
-                    src={item?.dataCurrency?.icon_url ? item?.dataCurrency?.icon_url : '/img/dummycoin.png'}
+                    src={item?.logo_url ? item?.logo_url : '/img/dummycoin.png'}
                     alt="icon"
                 />
             </div>,
@@ -371,25 +464,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             //     </div>
             // </div>,
             <p className={`m-0 text-sm ${getStatusClassTransaction(item.state)}`}>
-                {item.status === 'pending'
-                    ? 'Pending'
-                    : item.status === 'canceled'
-                    ? 'Canceled'
-                    : item.status === 'completed'
-                    ? 'Completed'
-                    : item.state === 'collected'
-                    ? 'Collected'
-                    : item.state === 'processing'
-                    ? 'Processing'
-                    : item.state === 'confirming'
-                    ? 'Success'
-                    : item.state === 'errored'
-                    ? 'Error'
-                    : item.state == 'succeed'
-                    ? 'Success'
-                    : item.state == 'failed'
-                    ? 'Failed'
-                    : ''}
+                {capitalizeFirstLetter(item?.state)}
             </p>,
             <div className="cursor-pointer" onClick={() => handleItemDetail(data[index])}>
                 <p className={`m-0 text-xs font-bold text-nowrap`}>Detail</p>
@@ -400,17 +475,6 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     React.useEffect(() => {
         setHistorys(list);
     }, [list]);
-
-    React.useEffect(() => {
-        if (startDate != '' && endDate != '') {
-            const filterredList = list.filter(
-                (item) =>
-                    moment(item.created_at).format() >= moment(startDate).format() &&
-                    moment(item.created_at).format() <= moment(endDate).format()
-            );
-            setHistorys(filterredList);
-        }
-    }, [startDate, endDate]);
 
     const filterredStatus = (status) => {
         let filterredList;
@@ -428,10 +492,29 @@ const HistoryTransactionMobileScreen: React.FC = () => {
         setHistorys(list);
     };
 
-    const optionStatus = [
-        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'processing' },
-        { label: <p className="m-0 text-sm grey-text-accent">Completed</p>, value: 'collected' },
+    const optionStatusDeposit = [
+        { label: <p className="m-0 text-sm grey-text-accent">Submitted</p>, value: 'submitted' },
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
+        { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Collected</p>, value: 'collected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
+        { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
+        { label: <p className="m-0 text-sm grey-text-accent">Fee Processing</p>, value: 'fee_processing' },
+    ];
+
+    const optionStatusWithdraw = [
+        { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepared' },
+        { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
+        { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
+        { label: <p className="m-0 text-sm grey-text-accent">Succeed</p>, value: 'succeed' },
+        { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
+        { label: <p className="m-0 text-sm grey-text-accent">Failed</p>, value: 'failed' },
+        { label: <p className="m-0 text-sm grey-text-accent">Errored</p>, value: 'errored' },
+        { label: <p className="m-0 text-sm grey-text-accent">Confirming</p>, value: 'confirming' },
+        { label: <p className="m-0 text-sm grey-text-accent">Under Review</p>, value: 'under_review' },
     ];
 
     return (
@@ -535,18 +618,18 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                             height={30}
                             width={30}
                             className="icon-history mr-3 rounded-full"
-                            src={detailData.dataCurrency?.icon_url}
+                            src={detailData?.logo_url}
                             alt="icon"
                         />
-                        <h3>{detailData?.dataCurrency?.id?.toUpperCase()}</h3>
+                        <h3 className="m-0 p-0">{detailData?.currency?.toUpperCase()}</h3>
                     </div>
                     <table className="w-100 table-canvas">
                         <tbody>
-                            <tr className="w-100 d-flex justify-content-between align-items0center">
+                            <tr className="w-100 d-flex justify-content-between align-items-center">
                                 <td className="td-title">Date</td>
                                 <td className="td-value">{moment(detailData.created_at).format('D MMM YYYY')}</td>
                             </tr>
-                            <tr className="w-100 d-flex justify-content-between align-items0center">
+                            <tr className="w-100 d-flex justify-content-between align-items-center">
                                 <td className="td-title">Status</td>
                                 <td className="td-value">
                                     {type === 'transfers'
@@ -554,7 +637,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                                         : detailData.state?.charAt(0).toUpperCase() + detailData.state?.slice(1)}
                                 </td>
                             </tr>
-                            <tr className="w-100 d-flex justify-content-between align-items0center">
+                            <tr className="w-100 d-flex justify-content-between align-items-center">
                                 <td className="td-title">Type</td>
                                 <td className="td-value">
                                     {type === 'withdraws'
@@ -564,99 +647,107 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                                         : 'Internal Transfer'}
                                 </td>
                             </tr>
-                            <tr className="w-100 d-flex justify-content-between align-items0center">
+                            <tr className="w-100 d-flex justify-content-between align-items-center">
                                 <td className="td-title">Amount</td>
                                 <td className="td-value">
                                     {detailData.amount} {detailData?.dataCurrency?.id?.toUpperCase()}
                                 </td>
                             </tr>
                             {type !== 'transfers' ? (
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                <tr className="w-100 d-flex justify-content-between align-items-center">
                                     <td className="td-title">Fee</td>
                                     <td className="td-value">
                                         {detailData.fee} {detailData?.dataCurrency?.id?.toUpperCase()}
                                     </td>
                                 </tr>
                             ) : null}
-                            <tr className="w-100 d-flex justify-content-between align-items0center">
+                            <tr className="w-100 d-flex justify-content-between align-items-center">
                                 <td className="td-title">
                                     {type === 'withdraws' ? 'RID' : type === 'deposits' ? 'TXID' : 'Receiver UID'}
                                 </td>
-                            </tr>
-                            {type === 'transfers' ? (
-                                <>
-                                    <tr className="w-100 d-flex justify-content-between align-items0center">
-                                        <td className="w-100">
+
+                                {type === 'transfers' ? (
+                                    <td>
+                                        <div className="w-100 d-flex justify-content-between align-items-center">
+                                            <div className="w-100">
+                                                <input
+                                                    className="p-0 m-0 td-value address w-100 bg-transparent"
+                                                    id="address"
+                                                    defaultValue={detailData.receiver_uid}
+                                                />
+                                            </div>
+                                            <div>
+                                                <button
+                                                    className="btn-transparent w-10"
+                                                    type="button"
+                                                    onClick={() => doCopy('address')}>
+                                                    <CopyButton />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                ) : (
+                                    <td className=" d-flex justify-content-between align-items-center">
+                                        <div className="">
                                             <input
-                                                className="p-0 m-0 text-sm grey-text-accent font-bold address w-100 bg-transparent"
+                                                className="p-0 m-0 td-value address w-100 bg-transparent"
                                                 id="address"
-                                                defaultValue={detailData.receiver_uid}
+                                                defaultValue={
+                                                    type === 'deposits'
+                                                        ? detailData?.txid
+                                                            ? detailData?.txid
+                                                            : detailData?.tid
+                                                        : type === 'withdraws'
+                                                        ? detailData?.rid
+                                                        : detailData?.txid
+                                                }
                                             />
-                                        </td>
-                                        <td>
+                                        </div>
+                                        <div>
                                             <button
                                                 className="btn-transparent w-10"
                                                 type="button"
                                                 onClick={() => doCopy('address')}>
                                                 <CopyButton />
                                             </button>
-                                        </td>
-                                    </tr>
-                                    <tr className="w-100 d-flex justify-content-between align-items0center">
-                                        <td className="td-title"> Sender UID</td>
-                                    </tr>
-                                    <tr className="w-100 d-flex justify-content-between align-items0center">
-                                        <td className="w-100">
+                                        </div>
+                                    </td>
+                                )}
+                            </tr>
+
+                            {type == 'transfers' && (
+                                <tr className="w-100 d-flex justify-content-between align-items-center">
+                                    <td className="td-title"> Sender UID</td>
+
+                                    <td className="d-flex justify-content-between align-items-center">
+                                        <div className="w-100">
                                             <input
-                                                className="p-0 m-0 text-sm grey-text-accent font-bold address w-100 bg-transparent"
+                                                className="p-0 m-0 td-value address w-100 bg-transparent"
                                                 id="address"
                                                 defaultValue={detailData.sender_uid}
                                             />
-                                        </td>
-                                        <td>
+                                        </div>
+                                        <div>
                                             <button
                                                 className="btn-transparent w-10"
                                                 type="button"
                                                 onClick={() => doCopy('address')}>
                                                 <CopyButton />
                                             </button>
-                                        </td>
-                                    </tr>
-                                </>
-                            ) : (
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
-                                    <td className="w-100">
-                                        <input
-                                            className="p-0 m-0 text-sm grey-text-accent font-bold address w-100 bg-transparent"
-                                            id="address"
-                                            defaultValue={
-                                                type === 'deposits'
-                                                    ? detailData.txid
-                                                    : type === 'withdraws'
-                                                    ? detailData.rid
-                                                    : detailData.txid
-                                            }
-                                        />
-                                    </td>
-                                    <td>
-                                        <button
-                                            className="btn-transparent w-10"
-                                            type="button"
-                                            onClick={() => doCopy('address')}>
-                                            <CopyButton />
-                                        </button>
+                                        </div>
                                     </td>
                                 </tr>
                             )}
+
                             {type === 'withdraws' ? (
                                 <>
-                                    <tr className="w-100 d-flex justify-content-between align-items0center">
+                                    <tr className="w-100 d-flex justify-content-between align-items-center">
                                         <td className="td-title">TXID</td>
                                     </tr>
-                                    <tr className="w-100 d-flex justify-content-between align-items0center">
+                                    <tr className="w-100 d-flex justify-content-between align-items-center">
                                         <td className="w-100">
                                             <input
-                                                className="p-0 m-0 text-sm grey-text-accent font-bold address w-100 bg-transparent"
+                                                className="p-0 m-0 td-value address w-100 bg-transparent"
                                                 id="address"
                                                 defaultValue={detailData?.blockchain_txid}
                                             />
@@ -692,6 +783,8 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                             onChange={(e) => {
                                 setStartDate(e.target.value);
                             }}
+                            value={startDate}
+                            defaultValue={new Date().toISOString().slice(0, 10)}
                         />
                     </div>
 
@@ -703,23 +796,32 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                             onChange={(e) => {
                                 setEndDate(e.target.value);
                             }}
+                            value={endDate}
+                            defaultValue={new Date().toISOString().slice(0, 10)}
                         />
                     </div>
 
-                    <div className="mb-24">
-                        <p className="m-0 white-text text-sm mb-8">Status</p>
-                        <Select
-                            value={optionStatus.filter(function (option) {
-                                return option.value === status;
-                            })}
-                            styles={CustomStylesSelect}
-                            options={optionStatus}
-                            onChange={(e) => {
-                                setStatus(e.value);
-                                filterredStatus(e.value);
-                            }}
-                        />
-                    </div>
+                    {type !== 'transfers' && (
+                        <div className="mb-24">
+                            <p className="m-0 white-text text-sm mb-8">Status</p>
+                            <Select
+                                value={
+                                    type == 'withdraws'
+                                        ? optionStatusWithdraw.filter(function (option) {
+                                              return option.value === status;
+                                          })
+                                        : optionStatusDeposit.filter(function (option) {
+                                              return option.value === status;
+                                          })
+                                }
+                                styles={CustomStylesSelect}
+                                options={type == 'withdraws' ? optionStatusWithdraw : optionStatusDeposit}
+                                onChange={(e) => {
+                                    setStatus(e.value);
+                                }}
+                            />
+                        </div>
+                    )}
 
                     <div className="d-flex justify-content-center align-items-center">
                         <button

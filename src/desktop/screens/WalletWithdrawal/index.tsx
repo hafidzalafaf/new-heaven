@@ -13,7 +13,6 @@ import { Table } from '../../../components';
 import { NoData } from '../../components';
 import { copy } from '../../../components';
 import { CopyableTextField } from '../../../components';
-import { CopyButton } from '../../../assets/images/CopyButton';
 import moment from 'moment';
 
 export const WalletWitdrawal: React.FC = () => {
@@ -34,6 +33,10 @@ export const WalletWitdrawal: React.FC = () => {
     const doCopy = (text: string) => {
         copy(text);
         dispatch(alertPush({ message: ['Link has been copied'], type: 'success' }));
+    };
+
+    const handleViewAll = () => {
+        history.push('/history-transaction', { types: 'withdraws' });
     };
 
     const getTableHeaders = () => {
@@ -104,9 +107,11 @@ export const WalletWitdrawal: React.FC = () => {
                         {historys.length < 1 && <NoData text="No Data Yet" />}
                         {historys.length > 0 && (
                             <div className="d-flex justify-content-center mt-3">
-                                <Link to="/history-transaction" className="font-bold text-center gradient-text text-sm">
+                                <p
+                                    onClick={handleViewAll}
+                                    className="font-bold text-center gradient-text text-sm cursor-pointer">
                                     View All
-                                </Link>
+                                </p>
                             </div>
                         )}
                     </div>

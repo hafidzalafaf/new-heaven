@@ -73,6 +73,7 @@ interface DocumentsState {
     showNotification: boolean;
     kycStatus: string;
     documentSuccess: boolean;
+    birthYear: number;
     // isLoading: boolean;
 }
 
@@ -112,6 +113,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
         kycStatus: '',
         documentSuccess: false,
         isLoading: false,
+        birthYear: moment().year(),
     };
 
     public UNSAFE_componentWillReceiveProps(next: Props) {
@@ -125,6 +127,9 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
         if (kycLabel.key == 'document') {
             const kycStatus = kycLabel.value;
             this.setState({ kycStatus: kycStatus });
+        }
+        if (this.props.user.level != 2){
+            this.props.history.push('/profile');
         }
     }
 
@@ -145,6 +150,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
             showNotification,
             kycStatus,
             documentSuccess,
+            birthYear,
         }: // isLoading,
         DocumentsState = this.state;
 
@@ -294,6 +300,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
                                                     <div className="col-12">
                                                         <div className="mt-3">
                                                             <button
+                                                                disabled={(Number(this.state.birthYear) > Number(moment().subtract(18, 'years').format('YYYY'))) || this.handleNextButtonDisabled() ? true : false}
                                                                 type="button"
                                                                 className="btn btn-block btn-lg btn-primary"
                                                                 onClick={() => this.setState({ step: 'document' })}>
@@ -530,7 +537,11 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
     private handleChangeBirthDate = (e: OnChangeEvent) => {
         this.setState({
             birthDate: moment(e.target.value).format('DD/MM/YYYY'),
+            birthYear: Number(moment(e.target.value).format('YYYY')),
         });
+        const birthYear = Number(moment(e.target.value).format('YYYY'));
+        const minYear = moment().subtract(18, 'years').format('YYYY');
+        Number(minYear) < Number(birthYear) ? this.props.fetchAlert({ message : ['You must be at least 18 years old to use this service'], type: 'error' }) : null;
     };
 
     private handleUploadScan = (uploadEvent, id) => {
@@ -627,6 +638,32 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
             selfieFileSizeErrorMessage === '';
 
         return !this.handleValidateInput('idNumber', idNumber) || !filesValid || !profileValid;
+    };
+
+    private handleNextButtonDisabled = () => {
+        const {
+            address,
+            birthDate,
+            city,
+            country,
+            district,
+            name,
+            province,
+            placeBirth,
+        } = this.state;
+
+        const profileValid =
+            address !== '' &&
+            birthDate !== '' &&
+            city !== '' &&
+            country !== '' &&
+            district !== '' &&
+            name !== '' &&
+            province !== '' &&
+            placeBirth !== '';
+
+
+        return !profileValid;
     };
 
     private sendDocuments = async () => {

@@ -44,8 +44,6 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleSendFeedbackNegative,
     } = props;
 
-    console.log(showPayment);
-
     return (
         <React.Fragment>
             <div className="mb-4 left-side">
@@ -152,9 +150,9 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                         <React.Fragment>
                                             <div
                                                 className={`payment-method content-payment ${
-                                                    showPayment ? 'hide' : ''
+                                                    showPayment ? '' : 'hide'
                                                 }  py-3 d-flex justify-content-between align-items-center text-xs font-semibold`}>
-                                                {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
+                                                <>
                                                     <img
                                                         src={
                                                             paymentUser?.logo ||
@@ -167,10 +165,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                         className="bank-logo mx-2"
                                                         alt="bank logo"
                                                     />
-                                                )}
-
-                                                <div>
-                                                    {(paymentUser || detail?.order?.payment !== null) && side == 'buy' && (
+                                                    <div>
                                                         <React.Fragment>
                                                             <p className="m-0 p-0 mb-8 font-semibold text-xs">
                                                                 {detail?.order?.payment !== null
@@ -183,8 +178,8 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                                     : paymentUser?.account_name}
                                                             </p>
                                                         </React.Fragment>
-                                                    )}
-                                                </div>
+                                                    </div>
+                                                </>
                                             </div>
 
                                             <div className={`content-payment-expand ${showPayment ? '' : 'hide'}`}>
@@ -321,6 +316,13 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                         onClick={() => handleShowModalSellConfirm()}
                                         className="btn btn-secondary px-5 text-sm">
                                         Payment Received
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        // onClick={side == 'buy' && handleShowModalCancel}
+                                        className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
+                                        Report
                                     </button>
                                 </div>
                             ) : (

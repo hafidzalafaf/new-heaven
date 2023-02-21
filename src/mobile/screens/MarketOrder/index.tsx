@@ -206,7 +206,7 @@ const MarketOrderMobileScreen: React.FC = () => {
                     height={30}
                     width={30}
                     className="icon-history mr-3 rounded-full"
-                    src={item.dataCurrency && item.dataCurrency.icon_url}
+                    src={item?.logo_url}
                     alt="icon"
                 />
             </div>,
@@ -249,10 +249,10 @@ const MarketOrderMobileScreen: React.FC = () => {
     const optionAssets = formattedMarkets.map((item) => {
         const customLabel = (
             <div className="d-flex align-items-center">
-                <img src={item.currency?.icon_url} alt="icon" className="mr-12 small-coin-icon" />
+                <img src={item?.logo_url} alt="icon" className="mr-12 small-coin-icon" />
                 <div>
                     <p className="m-0 text-sm grey-text-accent">{item.name.toUpperCase()}</p>
-                    <p className="m-0 text-xs grey-text-accent">{item.currency?.name}</p>
+                    <p className="m-0 text-xs grey-text-accent">{item?.base_unit?.toUpperCase()}</p>
                 </div>
             </div>
         );

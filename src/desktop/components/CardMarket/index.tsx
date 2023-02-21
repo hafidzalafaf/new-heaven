@@ -20,13 +20,9 @@ export const CardMarket: React.FunctionComponent<CardMarketProps> = (props) => {
                         <tr className="text-sm font-bold com-card-market__data" key={i}>
                             <td className="d-flex align-items-center pr-8">
                                 <div className="mr-8">
-                                    <img
-                                        src={el && el.currency && el.currency.icon_url}
-                                        alt="coin"
-                                        className="coin rounded-pill"
-                                    />
+                                    <img src={el?.logo_url} alt="coin" className="coin rounded-pill" />
                                 </div>
-                                <p className="white-text m-0">{el && el.currency && el.currency.id.toUpperCase()}</p>
+                                <p className="white-text m-0">{el?.base_unit?.toUpperCase()}</p>
                             </td>
                             <td className="white-text pr-8">
                                 {title == 'Top Volume Coins'

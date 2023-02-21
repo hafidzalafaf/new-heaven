@@ -99,7 +99,7 @@ export const MarketAllCryptoTabs: FC = (): ReactElement => {
         }
         return allMarket.map((item, i) => [
             <div key={i} className="d-flex align-items-center text-sm">
-                <img src={item.currency && item.currency.icon_url} alt="coin" className="mr-12 small-coin-icon" />
+                <img src={item?.logo_url} alt="coin" className="mr-12 small-coin-icon" />
                 <p className="m-0 mr-24 white-text font-bold">{item?.name?.toUpperCase()}</p>
             </div>,
             <p className="m-0 text-sm white-text">{item.last}</p>,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import {
     orderDetailFetch,
     selectP2POrderDetail,
@@ -20,7 +20,6 @@ import { CopyableTextField } from '../../../components';
 import { copy } from '../../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'src/desktop/components';
-import moment from 'moment';
 import {
     CheckFillIcon,
     CheckOutlineIcon,
@@ -29,6 +28,8 @@ import {
     GreyCheck,
     ActiveCheck,
 } from '../../../assets/images/P2PIcon';
+import ReactMomentCountDown from 'react-moment-countdown';
+import moment from 'moment';
 
 export const P2PWalletOrderScreen: React.FC = () => {
     useDocumentTitle('P2P || Order');
@@ -36,6 +37,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const { order_number = '' } = useParams<{ order_number?: string }>();
     const location: { state: { side: string } } = useLocation();
     const side = location.state?.side;
+    const history = useHistory()
+    
 
     const detail = useSelector(selectP2POrderDetail);
     const paymentConfirmSuccess = useSelector(selectP2PConfirmPaymentSuccess);
@@ -56,18 +59,57 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [paymentUser, setPaymentUser] = React.useState<any>();
     const [checkModalOne, setcheckModalOne] = React.useState(false);
     const [checkModalTwo, setcheckModalTwo] = React.useState(false);
+    const [orderNumber, setOrderNumber] = React.useState(order_number);
 
     const [comment, setComment] = React.useState('');
     const [showModalSellConfirm, setShowModalSellConfrim] = React.useState(false);
     const [showModalReport, setShowModalReport] = React.useState(false);
     const [showModalBuyOrderCompleted, setShowModalBuyOrderCompleted] = React.useState(false);
     const [showModalCancel, setShowModalCancel] = React.useState(false);
+    const [date, setDate] = React.useState<any>();
     const [active, setActive] = React.useState('');
+    
+    console.log(orderNumber);
 
-    console.log(paymentUser);
+
+    const dateInFuture = moment(detail?.order?.first_approve).format('YYYY-MM-DD HH:mm:ss');
+    const timeLeft = Date.parse(dateInFuture) - new Date().getTime()
+    let currentDays = Math.floor((Number(timeLeft) / (24*60*60*1000)));
+    let currentHours = Math.floor((Number(timeLeft) % (24*60*60*1000))/ (60*60*1000));
+    let currentMinutes = Math.floor((Number(timeLeft) % (60*60*1000))/ (60 * 1000));
+    let currentSeconds = Math.floor(Number(timeLeft)% (60 * 1000)/1000);
+    const [days, setDays] = React.useState(currentDays);
+    const [hours, setHours] = React.useState(currentHours);
+    const [minutes, setMinutes] = React.useState(currentMinutes);
+    const [seconds, setSeconds] = React.useState(currentSeconds);
+
+
+        if (window.location.pathname === '/p2p/wallet/order/undefined'){
+            window.location.replace('/p2p')
+        }
+
+
+    console.log(window.location.pathname)
+    React.useEffect(()=>{
+        let timer = null
+        timer = setInterval(()=>{
+            setDays(currentDays);
+            setHours(currentHours);
+            setMinutes(currentMinutes);
+            setSeconds(currentSeconds);
+        }, 1000)
+        return () => {
+            clearInterval(timer);
+        }
+    })
+
+    React.useEffect(()=>{
+        dispatch(orderDetailFetch({ offer_number: order_number }));
+    }, [dispatch, order_number])
+
 
     React.useEffect(() => {
-        dispatch(orderDetailFetch({ offer_number: order_number }));
+        setDate(moment(detail?.order?.first_approve).format('YYYY-MM-DD HH:mm:ss'));
         if (detail?.order?.first_approve) {
             let a = Math.floor(new Date(detail?.order?.first_approve).getTime() / 1000);
             let timeArr: any;
@@ -83,7 +125,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
             let timeInMilliseconds = timeArr[0] * 3600000 + timeArr[1] * 60000;
             setSecondCountdown(timeInMilliseconds - Date.now());
         }
-    }, [dispatch, order_number, paymentConfirmSuccess, confirmSellSuccess, cancelSuccess, shouldFetchP2POrderDetail]);
+    }, [dispatch, paymentConfirmSuccess, confirmSellSuccess, cancelSuccess, shouldFetchP2POrderDetail]);
+
 
     React.useEffect(() => {
         if (detail?.order?.state == 'prepare') {
@@ -120,6 +163,78 @@ export const P2PWalletOrderScreen: React.FC = () => {
             };
         }
     });
+
+
+    //countdown timer 
+
+    const Countdown = ({days, hours, minutes, seconds}) => {
+        var dayDigit = days.toString().split('')
+        var dayArray = dayDigit.map(Number)
+        var hourDigit = hours.toString().split('')
+        var hourArray = hourDigit.map(Number)
+        var minuteDigit = minutes.toString().split('')
+        var minuteArray = minuteDigit.map(Number)
+        var secondDigit = seconds.toString().split('')
+        var secondArray = secondDigit.map(Number)
+        console.log(dayArray, hourArray, minuteArray, secondArray, 'time');
+        return (
+         <>
+         {
+            timeLeft > 0 ?
+            <div className='d-flex flex-row'>
+            <div className='d-flex flex-row'>
+                <h2 className='text-white countdown-number'>{days > 10 ? dayArray[0] : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1]) ? 0 : 0}</h2>
+                <h2 className='text-white countdown-number'>{days > 10 ? dayArray[1] : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1]) ? 0 : dayArray[0]}</h2>
+            </div>
+
+            <h2 className='mt-2'>:</h2>
+            
+            <div className='d-flex flex-row'>
+                <h2 className='text-white countdown-number'>{hours > 10 ? hourArray[0] : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1]) ? 0 : 0}</h2>
+                <h2 className='text-white countdown-number'>{hours > 10 ? hourArray[1] : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1]) ? 0 : hourArray[0]}</h2>
+            </div>
+            
+            <h2 className='mt-2'>:</h2>
+            
+            <div className='d-flex flex-row'>
+                <h2 className='text-white countdown-number'>{minutes > 10 ? minuteArray[0] : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1]) ? 0 : 0}</h2>
+                <h2 className='text-white countdown-number'>{minutes > 10 ? minuteArray[1] : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1]) ? 0 : minuteArray[0]}</h2>
+            </div>
+            
+            <h2 className='mt-2'>:</h2>
+            
+            <div className='d-flex flex-row'>
+                <h2 className='text-white countdown-number'>{seconds > 10 ? secondArray[0] : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1]) ? 0 : 0}</h2>
+                <h2 className='text-white countdown-number'>{seconds > 10 ? secondArray[1] : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1]) ? 0 : secondArray[0]}</h2>
+            </div>
+        </div>
+            :
+            <div className='d-flex flex-row'>
+                <div className='d-flex flex-row'>
+                     <h2 className='text-white countdown-number'>0</h2>
+                     <h2 className='text-white countdown-number'>0</h2>
+                 </div>
+
+                 <h2>:</h2>
+
+                 <div className='d-flex flex-row'>
+                     <h2 className='text-white countdown-number'>0</h2>
+                     <h2 className='text-white countdown-number'>0</h2>
+                 </div>
+
+                 <h2>:</h2>
+
+                 <div className='d-flex flex-row'>
+                     <h2 className='text-white countdown-number'>0</h2>
+                     <h2 className='text-white countdown-number'>0</h2>
+                 </div>
+             </div> 
+         }
+        </>
+        )
+    }
+
+
 
     React.useEffect(() => {
         setComment('');
@@ -165,7 +280,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
         copy('kid-code');
         dispatch(alertPush({ message: ['Order Number copied'], type: 'success' }));
     };
-
+    
     const disableButton = !checkModalOne || !checkModalTwo;
 
     const handleChangePaymentMethod = (e: string, el: any) => {
@@ -532,7 +647,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         </div>
                     )}
                     <div className="d-flex flex-column align-items-end">
-                        {(detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting') && (
+                        {/* {(detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting') && (
                             <div className="d-flex align-items-center">
                                 <div className="second radius-sm mx-1">
                                     <p className="mb-0 text-md font-bold white-text text">
@@ -615,7 +730,21 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                     </p>
                                 </div>
                             </div>
-                        )}
+                        )} */}
+                        <Countdown 
+                            days={days} 
+                            hours={hours} 
+                            minutes={minutes} 
+                            seconds={seconds} 
+                        />
+                        {/* <div className="text-xl font-bold white-text text countdown-container">
+                            <ReactMomentCountDown
+                                toDate={dateInFuture}
+                                sourceFormatMask="YYYY-MM-DD HH:mm:ss"
+                                targetFormatMask="HH:mm:ss"
+                            />
+                        </div> */}
+
                         <div className="d-flex align-items-center">
                             <span className="grey-text text-sm">Order number</span>
                             <fieldset onClick={doCopyNumber}>
