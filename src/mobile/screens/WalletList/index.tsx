@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     selectAbilities,
     selectCurrencies,
@@ -11,6 +11,8 @@ import {
     Wallet,
     User,
     selectUserInfo,
+    memberLevelsFetch,
+    selectMemberLevels,
 } from '../../../modules';
 import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch, useDocumentTitle } from '../../../hooks';
 import { Table, Decimal, formatWithSeparators } from '../../../components';
@@ -41,7 +43,12 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
 
     const { isP2PEnabled } = props;
     const history = useHistory();
+    const dispatch = useDispatch();
     const { formatMessage } = useIntl();
+
+    React.useEffect(() => {
+        dispatch(memberLevelsFetch());
+    }, [dispatch]);
 
     const [showModal, setShowModal] = React.useState(false);
     const [modalType, setModalType] = React.useState('');
@@ -60,6 +67,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
     const markets = useSelector(selectMarkets);
     const tickers = useSelector(selectMarketTickers);
     const user: User = useSelector(selectUserInfo);
+    const memberLevel = useSelector(selectMemberLevels);
 
     React.useEffect(() => {
         if (wallets.length && currencies.length) {
@@ -212,22 +220,8 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
         [nonZeroSelected, setNonZeroSelected]
     );
 
-    // const handleClickWithdraw = React.useCallback(() => {
-    //     if (!user.otp) {
-    //         setShowModalLocked(!showModalLocked);
-    //     } else if (user.labels[0].key === 'document' && user.labels[0].value === 'verified') {
-    //         console.log('kyc');
-    //     } else {
-    //         setShowModal(true);
-    //     }
-    // }, []);
-
-    // const handleClickWithdraw = React.useCallback(() => {
-    //     user.otp ? setShowModal(true) : setShowModalLocked(!showModalLocked);
-    // }, []);
-
     const handleClickWithdraw = React.useCallback(() => {
-        if (user.level < 3) {
+        if (user.level < memberLevel?.withdraw?.minimum_level) {
             setShowModalLocked(true);
         } else {
             setShowModal(true);
