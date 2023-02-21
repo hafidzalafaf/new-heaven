@@ -35,6 +35,8 @@ import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow';
 import './Security.pcss';
 import { ModalTwoFaMobile } from 'src/mobile/components/ModalTwoFaMobile';
 import { ModalFullScreenMobile } from 'src/mobile/components';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 interface ProfileSecurityState {
     showTwoFaModal: boolean;
@@ -131,7 +133,7 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
 
     public componentDidUpdate(previousProps, previousState) {
         let time = null;
-        if (previousState === this.state.timerActive) {
+        if (!previousState.timerActive && this.state.timerActive) {
             time = setInterval(() => {
                 this.setState({ seconds: this.state.seconds - 1000 });
 
@@ -366,24 +368,39 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
     // **PHONE NUMBER PUBLIC FUNCTION
     // Render phone modal
     public modalPhoneContent = () => {
+        // console.log(this.state.phone[0], 'phone');
+        // console.log(this.state.isChangeNumber, 'change');
+        // console.log(this.state.timerActive, 'timer');
+        console.log('change number ', this.state.isChangeNumber);
+        console.log('validate at ', this.state.phone[0]);
+        console.log('timer active ', this.state.timerActive);
+
         return (
             <React.Fragment>
                 <p className="text-sm grey-text mb-24">
-                    {!this.props.user.phones[0] ? (
+                    {!this.state.phone[0] ? (
                         'Set Your Phone Number And Verified'
-                    ) : this.props.user.phones[0].validated_at === null && !this.state.isChangeNumber ? (
+                    ) : this.state.phone[0].validated_at === null && !this.state.isChangeNumber ? (
                         'You already add phone number, please verify by click send code button to get OTP number'
-                    ) : (this.props.user.phones[0] && this.state.isChangeNumber) ||
-                      this.props.user.phones[0].validated_at !== null ? (
+                    ) : (this.state.phone[0] && this.state.isChangeNumber) ||
+                      this.state.phone[0].validated_at !== null ? (
                         <p className="danger-text">
-                            You only have {5 - this.props.user.phones.length} chances to change your phone number
+                            {this.props.user?.phones?.length === 5 ||
+                            (this.props.user?.phones?.length === 5 &&
+                                (this.state.isChangeNumber || !this.state.isChangeNumber))
+                                ? `Sorry, you run out of time for changing your phone number`
+                                : this.state.isChangeNumber || this.state.phone[0].validated_at !== null
+                                ? `You only have ${
+                                      5 - this.props.user.phones.length
+                                  } chances to change your phone number`
+                                : `Please verify your phone number`}
                         </p>
                     ) : (
                         'Set Your New Phone Number And Verified'
                     )}
                 </p>
 
-                {this.props.user.phones[0] && !this.state.isChangeNumber && (
+                {this.props.user.phones[0] && (
                     <p className="text-sm grey-text mb-24">
                         {this.state.phone[0] && this.state.phone[0].number && `+ ${this.state.phone[0].number}`}
                     </p>
@@ -391,18 +408,15 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
 
                 <div className="form">
                     {(this.state.isChangeNumber ||
-                        !this.props.user.phones[0] ||
-                        this.props.user.phones[0].validated_at !== null) && (
+                        !this.state.phone[0] ||
+                        this.state.phone[0].validated_at !== null) && (
                         <div className="form-group mb-24">
-                            <CustomInput
-                                defaultLabel={`${!this.props.user.phones[0] ? '' : 'New'} Phone Number`}
-                                inputValue={this.state.newPhone}
-                                label={`${!this.props.user.phones[0] ? '' : 'New'} Phone Number`}
-                                placeholder="+6281902912921"
-                                type="text"
-                                labelVisible
-                                classNameLabel="white-text text-sm"
-                                handleChangeInput={(e) => this.setState({ newPhone: e })}
+                            <PhoneInput
+                                country={'id'}
+                                value={this.state.newPhone}
+                                onChange={(e) => this.setState({ newPhone: e })}
+                                placeholder={''}
+                                disabled={this.props.user?.phones?.length === 5}
                             />
                         </div>
                     )}
@@ -421,16 +435,19 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
                                 handleChangeInput={(e) => this.setState({ confirmationCode: e })}
+                                isDisabled={
+                                    this.props.user.phones.length === 5 ||
+                                    (this.state.isChangeNumber && this.props.user.phones.length === 5)
+                                }
                             />
                             <button
                                 type="submit"
-                                disabled={this.disabledButton()}
+                                disabled={this.disabledButtonCode()}
                                 onClick={this.handleSendCodePhone}
                                 className="btn btn-primary ml-2 text-nowrap">
                                 {(!this.state.isChangeNumber &&
-                                    this.state.phone &&
                                     this.state.phone[0] &&
-                                    this.state.phone[0].validate_at === null) ||
+                                    this.state.phone[0]?.validated_at === null) ||
                                 this.state.resendCodeActive
                                     ? 'Resend Code'
                                     : 'Send Code'}
@@ -444,8 +461,7 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
                             {moment(this.state.seconds).format('mm:ss')}
                         </p>
 
-                        {!this.state.isChangeNumber &&
-                            !this.props.user.phones[0] &&
+                        {(!this.state.isChangeNumber || !this.props.user.phones[0]) &&
                             this.state.phone[0]?.validated_at === null && (
                                 <p
                                     onClick={() => {
@@ -461,22 +477,21 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
                     </div>
 
                     <button
-                        // type="submit"
-                        disabled={
-                            this.state.phone[0]?.validate_at === null
-                                ? this.state.confirmationCode.length < 5
-                                    ? true
-                                    : false
-                                : this.state.confirmationCode.length < 5 || this.state.newPhone === ''
-                                ? true
-                                : false
-                        }
+                        type="button"
+                        disabled={this.disabledButton()}
                         onClick={this.handleChangePhone}
                         className="btn btn-primary btn-block"
                         data-toggle="modal"
                         data-target="#change-phone"
                         data-dismiss="modal">
-                        {!this.props.user.phones[0] ? 'Add' : 'Change'}
+                        {!this.props.user.phones[0]
+                            ? 'Add'
+                            : this.state.phone[0] && this.state.phone[0].validated_at === null
+                            ? 'Verify'
+                            : this.state.isChangeNumber ||
+                              (this.state.phone[0] && this.state.phone[0].validated_at !== null)
+                            ? 'Change'
+                            : ''}
                     </button>
                 </div>
             </React.Fragment>
@@ -493,10 +508,12 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
                     <h5 className="grey-text-accent text-center">
                         {!this.props.user.phones[0]
                             ? 'Add Phone Number'
-                            : this.props.user.phones[0].validated_at === null && !this.state.isChangeNumber
+                            : this.state.phone[0] &&
+                              this.state.phone[0].validated_at === null &&
+                              !this.state.isChangeNumber
                             ? 'Verify Phone Number'
-                            : (this.props.user.phones[0] && this.state.isChangeNumber) ||
-                              this.props.user.phones[0].validated_at !== null
+                            : this.state.isChangeNumber ||
+                              (this.state.phone[0] && this.state.phone[0].validated_at !== null)
                             ? 'Change Phone Number'
                             : ''}
                     </h5>
@@ -507,29 +524,34 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
 
     // handle sendCode (POST)
     public handleSendCodePhone = () => {
-        if (this.props.user.phones[0] && !this.state.isChangeNumber) {
-            this.props.resendCode({ phone_number: `+${this.state.phone[0].number}` });
+        if (this.state.phone[0]?.validated_at === null && !this.state.isChangeNumber) {
+            this.props.resendCode({ phone_number: `+${this.state.phone[0].number}`, channel: 'whatsapp' });
             this.setState({ timerActive: true, resendCodeActive: true });
         } else {
-            this.props.sendCode({ phone_number: this.state.newPhone });
+            this.props.sendCode({ phone_number: this.state.newPhone, channel: 'whatsapp' });
             this.setState({ timerActive: true, resendCodeActive: true });
         }
     };
 
     // handle submit change  add phone
     public handleChangePhone = () => {
-        if (this.props.user.phones[0] && !this.state.isChangeNumber) {
-            verifyPhone({
+        if (this.state.phone[0]?.validate_at == null && !this.state.isChangeNumber) {
+            this.props.verifyPhone({
                 phone_number: `+${this.state.phone[0].number}`,
                 verification_code: this.state.confirmationCode,
+                channel: 'whatsapp',
             });
         } else {
-            verifyPhone({ phone_number: this.state.newPhone, verification_code: this.state.confirmationCode });
+            this.props.verifyPhone({
+                phone_number: this.state.newPhone,
+                verification_code: this.state.confirmationCode,
+                channel: 'whatsapp',
+            });
         }
     };
 
-    public disabledButton = () => {
-        if (this.state.phone[0]?.validate_at === null && !this.state.isChangeNumber && !this.state.timerActive) {
+    public disabledButtonCode = () => {
+        if (this.state.phone[0]?.validated_at === null && !this.state.isChangeNumber && !this.state.timerActive) {
             return false;
         }
 
@@ -539,6 +561,22 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
 
         if (this.state.timerActive) {
             return true;
+        }
+    };
+
+    public disabledButton = () => {
+        if (this.state.phone[0]?.validated_at === null && !this.state.isChangeNumber) {
+            if (this.state.confirmationCode.length < 5) {
+                return true;
+            }
+        } else {
+            if (this.state.confirmationCode.length < 5) {
+                return true;
+            }
+
+            if (!this.state.newPhone) {
+                return true;
+            }
         }
     };
     // **END PHONE NUMBER PUBLIC FUNCTION

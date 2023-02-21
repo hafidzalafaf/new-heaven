@@ -63,6 +63,8 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
         handleCreateOffer,
     } = props;
 
+    console.log(optionPayment);
+
     return (
         <React.Fragment>
             <form className="com-form-crete-offer">
@@ -159,7 +161,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     />
                 </div>
 
-                <div>
+                {/* <div>
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">PAYMENT TIME LIMIT</p>
                     <input
                         type="text"
@@ -169,7 +171,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                         placeholder="10 MIN"
                         className="custom-input-offer w-100 mb-24 white-text"
                     />
-                </div>
+                </div> */}
 
                 <div>
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">TERM CONDITIONS</p>
@@ -178,6 +180,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                         required
                         value={term_of_condition}
                         onChange={(e) => handleChangeTermOfCondition(e.target.value)}
+                        placeholder="Enter Term Conditions"
                         className="custom-input-offer w-100 mb-24 white-text"
                     />
                 </div>
@@ -188,6 +191,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                         type="text"
                         value={auto_replay}
                         onChange={(e) => handleChangeAutoReplay(e.target.value)}
+                        placeholder="Auto Reply"
                         className="custom-input-offer w-100 mb-24 white-text"
                     />
                 </div>

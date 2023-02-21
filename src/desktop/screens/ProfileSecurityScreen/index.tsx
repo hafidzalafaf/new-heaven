@@ -351,18 +351,20 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
         return (
             <React.Fragment>
                 <p className="text-sm grey-text mb-24">
-                    {!this.props.user.phones[0] ? (
+                    {!this.state.phone[0] ? (
                         'Set Your Phone Number And Verified'
-                    ) : this.props.user.phones[0].validated_at === null && !this.state.isChangeNumber ? (
+                    ) : this.state.phone[0].validated_at === null && !this.state.isChangeNumber ? (
                         'You already add phone number, please verify by click send code button to get OTP number'
-                    ) : (this.props.user.phones[0] && this.state.isChangeNumber) ||
-                      this.props.user.phones[0].validated_at !== null ? (
+                    ) : (this.state.phone[0] && this.state.isChangeNumber) ||
+                      this.state.phone[0].validated_at !== null ? (
                         <p className="danger-text">
-                            {this.props.user.phones.length === 4 && this.state.isChangeNumber
+                            {this.props.user?.phones?.length === 5 ||
+                            (this.props.user?.phones?.length === 5 &&
+                                (this.state.isChangeNumber || !this.state.isChangeNumber))
                                 ? `Sorry, you run out of time for changing your phone number`
-                                : this.props.user.phones.length < 4 && this.state.isChangeNumber
+                                : this.state.isChangeNumber || this.state.phone[0].validated_at !== null
                                 ? `You only have ${
-                                      4 - this.props.user.phones.length
+                                      5 - this.props.user.phones.length
                                   } chances to change your phone number`
                                 : `Please verify your phone number`}
                         </p>
@@ -371,7 +373,7 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                     )}
                 </p>
 
-                {this.props.user.phones[0] && !this.state.isChangeNumber && (
+                {this.props.user.phones[0] && (
                     <p className="text-sm grey-text mb-24">
                         {this.state.phone[0] && this.state.phone[0].number && `+ ${this.state.phone[0].number}`}
                     </p>
@@ -409,14 +411,19 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
                                 handleChangeInput={(e) => this.handleChangeVerificationCodeValue(e)}
-                                isDisabled={this.state.isChangeNumber && this.props.user?.phones?.length === 4}
+                                isDisabled={
+                                    this.props.user.phones.length === 5 ||
+                                    (this.state.isChangeNumber && this.props.user.phones.length === 5)
+                                }
                             />
                             <button
                                 type="submit"
                                 disabled={this.disabledButtonCode()}
                                 onClick={this.handleSendCodePhone}
                                 className="btn btn-primary ml-2 text-nowrap">
-                                {(!this.state.isChangeNumber && this.state.phone[0]?.validated_at === null) ||
+                                {(!this.state.isChangeNumber &&
+                                    this.state.phone[0] &&
+                                    this.state.phone[0]?.validated_at === null) ||
                                 this.state.resendCodeActive
                                     ? 'Resend Code'
                                     : 'Send Code'}
@@ -497,11 +504,11 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
 
     // handle sendCode (POST)
     public handleSendCodePhone = () => {
-        if (this.props.user.phones[0]?.validated_at === null && !this.state.isChangeNumber) {
-            this.props.resendCode({ phone_number: `+${this.state.phone[0].number}` });
+        if (this.state.phone[0]?.validated_at === null && !this.state.isChangeNumber) {
+            this.props.resendCode({ phone_number: `+${this.state.phone[0].number}`, channel: 'whatsapp' });
             this.setState({ timerActive: true, resendCodeActive: true });
         } else {
-            this.props.sendCode({ phone_number: this.state.newPhone });
+            this.props.sendCode({ phone_number: this.state.newPhone, channel: 'whatsapp' });
             this.setState({ timerActive: true, resendCodeActive: true });
         }
     };
@@ -512,21 +519,23 @@ class ProfileSecurityComponent extends React.Component<Props, ProfileSecuritySta
             this.props.verifyPhone({
                 phone_number: `+${this.state.phone[0].number}`,
                 verification_code: this.state.verificationCode,
+                channel: 'whatsapp',
             });
         } else {
             this.props.verifyPhone({
                 phone_number: this.state.newPhone,
                 verification_code: this.state.verificationCode,
+                channel: 'whatsapp',
             });
         }
     };
 
     public disabledButtonCode = () => {
-        if (this.state.phone[0]?.validate_at == null && !this.state.isChangeNumber && !this.state.timerActive) {
+        if (this.state.phone[0]?.validated_at === null && !this.state.isChangeNumber && !this.state.timerActive) {
             return false;
         }
 
-        if (!this.state.newPhone) {
+        if (this.state.newPhone === '') {
             return true;
         }
 

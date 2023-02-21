@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useMemo, useCallback, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useHistory, useParams, Link } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDepthFetch, useOpenOrdersFetch } from '../../../hooks';
 import { Decimal } from '../../../components';
@@ -29,6 +29,9 @@ import {
     selectTradingFee,
     groupFetch,
     withdrawSumFetch,
+    memberLevelsFetch,
+    selectMemberLevels,
+    selectUserInfo,
 } from '../../../modules';
 import { incrementalOrderBook } from '../../../api';
 import { OpenOrders, OrderBook, MarketListTrade, RecentTrades, OrderForm, TradingChart } from '../../containers';
@@ -37,6 +40,7 @@ import { getTriggerSign } from './helpers';
 import { getTotalPrice, getAmount } from '../../../helpers';
 import { CloseIconTrade } from '../../../assets/images/CloseIcon';
 import { Modal } from '../../../desktop/components';
+import { CircleCloseDangerLargeIcon } from 'src/assets/images/CircleCloseIcon';
 
 export const TradingScreen: FC = (): ReactElement => {
     const { currency = '' } = useParams<{ currency?: string }>();
@@ -56,6 +60,10 @@ export const TradingScreen: FC = (): ReactElement => {
     const orderLoading = useSelector(selectOrderExecuteLoading);
     const groupMember = useSelector(selectGroupMember);
     const tradingFee = useSelector(selectTradingFee);
+    const memberLevel = useSelector(selectMemberLevels);
+    const user = useSelector(selectUserInfo);
+
+    const [showModalLocked, setShowModalLocked] = React.useState(false);
 
     // State Open Order
     const [hideOtherPairs, setHideOtherPairs] = useState<boolean>(false);
@@ -89,7 +97,8 @@ export const TradingScreen: FC = (): ReactElement => {
     React.useEffect(() => {
         dispatch(groupFetch());
         dispatch(withdrawSumFetch());
-    }, []);
+        dispatch(memberLevelsFetch());
+    }, [dispatch]);
 
     const FeeTrading = tradingFee.find((level) => level.group == groupMember.group);
     const willRecive = Number(totalSell) - (Number(FeeTrading?.taker) * 100 * Number(totalSell)) / 100;
@@ -286,7 +295,6 @@ export const TradingScreen: FC = (): ReactElement => {
         };
 
         dispatch(orderExecuteFetch(orderType === 'limit' ? payloadLimit : payloadMarket));
-
         resetForm();
     };
 
@@ -349,18 +357,56 @@ export const TradingScreen: FC = (): ReactElement => {
 
     // submit sell
     const handleSubmitSell = () => {
-        setShowModalSell(true);
+        if (user?.level < memberLevel?.trading?.minimum_level) {
+            setShowModalLocked(true);
+        } else {
+            setShowModalSell(true);
+        }
     };
 
     // submit buy
     const handleSubmitBuy = () => {
-        setShowModalBuy(true);
+        if (user?.level < memberLevel?.trading?.minimum_level) {
+            setShowModalLocked(true);
+        } else {
+            setShowModalBuy(true);
+        }
     };
 
     // order type
     const handleSelectOrderType = (e: string) => {
         setOrderType(e);
         resetForm();
+    };
+
+    const renderHeaderModalLocked = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-center align-items-center w-100">
+                    <CircleCloseDangerLargeIcon />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const renderContentModalLocked = () => {
+        return (
+            <React.Fragment>
+                <h1 className="white-text text-lg mb-24 text-center ">Trade Locked</h1>
+                <p className="grey-text text-ms font-extrabold mb-24 text-center">
+                    {user?.level == 1
+                        ? 'For trade you must verified your phone number and document first'
+                        : 'For trade you must verified your document first'}
+                </p>
+                <div className="d-flex justify-content-center align-items-center w-100 mb-0">
+                    <Link to={`${user?.level == 1 ? '/profile' : '/profile/kyc'}`}>
+                        <button type="button" className="btn btn-primary sm px-5 mr-3">
+                            {user?.level == 1 ? 'Verify Phone Number' : 'Verify Document'}
+                        </button>
+                    </Link>
+                </div>
+            </React.Fragment>
+        );
     };
     // ======================= End Function Order Form =======================
 
@@ -673,6 +719,7 @@ export const TradingScreen: FC = (): ReactElement => {
 
                 {showModalCancel && <Modal show={showModalCancel} content={renderModalContentCancel()} />}
                 {showModalCancelAll && <Modal show={showModalCancelAll} content={renderModalContentCancelAll()} />}
+                <Modal show={showModalLocked} header={renderHeaderModalLocked()} content={renderContentModalLocked()} />
             </div>
         </React.Fragment>
     );

@@ -7,8 +7,10 @@ import {
     selectP2PPaymentUser,
     selectP2PCurrenciesData,
     p2pCurrenciesFetch,
+    selectUserInfo,
 } from 'src/modules';
 import { useDispatch, useSelector } from 'react-redux';
+import { ModalUserLevel } from '../../../desktop/components';
 
 interface P2PPaymentMethodProps {
     name: string;
@@ -18,13 +20,15 @@ interface P2PPaymentMethodProps {
 }
 
 export const P2PPaymentMethod: React.FC = () => {
+    const dispatch = useDispatch();
+    const currenciesData = useSelector(selectP2PCurrenciesData);
+    const user = useSelector(selectUserInfo);
+    const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
+
     const [expandPayment, setExpandPayment] = React.useState(false);
     const [fiat, setFiat] = React.useState('IDR');
     const [bankData, setBankData] = React.useState([]);
-    const dispatch = useDispatch();
-
-    const currenciesData = useSelector(selectP2PCurrenciesData);
-    const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
+    const [showModalUserLevel, setShowModalUserLevel] = React.useState(false);
 
     React.useEffect(() => {
         dispatch(p2pPaymentUserFetch());
@@ -53,7 +57,13 @@ export const P2PPaymentMethod: React.FC = () => {
                     <div className="w-20">
                         <div className="position-relative w-100">
                             <button
-                                onClick={() => setExpandPayment(!expandPayment)}
+                                onClick={() => {
+                                    if (user?.level < 3) {
+                                        setShowModalUserLevel(true);
+                                    } else {
+                                        setExpandPayment(!expandPayment);
+                                    }
+                                }}
                                 type="button"
                                 className="btn-primary w-100">
                                 + Add a payment method
@@ -117,6 +127,14 @@ export const P2PPaymentMethod: React.FC = () => {
                     </div>
                 )}
             </div>
+
+            {showModalUserLevel && (
+                <ModalUserLevel
+                    show={showModalUserLevel}
+                    title={'Add Payment Method'}
+                    onClose={() => setShowModalUserLevel(false)}
+                />
+            )}
         </React.Fragment>
     );
 };

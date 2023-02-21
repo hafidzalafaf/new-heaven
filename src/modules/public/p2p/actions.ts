@@ -37,6 +37,9 @@ export interface OffersFetch {
         base?: string;
         quote?: string;
         payment_method?: number;
+        amount?: string;
+        min_price?: string;
+        max_price?: string;
     };
 }
 

@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, Link } from 'react-router-dom';
 import { Decimal, formatWithSeparators, Loading, Table } from 'src/components';
 import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch } from 'src/hooks';
@@ -48,9 +48,11 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
     const { formatMessage } = useIntl();
     const { isP2PEnabled } = props;
     const history = useHistory();
+    const dispatch = useDispatch();
     const translate = useCallback((id: string, value?: any) => formatMessage({ id: id }, { ...value }), [
         formatMessage,
     ]);
+
     const wallets = useSelector(selectWallets);
     const walletsLoading = useSelector(selectWalletsLoading);
     const p2pWallets = useSelector(selectP2PWallets);
@@ -145,9 +147,9 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
 
         // const filteredList = [];
 
-        return !filteredWallets && !filterValue && !nonZeroSelected
+        return !filteredList.length && !filterValue && !nonZeroSelected
             ? [[[''], [''], <Loading />, [''], [''], ['']]]
-            : !filteredWallets && !loading
+            : !filteredList.length && !loading
             ? [['no data found']]
             : filteredList.map((item, index) => {
                   const { currency, iconUrl, name, fixed, spotBalance, spotLocked, p2pBalance, p2pLocked } = item;
@@ -158,7 +160,7 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                   const disableWithdrawal = item?.network?.filter((net) => net.withdrawal_enabled == true);
 
                   return [
-                      <div key={index} className="d-flex">
+                      <div key={index} className="d-flex align-items-center">
                           <img
                               alt={currency?.toUpperCase()}
                               src={
@@ -168,8 +170,8 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                               }
                               style={{ height: '24px', marginRight: '16px' }}
                           />
-                          <p className="text-sm white-text">{currency.toUpperCase()}</p>
-                          <p className="ml-1 text-sm grey-text-accent">{name}</p>
+                          <p className="text-sm white-text m-0">{currency.toUpperCase()}</p>
+                          <p className="ml-1 text-sm grey-text-accent m-0">{name}</p>
                       </div>,
                       <Decimal key={index} fixed={fixed} thousSep=",">
                           {totalBalance ? totalBalance.toString() : '0'}

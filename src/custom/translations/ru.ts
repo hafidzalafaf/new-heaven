@@ -1089,7 +1089,9 @@ export const ru: LangType = {
     'resource.phone.missing_verification_code': 'Код проверки отсутствует',
     'resource.phone.empty_verification_code': 'Код проверки отсутствует',
     'resource.phone.too_many_retries': 'Вы слишком много раз запрашивали код подтверждения',
-
+    'resource.phone.resource.phone.whatsapp_number_is_invalid_or_does_not_exists':
+        'Номер WhatsApp недействителен, уже используется или не существует',
+    'resource.phone.code_sent_too_fast': 'Verification code sent too fast',
     'account.currency.withdrawal.disabled': 'Withdraw is currenctly disabled for currency',
     'account.currency.doesnt_exist': 'Валюта не существует',
     'account.currency.deposit_disabled': 'Deposit is currently disabled',
@@ -1467,6 +1469,9 @@ export const ru: LangType = {
     'page.body.wallets.transfers.note': 'Note',
     'page.body.wallets.transfers.note.message':
         'Internal transfers are free and instant. You can use them to manage your funds between different accounts on the platform',
+
+    // p2p
+    'p2p_user.payment_user.payment_user_is_exists': 'Способ оплаты уже существует',
 
     // p2p success messages
     'success.p2p.transfer.created': 'Transfer was created',

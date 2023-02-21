@@ -45,11 +45,8 @@ export const TableListP2P = () => {
     const createData = useSelector(selectP2POrderCreateData);
     const createOrderSuccess = useSelector(selectP2POrderCreateSuccess);
 
-    const [side, setSide] = React.useState('buy');
     const [currencies, setCurrencies] = React.useState([]);
     const [payments, setPayments] = React.useState([]);
-    const [fiat, setFiat] = React.useState('IDR');
-    const [currency, setCurrency] = React.useState(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
     const [payment, setPayment] = React.useState('');
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
@@ -60,6 +57,16 @@ export const TableListP2P = () => {
     const [showSelectedPayment, setShowSelectedPayment] = React.useState(false);
     const [showModalUserLevel, setShowModalUserLevel] = React.useState(false);
     const [title, setTitle] = React.useState('');
+
+    /* ========== ORDER FETCH STATE START ========== */
+    const [side, setSide] = React.useState('buy');
+    const [fiat, setFiat] = React.useState('IDR');
+    const [currency, setCurrency] = React.useState(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
+    const [amountList, setAmountList] = React.useState('');
+    const [amountFilter, setAmountFilter] = React.useState('');
+    const [minPriceFilter, setMinPriceFilter] = React.useState('');
+    const [maxPriceFilter, setMaxPriceFilter] = React.useState('');
+    /* ========== ORDER FETCH STATE END ========== */
 
     /* ========== ORDER CREATE STATE START ========== */
     const [price_actual, setPriceActual] = React.useState<string | number>();
@@ -87,10 +94,59 @@ export const TableListP2P = () => {
     /* ============== CREATE OFFER STATE END ============== */
 
     React.useEffect(() => {
+        const defaultPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+        };
+
+        const amountListPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            amount: amountList,
+        };
+
+        const amountFilterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            amount: amountFilter,
+        };
+
+        const priceFilterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            min_price: minPriceFilter,
+            max_price: maxPriceFilter,
+        };
+
+        const filterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            min_price: minPriceFilter,
+            max_price: maxPriceFilter,
+            amount: amountFilter,
+        };
+
         if (currency !== undefined && fiat !== undefined) {
-            dispatch(offersFetch({ fiat: fiat, currency: currency, side: side }));
+            dispatch(
+                offersFetch(
+                    amountList
+                        ? amountListPayload
+                        : amountFilter
+                        ? amountFilterPayload
+                        : minPriceFilter && maxPriceFilter
+                        ? priceFilterPayload
+                        : minPriceFilter && maxPriceFilter && amountFilter
+                        ? filterPayload
+                        : defaultPayload
+                )
+            );
         }
-    }, [dispatch, side, fiat, currency]);
+    }, [dispatch, side, fiat, currency, amountList, amountFilter, minPriceFilter, maxPriceFilter]);
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
@@ -317,6 +373,25 @@ export const TableListP2P = () => {
     };
     /* ============== FUNCTION MODAL PAYMENT OPTION END ============== */
 
+    const handleChangeAmountList = (e) => {
+        const value = e.replace(/[^0-9+\.]/g, '');
+        setAmountList(value);
+    };
+
+    const handleChangeAmountFilter = (e) => {
+        setAmountFilter(e);
+    };
+
+    const handleChangeMinPrice = (e) => {
+        const value = e.replace(/[^0-9+\.]/g, '');
+        setMinPriceFilter(value);
+    };
+
+    const handleChangeMaxPrice = (e) => {
+        const value = e.replace(/[^0-9+\.]/g, '');
+        setMaxPriceFilter(value);
+    };
+
     const renderModalPrice = () => {
         return (
             <div className="d-flex flex-column justify-content-center align-items-center">
@@ -365,8 +440,8 @@ export const TableListP2P = () => {
                             <input
                                 type="number"
                                 required
-                                // value={min_order}
-                                // onChange={(e) => handleChangeMinOrder(e.target.value)}
+                                value={minPriceFilter}
+                                onChange={(e) => handleChangeMinPrice(e.target.value)}
                                 placeholder="00000"
                                 className="custom-input-offer w-100 white-text"
                             />
@@ -380,8 +455,8 @@ export const TableListP2P = () => {
                             <input
                                 type="number"
                                 required
-                                // value={max_order}
-                                // onChange={(e) => handleChangeMaxOrder(e.target.value)}
+                                value={maxPriceFilter}
+                                onChange={(e) => handleChangeMaxPrice(e.target.value)}
                                 placeholder="00000"
                                 className="custom-input-offer w-100 white-text"
                             />
@@ -401,8 +476,8 @@ export const TableListP2P = () => {
                             <input
                                 type="number"
                                 required
-                                // value={min_order}
-                                // onChange={(e) => handleChangeMinOrder(e.target.value)}
+                                value={amountFilter}
+                                onChange={(e) => handleChangeAmountFilter(e.target.value)}
                                 placeholder="00000"
                                 className="custom-input-offer w-100 white-text"
                             />
@@ -438,8 +513,12 @@ export const TableListP2P = () => {
                     </div>
 
                     <div className="d-flex align-items-center gap-16">
-                        <button className="btn-secondary w-50">Reset</button>
-                        <button className="btn-primary w-50">Confirm</button>
+                        <button type="button" onClick={() => setShowFilter(false)} className="btn-secondary w-50">
+                            Reset
+                        </button>
+                        <button type="button" onClick={() => setShowFilter(false)} className="btn-primary w-50">
+                            Confirm
+                        </button>
                     </div>
                 </form>
             </div>
@@ -567,9 +646,16 @@ export const TableListP2P = () => {
                         </div>
 
                         <div className="d-flex align-items-center mb-24">
-                            <input style={{
-                                color: 'white',
-                            }} type="text" placeholder="00.00" className="input-filter-fiat dark-bg-accent filter-input" />
+                            <input
+                                style={{
+                                    color: 'white',
+                                }}
+                                value={amountList}
+                                onChange={(e) => handleChangeAmountList(e.target.value)}
+                                type="text"
+                                placeholder="00.00"
+                                className="input-filter-fiat dark-bg-accent filter-input"
+                            />
                             <div className="mr-16">
                                 <Select
                                     value={optionFiats?.filter(function (option) {

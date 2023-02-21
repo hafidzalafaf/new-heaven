@@ -24,6 +24,7 @@ import {
     resendCode,
     verifyPhone,
     selectBlogs,
+    userFetch,
 } from '../../../modules';
 import { selectApiKeys } from 'src/modules/user/apiKeys/selectors';
 import { Modal, CustomInput, NoData } from '../../components';
@@ -106,11 +107,11 @@ export const ProfileScreen: FC = (): ReactElement => {
 
     const handleSendCodePhone = () => {
         if (phone[0]?.validated_at === null && !isChangeNumber) {
-            dispatch(resendCode({ phone_number: `+${phone[0].number}` }));
+            dispatch(resendCode({ phone_number: `+${phone[0].number}`, channel: 'whatsapp' }));
             setTimerActive(true);
             setResendCodeActive(true);
         } else {
-            dispatch(sendCode({ phone_number: newPhoneValue }));
+            dispatch(sendCode({ phone_number: newPhoneValue, channel: 'whatsapp' }));
             setTimerActive(true);
             setResendCodeActive(true);
         }
@@ -118,9 +119,19 @@ export const ProfileScreen: FC = (): ReactElement => {
 
     const handleChangePhone = () => {
         if (phone[0]?.validated_at === null && !isChangeNumber) {
-            dispatch(verifyPhone({ phone_number: `+${phone[0].number}`, verification_code: verificationCode }));
+            dispatch(
+                verifyPhone({
+                    phone_number: `+${phone[0].number}`,
+                    verification_code: verificationCode,
+                    channel: 'whatsapp',
+                })
+            );
+            dispatch(userFetch());
         } else {
-            dispatch(verifyPhone({ phone_number: newPhoneValue, verification_code: verificationCode }));
+            dispatch(
+                verifyPhone({ phone_number: newPhoneValue, verification_code: verificationCode, channel: 'whatsapp' })
+            );
+            dispatch(userFetch());
         }
     };
 
@@ -245,23 +256,24 @@ export const ProfileScreen: FC = (): ReactElement => {
         return (
             <React.Fragment>
                 <p className="text-sm grey-text mb-8">
-                    {!user.phones[0] ? (
+                    {!phone[0] ? (
                         'Set Your Phone Number And Verified'
-                    ) : user.phones[0] && user.phones[0].validated_at === null && !isChangeNumber ? (
+                    ) : phone[0] && phone[0].validated_at === null && !isChangeNumber ? (
                         'You already add phone number, please verify by click send code button to get OTP number'
-                    ) : (user.phones[0] && isChangeNumber) || user.phones[0] !== null ? (
+                    ) : (phone[0] && isChangeNumber) || (phone[0] && phone[0].validated_at !== null) ? (
                         <p className="danger-text">
-                            {user.phones.length === 4 && isChangeNumber
+                            {user?.phones?.length === 5 ||
+                            (user?.phones?.length === 5 && (isChangeNumber || !isChangeNumber))
                                 ? `Sorry, you run out of time for changing your phone number`
-                                : user.phones.length < 4 && isChangeNumber
-                                ? `You only have ${4 - user.phones.length} chances to change your phone number`
+                                : isChangeNumber || (phone[0] && phone[0].validated_at !== null)
+                                ? `You only have ${5 - user.phones.length} chances to change your phone number`
                                 : `Please verify your phone number`}
                         </p>
                     ) : (
                         'Set Your New Phone Number And Verified'
                     )}
                 </p>
-                {user.phones[0] && !isChangeNumber && (
+                {user.phones[0] && (
                     <p className="text-sm grey-text mb-24">{phone[0] && phone[0].number && `+ ${phone[0].number}`}</p>
                 )}
 
@@ -294,7 +306,7 @@ export const ProfileScreen: FC = (): ReactElement => {
                                 classNameLabel="d-none"
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
-                                isDisabled={isChangeNumber && user.phones.length === 4}
+                                isDisabled={user.phones.length === 5 || (isChangeNumber && user.phones.length === 5)}
                                 handleChangeInput={(e) => handleChangeVerificationCodeValue(e)}
                             />
                             <button

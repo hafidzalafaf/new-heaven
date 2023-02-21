@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 import { sendError } from '../../..';
 import { API, RequestOptions } from '../../../../api';
-import { buildQueryString } from '../../../../helpers';
+import { buildQueryString, getOrderAPI } from 'src/helpers';
 import { offersData, offersError, OffersFetch } from '../actions';
 import axios from 'axios';
 
@@ -12,12 +12,41 @@ const config: RequestOptions = {
 
 export function* p2pOffersSaga(action: OffersFetch) {
     try {
-        const { side, sort, base, quote, payment_method, currency, fiat } = action.payload;
+        const {
+            side,
+            sort,
+            base,
+            quote,
+            payment_method,
+            currency,
+            fiat,
+            amount,
+            max_price,
+            min_price,
+            limit,
+            page,
+        } = action.payload;
+        let params: any = {
+            side,
+            sort,
+            base,
+            quote,
+            payment_method,
+            currency,
+            fiat,
+            amount,
+            max_price,
+            min_price,
+            limit,
+            page,
+        };
 
-        const { data, headers } = yield call(
-            API.get(config),
-            `/public/trades?fiat=${fiat}&currency=${currency}&side=${side}`
-        );
+        // const { data, headers } = yield call(
+        //     API.get(config),
+        //     `/public/trades?fiat=${fiat}&currency=${currency}&side=${side}`
+        // );
+
+        const { data, headers } = yield call(API.get(config), `/public/trades?${buildQueryString(params)}`);
 
         yield put(
             offersData({

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Link, useParams, useHistory } from 'react-router-dom';
 import {
@@ -18,6 +18,8 @@ import {
     User,
     selectUserInfo,
     RootState,
+    selectMemberLevels,
+    memberLevelsFetch,
 } from '../../../modules';
 import { useHistoryFetch, useDocumentTitle, useMarketsFetch } from '../../../hooks';
 import Select from 'react-select';
@@ -49,6 +51,11 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     // useWalletsFetch();
     // useMarketsTickersFetch();
     useMarketsFetch();
+    const dispatch = useDispatch();
+
+    React.useEffect(() => {
+        dispatch(memberLevelsFetch());
+    }, [dispatch]);
 
     const { currency = '' } = useParams<{ currency?: string }>();
     useDocumentTitle(`Detail ${currency.toUpperCase()}`);
@@ -63,6 +70,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const currencies: Currency[] = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
     const tickers = useSelector(selectMarketTickers);
+    const memberLevel = useSelector(selectMemberLevels);
 
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
 
@@ -284,10 +292,10 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     <button
                         type="button"
                         onClick={() => {
-                            if (user.level == 3) {
-                                history.push(`/wallets/${currency}/withdraw`);
-                            } else {
+                            if (user.level < memberLevel?.withdraw?.minimum_level) {
                                 setShowModalLocked(true);
+                            } else {
+                                history.push(`/wallets/${currency}/withdraw`);
                             }
                         }}
                         className="btn btn-primary btn-sm font-normal m-1">
