@@ -65,7 +65,6 @@ const ProfileMobileScreen: React.FC = () => {
     React.useEffect(() => {
         if (verifyPhoneSuccess) {
             setShowModalPhone(false);
-            dispatch(userFetch());
         }
     }, [verifyPhoneSuccess]);
 
@@ -173,10 +172,6 @@ const ProfileMobileScreen: React.FC = () => {
         setNewPhoneValue(value);
     };
 
-    const handleResetPassword = () => {
-        history.push('/change-email');
-    };
-
     const renderModal = () => (
         <React.Fragment>
             <div className="d-flex justify-content-center">
@@ -188,9 +183,7 @@ const ProfileMobileScreen: React.FC = () => {
                 for 24 hours after changing or unbinding an email. <br /> 2.Emails that have been unbound or changed in
                 the past 30 days cannot be used to register new accounts
             </p>
-            <button onClick={handleResetPassword} className="btn btn-primary btn-mobile btn-block mb-3">
-                Continue
-            </button>
+            <button className="btn btn-primary btn-mobile btn-block mb-3">Continue</button>
             <button className="btn btn-success btn-mobile btn-outline w-100" onClick={() => setShowModalEmail(false)}>
                 Close
             </button>
@@ -214,13 +207,14 @@ const ProfileMobileScreen: React.FC = () => {
                     <span className="text-secondary text-lg">Setting Phone Number</span>
                 </div>
                 <p className="text-sm grey-text mb-8">
-                    {!user.phones[0] ? (
+                    {!phone[0] ? (
                         'Set Your Phone Number And Verified'
-                    ) : user.phones[0] && user.phones[0].validated_at === null && !isChangeNumber ? (
+                    ) : phone[0] && phone[0].validated_at === null && !isChangeNumber ? (
                         'You already add phone number, please verify by click send code button to get OTP number'
-                    ) : (user.phones[0] && isChangeNumber) || user.phones[0] !== null ? (
+                    ) : (phone[0] && isChangeNumber) || (phone[0] && phone[0].validated_at !== null) ? (
                         <p className="danger-text">
-                            {user?.phones?.length === 5 && isChangeNumber
+                            {user?.phones?.length === 5 ||
+                            (user?.phones?.length === 5 && (isChangeNumber || !isChangeNumber))
                                 ? `Sorry, you run out of time for changing your phone number`
                                 : isChangeNumber || (phone[0] && phone[0].validated_at !== null)
                                 ? `You only have ${5 - user.phones.length} chances to change your phone number`
@@ -230,7 +224,7 @@ const ProfileMobileScreen: React.FC = () => {
                         'Set Your New Phone Number And Verified'
                     )}
                 </p>
-                {user.phones[0] && !isChangeNumber && (
+                {user.phones[0] && (
                     <p className="text-sm grey-text mb-24">{phone[0] && phone[0].number && `+ ${phone[0].number}`}</p>
                 )}
 
@@ -264,7 +258,7 @@ const ProfileMobileScreen: React.FC = () => {
                                 classNameLabel="d-none"
                                 classNameInput="spacing-10"
                                 classNameGroup="mb-0 w-100"
-                                isDisabled={isChangeNumber && user.phones.length === 5}
+                                isDisabled={user.phones.length === 5 || (isChangeNumber && user.phones.length === 5)}
                                 handleChangeInput={(e) => handleChangeVerificationCodeValue(e)}
                             />
                             <button
@@ -307,9 +301,11 @@ const ProfileMobileScreen: React.FC = () => {
                         data-dismiss="modal">
                         {!user.phones[0]
                             ? 'Add'
-                            : isChangeNumber || (phone[0] && phone[0].validated_at !== null)
+                            : phone[0] && phone[0].validated_at === null
                             ? 'Verify'
-                            : 'Change'}
+                            : isChangeNumber || (phone[0] && phone[0].validated_at !== null)
+                            ? 'Change'
+                            : ''}
                     </button>
                 </div>
             </div>
@@ -392,9 +388,7 @@ const ProfileMobileScreen: React.FC = () => {
                     </div>
                 )}
                 <div>
-                    <div
-                        className=" d-flex align-items-center mb-24 cursor-pointer"
-                        onClick={() => setShowModalEmail(true)}>
+                    <div className=" d-flex align-items-center mb-24">
                         <div className="mr-3">
                             <EmailProfileIcon className="profile-icon" />
                         </div>
