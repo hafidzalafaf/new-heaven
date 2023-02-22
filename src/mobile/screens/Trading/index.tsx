@@ -772,7 +772,7 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                         totalSell={totalSell}
                         orderPercentageSell={orderPercentageSell}
                         handleChangeAmountSell={handleChangeAmountSell}
-                        totalPriceSell={getTotalPrice(amountSell, +tickerItem?.last, asks)}
+                        totalPriceSell={getTotalPrice(amountSell, +tickerItem?.last, bids)}
                         handleChangePriceSell={handleChangePriceSell}
                         handleSelectPercentageSell={handleSelectPercentageSell}
                         showModalSell={showModalSell}
@@ -783,7 +783,7 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
                         totalBuy={totalBuy}
                         orderPercentageBuy={orderPercentageBuy}
                         handleChangeAmountBuy={handleChangeAmountBuy}
-                        totalPriceBuy={getTotalPrice(amountBuy, +tickerItem?.last, bids)}
+                        totalPriceBuy={getTotalPrice(amountBuy, +tickerItem?.last, asks)}
                         handleChangePriceBuy={handleChangePriceBuy}
                         handleSelectPercentageBuy={handleSelectPercentageBuy}
                         showModalBuy={showModalBuy}
