@@ -21,6 +21,7 @@ export interface P2POrderStepProps {
     handleShowModalCancel: () => void;
     handleSendFeedbackPositive: () => void;
     handleSendFeedbackNegative: () => void;
+    timeLeft: number;
 }
 
 export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) => {
@@ -42,6 +43,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleShowModalCancel,
         handleSendFeedbackPositive,
         handleSendFeedbackNegative,
+        timeLeft
     } = props;
 
     return (
@@ -328,6 +330,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                             ) : (
                                 <div className="d-flex gap-24">
                                     <button
+                                        disabled={timeLeft <= 0}
                                         type="button"
                                         onClick={
                                             detail?.order?.payment == null

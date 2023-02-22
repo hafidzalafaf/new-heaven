@@ -183,29 +183,29 @@ export const P2PWalletOrderScreen: React.FC = () => {
             timeLeft > 0 ?
             <div className='d-flex flex-row'>
             <div className='d-flex flex-row'>
-                <h2 className='text-white countdown-number'>{days > 10 ? dayArray[0] : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1]) ? 0 : 0}</h2>
-                <h2 className='text-white countdown-number'>{days > 10 ? dayArray[1] : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1]) ? 0 : dayArray[0]}</h2>
+                <h2 className='text-white countdown-number'>{days >= 10 ? dayArray[0] : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1]) ? 0 : 0}</h2>
+                <h2 className='text-white countdown-number'>{days >= 10 ? dayArray[1] : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1]) ? 0 : dayArray[0]}</h2>
             </div>
 
             <h2 className='mt-2'>:</h2>
             
             <div className='d-flex flex-row'>
-                <h2 className='text-white countdown-number'>{hours > 10 ? hourArray[0] : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1]) ? 0 : 0}</h2>
-                <h2 className='text-white countdown-number'>{hours > 10 ? hourArray[1] : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1]) ? 0 : hourArray[0]}</h2>
+                <h2 className='text-white countdown-number'>{hours >= 10 ? hourArray[0] : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1]) ? 0 : 0}</h2>
+                <h2 className='text-white countdown-number'>{hours >= 10 ? hourArray[1] : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1]) ? 0 : hourArray[0]}</h2>
             </div>
             
             <h2 className='mt-2'>:</h2>
             
             <div className='d-flex flex-row'>
-                <h2 className='text-white countdown-number'>{minutes > 10 ? minuteArray[0] : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1]) ? 0 : 0}</h2>
-                <h2 className='text-white countdown-number'>{minutes > 10 ? minuteArray[1] : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1]) ? 0 : minuteArray[0]}</h2>
+                <h2 className='text-white countdown-number'>{minutes >= 10 ? minuteArray[0] : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1]) ? 0 : 0}</h2>
+                <h2 className='text-white countdown-number'>{minutes >= 10 ? minuteArray[1] : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1]) ? 0 : minuteArray[0]}</h2>
             </div>
             
             <h2 className='mt-2'>:</h2>
             
             <div className='d-flex flex-row'>
-                <h2 className='text-white countdown-number'>{seconds > 10 ? secondArray[0] : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1]) ? 0 : 0}</h2>
-                <h2 className='text-white countdown-number'>{seconds > 10 ? secondArray[1] : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1]) ? 0 : secondArray[0]}</h2>
+                <h2 className='text-white countdown-number'>{seconds >= 10 ? secondArray[0] : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1]) ? 0 : 0}</h2>
+                <h2 className='text-white countdown-number'>{seconds >= 10 ? secondArray[1] : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1]) ? 0 : secondArray[0]}</h2>
             </div>
         </div>
             :
@@ -781,6 +781,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         handleShowModalBuyOrderCompleted={() =>
                             setShowModalBuyOrderCompleted(!showModalBuyOrderCompleted)
                         }
+                        timeLeft={timeLeft}
                         handleShowModalSellConfirm={() => setShowModalSellConfrim(!showModalSellConfirm)}
                         handleShowModalCancel={() => setShowModalCancel(!showModalCancel)}
                         handleSendFeedbackPositive={handleSendFeedbackPositive}
