@@ -15,7 +15,6 @@ export function* sendCodeSaga(action: SendCodeFetch) {
     try {
         const response = yield call(API.post(sessionsConfig(getCsrfToken())), '/resource/phones', action.payload);
         yield put(sendCodeData());
-        console.log(response);
 
         yield put(alertPush({ message: ['success.phone.verification.send'], type: 'success' }));
     } catch (error) {
