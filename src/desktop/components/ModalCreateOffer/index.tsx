@@ -69,6 +69,7 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
         currencies,
         fiats,
         payments,
+
     } = props;
 
     const history = useHistory();

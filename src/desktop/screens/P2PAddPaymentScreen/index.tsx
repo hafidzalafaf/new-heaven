@@ -43,9 +43,9 @@ export const P2PAddPaymentScreen: React.FC = () => {
     }, [dispatch, fiat]);
 
     React.useEffect(() => {
-        setBankData(currenciesData?.payment?.find((item) => item.id == bank.payment));
+        setBankData(currenciesData?.payment?.find((item) => item.symbol == bank.payment));
     }, [currenciesData]);
-
+    
     React.useEffect(() => {
         if (createPaymentSuccess) {
             history.push('/p2p/profile');
@@ -94,7 +94,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
                             <input
                                 type="text"
                                 className="custom-input-add-payment w-100 white-text"
-                                defaultValue={bankData?.bank_name}
+                                defaultValue={bankData?.symbol}
                                 readOnly
                                 disabled
                             />
@@ -162,15 +162,12 @@ export const P2PAddPaymentScreen: React.FC = () => {
                         )}
 
                         <div className="mb-24 position-relative">
-                            <label className="m-0 p-0 mb-16 white-text text-ms">Phone Number Verification Code</label>
+                            <label className="m-0 p-0 mb-16 white-text text-ms">2FA Code</label>
                             <input
                                 type="text"
                                 placeholder="Enter Verfication Code"
                                 className="custom-input-add-payment w-100 mb-24 white-text"
                             />
-                            <label className="input-label-right text-sm grey-text position-absolute cursor-pointer">
-                                Get Code
-                            </label>
 
                             <p className="m-0 p-0 grey-text text-xxs font-normal text-right">
                                 Enter the 6 digit code send 199*****2300

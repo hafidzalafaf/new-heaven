@@ -17,6 +17,8 @@ import {
     selectP2POrderCreateData,
     selectP2POrderCreateSuccess,
     selectP2POffersFetchLoading,
+    selectP2PPaymentUser,
+    p2pPaymentUserFetch,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import { RefreshIcon, FilterIcon, DropdownIcon, InfoSecondaryIcon } from 'src/assets/images/P2PIcon';
@@ -26,6 +28,7 @@ import {
     TableOfferP2P,
     ModalUserLevel,
     ModalOptionPayment,
+    P2PPaymentMethodProps,
 } from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
@@ -46,6 +49,7 @@ export const TableListP2P = () => {
     const createData = useSelector(selectP2POrderCreateData);
     const createOrderSuccess = useSelector(selectP2POrderCreateSuccess);
     const loadingOffers = useSelector(selectP2POffersFetchLoading);
+    const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
 
     const [currencies, setCurrencies] = React.useState([]);
     const [payments, setPayments] = React.useState([]);
@@ -149,9 +153,9 @@ export const TableListP2P = () => {
             );
         }
     }, [dispatch, side, fiat, currency, amountList, amountFilter, minPriceFilter, maxPriceFilter]);
-
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
+        dispatch(p2pPaymentUserFetch());
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -160,8 +164,8 @@ export const TableListP2P = () => {
 
     React.useEffect(() => {
         setCurrencies(currenciesData?.currency);
-        setPayments(currenciesData?.payment);
-    }, [currenciesData]);
+        setPayments(paymentMethods);
+    }, [currenciesData, paymentMethods]);
 
     React.useEffect(() => {
         if (createOrderSuccess) {
