@@ -14,7 +14,7 @@ export interface OfferFormProps {
     trade_amount: string;
     min_order: string;
     max_order: string;
-    payment: any;
+    payment: {};
     paymentValue: any;
     payment_limit: string;
     term_of_condition: string;

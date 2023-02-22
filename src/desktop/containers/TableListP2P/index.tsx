@@ -323,10 +323,11 @@ export const TableListP2P = () => {
         let data = e;
         let temp = [];
         data?.map((el) => {
-            temp.push(el.value);
+            temp.push({ payment: el.value});
         });
 
         setPaymentOffer(temp);
+        console.log(temp, 'temp')
     };
 
     const handleChangePriceOffer = (e: string) => {
