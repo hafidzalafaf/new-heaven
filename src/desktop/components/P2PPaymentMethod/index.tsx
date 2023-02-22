@@ -12,11 +12,13 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { ModalUserLevel } from '../../../desktop/components';
 
-interface P2PPaymentMethodProps {
+export interface P2PPaymentMethodProps {
     name: string;
     id: number;
     account_number: string;
     account_name: string;
+    bank_name: string;
+    payment_user_uid: string;
 }
 
 export const P2PPaymentMethod: React.FC = () => {
@@ -42,6 +44,7 @@ export const P2PPaymentMethod: React.FC = () => {
         setBankData(currenciesData?.payment);
     }, [currenciesData]);
 
+        console.log(paymentMethods, 'payment methods')
     return (
         <React.Fragment>
             <div className="com-p2p-payment-method">
@@ -73,7 +76,7 @@ export const P2PPaymentMethod: React.FC = () => {
                                 <div className="position-absolute dropdown-payment w-100 dark-bg-main p-16 radius-lg">
                                     {bankData.map((bank, i) => (
                                         <Link
-                                            to={`/p2p/payment-method/${bank.id}`}
+                                            to={`/p2p/payment-method/${bank.symbol}`}
                                             key={i}
                                             className="bank-payment-container d-flex align-items-center gap-6 cursor-pointer">
                                             <p className="payment-label text-sm font-extrabold blue-text m-0 p-0">I</p>

@@ -38,10 +38,10 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
     }, [dispatch]);
-
-    React.useEffect(() => {
-        setChats(p2pChat.reverse());
-    }, [p2pChat]);
+    console.log(p2pChat)
+    // React.useEffect(() => {
+    //     setChats(p2pChat?.reverse());
+    // }, [p2pChat]);
 
     React.useEffect(() => {
         dispatch(orderChat({ offer_number: order_number }));

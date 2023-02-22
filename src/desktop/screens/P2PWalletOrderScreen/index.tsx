@@ -69,7 +69,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [date, setDate] = React.useState<any>();
     const [active, setActive] = React.useState('');
     
-    console.log(orderNumber);
 
 
     const dateInFuture = moment(detail?.order?.first_approve).format('YYYY-MM-DD HH:mm:ss');
@@ -89,7 +88,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
         }
 
 
-    console.log(window.location.pathname)
     React.useEffect(()=>{
         let timer = null
         timer = setInterval(()=>{
@@ -176,7 +174,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
         var minuteArray = minuteDigit.map(Number)
         var secondDigit = seconds.toString().split('')
         var secondArray = secondDigit.map(Number)
-        console.log(dayArray, hourArray, minuteArray, secondArray, 'time');
         return (
          <>
          {
