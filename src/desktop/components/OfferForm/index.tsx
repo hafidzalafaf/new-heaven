@@ -64,43 +64,19 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
         handleCreateOffer,
     } = props;
 
-    /*
-     <components.Menu {...props}>
-        <div>
-          {props.selectProps.fetchingData ? (
-            <span className="fetching">Fetching data...</span>
-          ) : (
-            <div>{props.children}</div>
-          )}
-          <button
-            className={"change-data"}
-            onClick={props.selectProps.changeOptionsData}
-          >
-            Change data
-          </button>
-        </div>
-      </components.Menu>
-    */
-
-    const Option = (props) => {
-        return (
-            <React.Fragment>
-                <components.Option {...props}>{props.children}</components.Option>
-            </React.Fragment>
-        );
-    };
-
     const AddPayment = (props) => {
         return (
             <React.Fragment>
-                <components.Menu {...props}>
+                <components.MenuList {...props}>
                     <div>{props.children}</div>
                     <Link to={`/p2p/profile`}>
-                        <p className="m-0 p-0 gradient-text text-ms font-semibold text-center add-payment-select">
-                            Add payment method
-                        </p>
+                        <div className="add-payment-select">
+                            <p className="m-0 p-0 gradient-text text-ms font-semibold text-center ">
+                                Add payment method
+                            </p>
+                        </div>
                     </Link>
-                </components.Menu>
+                </components.MenuList>
             </React.Fragment>
         );
     };
@@ -197,7 +173,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                         value={paymentValue}
                         styles={CustomStylesSelect}
                         options={optionPayment}
-                        components={{ AddPayment, Option }}
+                        components={{ MenuList: AddPayment }}
                         onChange={(e) => {
                             handleChangePayment(e);
                         }}
