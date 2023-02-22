@@ -16,6 +16,7 @@ import {
     selectUserInfo,
     selectP2POrderCreateData,
     selectP2POrderCreateSuccess,
+    selectP2POffersFetchLoading,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import { RefreshIcon, FilterIcon, DropdownIcon, InfoSecondaryIcon } from 'src/assets/images/P2PIcon';
@@ -44,6 +45,7 @@ export const TableListP2P = () => {
     const user = useSelector(selectUserInfo);
     const createData = useSelector(selectP2POrderCreateData);
     const createOrderSuccess = useSelector(selectP2POrderCreateSuccess);
+    const loadingOffers = useSelector(selectP2POffersFetchLoading);
 
     const [currencies, setCurrencies] = React.useState([]);
     const [payments, setPayments] = React.useState([]);
@@ -182,6 +184,61 @@ export const TableListP2P = () => {
     const optionPayment = payments?.map((item) => {
         return { label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>, value: item.payment_user_id };
     });
+
+    const handleRefresh = () => {
+        const defaultPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+        };
+
+        const amountListPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            amount: amountList,
+        };
+
+        const amountFilterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            amount: amountFilter,
+        };
+
+        const priceFilterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            min_price: minPriceFilter,
+            max_price: maxPriceFilter,
+        };
+
+        const filterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            min_price: minPriceFilter,
+            max_price: maxPriceFilter,
+            amount: amountFilter,
+        };
+
+        if (currency !== undefined && fiat !== undefined) {
+            dispatch(
+                offersFetch(
+                    amountList
+                        ? amountListPayload
+                        : amountFilter
+                        ? amountFilterPayload
+                        : minPriceFilter && maxPriceFilter
+                        ? priceFilterPayload
+                        : minPriceFilter && maxPriceFilter && amountFilter
+                        ? filterPayload
+                        : defaultPayload
+                )
+            );
+        }
+    };
 
     /* ============== FUNCTION CREATE ORDER START ============== */
     const optionPaymentOrder = payment_option?.map((item) => {
@@ -692,14 +749,7 @@ export const TableListP2P = () => {
                     </div>
 
                     <div className="d-flex align-items-center flex-wrap">
-                        <button
-                            onClick={() => {
-                                setFiat('IDR');
-                                setCurrency(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
-                                setPayment('');
-                            }}
-                            type="button"
-                            className="grey-text btn-secondary mr-16 mb-24">
+                        <button onClick={handleRefresh} type="button" className="grey-text btn-secondary mr-16 mb-24">
                             <RefreshIcon fillColor={'var(--text-grey-color)'} /> Refresh
                         </button>
 
@@ -737,6 +787,7 @@ export const TableListP2P = () => {
                         handleSelectOffer={handleSelectOfferBuy}
                         handleCloseExpand={handleCloseExpandBuy}
                         resetForm={resetForm}
+                        loading={loadingOffers}
                     />
                 )}
                 {/* ========= TABLE BUY END ========= */}
@@ -760,6 +811,7 @@ export const TableListP2P = () => {
                         handleSelectOffer={handleSelectOfferSell}
                         handleCloseExpand={handleCloseExpandSell}
                         resetForm={resetForm}
+                        loading={loadingOffers}
                     />
                 )}
                 {/* ========= TABLE SELL END ========= */}

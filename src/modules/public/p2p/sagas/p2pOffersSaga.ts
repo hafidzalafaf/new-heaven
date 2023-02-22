@@ -41,11 +41,6 @@ export function* p2pOffersSaga(action: OffersFetch) {
             page,
         };
 
-        // const { data, headers } = yield call(
-        //     API.get(config),
-        //     `/public/trades?fiat=${fiat}&currency=${currency}&side=${side}`
-        // );
-
         const { data, headers } = yield call(API.get(config), `/public/trades?${buildQueryString(params)}`);
 
         yield put(

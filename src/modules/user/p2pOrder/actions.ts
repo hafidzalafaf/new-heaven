@@ -29,6 +29,13 @@ import { Order, Confirm } from './types';
 
 export interface OrderFetch {
     type: typeof ORDER_FETCH;
+    payload: {
+        fiat?: string;
+        side?: string;
+        state?: string;
+        from?: string;
+        to?: string;
+    };
 }
 
 export interface OrderData {
@@ -183,11 +190,13 @@ export type OrderActions =
     | OrderChatCreateData
     | OrderChatCreateError;
 
-export const orderFetch = (): OrderFetch => ({
+export const orderFetch = (payload?: OrderFetch['payload']): OrderFetch => ({
+    // export const orderFetch = (): OrderFetch => ({
     type: ORDER_FETCH,
+    payload,
 });
 
-export const orderData = (payload: OrderData['payload']): OrderData => ({
+export const orderData = (payload?: OrderData['payload']): OrderData => ({
     type: ORDER_DATA,
     payload,
 });

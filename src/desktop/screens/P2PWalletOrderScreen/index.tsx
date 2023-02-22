@@ -37,8 +37,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const { order_number = '' } = useParams<{ order_number?: string }>();
     const location: { state: { side: string } } = useLocation();
     const side = location.state?.side;
-    const history = useHistory()
-    
+    const history = useHistory();
 
     const detail = useSelector(selectP2POrderDetail);
     const paymentConfirmSuccess = useSelector(selectP2PConfirmPaymentSuccess);
@@ -68,45 +67,46 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [showModalCancel, setShowModalCancel] = React.useState(false);
     const [date, setDate] = React.useState<any>();
     const [active, setActive] = React.useState('');
-    
-    console.log(orderNumber);
-
 
     const dateInFuture = moment(detail?.order?.first_approve).format('YYYY-MM-DD HH:mm:ss');
-    const timeLeft = Date.parse(dateInFuture) - new Date().getTime()
-    let currentDays = Math.floor((Number(timeLeft) / (24*60*60*1000)));
-    let currentHours = Math.floor((Number(timeLeft) % (24*60*60*1000))/ (60*60*1000));
-    let currentMinutes = Math.floor((Number(timeLeft) % (60*60*1000))/ (60 * 1000));
-    let currentSeconds = Math.floor(Number(timeLeft)% (60 * 1000)/1000);
+    const timeLeft = Date.parse(dateInFuture) - new Date().getTime();
+    let currentDays = Math.floor(Number(timeLeft) / (24 * 60 * 60 * 1000));
+    let currentHours = Math.floor((Number(timeLeft) % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+    let currentMinutes = Math.floor((Number(timeLeft) % (60 * 60 * 1000)) / (60 * 1000));
+    let currentSeconds = Math.floor((Number(timeLeft) % (60 * 1000)) / 1000);
     const [days, setDays] = React.useState(currentDays);
     const [hours, setHours] = React.useState(currentHours);
     const [minutes, setMinutes] = React.useState(currentMinutes);
     const [seconds, setSeconds] = React.useState(currentSeconds);
 
+    if (window.location.pathname === '/p2p/wallet/order/undefined') {
+        window.location.replace('/p2p');
+    }
 
-        if (window.location.pathname === '/p2p/wallet/order/undefined'){
-            window.location.replace('/p2p')
-        }
-
-
-    console.log(window.location.pathname)
-    React.useEffect(()=>{
-        let timer = null
-        timer = setInterval(()=>{
+    console.log(window.location.pathname);
+    React.useEffect(() => {
+        let timer = null;
+        timer = setInterval(() => {
             setDays(currentDays);
             setHours(currentHours);
             setMinutes(currentMinutes);
             setSeconds(currentSeconds);
-        }, 1000)
+        }, 1000);
         return () => {
             clearInterval(timer);
-        }
-    })
+        };
+    });
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
-    }, [dispatch, order_number])
+        const fetchInterval = setInterval(() => {
+            dispatch(orderDetailFetch({ offer_number: order_number }));
+        }, 5000);
 
+        return () => {
+            clearInterval(fetchInterval);
+        };
+    }, [dispatch, order_number]);
 
     React.useEffect(() => {
         setDate(moment(detail?.order?.first_approve).format('YYYY-MM-DD HH:mm:ss'));
@@ -126,7 +126,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
             setSecondCountdown(timeInMilliseconds - Date.now());
         }
     }, [dispatch, paymentConfirmSuccess, confirmSellSuccess, cancelSuccess, shouldFetchP2POrderDetail]);
-
 
     React.useEffect(() => {
         if (detail?.order?.state == 'prepare') {
@@ -164,77 +163,121 @@ export const P2PWalletOrderScreen: React.FC = () => {
         }
     });
 
+    //countdown timer
 
-    //countdown timer 
-
-    const Countdown = ({days, hours, minutes, seconds}) => {
-        var dayDigit = days.toString().split('')
-        var dayArray = dayDigit.map(Number)
-        var hourDigit = hours.toString().split('')
-        var hourArray = hourDigit.map(Number)
-        var minuteDigit = minutes.toString().split('')
-        var minuteArray = minuteDigit.map(Number)
-        var secondDigit = seconds.toString().split('')
-        var secondArray = secondDigit.map(Number)
+    const Countdown = ({ days, hours, minutes, seconds }) => {
+        var dayDigit = days.toString().split('');
+        var dayArray = dayDigit.map(Number);
+        var hourDigit = hours.toString().split('');
+        var hourArray = hourDigit.map(Number);
+        var minuteDigit = minutes.toString().split('');
+        var minuteArray = minuteDigit.map(Number);
+        var secondDigit = seconds.toString().split('');
+        var secondArray = secondDigit.map(Number);
         console.log(dayArray, hourArray, minuteArray, secondArray, 'time');
         return (
-         <>
-         {
-            timeLeft > 0 ?
-            <div className='d-flex flex-row'>
-            <div className='d-flex flex-row'>
-                <h2 className='text-white countdown-number'>{days > 10 ? dayArray[0] : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1]) ? 0 : 0}</h2>
-                <h2 className='text-white countdown-number'>{days > 10 ? dayArray[1] : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1]) ? 0 : dayArray[0]}</h2>
-            </div>
+            <>
+                {timeLeft > 0 ? (
+                    <div className="d-flex flex-row">
+                        <div className="d-flex flex-row">
+                            <h2 className="text-white countdown-number">
+                                {days > 10
+                                    ? dayArray[0]
+                                    : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
+                                    ? 0
+                                    : 0}
+                            </h2>
+                            <h2 className="text-white countdown-number">
+                                {days > 10
+                                    ? dayArray[1]
+                                    : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
+                                    ? 0
+                                    : dayArray[0]}
+                            </h2>
+                        </div>
 
-            <h2 className='mt-2'>:</h2>
-            
-            <div className='d-flex flex-row'>
-                <h2 className='text-white countdown-number'>{hours > 10 ? hourArray[0] : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1]) ? 0 : 0}</h2>
-                <h2 className='text-white countdown-number'>{hours > 10 ? hourArray[1] : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1]) ? 0 : hourArray[0]}</h2>
-            </div>
-            
-            <h2 className='mt-2'>:</h2>
-            
-            <div className='d-flex flex-row'>
-                <h2 className='text-white countdown-number'>{minutes > 10 ? minuteArray[0] : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1]) ? 0 : 0}</h2>
-                <h2 className='text-white countdown-number'>{minutes > 10 ? minuteArray[1] : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1]) ? 0 : minuteArray[0]}</h2>
-            </div>
-            
-            <h2 className='mt-2'>:</h2>
-            
-            <div className='d-flex flex-row'>
-                <h2 className='text-white countdown-number'>{seconds > 10 ? secondArray[0] : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1]) ? 0 : 0}</h2>
-                <h2 className='text-white countdown-number'>{seconds > 10 ? secondArray[1] : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1]) ? 0 : secondArray[0]}</h2>
-            </div>
-        </div>
-            :
-            <div className='d-flex flex-row'>
-                <div className='d-flex flex-row'>
-                     <h2 className='text-white countdown-number'>0</h2>
-                     <h2 className='text-white countdown-number'>0</h2>
-                 </div>
+                        <h2 className="mt-2">:</h2>
 
-                 <h2>:</h2>
+                        <div className="d-flex flex-row">
+                            <h2 className="text-white countdown-number">
+                                {hours > 10
+                                    ? hourArray[0]
+                                    : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
+                                    ? 0
+                                    : 0}
+                            </h2>
+                            <h2 className="text-white countdown-number">
+                                {hours > 10
+                                    ? hourArray[1]
+                                    : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
+                                    ? 0
+                                    : hourArray[0]}
+                            </h2>
+                        </div>
 
-                 <div className='d-flex flex-row'>
-                     <h2 className='text-white countdown-number'>0</h2>
-                     <h2 className='text-white countdown-number'>0</h2>
-                 </div>
+                        <h2 className="mt-2">:</h2>
 
-                 <h2>:</h2>
+                        <div className="d-flex flex-row">
+                            <h2 className="text-white countdown-number">
+                                {minutes > 10
+                                    ? minuteArray[0]
+                                    : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
+                                    ? 0
+                                    : 0}
+                            </h2>
+                            <h2 className="text-white countdown-number">
+                                {minutes > 10
+                                    ? minuteArray[1]
+                                    : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
+                                    ? 0
+                                    : minuteArray[0]}
+                            </h2>
+                        </div>
 
-                 <div className='d-flex flex-row'>
-                     <h2 className='text-white countdown-number'>0</h2>
-                     <h2 className='text-white countdown-number'>0</h2>
-                 </div>
-             </div> 
-         }
-        </>
-        )
-    }
+                        <h2 className="mt-2">:</h2>
 
+                        <div className="d-flex flex-row">
+                            <h2 className="text-white countdown-number">
+                                {seconds > 10
+                                    ? secondArray[0]
+                                    : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
+                                    ? 0
+                                    : 0}
+                            </h2>
+                            <h2 className="text-white countdown-number">
+                                {seconds > 10
+                                    ? secondArray[1]
+                                    : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
+                                    ? 0
+                                    : secondArray[0]}
+                            </h2>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="d-flex flex-row">
+                        <div className="d-flex flex-row">
+                            <h2 className="text-white countdown-number">0</h2>
+                            <h2 className="text-white countdown-number">0</h2>
+                        </div>
 
+                        <h2>:</h2>
+
+                        <div className="d-flex flex-row">
+                            <h2 className="text-white countdown-number">0</h2>
+                            <h2 className="text-white countdown-number">0</h2>
+                        </div>
+
+                        <h2>:</h2>
+
+                        <div className="d-flex flex-row">
+                            <h2 className="text-white countdown-number">0</h2>
+                            <h2 className="text-white countdown-number">0</h2>
+                        </div>
+                    </div>
+                )}
+            </>
+        );
+    };
 
     React.useEffect(() => {
         setComment('');
@@ -280,7 +323,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
         copy('kid-code');
         dispatch(alertPush({ message: ['Order Number copied'], type: 'success' }));
     };
-    
+
     const disableButton = !checkModalOne || !checkModalTwo;
 
     const handleChangePaymentMethod = (e: string, el: any) => {
@@ -731,12 +774,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                                 </div>
                             </div>
                         )} */}
-                        <Countdown 
-                            days={days} 
-                            hours={hours} 
-                            minutes={minutes} 
-                            seconds={seconds} 
-                        />
+                        <Countdown days={days} hours={hours} minutes={minutes} seconds={seconds} />
                         {/* <div className="text-xl font-bold white-text text countdown-container">
                             <ReactMomentCountDown
                                 toDate={dateInFuture}

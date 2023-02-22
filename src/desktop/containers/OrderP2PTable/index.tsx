@@ -5,7 +5,7 @@ import '../../../styles/colors.pcss';
 import Select from 'react-select';
 import moment from 'moment';
 import { CustomStylesSelect, NoData } from '../../../desktop/components';
-import { Table } from '../../../components';
+import { Loading, Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
 import { orderFetch, selectP2POrder, selectP2POrderLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
@@ -20,12 +20,18 @@ export const OrderP2PTable = () => {
     const loading = useSelector(selectP2POrderLoading);
     const fiats = useSelector(selectP2PFiatsData);
 
-    const [endDate, setEndDate] = React.useState('');
-    const [startDate, setStartDate] = React.useState('');
+    const [startDate, setStartDate] = React.useState<string | number>();
+    const [endDate, setEndDate] = React.useState<string | number>();
+    const [fiat, setFiat] = React.useState('');
+    const [status, setStatus] = React.useState('');
+    const [side, setSide] = React.useState('all');
     const [data, setData] = React.useState([]);
     const [active, setActive] = React.useState('');
-    const [tab, setTab] = React.useState('all');
+
     const [showModalCancel, setShowModalCancel] = React.useState(false);
+
+    const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
+    const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
@@ -44,16 +50,16 @@ export const OrderP2PTable = () => {
 
     React.useEffect(() => {
         setData(
-            tab == 'done'
+            side == 'done'
                 ? order.filter((item) => item.state == 'accepted')
-                : tab == 'processing'
+                : side == 'processing'
                 ? order.filter((item) => item.state == 'success' || item.state == 'waiting' || item.state == 'prepare')
                 : order
         );
-    }, [order, tab]);
+    }, [order, side]);
 
     const handleSelect = (k) => {
-        setTab(k);
+        setSide(k);
     };
 
     const filterredType = (type) => {
@@ -66,18 +72,14 @@ export const OrderP2PTable = () => {
     };
 
     // fiat, side, state, from, to
-
-    const optionQuote = [
-        { label: <p className="m-0 text-sm grey-text-accent">USDT</p>, value: 'usdt' },
-        { label: <p className="m-0 text-sm grey-text-accent">IDR</p>, value: 'idr' },
-        { label: <p className="m-0 text-sm grey-text-accent">BTC</p>, value: 'btc' },
-        { label: <p className="m-0 text-sm grey-text-accent">TRX</p>, value: 'trx' },
-    ];
+    const optionFiats = fiats?.map((item) => {
+        return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };
+    });
 
     const optionStatus = [
         { label: <p className="m-0 text-sm grey-text-accent">All Status</p>, value: 'all' },
         { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepared' },
-        { label: <p className="m-0 text-sm grey-text-accent">Waiting Seller Confirmation</p>, value: 'waiting' },
+        { label: <p className="m-0 text-sm grey-text-accent">Waiting</p>, value: 'waiting' },
         { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
         { label: <p className="m-0 text-sm grey-text-accent">Success</p>, value: 'success' },
@@ -142,15 +144,14 @@ export const OrderP2PTable = () => {
                 <div className="w-20">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">Coins</p>
                     <Select
-                        // value={optionQuote.filter(function (option) {
-                        //     return option.value === status;
-                        // })}
+                        value={optionFiats.filter(function (option) {
+                            return option.value === fiat;
+                        })}
                         styles={CustomStylesSelect}
-                        options={optionQuote}
-                        // onChange={(e) => {
-                        //     setStatus(e.value);
-                        //     filterredStatus(e.value);
-                        // }}
+                        options={optionFiats}
+                        onChange={(e) => {
+                            setFiat(e.value);
+                        }}
                     />
                 </div>
 
@@ -191,6 +192,8 @@ export const OrderP2PTable = () => {
                         onChange={(e) => {
                             setStartDate(e.target.value);
                         }}
+                        value={startDate}
+                        defaultValue={new Date().toISOString().slice(0, 10)}
                     />
                 </div>
 
@@ -202,6 +205,8 @@ export const OrderP2PTable = () => {
                         onChange={(e) => {
                             setEndDate(e.target.value);
                         }}
+                        value={endDate}
+                        defaultValue={new Date().toISOString().slice(0, 10)}
                     />
                 </div>
             </div>
@@ -326,25 +331,26 @@ export const OrderP2PTable = () => {
                     <div className="position-relative w-100">
                         <Tabs
                             defaultActiveKey="all"
-                            activeKey={tab}
+                            activeKey={side}
                             onSelect={(k) => handleSelect(k)}
                             id="fill-tab-example"
                             className="mb-3"
                             fill>
                             <Tab eventKey="all" title="All Orders">
                                 <div className="w-100">{renderFilter()}</div>
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {(!data || !data[0]) && <NoData text="No Order Yet" />}
+                                {loading ? <Loading /> : <Table header={getTableHeaders()} data={getTableData(data)} />}
+
+                                {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="processing" title="Processing">
                                 <div className="w-100">{renderFilter()}</div>
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {(!data || !data[0]) && <NoData text="No Order Yet" />}
+                                {loading ? <Loading /> : <Table header={getTableHeaders()} data={getTableData(data)} />}
+                                {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="done" title="Transaction Done">
                                 <div className="w-100">{renderFilter()}</div>
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {(!data || !data[0]) && <NoData text="No Order Yet" />}
+                                {loading ? <Loading /> : <Table header={getTableHeaders()} data={getTableData(data)} />}
+                                {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                         </Tabs>
 

@@ -3,7 +3,6 @@ import { sendError } from '../../../';
 import { API, RequestOptions } from '../../../../api';
 import { orderData, orderError, OrderFetch } from '../actions';
 import { buildQueryString } from '../../../../helpers';
-import axios from 'axios';
 import { getCsrfToken } from '../../../../helpers';
 
 const config = (csrfToken?: string): RequestOptions => {
@@ -15,8 +14,34 @@ const config = (csrfToken?: string): RequestOptions => {
 
 export function* orderSaga(action: OrderFetch) {
     try {
-        const feedback = yield call(API.get(config(getCsrfToken())), `/account/order`);
-        yield put(orderData(feedback));
+        let fiat = '';
+        let side = '';
+        let state = '';
+        let from = '';
+        let to = '';
+
+        if (action.payload) {
+            fiat = action.payload.fiat;
+            side = action.payload.side;
+            state = action.payload.state;
+            from = action.payload.from;
+            to = action.payload.to;
+        }
+        // const { fiat, side, state, from, to } = action.payload;
+        let params: any = {
+            fiat,
+            side,
+            state,
+            from,
+            to,
+        };
+
+        // const data = yield call(
+        //     API.get(config(getCsrfToken())),
+        //     action.payload ? `/account/order?${buildQueryString(params)}` : `/account/order`
+        // );
+        const data = yield call(API.get(config(getCsrfToken())), `/account/order${`?${buildQueryString(params)}`}`);
+        yield put(orderData(data));
     } catch (error) {
         yield put(
             sendError({
