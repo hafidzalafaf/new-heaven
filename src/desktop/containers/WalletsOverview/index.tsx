@@ -131,8 +131,6 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
         [history]
     );
 
-    console.log(filteredWallets);
-
     const retrieveData = useCallback(() => {
         const list = nonZeroSelected
             ? filteredWallets.filter((i) => i.balance && Number(i.balance) > 0)
