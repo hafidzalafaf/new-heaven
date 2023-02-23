@@ -44,7 +44,6 @@ export const P2PPaymentMethod: React.FC = () => {
         setBankData(currenciesData?.payment);
     }, [currenciesData]);
 
-        console.log(paymentMethods, 'payment methods')
     return (
         <React.Fragment>
             <div className="com-p2p-payment-method">
