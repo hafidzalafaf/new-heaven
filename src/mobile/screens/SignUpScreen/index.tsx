@@ -21,6 +21,7 @@ import {
     signUp,
     selectCurrentPasswordEntropy,
     entropyPasswordFetch,
+    selectSignUpLoading,
 } from '../../../modules';
 import {
     passwordErrorFirstSolution,
@@ -80,6 +81,7 @@ const SignUpMobileScreen: React.FC = () => {
     const captcha_response = useSelector(selectCaptchaResponse);
     const reCaptchaSuccess = useSelector(selectRecaptchaSuccess);
     const geetestCaptchaSuccess = useSelector(selectGeetestCaptchaSuccess);
+    const signUpLoading = useSelector(selectSignUpLoading);
 
     const handleChangeUsername = (value: string) => {
         setUsernamevalue(value.replace(/[^A-Za-z0-9]+/g, '').toLowerCase());
@@ -301,6 +303,7 @@ const SignUpMobileScreen: React.FC = () => {
 
         if (
             // !hasConfirmed ||
+            signUpLoading ||
             !passwordErrorFirstSolved ||
             !passwordErrorSecondSolved ||
             !passwordErrorThirdSolved ||
