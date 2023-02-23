@@ -25,6 +25,12 @@ import {
     ORDER_CHAT_CREATE,
     ORDER_CHAT_CREATE_DATA,
     ORDER_CHAT_CREATE_ERROR,
+    ORDER_REPORT,
+    ORDER_REPORT_DATA,
+    ORDER_REPORT_ERROR,
+    ORDER_REPORT_CREATE,
+    ORDER_REPORT_CREATE_DATA,
+    ORDER_REPORT_CREATE_ERROR,
 } from './constants';
 import { Order, Confirm } from './types';
 
@@ -90,6 +96,18 @@ export interface OrderState {
         success: boolean;
         error?: CommonError;
     };
+    report: {
+        data: Order[];
+        fetching: boolean;
+        success: boolean;
+        error?: CommonError;
+    };
+    report_create: {
+        // data: Order;
+        fetching: boolean;
+        success: boolean;
+        error?: CommonError;
+    };
 }
 
 export const initialOrderState: OrderState = {
@@ -130,6 +148,16 @@ export const initialOrderState: OrderState = {
         success: false,
     },
     chat_create: {
+        // data: defaultOrder,
+        fetching: false,
+        success: false,
+    },
+    report: {
+        data: [],
+        fetching: false,
+        success: false,
+    },
+    report_create: {
         // data: defaultOrder,
         fetching: false,
         success: false,
@@ -368,6 +396,64 @@ const orderChatCreateReducer = (state: OrderState['chat_create'], action: OrderA
     }
 };
 
+export const orderReportReducer = (state: OrderState['report'], action: OrderActions) => {
+    switch (action.type) {
+        case ORDER_REPORT:
+            return {
+                ...state,
+                fetching: true,
+                success: false,
+                error: undefined,
+            };
+        case ORDER_REPORT_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case ORDER_REPORT_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+const orderReportCreateReducer = (state: OrderState['report_create'], action: OrderActions) => {
+    switch (action.type) {
+        case ORDER_REPORT_CREATE:
+            return {
+                ...state,
+                fetching: true,
+                success: false,
+                error: undefined,
+            };
+        case ORDER_REPORT_CREATE_DATA:
+            return {
+                ...state,
+                // data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case ORDER_REPORT_CREATE_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
 export const orderReducer = (state = initialOrderState, action: OrderActions) => {
     switch (action.type) {
         case ORDER_FETCH:
@@ -437,6 +523,23 @@ export const orderReducer = (state = initialOrderState, action: OrderActions) =>
             return {
                 ...state,
                 chat_create: orderChatCreateReducer(orderChatCreateState, action),
+            };
+
+        case ORDER_REPORT:
+        case ORDER_REPORT_DATA:
+        case ORDER_REPORT_ERROR:
+            return {
+                ...state,
+                report: orderReportReducer({ ...state.report }, action),
+            };
+
+        case ORDER_REPORT_CREATE:
+        case ORDER_REPORT_CREATE_DATA:
+        case ORDER_REPORT_CREATE_ERROR:
+            const orderReportCreateState = { ...state.report_create };
+            return {
+                ...state,
+                report_create: orderReportCreateReducer(orderReportCreateState, action),
             };
 
         default:
