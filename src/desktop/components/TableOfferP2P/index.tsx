@@ -277,7 +277,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                             </td>
                                             <td>
                                                 <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                                    {item?.payment[0]
+                                                    {item?.payment && item?.payment[0]
                                                         ? item?.payment?.map((bank, i) => (
                                                               <div key={i} className="label-bank">
                                                                   <img src={bank?.logo} alt={bank?.bank_name} />
