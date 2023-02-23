@@ -187,7 +187,17 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
             data &&
             data.map((item) => [
                 <div className="d-flex justify-content-start align-items-start td-coin">
-                    <img src={currencyItem && currencyItem.icon_url} alt="logo" className="small-coin-icon mr-8" />
+                    <img
+                        src={
+                            currencyItem?.icon_url !== '-' &&
+                            currencyItem?.icon_url !== null &&
+                            currencyItem?.icon_url !== 'null'
+                                ? currencyItem?.icon_url
+                                : '/img/dummycoin.png'
+                        }
+                        alt="logo"
+                        className="small-coin-icon mr-8"
+                    />
                     <div className="d-flex flex-column justify-content-start align-items-start">
                         <h3 className="p-0 m-0 grey-text-accent text-sm font-bold">Amount</h3>
                         <h4 className="p-0 m-0 grey-text text-sm font-bold text-nowrap">
@@ -432,7 +442,6 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                                     key={i}
                                     className="cursor-pointer mb-8">
                                     <h3 className="p-0 m-0 text-ms grey-text-accent">{item && item.protocol}</h3>
-                                    <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p>
                                 </div>
                             ))}
                     </div>

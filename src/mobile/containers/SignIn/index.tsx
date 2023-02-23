@@ -47,6 +47,7 @@ export interface SignInProps {
     reCaptchaSuccess?: boolean;
     geetestCaptchaSuccess?: boolean;
     captcha_response?: string | GeetestCaptchaResponse;
+    signInLoading: boolean;
 }
 
 const SignInMobile: React.FC<SignInProps> = ({
@@ -78,6 +79,7 @@ const SignInMobile: React.FC<SignInProps> = ({
     renderCaptcha,
     classNameEmail,
     classNamePassword,
+    signInLoading,
 }) => {
     const history = useHistory();
     const dispatch = useDispatch();
@@ -241,7 +243,13 @@ const SignInMobile: React.FC<SignInProps> = ({
 
                 <button
                     className="btn btn-primary btn-block btn-mobile my-3"
-                    disabled={isLoading || !emailValue.match(EMAIL_REGEX) || !passwordValue || isButtonDisabled}
+                    disabled={
+                        isLoading ||
+                        !emailValue.match(EMAIL_REGEX) ||
+                        !passwordValue ||
+                        isButtonDisabled ||
+                        signInLoading
+                    }
                     onClick={handleClick as any}>
                     Login
                 </button>
