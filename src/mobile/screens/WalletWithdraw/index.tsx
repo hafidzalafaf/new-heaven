@@ -250,7 +250,13 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                             </p>
                             <div className="w-100 d-flex align-items-center coin-selected">
                                 <img
-                                    src={currencyItem && currencyItem.icon_url}
+                                    src={
+                                        currencyItem?.icon_url !== '-' &&
+                                        currencyItem?.icon_url !== null &&
+                                        currencyItem?.icon_url !== 'null'
+                                            ? currencyItem?.icon_url
+                                            : '/img/dummycoin.png'
+                                    }
                                     alt="icon"
                                     className="mr-12 small-coin-icon"
                                 />
@@ -404,7 +410,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                         })}
                                     </p>
                                     <p className="mb-0 text-base grey-text-accent font-bold">
-                                        <Decimal fixed={currencyItem?.precision} thousSep=",">
+                                        <Decimal fixed={currencyItem?.precision}>
                                             {amount !== '' ? withdrawRecive : '0'}
                                         </Decimal>{' '}
                                         {currency.toUpperCase()}

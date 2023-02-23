@@ -71,6 +71,8 @@ export const CoinTransfer: React.FC<CoinTransferProps> = (props) => {
                     i.currency?.toLocaleLowerCase().includes(filterValue.toLowerCase())
             );
 
+            console.log(filteredList);
+
             return !filteredList.length
                 ? [[]]
                 : filteredList.map((item, index) => {
@@ -88,7 +90,13 @@ export const CoinTransfer: React.FC<CoinTransferProps> = (props) => {
                               <div>
                                   <div className="d-flex justify-content-start align-items-center div-coin">
                                       <img
-                                          src={item.iconUrl}
+                                          src={
+                                              item?.iconUrl !== '-' &&
+                                              item?.iconUrl !== null &&
+                                              item?.iconUrl !== 'null'
+                                                  ? item?.iconUrl
+                                                  : '/img/dummycoin.png'
+                                          }
                                           alt="logo"
                                           className="rounded-full icon-coin-transfer mr-3"
                                       />
@@ -167,7 +175,7 @@ export const CoinTransfer: React.FC<CoinTransferProps> = (props) => {
                                     key={i}
                                     className="cursor-pointer mb-8">
                                     <h3 className="p-0 m-0 text-ms grey-text-accent">{item && item.protocol}</h3>
-                                    <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p>
+                                    {/* <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p> */}
                                 </div>
                             ))
                             : 

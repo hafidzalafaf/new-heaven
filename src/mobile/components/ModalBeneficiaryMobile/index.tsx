@@ -58,6 +58,7 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
     const [coinDescription, setCoinDescription] = React.useState('');
     const [coinDestinationTag, setCoinDestinationTag] = React.useState('');
     const [currencyID, setCurrencyID] = React.useState('');
+    const [protocol, setProtocol] = React.useState('');
 
     const wallet: Wallet = wallets.find((item) => item.currency === currency) || DEFAULT_WALLET;
     const balance = wallet && wallet.balance ? wallet.balance.toString() : '0';
@@ -137,8 +138,8 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
         currencyItem &&
         currencyItem.networks.map((item) => {
             const customLabel = (
-                <div className="d-flex align-items-center">
-                    <p className="m-0 grey-text-accent text-sm">{item.blockchain_key}</p>
+                <div className="d-flex align-items-center cursor-pointer" onClick={() => setProtocol(item?.protocol)}>
+                    <p className="m-0 grey-text-accent text-sm">{item.protocol}</p>
                 </div>
             );
 
@@ -201,10 +202,13 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
                                         <span className="text-xs danger-text">Invalid Address</span>
                                     )}
                                 </div>
-                                <p className="text-xs grey-text ">
-                                    Do not send Tether USD unless you are certain the destination supports TRC-20
-                                    transactions. If it does not, you could permanently lose access to your coins.
-                                </p>
+                                {protocol && (
+                                    <p className="text-xs grey-text ">
+                                        Do not send {currency?.toUpperCase()} unless you are certain the destination
+                                        supports {protocol?.toUpperCase()} transactions. If it does not, you could
+                                        permanently lose access to your coins.
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>

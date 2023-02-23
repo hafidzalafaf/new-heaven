@@ -83,7 +83,13 @@ const InternalTransferMobileScreen: React.FC = () => {
                         </p>
                         <div className="w-100 d-flex align-items-center coin-selected">
                             <img
-                                src={currencyItem && currencyItem.icon_url}
+                                src={
+                                    currencyItem?.icon_url !== '-' &&
+                                    currencyItem?.icon_url !== null &&
+                                    currencyItem?.icon_url !== 'null'
+                                        ? currencyItem?.icon_url
+                                        : '/img/dummycoin.png'
+                                }
                                 alt="icon"
                                 className="mr-12 small-coin-icon"
                             />

@@ -559,10 +559,7 @@ export const TradingScreen: FC = (): ReactElement => {
                         )}
                     </span>,
                     <span style={{ color: setTradeColor(side).color }} key={id}>
-                        <Decimal fixed={2} thousSep=",">
-                            {+filled}
-                        </Decimal>
-                        %
+                        <Decimal fixed={2}>{+filled}</Decimal>%
                     </span>,
                     <p className={`m-0 p-0 text-sm font-semibold ${side === 'sell' ? 'danger-text' : 'contrast-text'}`}>
                         {side === 'sell' ? 'Sell' : 'Buy'}
