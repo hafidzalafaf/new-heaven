@@ -12,7 +12,7 @@ export interface P2POrderStepProps {
     side: string;
     detail: any;
     order_number: string;
-    handleChangePaymentMethod: (e: string, el: any) => void;
+    handleChangePaymentMethod: (el: any) => void;
     handleChangeComment: (e: string) => void;
     handleConfirmPaymentBuy: () => void;
     handleShowPayment: () => void;
@@ -43,7 +43,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleShowModalCancel,
         handleSendFeedbackPositive,
         handleSendFeedbackNegative,
-        timeLeft
+        timeLeft,
     } = props;
 
     return (
@@ -190,7 +190,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                         key={i}
                                                         onClick={() => {
                                                             if (el !== undefined) {
-                                                                handleChangePaymentMethod(el?.payment_user_id, el);
+                                                                handleChangePaymentMethod(el);
                                                             }
                                                         }}
                                                         className="payment-item cursor-pointer">
@@ -247,7 +247,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                         key={i}
                                                         onClick={() => {
                                                             if (el !== undefined) {
-                                                                handleChangePaymentMethod(el?.payment_user_id, el);
+                                                                handleChangePaymentMethod(el);
                                                             }
                                                         }}
                                                         className="payment-item cursor-pointer">

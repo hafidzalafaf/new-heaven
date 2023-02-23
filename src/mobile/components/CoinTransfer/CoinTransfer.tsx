@@ -71,8 +71,6 @@ export const CoinTransfer: React.FC<CoinTransferProps> = (props) => {
                     i.currency?.toLocaleLowerCase().includes(filterValue.toLowerCase())
             );
 
-            console.log(filteredList);
-
             return !filteredList.length
                 ? [[]]
                 : filteredList.map((item, index) => {
@@ -166,7 +164,7 @@ export const CoinTransfer: React.FC<CoinTransferProps> = (props) => {
                             </p>
                         </div>
 
-                        {currencyItem && currencyItem.networks[0] ?
+                        {currencyItem && currencyItem.networks[0] ? (
                             currencyItem.networks.map((item, i) => (
                                 <div
                                     onClick={() =>
@@ -178,9 +176,9 @@ export const CoinTransfer: React.FC<CoinTransferProps> = (props) => {
                                     {/* <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p> */}
                                 </div>
                             ))
-                            : 
-                            <NoData text='There is no network available' />
-                            }
+                        ) : (
+                            <NoData text="There is no network available" />
+                        )}
                     </div>
                 </div>
             </div>

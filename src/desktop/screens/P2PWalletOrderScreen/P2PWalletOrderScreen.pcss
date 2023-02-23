@@ -171,6 +171,30 @@
                 justify-content: end;
                 align-items: end;
                 margin-bottom: 12px;
+
+                .buble-chat {
+                    background: var(--border-color);
+                    padding: 8px;
+                    border-radius: 4px 4px 0px 4px;
+                    max-width: 250px;
+                    min-width: 100px;
+                    position: relative;
+                    padding-bottom: 24px;
+                    .time {
+                        position: absolute;
+                        right: 4px;
+                        bottom: 4px;
+                    }
+
+                    img {
+                        max-width: 100%;
+                        max-height: 200px;
+                    }
+
+                    .content-chat {
+                        overflow-wrap: break-word;
+                    }
+                }
             }
 
             .sender-chat {
@@ -179,30 +203,34 @@
                 justify-content: start;
                 align-items: start;
                 margin-bottom: 12px;
+
+                .buble-chat {
+                    background: #4062bb;
+                    padding: 8px;
+                    border-radius: 4px 4px 4px 0px;
+                    max-width: 250px;
+                    min-width: 100px;
+                    position: relative;
+                    padding-bottom: 24px;
+                    .time {
+                        position: absolute;
+                        right: 4px;
+                        bottom: 4px;
+                    }
+
+                    img {
+                        max-width: 100%;
+                        max-height: 200px;
+                    }
+
+                    .content-chat {
+                        overflow-wrap: break-word;
+                    }
+                }
             }
 
             .sender-name {
                 margin-bottom: 0;
-            }
-
-            .buble-chat {
-                padding: 8px;
-                border-radius: 4px;
-                background: var(--border-color);
-                max-width: 250px;
-                min-width: 100px;
-                position: relative;
-                padding-bottom: 24px;
-                .time {
-                    position: absolute;
-                    right: 4px;
-                    bottom: 4px;
-                }
-
-                img {
-                    max-width: 100%;
-                    max-height: 200px;
-                }
             }
 
             .chat-notification {

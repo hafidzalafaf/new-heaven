@@ -330,8 +330,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     const disableButton = !checkModalOne || !checkModalTwo;
 
-    const handleChangePaymentMethod = (e: string, el: any) => {
-        setPaymentMethod(e);
+    const handleChangePaymentMethod = (el) => {
+        setPaymentMethod(el?.payment_user_uid);
         setPaymentUser(el);
         setShowPayment(!showPayment);
     };
@@ -359,6 +359,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const handleChangeComment = (e: string) => {
         setComment(e);
     };
+
+    console.log(paymentMethod, 'PAYMENT');
 
     const renderModalContent = () => {
         return (
