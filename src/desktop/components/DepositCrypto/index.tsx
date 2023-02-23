@@ -142,9 +142,7 @@ const DepositCrypto: React.FunctionComponent<DepositCryptoProps> = (props: Depos
                 <span>
                     {formatMessage({ id: 'page.body.wallets.tabs.deposit.min.deposit' })}&nbsp;
                     <span>
-                        <Decimal fixed={wallet.fixed} thousSep=",">
-                            {minDepositAmount?.toString()}
-                        </Decimal>
+                        <Decimal fixed={wallet.fixed}>{minDepositAmount?.toString()}</Decimal>
                         &nbsp;{wallet.currency?.toUpperCase()}
                     </span>
                 </span>

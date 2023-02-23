@@ -15,6 +15,7 @@ import {
     selectGeetestCaptchaSuccess,
     selectCaptchaResponse,
     resetCaptchaState,
+    selectSignInLoading,
 } from '../../../modules';
 import { useHistory } from 'react-router';
 import { useReduxSelector } from 'src/hooks';
@@ -36,6 +37,7 @@ const SignInMobileScreen: React.FC = () => {
     const reCaptchaSuccess = useReduxSelector(selectRecaptchaSuccess);
     const geetestCaptchaSuccess = useReduxSelector(selectGeetestCaptchaSuccess);
     const captcha_response = useReduxSelector(selectCaptchaResponse);
+    const signInLoading = useReduxSelector(selectSignInLoading);
 
     const [emailValue, setEmailvalue] = React.useState('');
     const [emailError, setEmailError] = React.useState('');
@@ -202,6 +204,7 @@ const SignInMobileScreen: React.FC = () => {
                         otpCode={otpCode}
                         handleOtpCodeChange={handleOtpCodeChange}
                         handleClose2fa={handleClose}
+                        signInLoading={signInLoading}
                     />
                 ) : (
                     <SignInMobile
@@ -238,6 +241,7 @@ const SignInMobileScreen: React.FC = () => {
                         captcha_response={captcha_response}
                         classNameEmail={emailClassname}
                         classNamePassword={passwordClassname}
+                        signInLoading={signInLoading}
                     />
                 )}
             </div>

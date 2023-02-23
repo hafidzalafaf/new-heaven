@@ -157,10 +157,7 @@ export const ModalInternalTransfer: React.FunctionComponent<ModalTransferShowPro
                                     </div>
                                     <div className="ml-2">
                                         <p className="mb-2 text-sm grey-text">
-                                            <Decimal fixed={selectedFixed} thousSep=",">
-                                                {balance}
-                                            </Decimal>{' '}
-                                            {currency.toUpperCase()}
+                                            <Decimal fixed={selectedFixed}>{balance}</Decimal> {currency.toUpperCase()}
                                         </p>
                                     </div>
                                 </div>

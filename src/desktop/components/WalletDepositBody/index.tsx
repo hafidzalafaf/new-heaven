@@ -171,9 +171,7 @@ const WalletDepositBody = () => {
                                 <div>
                                     <p className="mb-2 text-xs white-text">Minimum Deposit</p>
                                     <p className="mb-2 text-sm white-text font-bold">
-                                        <Decimal fixed={wallet?.fixed} thousSep=",">
-                                            {minDepositAmount?.toString()}
-                                        </Decimal>
+                                        <Decimal fixed={wallet?.fixed}>{minDepositAmount?.toString()}</Decimal>
                                         &nbsp;{wallet?.currency?.toUpperCase()}
                                     </p>
                                 </div>

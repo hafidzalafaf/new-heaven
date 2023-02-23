@@ -14,6 +14,7 @@ export interface TwoFactorAuthProps {
     otpCode: string;
     handleOtpCodeChange: (e: any) => void;
     handleClose2fa: () => void;
+    signInLoading: boolean;
 }
 
 const TwoFaAuthenticationMobile: React.FC<TwoFactorAuthProps> = ({
@@ -22,6 +23,7 @@ const TwoFaAuthenticationMobile: React.FC<TwoFactorAuthProps> = ({
     buttonLabel,
     onSubmit,
     handleOtpCodeChange,
+    signInLoading,
 }) => {
     const dispatch = useDispatch();
 
@@ -76,7 +78,7 @@ const TwoFaAuthenticationMobile: React.FC<TwoFactorAuthProps> = ({
             </div>
             <button
                 type="button"
-                disabled={isLoading || otpCode.length < 6}
+                disabled={isLoading || otpCode.length < 6 || signInLoading}
                 onClick={onSubmit}
                 className="btn btn-primary btn-block btn-mobile px-4 mb-3">
                 {isLoading ? 'Loading...' : buttonLabel ? buttonLabel : 'Login'}
