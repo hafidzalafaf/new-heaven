@@ -360,8 +360,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
         setComment(e);
     };
 
-    console.log(paymentMethod, 'PAYMENT');
-
     const renderModalContent = () => {
         return (
             <div>
@@ -687,8 +685,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     ) : (
                         <div>
                             <p className="mb-2 text-lg white-text font-bold">
-                                {side === 'sell' ? 'Sell' : 'Buy'} {detail?.offer?.fiat} from{' '}
-                                {detail?.order?.trades?.email}
+                                {side === 'sell' ? 'Sell' : 'Buy'} {detail?.offer?.fiat}{' '}
+                                {side === 'sell' ? 'to' : 'from'} {detail?.order?.trades?.email}
                             </p>
                             <p className="mb-0 text-sm grey-text">
                                 Order has been made. Please wait for system confirmation.
@@ -828,6 +826,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         timeLeft={timeLeft}
                         handleShowModalSellConfirm={() => setShowModalSellConfrim(!showModalSellConfirm)}
                         handleShowModalCancel={() => setShowModalCancel(!showModalCancel)}
+                        handleShowModalReport={() => setShowModalReport(!showModalReport)}
                         handleSendFeedbackPositive={handleSendFeedbackPositive}
                         handleSendFeedbackNegative={handleSendFeedbackNegative}
                     />

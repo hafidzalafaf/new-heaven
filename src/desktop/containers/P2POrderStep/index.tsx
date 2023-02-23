@@ -19,6 +19,7 @@ export interface P2POrderStepProps {
     handleShowModalBuyOrderCompleted: () => void;
     handleShowModalSellConfirm: () => void;
     handleShowModalCancel: () => void;
+    handleShowModalReport: () => void;
     handleSendFeedbackPositive: () => void;
     handleSendFeedbackNegative: () => void;
     timeLeft: number;
@@ -41,6 +42,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleShowModalBuyOrderCompleted,
         handleShowModalSellConfirm,
         handleShowModalCancel,
+        handleShowModalReport,
         handleSendFeedbackPositive,
         handleSendFeedbackNegative,
         timeLeft,
@@ -314,6 +316,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                               side == 'sell' ? (
                                 <div className="d-flex gap-24">
                                     <button
+                                        disabled={detail?.order?.state !== 'waiting'}
                                         type="button"
                                         onClick={() => handleShowModalSellConfirm()}
                                         className="btn btn-secondary px-5 text-sm">
@@ -322,7 +325,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
 
                                     <button
                                         type="button"
-                                        // onClick={side == 'buy' && handleShowModalCancel}
+                                        onClick={() => side == 'sell' && handleShowModalReport()}
                                         className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
                                         Report
                                     </button>
@@ -330,7 +333,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                             ) : (
                                 <div className="d-flex gap-24">
                                     <button
-                                        disabled={timeLeft <= 0}
+                                        disabled={timeLeft <= 0 || detail?.order?.state !== 'prepare'}
                                         type="button"
                                         onClick={
                                             detail?.order?.payment == null
@@ -342,7 +345,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={side == 'buy' && handleShowModalCancel}
+                                        onClick={() => side == 'buy' && handleShowModalCancel()}
                                         className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
                                         Cancel Order
                                     </button>
