@@ -85,8 +85,6 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
         };
     });
 
-    console.log(payments, 'payment');
-
     const optionPayment = payments?.map((item) => {
         return {
             label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>,
