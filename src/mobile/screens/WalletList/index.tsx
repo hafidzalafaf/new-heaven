@@ -13,6 +13,7 @@ import {
     selectUserInfo,
     memberLevelsFetch,
     selectMemberLevels,
+    selectP2PWallets,
 } from '../../../modules';
 import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch, useDocumentTitle } from '../../../hooks';
 import { Table, Decimal, formatWithSeparators } from '../../../components';
@@ -34,11 +35,16 @@ interface ExtendedWallet extends Wallet {
     spotLocked?: string;
     p2pBalance?: string;
     p2pLocked?: string;
+    status?: string;
+    network?: any;
+    last: any;
+    marketId: string;
 }
 
 const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
     useWalletsFetch();
     useMarketsFetch();
+    useMarketsTickersFetch();
     useDocumentTitle('Wallets');
 
     const { isP2PEnabled } = props;
@@ -68,20 +74,30 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
     const tickers = useSelector(selectMarketTickers);
     const user: User = useSelector(selectUserInfo);
     const memberLevel = useSelector(selectMemberLevels);
+    const p2pWallets = useSelector(selectP2PWallets);
 
     React.useEffect(() => {
-        if (wallets.length && currencies.length) {
+        if (wallets.length && (isP2PEnabled ? p2pWallets.length : true) && currencies.length) {
             const extendedWallets: ExtendedWallet[] = currencies.map((cur) => {
                 if (cur.status === 'hidden' && user.role !== 'admin' && user.role !== 'superadmin') {
                     return null;
                 }
+
                 const spotWallet = wallets.find((i) => i.currency === cur.id);
+                const p2pWallet = isP2PEnabled ? p2pWallets.find((i) => i.currency === cur.id) : null;
+                const market = markets.find((item) => item.base_unit == cur.id);
+                const ticker = tickers[market?.id];
+
                 return {
                     ...spotWallet,
                     spotBalance: spotWallet ? spotWallet.balance : '0',
                     spotLocked: spotWallet ? spotWallet.locked : '0',
                     status: cur.status,
                     network: cur.networks,
+                    marketId: market ? market.id : null,
+                    last: ticker ? ticker.last : null,
+                    p2pBalance: p2pWallet ? p2pWallet.balance : '0',
+                    p2pLocked: p2pWallet ? p2pWallet.locked : '0',
                 };
             });
 
@@ -111,17 +127,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                 : filteredList.map((item, index) => {
                       const { currency, iconUrl, name, fixed, spotBalance, spotLocked } = item;
                       const totalBalance = Number(spotBalance) + Number(spotLocked);
-                      const estimatedValue =
-                          Number(totalBalance) && currency
-                              ? estimateUnitValue(
-                                    currency.toUpperCase(),
-                                    VALUATION_PRIMARY_CURRENCY,
-                                    Number(totalBalance),
-                                    currencies,
-                                    markets,
-                                    tickers
-                                )
-                              : Decimal.format(0, fixed);
+                      const estimatedValue = item?.last !== null ? item.last * totalBalance : '0';
 
                       return [
                           <Link
@@ -148,7 +154,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                               className="td-available-order d-flex flex-column justify-content-start align-items-start">
                               <h3 className="p-0 m-0 text-one">Total Balance</h3>
                               <h4 className="p-0 m-0 text-two">
-                                  <Decimal key={index} fixed={fixed} thousSep=",">
+                                  <Decimal key={index} fixed={fixed}>
                                       {spotBalance ? spotBalance.toString() : '0'}
                                   </Decimal>
                               </h4>
@@ -157,7 +163,11 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                               to={`/wallets/${currency}/detail`}
                               className="td-available-order d-flex flex-column justify-content-start align-items-start">
                               <h3 className="p-0 m-0 text-one">Estimated Value</h3>
-                              <h4 className="p-0 m-0 text-two">{formatWithSeparators(estimatedValue, ',')}</h4>
+                              <h4 className="p-0 m-0 text-two">
+                                  <Decimal key={index} fixed={fixed}>
+                                      {estimatedValue ? estimatedValue.toString() : '0'}
+                                  </Decimal>
+                              </h4>
                           </Link>,
                           <Link to={`/wallets/${currency}/detail`}>
                               <ArrowRight className={''} />
@@ -209,7 +219,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
     };
 
     const handleFilter = (result: object[]) => {
-        setFilteredWallets(result as Wallet[]);
+        setFilteredWallets(result as ExtendedWallet[]);
     };
 
     const handleToggleCheckbox = React.useCallback(
