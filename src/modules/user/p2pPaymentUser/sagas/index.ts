@@ -1,9 +1,18 @@
 import { takeEvery, takeLatest } from 'redux-saga/effects';
-import { P2P_PAYMENT_USER_CREATE, P2P_PAYMENT_USER_FETCH } from '../constants';
-import { p2pCreatePaymentUserSaga } from './p2pCreatePaymentUserSaga';
+import {
+    P2P_PAYMENT_USER_FETCH,
+    P2P_PAYMENT_USER_CREATE,
+    P2P_PAYMENT_USER_UPDATE,
+    P2P_PAYMENT_USER_DELETE,
+} from '../constants';
 import { p2pFetchPaymentUserSaga } from './p2pFetchPaymentUserSaga';
+import { p2pCreatePaymentUserSaga } from './p2pCreatePaymentUserSaga';
+import { p2pUpdatePaymentUserSaga } from './p2pUpdatePaymentUserSaga';
+import { p2pDeletePaymentUserSaga } from './p2pDeletePaymentUserSaga';
 
 export function* rootP2PPaymentUserSaga() {
-    yield takeEvery(P2P_PAYMENT_USER_CREATE, p2pCreatePaymentUserSaga);
     yield takeLatest(P2P_PAYMENT_USER_FETCH, p2pFetchPaymentUserSaga);
+    yield takeEvery(P2P_PAYMENT_USER_CREATE, p2pCreatePaymentUserSaga);
+    yield takeEvery(P2P_PAYMENT_USER_UPDATE, p2pUpdatePaymentUserSaga);
+    yield takeEvery(P2P_PAYMENT_USER_DELETE, p2pDeletePaymentUserSaga);
 }

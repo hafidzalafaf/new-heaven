@@ -109,10 +109,7 @@ export const ModalBeneficiaryList: React.FunctionComponent<ModalBeneficiaryListP
                         <div className="ml-2">
                             <p className="mb-2 text-sm grey-text text-right">
                                 {' '}
-                                <Decimal fixed={selectedFixed} thousSep=",">
-                                    {balance}
-                                </Decimal>{' '}
-                                {currency.toUpperCase()}
+                                <Decimal fixed={selectedFixed}>{balance}</Decimal> {currency.toUpperCase()}
                             </p>
                         </div>
                     </div>

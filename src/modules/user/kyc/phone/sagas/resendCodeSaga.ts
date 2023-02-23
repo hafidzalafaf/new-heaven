@@ -19,7 +19,6 @@ export function* resendCodeSaga(action: ResendCodeFetch) {
             action.payload
         );
         yield put(resendCodeData());
-        console.log(response);
 
         yield put(alertPush({ message: ['success.phone.verification.send'], type: 'success' }));
     } catch (error) {

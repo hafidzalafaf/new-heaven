@@ -20,8 +20,15 @@ import {
     RootState,
     selectMemberLevels,
     memberLevelsFetch,
+    selectP2PWallets,
 } from '../../../modules';
-import { useHistoryFetch, useDocumentTitle, useMarketsFetch } from '../../../hooks';
+import {
+    useHistoryFetch,
+    useDocumentTitle,
+    useMarketsFetch,
+    useWalletsFetch,
+    useMarketsTickersFetch,
+} from '../../../hooks';
 import Select from 'react-select';
 import moment from 'moment';
 import { PaginationMobile } from 'src/mobile/components';
@@ -45,11 +52,15 @@ interface ExtendedWalletMobile extends Wallet {
     spotLocked?: string;
     p2pBalance?: string;
     p2pLocked?: string;
+    status?: string;
+    network?: any;
+    last: any;
+    marketId: string;
 }
 
 const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
-    // useWalletsFetch();
-    // useMarketsTickersFetch();
+    useWalletsFetch();
+    useMarketsTickersFetch();
     useMarketsFetch();
     const dispatch = useDispatch();
 
@@ -70,6 +81,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const currencies: Currency[] = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
     const tickers = useSelector(selectMarketTickers);
+    const p2pWallets = useSelector(selectP2PWallets);
     const memberLevel = useSelector(selectMemberLevels);
 
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
@@ -88,7 +100,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const [endDate, setEndDate] = React.useState('');
     const [showNetwork, setShowNetwork] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
-    const [estimatedValue, setEstimatedValue] = React.useState<string>();
+    const [estimatedValue, setEstimatedValue] = React.useState<string | number>();
     const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
 
     // Handle get item pagination
@@ -97,16 +109,26 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const nextPageExists = useSelector((state: RootState) => selectNextPageExists(state, 5));
 
     React.useEffect(() => {
-        if (wallets.length && currencies.length) {
+        if (wallets.length && (isP2PEnabled ? p2pWallets.length : true) && currencies.length) {
             const extendedWallets: ExtendedWalletMobile[] = currencies.map((cur) => {
                 if (cur.status === 'hidden' && user.role !== 'admin' && user.role !== 'superadmin') {
                     return null;
                 }
                 const spotWallet = wallets.find((i) => i.currency === cur.id);
+                const p2pWallet = isP2PEnabled ? p2pWallets.find((i) => i.currency === cur.id) : null;
+                const market = markets.find((item) => item.base_unit == cur.id);
+                const ticker = tickers[market?.id];
+
                 return {
                     ...spotWallet,
                     spotBalance: spotWallet ? spotWallet.balance : '0',
                     spotLocked: spotWallet ? spotWallet.locked : '0',
+                    status: cur.status,
+                    network: cur.networks,
+                    marketId: market ? market.id : null,
+                    last: ticker ? ticker.last : null,
+                    p2pBalance: p2pWallet ? p2pWallet.balance : '0',
+                    p2pLocked: p2pWallet ? p2pWallet.locked : '0',
                 };
             });
 
@@ -165,7 +187,17 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
             data &&
             data.map((item) => [
                 <div className="d-flex justify-content-start align-items-start td-coin">
-                    <img src={currencyItem && currencyItem.icon_url} alt="logo" className="small-coin-icon mr-8" />
+                    <img
+                        src={
+                            currencyItem?.icon_url !== '-' &&
+                            currencyItem?.icon_url !== null &&
+                            currencyItem?.icon_url !== 'null'
+                                ? currencyItem?.icon_url
+                                : '/img/dummycoin.png'
+                        }
+                        alt="logo"
+                        className="small-coin-icon mr-8"
+                    />
                     <div className="d-flex flex-column justify-content-start align-items-start">
                         <h3 className="p-0 m-0 grey-text-accent text-sm font-bold">Amount</h3>
                         <h4 className="p-0 m-0 grey-text text-sm font-bold text-nowrap">
@@ -222,21 +254,8 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const fixed = Number(filteredList.map((item) => item.fixed));
 
     React.useEffect(() => {
-        if (Number(totalBalance) && currency) {
-            return setEstimatedValue(
-                estimateUnitValue(
-                    currency.toUpperCase(),
-                    VALUATION_PRIMARY_CURRENCY,
-                    +totalBalance,
-                    currencies,
-                    markets,
-                    tickers
-                )
-            );
-        } else {
-            return setEstimatedValue(Decimal.format(0, fixed));
-        }
-    }, [totalBalance, currency, currencies, markets, tickers]);
+        setEstimatedValue(+filteredList.map((item) => item?.last * totalBalance));
+    }, [totalBalance, currency, filteredList]);
 
     return (
         <>
@@ -274,7 +293,9 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                             <h3 className="text-sm grey-text">
                                 {formatMessage({ id: 'page.mobile.wallets.banner.estimated' })}
                             </h3>
-                            <h2 className="text-sm grey-text estimated-value font-extrabold">{estimatedValue}</h2>
+                            <h2 className="text-sm grey-text estimated-value font-extrabold">
+                                <Decimal fixed={fixed}>{estimatedValue ? estimatedValue.toString() : '0'}</Decimal>
+                            </h2>
                         </div>
                     </div>
                     ;
@@ -421,7 +442,6 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                                     key={i}
                                     className="cursor-pointer mb-8">
                                     <h3 className="p-0 m-0 text-ms grey-text-accent">{item && item.protocol}</h3>
-                                    <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p>
                                 </div>
                             ))}
                     </div>

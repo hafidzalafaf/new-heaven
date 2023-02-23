@@ -19,7 +19,6 @@ export function* confirmPhoneSaga(action: SendCodeFetch) {
             '/resource/phones/verify',
             action.payload
         );
-        console.log(response);
         yield put(verifyPhoneData({ message: 'success.phone.confirmation.message' }));
         yield put(changeUserLevel({ level: 2 }));
         yield put(alertPush({ message: ['success.phone.confirmed'], type: 'success' }));

@@ -551,9 +551,7 @@ export const WalletWithdrawalForm: React.FC = () => {
                 <div className="d-flex justify-content-between mb-24">
                     <p className="mb-0 text-ms grey-text-accent">You will Recive </p>
                     <p className="mb-0 text-ms grey-text-accent font-bold">
-                        <Decimal fixed={currencyItem?.precision} thousSep=",">
-                            {amount !== '' ? withdrawRecive : '0'}
-                        </Decimal>{' '}
+                        <Decimal fixed={currencyItem?.precision}>{amount !== '' ? withdrawRecive : '0'}</Decimal>{' '}
                         {currency.toUpperCase()}
                     </p>
                 </div>

@@ -131,8 +131,6 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
         [history]
     );
 
-    console.log(filteredWallets);
-
     const retrieveData = useCallback(() => {
         const list = nonZeroSelected
             ? filteredWallets.filter((i) => i.balance && Number(i.balance) > 0)
@@ -173,16 +171,16 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                           <p className="text-sm white-text m-0">{currency.toUpperCase()}</p>
                           <p className="ml-1 text-sm grey-text-accent m-0">{name}</p>
                       </div>,
-                      <Decimal key={index} fixed={fixed} thousSep=",">
+                      <Decimal key={index} fixed={fixed}>
                           {totalBalance ? totalBalance.toString() : '0'}
                       </Decimal>,
-                      <Decimal key={index} fixed={fixed} thousSep=",">
+                      <Decimal key={index} fixed={fixed}>
                           {estimatedValue ? estimatedValue.toString() : '0'}
                       </Decimal>,
-                      <Decimal key={index} fixed={fixed} thousSep=",">
+                      <Decimal key={index} fixed={fixed}>
                           {spotBalance ? spotBalance.toString() : '0'}
                       </Decimal>,
-                      <Decimal key={index} fixed={fixed} thousSep=",">
+                      <Decimal key={index} fixed={fixed}>
                           {spotLocked ? spotLocked.toString() : '0'}
                       </Decimal>,
                       <div key={index} className="ml-auto">

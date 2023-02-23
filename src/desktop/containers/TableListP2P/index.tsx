@@ -16,6 +16,7 @@ import {
     selectUserInfo,
     selectP2POrderCreateData,
     selectP2POrderCreateSuccess,
+    selectP2POffersFetchLoading,
     selectP2PPaymentUser,
     p2pPaymentUserFetch,
 } from 'src/modules';
@@ -47,6 +48,7 @@ export const TableListP2P = () => {
     const user = useSelector(selectUserInfo);
     const createData = useSelector(selectP2POrderCreateData);
     const createOrderSuccess = useSelector(selectP2POrderCreateSuccess);
+    const loadingOffers = useSelector(selectP2POffersFetchLoading);
     const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
 
     const [currencies, setCurrencies] = React.useState([]);
@@ -187,6 +189,61 @@ export const TableListP2P = () => {
         return { label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>, value: item.payment_user_id };
     });
 
+    const handleRefresh = () => {
+        const defaultPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+        };
+
+        const amountListPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            amount: amountList,
+        };
+
+        const amountFilterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            amount: amountFilter,
+        };
+
+        const priceFilterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            min_price: minPriceFilter,
+            max_price: maxPriceFilter,
+        };
+
+        const filterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            min_price: minPriceFilter,
+            max_price: maxPriceFilter,
+            amount: amountFilter,
+        };
+
+        if (currency !== undefined && fiat !== undefined) {
+            dispatch(
+                offersFetch(
+                    amountList
+                        ? amountListPayload
+                        : amountFilter
+                        ? amountFilterPayload
+                        : minPriceFilter && maxPriceFilter
+                        ? priceFilterPayload
+                        : minPriceFilter && maxPriceFilter && amountFilter
+                        ? filterPayload
+                        : defaultPayload
+                )
+            );
+        }
+    };
+
     /* ============== FUNCTION CREATE ORDER START ============== */
     const optionPaymentOrder = payment_option?.map((item) => {
         return { label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>, value: item.payment_user_id };
@@ -281,7 +338,7 @@ export const TableListP2P = () => {
             payment_limit: payment_limit,
             term_of_condition: term_of_condition,
             auto_replay: auto_replay,
-            side: sideOffer
+            side: sideOffer,
         };
 
         dispatch(p2pOfferCreate(payload));
@@ -696,14 +753,7 @@ export const TableListP2P = () => {
                     </div>
 
                     <div className="d-flex align-items-center flex-wrap">
-                        <button
-                            onClick={() => {
-                                setFiat('IDR');
-                                setCurrency(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
-                                setPayment('');
-                            }}
-                            type="button"
-                            className="grey-text btn-secondary mr-16 mb-24">
+                        <button onClick={handleRefresh} type="button" className="grey-text btn-secondary mr-16 mb-24">
                             <RefreshIcon fillColor={'var(--text-grey-color)'} /> Refresh
                         </button>
 
@@ -741,6 +791,7 @@ export const TableListP2P = () => {
                         handleSelectOffer={handleSelectOfferBuy}
                         handleCloseExpand={handleCloseExpandBuy}
                         resetForm={resetForm}
+                        loading={loadingOffers}
                     />
                 )}
                 {/* ========= TABLE BUY END ========= */}
@@ -764,6 +815,7 @@ export const TableListP2P = () => {
                         handleSelectOffer={handleSelectOfferSell}
                         handleCloseExpand={handleCloseExpandSell}
                         resetForm={resetForm}
+                        loading={loadingOffers}
                     />
                 )}
                 {/* ========= TABLE SELL END ========= */}

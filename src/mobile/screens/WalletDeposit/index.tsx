@@ -309,7 +309,16 @@ const WalletDepositMobileScreen: React.FC = () => {
                                     <QRCode size={200} value={depositAddress && depositAddress.address} />
                                 </div>
                                 <div className="logo-coin d-flex justify-content-center align-items-center">
-                                    <img src={currencyItem.icon_url} alt="" />
+                                    <img
+                                        src={
+                                            currencyItem?.icon_url !== '-' &&
+                                            currencyItem?.icon_url !== null &&
+                                            currencyItem?.icon_url !== 'null'
+                                                ? currencyItem?.icon_url
+                                                : '/img/dummycoin.png'
+                                        }
+                                        alt="icon"
+                                    />
                                 </div>
                             </div>
                             <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mb-8">Network</h2>
@@ -379,7 +388,13 @@ const WalletDepositMobileScreen: React.FC = () => {
                             <div className="d-flex justify-content-between align-items-center dark-bg-accent radius-sm p-16 mb-16">
                                 <div className="d-flex align-items-center">
                                     <img
-                                        src={currencyItem && currencyItem.icon_url}
+                                        src={
+                                            currencyItem?.icon_url !== '-' &&
+                                            currencyItem?.icon_url !== null &&
+                                            currencyItem?.icon_url !== 'null'
+                                                ? currencyItem?.icon_url
+                                                : '/img/dummycoin.png'
+                                        }
                                         alt="logo"
                                         className="small-coin-icon mr-8"
                                     />
@@ -518,7 +533,6 @@ const WalletDepositMobileScreen: React.FC = () => {
                                             <h3 className="p-0 m-0 text-ms grey-text-accent">
                                                 {item && item.protocol}
                                             </h3>
-                                            <p className="m-0 p-0 grey-text text-xxs">{item && item.blockchain_key}</p>
                                         </div>
                                     ))}
                             </div>

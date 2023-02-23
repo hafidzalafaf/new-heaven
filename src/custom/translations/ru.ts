@@ -1475,9 +1475,9 @@ export const ru: LangType = {
 
     // p2p success messages
     'success.p2p.transfer.created': 'Transfer was created',
-    'success.payment_method.deleted': 'Payment Method: successfully deleted',
-    'success.payment_method.created': 'Payment Method: successfully created',
-    'success.payment_method.updated': 'Payment Method: successfully updated',
+    'success.payment_method.deleted': 'Способ оплаты удален',
+    'success.payment_method.created': 'Способ оплаты создан',
+    'success.payment_method.updated': 'Способ оплаты обновлен',
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
 
     ...nationalitiesNames,
