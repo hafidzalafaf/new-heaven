@@ -168,8 +168,11 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     <Select
                         isMulti
                         value={paymentValue}
+                        components={{ MenuList: AddPayment }}
                         styles={CustomStylesSelect}
                         options={optionPayment}
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
                         onChange={(e) => {
                             handleChangePayment(e);
                         }}
