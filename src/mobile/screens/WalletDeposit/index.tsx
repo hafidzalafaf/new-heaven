@@ -82,7 +82,9 @@ const WalletDepositMobileScreen: React.FC = () => {
         blockchain_key: null,
     };
 
-    const blockchainKey = blockchain && blockchain.blockchain_key;
+    const blockchainKey = blockchain?.blockchain_key;
+    const minDepositAmount = blockchain?.min_deposit_amount || '0';
+    const minDepositConfirm = blockchain?.min_confirmations || '0';
 
     const depositAddress =
         (wallet &&
@@ -318,6 +320,8 @@ const WalletDepositMobileScreen: React.FC = () => {
                                                 : '/img/dummycoin.png'
                                         }
                                         alt="icon"
+                                        width={40}
+                                        height={40}
                                     />
                                 </div>
                             </div>
@@ -375,7 +379,7 @@ const WalletDepositMobileScreen: React.FC = () => {
                             <button
                                 disabled={depositAddress && depositAddress.address && depositAddress.address === null}
                                 onClick={() => doCopy('address')}
-                                className="btn-primary w-100">
+                                className="btn-primary w-100 mb-24">
                                 Copy Address
                             </button>
                         </React.Fragment>
@@ -455,20 +459,16 @@ const WalletDepositMobileScreen: React.FC = () => {
                         ''
                     )}
 
-                    {depositAddress === null || (depositAddress && depositAddress.address === null) ? (
-                        <ul className="grey-text text-sm">
-                            <li>
-                                {currency && currency.toUpperCase()} deposit will be into the account after the 3
-                                confirmation, and it can be allowed to withdraw after the 5 confirmation.
-                            </li>
-                            <li>
-                                Minimum deposit are 0.0001 {currency && currency.toUpperCase()}, and deposit will be not
-                                into the account if they are less the minimum.
-                            </li>
-                        </ul>
-                    ) : (
-                        ''
-                    )}
+                    <ul className="grey-text text-sm">
+                        <li>
+                            {currency && currency.toUpperCase()} deposit will be into the account after the{' '}
+                            {minDepositConfirm} confirmation.
+                        </li>
+                        <li>
+                            Minimum deposit are {minDepositAmount} {currency && currency.toUpperCase()}, and deposit
+                            will be not into the account if they are less the minimum.
+                        </li>
+                    </ul>
                 </div>
             </section>
 
