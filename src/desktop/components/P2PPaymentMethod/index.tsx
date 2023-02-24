@@ -38,6 +38,8 @@ export const P2PPaymentMethod: React.FC = () => {
         dispatch(p2pPaymentUserFetch());
     }, [dispatch]);
 
+    console.log(paymentMethods, 'zamn')
+
     React.useEffect(() => {
         dispatch(p2pCurrenciesFetch({ fiat }));
     }, [dispatch, fiat]);

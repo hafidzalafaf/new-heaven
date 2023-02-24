@@ -9,7 +9,7 @@ const config: RequestOptions = {
 
 export function* p2pFetchPaymentUserSaga(action: P2PPaymentUserFetchSingle) {
     try {
-        const feedback = yield call(API.get(config), `/account/payment?payment_user_uid=${action.payload.payment_user_uid}`);
+        const feedback = yield call(API.get(config), `/account/payment`);
         yield put(p2pPaymentUserData(feedback));
     } catch (error) {
         yield put(
