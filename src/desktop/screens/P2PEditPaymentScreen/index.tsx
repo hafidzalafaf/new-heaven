@@ -15,36 +15,39 @@ import { InfoWarningIcon, QRIcon } from '../../../assets/images/P2PIcon';
 import { useParams, useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
-interface Bank {
+interface uid {
     payment: string;
 }
 
-export const P2PAddPaymentScreen: React.FC = () => {
-    useDocumentTitle('P2P || Add Payment');
+export const P2PEditPaymentScreen: React.FC = () => {
+    useDocumentTitle('P2P || Edit Payment');
     const dispatch = useDispatch();
     const history = useHistory();
     const user = useSelector(selectUserInfo);
     const currenciesData = useSelector(selectP2PCurrenciesData);
     const createPaymentSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
-
+    const payment_user_uid:uid  = useParams()
+    console.log(payment_user_uid, 'param')
+    console.log('hello');
+    
     const [inputFile, setInputFile] = React.useState(null);
     const [fileName, setFileName] = React.useState('');
     const [fiat, setFiat] = React.useState('IDR');
     const [account_number, setAccountNumber] = React.useState('');
     const [bankData, setBankData] = React.useState<any>();
-    const bank: Bank = useParams();
-    console.log(bank)
 
+    console.log(currenciesData, 'curr')
+    console.log(bankData, 'bankData')
     const profiles = user.profiles.slice(-1);
-    const replacedDash = bank.payment.replace(/-/g, ' ');
-    const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
+    // const replacedDash = bank.payment.replace(/-/g, ' ');
+    // const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
 
     React.useEffect(() => {
         dispatch(p2pCurrenciesFetch({ fiat }));
     }, [dispatch, fiat]);
 
     React.useEffect(() => {
-        setBankData(currenciesData?.payment?.find((item) => item.symbol == bank.payment));
+        setBankData(currenciesData?.payment?.find((item) => item.payment_user_uid == payment_user_uid.payment));
     }, [currenciesData]);
     
     React.useEffect(() => {
@@ -54,7 +57,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
     }, [createPaymentSuccess]);
 
     const handleCreatePayment = () => {
-        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bank.payment };
+        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bankData.symbol };
 
         dispatch(p2pPaymentUserCreate(payload));
     };
@@ -65,7 +68,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
     };
 
     const disabledButton = () => {
-        if (!profiles[0]?.first_name || !bank?.payment || !account_number) {
+        if (!profiles[0]?.first_name || !bankData?.symbol || !account_number) {
             return true;
         } else {
             return false;

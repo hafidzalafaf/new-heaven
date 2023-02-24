@@ -1,4 +1,5 @@
 export const P2P_PAYMENT_USER_FETCH = 'p2pPaymentUser/FETCH';
+export const P2P_PAYMENT_USER_FETCH_SINGLE = 'p2pPaymentUser/FETCH_SINGLE';
 export const P2P_PAYMENT_USER_DATA = 'p2pPaymentUser/DATA';
 export const P2P_PAYMENT_USER_ERROR = 'p2pPaymentUser/ERROR';
 

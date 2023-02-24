@@ -101,6 +101,7 @@ import {
     P2PWalletScreen,
     P2PAddPaymentScreen,
     P2PWalletOrderScreen,
+    P2PEditPaymentScreen
 } from '../../desktop/screens';
 
 interface ReduxProps {
@@ -685,7 +686,14 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                     <PrivateRoute
                         loading={userLoading}
                         isLogged={isLoggedIn}
-                        path="/p2p/payment-method/:payment"
+                        path="/p2p/payment-method/edit/:payment_user_uid"
+                        component={P2PEditPaymentScreen}
+                    />
+
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/payment-method/create/:payment"
                         component={P2PAddPaymentScreen}
                     />
 

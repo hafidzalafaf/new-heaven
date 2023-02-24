@@ -1,7 +1,6 @@
 import * as React from 'react';
-import Select, { components } from 'react-select';
+import Select from 'react-select';
 import { CustomStylesSelect } from '..';
-import { Link } from 'react-router-dom';
 
 export interface OfferFormProps {
     showModalCreateOffer?: boolean;
@@ -63,25 +62,6 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
         handleChangeTradeAmount,
         handleCreateOffer,
     } = props;
-
-    const AddPayment = (props) => {
-        return (
-            <React.Fragment>
-                <components.MenuList {...props}>
-                    <div>{props.children}</div>
-                    <Link to={`/p2p/profile`}>
-                        <div className="add-payment-select">
-                            <p className="m-0 p-0 gradient-text text-ms font-semibold text-center ">
-                                Add payment method
-                            </p>
-                        </div>
-                    </Link>
-                </components.MenuList>
-            </React.Fragment>
-        );
-    };
-
-    console.log(optionPayment);
 
     return (
         <React.Fragment>
@@ -173,7 +153,6 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                         value={paymentValue}
                         styles={CustomStylesSelect}
                         options={optionPayment}
-                        components={{ MenuList: AddPayment }}
                         onChange={(e) => {
                             handleChangePayment(e);
                         }}

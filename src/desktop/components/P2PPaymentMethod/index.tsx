@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { NoDataIcon } from '../../../assets/images/P2PIcon';
 import {
     p2pPaymentUserData,
@@ -26,6 +26,8 @@ export const P2PPaymentMethod: React.FC = () => {
     const currenciesData = useSelector(selectP2PCurrenciesData);
     const user = useSelector(selectUserInfo);
     const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
+
+    const history = useHistory()
 
     const [expandPayment, setExpandPayment] = React.useState(false);
     const [fiat, setFiat] = React.useState('IDR');
@@ -75,7 +77,7 @@ export const P2PPaymentMethod: React.FC = () => {
                                 <div className="position-absolute dropdown-payment w-100 dark-bg-main p-16 radius-lg">
                                     {bankData.map((bank, i) => (
                                         <Link
-                                            to={`/p2p/payment-method/${bank.symbol}`}
+                                            to={`/p2p/payment-method/create/${bank.symbol}`}
                                             key={i}
                                             className="bank-payment-container d-flex align-items-center gap-6 cursor-pointer">
                                             <p className="payment-label text-sm font-extrabold blue-text m-0 p-0">I</p>
@@ -100,11 +102,11 @@ export const P2PPaymentMethod: React.FC = () => {
                                 <div className="d-flex justify-content-between align-items- mb-16">
                                     <div className="d-flex align-items-center gap-16">
                                         <img src="/img/logo-bca.png" alt="logo" />
-                                        <p className="m-0 p-0 grey-text text-ms">{bank?.name}</p>
+                                        <p className="m-0 p-0 grey-text text-ms">{bank?.bank_name}</p>
                                     </div>
 
                                     <div className="d-flex align-items-center gap-16">
-                                        <p className="m-0 p-0 cursor-pointer grey-text text-ms">Edit</p>
+                                        <p onClick={()=> history.push(`/p2p/payment-method/edit/${bank?.payment_user_uid}`)} className="m-0 p-0 cursor-pointer grey-text text-ms cursor-pointer">Edit</p>
                                         <p className="m-0 p-0 cursor-pointer grey-text text-ms">Delete</p>
                                     </div>
                                 </div>
