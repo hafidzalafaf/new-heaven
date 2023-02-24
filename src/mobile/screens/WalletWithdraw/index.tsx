@@ -399,7 +399,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                         })}
                                     </p>
                                     <p className="mb-0  text-base grey-text-accent font-bold">
-                                        $ {fee !== undefined ? fee : '0'}
+                                        {fee !== undefined ? fee : '0'} {currency?.toUpperCase()}
                                     </p>
                                 </div>
 
@@ -413,7 +413,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                         <Decimal fixed={currencyItem?.precision}>
                                             {amount !== '' ? withdrawRecive : '0'}
                                         </Decimal>{' '}
-                                        {currency.toUpperCase()}
+                                        {currency?.toUpperCase()}
                                     </p>
                                 </div>
                             </div>
@@ -422,21 +422,21 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                 <div className="my-2">
                                     <p className="mb-0 text-sm grey-text-accent">Daily Limit</p>
                                     <p className="mb-0  text-base grey-text-accent font-bold">
-                                        {remainingWithdrawDaily} {currency.toUpperCase()}
+                                        {remainingWithdrawDaily} {currency?.toUpperCase()}
                                     </p>
                                 </div>
 
                                 <div className="my-2">
                                     <p className="mb-0 text-sm grey-text-accent">Monthly Limit</p>
                                     <p className="mb-0  text-base grey-text-accent font-bold">
-                                        {remainingWithdrawMothly} {currency.toUpperCase()}
+                                        {remainingWithdrawMothly} {currency?.toUpperCase()}
                                     </p>
                                 </div>
 
                                 <div className="my-2">
                                     <p className="mb-0 text-sm grey-text-accent">Min Withdraw</p>
                                     <p className="mb-0  text-base grey-text-accent font-bold">
-                                        $ {minWithdraw ? minWithdraw : '0'}
+                                        {minWithdraw ? minWithdraw : '0'} {currency?.toUpperCase()}
                                     </p>
                                 </div>
                             </div>
