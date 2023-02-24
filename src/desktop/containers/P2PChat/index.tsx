@@ -38,16 +38,25 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
     }, [dispatch]);
-    console.log(p2pChat)
-    // React.useEffect(() => {
-    //     setChats(p2pChat?.reverse());
-    // }, [p2pChat]);
+    console.log(p2pChat, 'CHAT');
+
+    React.useEffect(() => {
+        setChats(p2pChat?.room?.reverse());
+    }, [p2pChat]);
 
     React.useEffect(() => {
         dispatch(orderChat({ offer_number: order_number }));
         if (p2pChatCreateSuccess) {
             setMessage('');
         }
+
+        const fetchInterval = setInterval(() => {
+            dispatch(orderChat({ offer_number: order_number }));
+        }, 5000);
+
+        return () => {
+            clearInterval(fetchInterval);
+        };
     }, [dispatch, p2pChatCreateSuccess]);
 
     const handleSendChat = (e) => {
@@ -85,7 +94,7 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                         <img src="/img/coin.png" className="icon-lg" alt="" />
                         <div className="ml-3">
                             <p className="text-ms mb-2 white-text font-normal">
-                                {detail?.order?.trades?.email} <CheckFillIcon />
+                                {p2pChat?.target?.member?.email} <CheckFillIcon />
                             </p>
                             <p className="mb-1 grey-text-accent text-sm">30D Trades</p>
                             <p className="mb-1 grey-text-accent text-sm">30D Completetition Rate</p>
@@ -108,19 +117,22 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                         <div className="chat">
                             {chats?.map((chat, i) => (
                                 <React.Fragment key={i}>
+                                    {console.log(chat)}
                                     <div
                                         className={
-                                            chat?.p2p_user?.uid === profile?.member?.uid ? 'my-chat' : 'sender-chat'
+                                            chat?.p2p_user?.member?.uid === profile?.member?.uid
+                                                ? 'my-chat'
+                                                : 'sender-chat'
                                         }>
                                         <p className="sender-name text-xxs text-white">
-                                            {chat?.p2p_user?.uid === profile?.member?.uid
+                                            {chat?.p2p_user?.member?.uid === profile?.member?.uid
                                                 ? 'You'
-                                                : chat?.p2p_user == 'Nusablocks'
-                                                ? 'Nusablocks'
-                                                : chat?.p2p_user?.email}
+                                                : chat?.p2p_user?.username
+                                                ? chat?.p2p_user?.username
+                                                : chat?.p2p_user?.member?.email}
                                         </p>
                                         <div className="buble-chat">
-                                            <span className="white-text text-xs">{chat?.chat}</span>
+                                            <span className="white-text text-xs content-chat">{chat?.chat}</span>
                                             <div className="time grey-text-accent text-xxs">
                                                 {moment(chat?.updated_at).format('HH:mm')}
                                             </div>

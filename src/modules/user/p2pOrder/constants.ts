@@ -29,3 +29,11 @@ export const ORDER_CHAT_ERROR = 'order/CHAT_ERROR';
 export const ORDER_CHAT_CREATE = 'order/CHAT_CREATE';
 export const ORDER_CHAT_CREATE_DATA = 'order/CHAT_CREATE_DATA';
 export const ORDER_CHAT_CREATE_ERROR = 'order/CHAT_CREATE_ERROR';
+
+export const ORDER_REPORT = 'order/REPORT';
+export const ORDER_REPORT_DATA = 'order/REPORT_DATA';
+export const ORDER_REPORT_ERROR = 'order/REPORT_ERROR';
+
+export const ORDER_REPORT_CREATE = 'order/REPORT_CREATE';
+export const ORDER_REPORT_CREATE_DATA = 'order/REPORT_CREATE_DATA';
+export const ORDER_REPORT_CREATE_ERROR = 'order/REPORT_CREATE_ERROR';

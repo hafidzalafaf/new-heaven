@@ -14,7 +14,7 @@ const config = (csrfToken?: string): RequestOptions => {
 export function* orderConfirmPaymentSaga(actionParam: OrderConfirmPayment) {
     try {
         const { order_number, payment_method } = actionParam.payload;
-        const payload = yield call(API.put(config(getCsrfToken())), `/market/orders/payment_confirm/${order_number}`, {
+        const payload = yield call(API.post(config(getCsrfToken())), `/market/orders/payment_confirm/${order_number}`, {
             payment_method,
         });
 

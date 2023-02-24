@@ -338,18 +338,24 @@ export const OrderP2PTable = () => {
                             fill>
                             <Tab eventKey="all" title="All Orders">
                                 <div className="w-100">{renderFilter()}</div>
-                                {loading ? <Loading /> : <Table header={getTableHeaders()} data={getTableData(data)} />}
+                                {/* {loading ? <Loading /> :  */}
+                                <Table header={getTableHeaders()} data={getTableData(data)} />
+                                {/* } */}
 
                                 {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="processing" title="Processing">
                                 <div className="w-100">{renderFilter()}</div>
-                                {loading ? <Loading /> : <Table header={getTableHeaders()} data={getTableData(data)} />}
+                                {/* {loading ? <Loading /> :  */}
+                                <Table header={getTableHeaders()} data={getTableData(data)} />
+                                {/*  } */}
                                 {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="done" title="Transaction Done">
                                 <div className="w-100">{renderFilter()}</div>
-                                {loading ? <Loading /> : <Table header={getTableHeaders()} data={getTableData(data)} />}
+                                {/* {loading ? <Loading /> :  */}
+                                <Table header={getTableHeaders()} data={getTableData(data)} />
+                                {/* } */}
                                 {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                         </Tabs>

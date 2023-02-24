@@ -24,6 +24,12 @@ import {
     ORDER_CHAT_CREATE,
     ORDER_CHAT_CREATE_DATA,
     ORDER_CHAT_CREATE_ERROR,
+    ORDER_REPORT,
+    ORDER_REPORT_DATA,
+    ORDER_REPORT_ERROR,
+    ORDER_REPORT_CREATE,
+    ORDER_REPORT_CREATE_DATA,
+    ORDER_REPORT_CREATE_ERROR,
 } from './constants';
 import { Order, Confirm } from './types';
 
@@ -164,6 +170,41 @@ export interface OrderChatCreateError {
     error: CommonError;
 }
 
+export interface OrderReport {
+    type: typeof ORDER_REPORT;
+    payload?: {
+        order_number: string;
+    };
+}
+
+export interface OrderReportData {
+    type: typeof ORDER_REPORT_DATA;
+    payload: [];
+}
+
+export interface OrderReportError {
+    type: typeof ORDER_REPORT_ERROR;
+    error: CommonError;
+}
+
+export interface OrderReportCreate {
+    type: typeof ORDER_REPORT_CREATE;
+    payload?: {
+        order_number?: string;
+        reason?: any;
+        upload_payment?: any;
+    };
+}
+
+export interface OrderReportCreateData {
+    type: typeof ORDER_REPORT_CREATE_DATA;
+}
+
+export interface OrderReportCreateError {
+    type: typeof ORDER_REPORT_CREATE_ERROR;
+    error: CommonError;
+}
+
 export type OrderActions =
     | OrderFetch
     | OrderData
@@ -188,7 +229,13 @@ export type OrderActions =
     | OrderChatError
     | OrderChatCreate
     | OrderChatCreateData
-    | OrderChatCreateError;
+    | OrderChatCreateError
+    | OrderReport
+    | OrderReportData
+    | OrderReportError
+    | OrderReportCreate
+    | OrderReportCreateData
+    | OrderReportCreateError;
 
 export const orderFetch = (payload?: OrderFetch['payload']): OrderFetch => ({
     // export const orderFetch = (): OrderFetch => ({
@@ -305,5 +352,34 @@ export const orderChatCreateData = (): OrderChatCreateData => ({
 
 export const orderChatCreateError = (error: CommonError): OrderChatCreateError => ({
     type: ORDER_CHAT_CREATE_ERROR,
+    error,
+});
+
+export const orderReport = (payload: OrderReport['payload']): OrderReport => ({
+    type: ORDER_REPORT,
+    payload,
+});
+
+export const orderReportData = (payload: OrderReportData['payload']): OrderReportData => ({
+    type: ORDER_REPORT_DATA,
+    payload,
+});
+
+export const orderReportError = (error: CommonError): OrderReportError => ({
+    type: ORDER_REPORT_ERROR,
+    error,
+});
+
+export const orderReportCreate = (payload: OrderReportCreate['payload']): OrderReportCreate => ({
+    type: ORDER_REPORT_CREATE,
+    payload,
+});
+
+export const orderReportCreateData = (): OrderReportCreateData => ({
+    type: ORDER_REPORT_CREATE_DATA,
+});
+
+export const orderReportCreateError = (error: CommonError): OrderReportCreateError => ({
+    type: ORDER_REPORT_CREATE_ERROR,
     error,
 });
