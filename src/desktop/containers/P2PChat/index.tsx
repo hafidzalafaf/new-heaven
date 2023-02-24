@@ -38,7 +38,6 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
     }, [dispatch]);
-    console.log(p2pChat, 'CHAT');
 
     React.useEffect(() => {
         setChats(p2pChat?.room?.reverse());
@@ -117,7 +116,6 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                         <div className="chat">
                             {chats?.map((chat, i) => (
                                 <React.Fragment key={i}>
-                                    {console.log(chat)}
                                     <div
                                         className={
                                             chat?.p2p_user?.member?.uid === profile?.member?.uid

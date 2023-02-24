@@ -68,7 +68,17 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [date, setDate] = React.useState<any>();
     const [active, setActive] = React.useState('');
 
-    const dateInFuture = moment(detail?.order?.first_approve).format('YYYY-MM-DD HH:mm:ss');
+    // const dateInFuture = (date) => {
+    //     return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    // };
+
+    // const timeLeft = (date) => {
+    //     return Date.parse(dateInFuture(date)) - new Date().getTime();
+    // };
+
+    const dateInFuture = moment(
+        detail?.order?.state == 'prepare' ? detail?.order?.first_approve : detail?.order?.second_approve
+    ).format('YYYY-MM-DD HH:mm:ss');
     const timeLeft = Date.parse(dateInFuture) - new Date().getTime();
     let currentDays = Math.floor(Number(timeLeft) / (24 * 60 * 60 * 1000));
     let currentHours = Math.floor((Number(timeLeft) % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
@@ -167,9 +177,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
     });
 
     //countdown timer
-
-    //countdown timer
-
     const Countdown = ({ days, hours, minutes, seconds }) => {
         var dayDigit = days.toString().split('');
         var dayArray = dayDigit.map(Number);
@@ -184,14 +191,14 @@ export const P2PWalletOrderScreen: React.FC = () => {
                 {timeLeft > 0 ? (
                     <div className="d-flex flex-row">
                         <div className="d-flex flex-row">
-                            <h2 className="text-white countdown-number">
+                            <h2 className="text-white countdown-number mb-0">
                                 {days >= 10
                                     ? dayArray[0]
                                     : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
                                     ? 0
                                     : 0}
                             </h2>
-                            <h2 className="text-white countdown-number">
+                            <h2 className="text-white countdown-number mb-0">
                                 {days >= 10
                                     ? dayArray[1]
                                     : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
@@ -203,14 +210,14 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         <h2 className="mt-2">:</h2>
 
                         <div className="d-flex flex-row">
-                            <h2 className="text-white countdown-number">
+                            <h2 className="text-white countdown-number mb-0">
                                 {hours >= 10
                                     ? hourArray[0]
                                     : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
                                     ? 0
                                     : 0}
                             </h2>
-                            <h2 className="text-white countdown-number">
+                            <h2 className="text-white countdown-number mb-0">
                                 {hours >= 10
                                     ? hourArray[1]
                                     : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
@@ -222,14 +229,14 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         <h2 className="mt-2">:</h2>
 
                         <div className="d-flex flex-row">
-                            <h2 className="text-white countdown-number">
+                            <h2 className="text-white countdown-number mb-0">
                                 {minutes >= 10
                                     ? minuteArray[0]
                                     : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
                                     ? 0
                                     : 0}
                             </h2>
-                            <h2 className="text-white countdown-number">
+                            <h2 className="text-white countdown-number mb-0">
                                 {minutes >= 10
                                     ? minuteArray[1]
                                     : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
@@ -241,14 +248,14 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         <h2 className="mt-2">:</h2>
 
                         <div className="d-flex flex-row">
-                            <h2 className="text-white countdown-number">
+                            <h2 className="text-white countdown-number mb-0">
                                 {seconds >= 10
                                     ? secondArray[0]
                                     : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
                                     ? 0
                                     : 0}
                             </h2>
-                            <h2 className="text-white countdown-number">
+                            <h2 className="text-white countdown-number mb-0">
                                 {seconds >= 10
                                     ? secondArray[1]
                                     : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
@@ -260,22 +267,22 @@ export const P2PWalletOrderScreen: React.FC = () => {
                 ) : (
                     <div className="d-flex flex-row">
                         <div className="d-flex flex-row">
-                            <h2 className="text-white countdown-number">0</h2>
-                            <h2 className="text-white countdown-number">0</h2>
+                            <h2 className="text-white countdown-number mb-0">0</h2>
+                            <h2 className="text-white countdown-number mb-0">0</h2>
                         </div>
 
                         <h2>:</h2>
 
                         <div className="d-flex flex-row">
-                            <h2 className="text-white countdown-number">0</h2>
-                            <h2 className="text-white countdown-number">0</h2>
+                            <h2 className="text-white countdown-number mb-0">0</h2>
+                            <h2 className="text-white countdown-number mb-0">0</h2>
                         </div>
 
                         <h2>:</h2>
 
                         <div className="d-flex flex-row">
-                            <h2 className="text-white countdown-number">0</h2>
-                            <h2 className="text-white countdown-number">0</h2>
+                            <h2 className="text-white countdown-number mb-0">0</h2>
+                            <h2 className="text-white countdown-number mb-0">0</h2>
                         </div>
                     </div>
                 )}
@@ -694,98 +701,13 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         </div>
                     )}
                     <div className="d-flex flex-column align-items-end">
-                        {/* {(detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting') && (
-                            <div className="d-flex align-items-center">
-                                <div className="second radius-sm mx-1">
-                                    <p className="mb-0 text-md font-bold white-text text">
-                                        {moment(
-                                            detail?.order?.state == 'prepare'
-                                                ? firstCoundown
-                                                : detail?.order?.state == 'waiting'
-                                                ? secondCountdown
-                                                : 0
-                                        )
-                                            .format('hh:mm:ss')
-                                            .slice(0, 1)}
-                                    </p>
-                                </div>
-                                <div className="second radius-sm mx-1">
-                                    <p className="mb-0 text-md font-bold white-text text">
-                                        {moment(
-                                            detail?.order?.state == 'prepare'
-                                                ? firstCoundown
-                                                : detail?.order?.state == 'waiting'
-                                                ? secondCountdown
-                                                : 0
-                                        )
-                                            .format('hh:mm:ss')
-                                            .slice(1, 2)}
-                                    </p>
-                                </div>
-                                <p className="dots grey-text-accent mb-0 white-text">:</p>
-                                <div className="second radius-sm mx-1">
-                                    <p className="mb-0 text-md font-bold white-text text">
-                                        {moment(
-                                            detail?.order?.state == 'prepare'
-                                                ? firstCoundown
-                                                : detail?.order?.state == 'waiting'
-                                                ? secondCountdown
-                                                : 0
-                                        )
-                                            .format('hh:mm:ss')
-                                            .slice(3, 4)}
-                                    </p>
-                                </div>
-                                <div className="second radius-sm mx-1">
-                                    <p className="mb-0 text-md font-bold white-text text">
-                                        {moment(
-                                            detail?.order?.state == 'prepare'
-                                                ? firstCoundown
-                                                : detail?.order?.state == 'waiting'
-                                                ? secondCountdown
-                                                : 0
-                                        )
-                                            .format('hh:mm:ss')
-                                            .slice(4, 5)}
-                                    </p>
-                                </div>
-                                <p className="dots grey-text-accent mb-0 white-text">:</p>
-                                <div className="second radius-sm mx-1">
-                                    <p className="mb-0 text-md font-bold white-text text">
-                                        {moment(
-                                            detail?.order?.state == 'prepare'
-                                                ? firstCoundown
-                                                : detail?.order?.state == 'waiting'
-                                                ? secondCountdown
-                                                : 0
-                                        )
-                                            .format('hh:mm:ss')
-                                            .slice(6, 7)}
-                                    </p>
-                                </div>
-                                <div className="second radius-sm mx-1">
-                                    <p className="mb-0 text-md font-bold white-text text">
-                                        {moment(
-                                            detail?.order?.state == 'prepare'
-                                                ? firstCoundown
-                                                : detail?.order?.state == 'waiting'
-                                                ? secondCountdown
-                                                : 0
-                                        )
-                                            .format('hh:mm:ss')
-                                            .slice(7, 8)}
-                                    </p>
-                                </div>
-                            </div>
-                        )} */}
-                        <Countdown days={days} hours={hours} minutes={minutes} seconds={seconds} />
-                        {/* <div className="text-xl font-bold white-text text countdown-container">
-                            <ReactMomentCountDown
-                                toDate={dateInFuture}
-                                sourceFormatMask="YYYY-MM-DD HH:mm:ss"
-                                targetFormatMask="HH:mm:ss"
-                            />
-                        </div> */}
+                        {side == 'buy' && detail?.order?.state == 'prepare' && (
+                            <Countdown days={days} hours={hours} minutes={minutes} seconds={seconds} />
+                        )}
+
+                        {side == 'sell' && detail?.order?.state == 'waiting' && (
+                            <Countdown days={days} hours={hours} minutes={minutes} seconds={seconds} />
+                        )}
 
                         <div className="d-flex align-items-center">
                             <span className="grey-text text-sm">Order number</span>
@@ -824,6 +746,10 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             setShowModalBuyOrderCompleted(!showModalBuyOrderCompleted)
                         }
                         timeLeft={timeLeft}
+                        days={days}
+                        hours={hours}
+                        minutes={minutes}
+                        seconds={seconds}
                         handleShowModalSellConfirm={() => setShowModalSellConfrim(!showModalSellConfirm)}
                         handleShowModalCancel={() => setShowModalCancel(!showModalCancel)}
                         handleShowModalReport={() => setShowModalReport(!showModalReport)}

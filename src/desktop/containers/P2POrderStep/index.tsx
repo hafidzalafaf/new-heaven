@@ -23,6 +23,10 @@ export interface P2POrderStepProps {
     handleSendFeedbackPositive: () => void;
     handleSendFeedbackNegative: () => void;
     timeLeft: number;
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
 }
 
 export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) => {
@@ -46,6 +50,10 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleSendFeedbackPositive,
         handleSendFeedbackNegative,
         timeLeft,
+        days,
+        hours,
+        minutes,
+        seconds,
     } = props;
 
     return (
@@ -96,7 +104,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                             </p>
                             {side == 'sell' ? (
                                 <div className="payment-method py-3 d-flex justify-content-between align-items-center text-xs font-semibold mt-3">
-                                    {detail?.order?.payment !== null && side == 'sell' && (
+                                    {detail?.order?.state !== 'prepare' && side == 'sell' && (
                                         <img
                                             src={
                                                 detail?.order?.payment?.logo === 'dummy'
@@ -137,7 +145,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 <div className="payment">
                                     <div
                                         className="header-payment d-flex justify-content-between align-items-center mt-3 cursor-pointer"
-                                        onClick={handleShowPayment}>
+                                        onClick={detail?.order?.state == 'prepare' && handleShowPayment}>
                                         <p className="mb-0">
                                             <Wallet />
                                             <span className="mb-0 ml-3 text-sm white-text font-semibold">
@@ -150,7 +158,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                             </div>
                                         )}
                                     </div>
-                                    {paymentUser ? (
+                                    {paymentUser || detail?.order?.state !== 'prepare' ? (
                                         <React.Fragment>
                                             <div
                                                 className={`payment-method content-payment ${
@@ -332,23 +340,42 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 </div>
                             ) : (
                                 <div className="d-flex gap-24">
-                                    <button
-                                        disabled={timeLeft <= 0 || detail?.order?.state !== 'prepare'}
-                                        type="button"
-                                        onClick={
-                                            detail?.order?.payment == null
-                                                ? handleConfirmPaymentBuy
-                                                : handleShowModalBuyOrderCompleted
-                                        }
-                                        className="btn btn-primary px-5">
-                                        Confirm
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => side == 'buy' && handleShowModalCancel()}
-                                        className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
-                                        Cancel Order
-                                    </button>
+                                    {detail?.order?.state == 'preprare' ? (
+                                        <button
+                                            disabled={timeLeft <= 0 || detail?.order?.state !== 'prepare'}
+                                            type="button"
+                                            onClick={
+                                                detail?.order?.payment == null
+                                                    ? handleConfirmPaymentBuy
+                                                    : handleShowModalBuyOrderCompleted
+                                            }
+                                            className="btn btn-primary px-5">
+                                            Confirm
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => side == 'buy' && handleShowModalCancel()}
+                                            className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
+                                            Cancel Order
+                                        </button>
+                                    )}
+
+                                    {detail?.order?.state == 'waiting' ? (
+                                        <button
+                                            type="button"
+                                            className="btn btn-transparent btn-inline w-auto font-semibold grey-text">
+                                            Transaction Issue; appeal after (
+                                            {`${days} : ${hours} : ${minutes} : ${seconds}`})
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => side == 'buy' && handleShowModalCancel()}
+                                            className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
+                                            Cancel Order
+                                        </button>
+                                    )}
                                 </div>
                             )}
                         </div>
