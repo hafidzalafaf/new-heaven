@@ -101,7 +101,9 @@ import {
     P2PWalletScreen,
     P2PAddPaymentScreen,
     P2PWalletOrderScreen,
-    P2PEditPaymentScreen
+    P2PEditPaymentScreen,
+    P2PMyOfferScreen,
+    P2PDetailOfferScreen,
 } from '../../desktop/screens';
 
 interface ReduxProps {
@@ -722,6 +724,12 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         path="/p2p/wallet/order/:order_number"
                         component={P2PWalletOrderScreen}
                     />
+                    <PublicRoute
+                        loading={userLoading}
+                        path="/p2p/offer/:offer_number"
+                        component={P2PDetailOfferScreen}
+                    />
+                    <PublicRoute loading={userLoading} path="/p2p/offer" component={P2PMyOfferScreen} />
                     <PublicRoute loading={userLoading} path="/p2p" component={P2PScreen} />
                     <Route exact={true} path="/" component={LandingScreen} />
                     <Route path="**">
