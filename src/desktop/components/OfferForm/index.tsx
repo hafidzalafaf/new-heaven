@@ -2,7 +2,6 @@ import * as React from 'react';
 import Select, { components } from 'react-select';
 import { CustomStylesSelect } from '..';
 import { Link } from 'react-router-dom';
-
 export interface OfferFormProps {
     showModalCreateOffer?: boolean;
     onCloseModal?: () => void;
@@ -171,7 +170,6 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                         value={paymentValue}
                         styles={CustomStylesSelect}
                         options={optionPayment}
-                        components={{ MenuList: AddPayment }}
                         onChange={(e) => {
                             handleChangePayment(e);
                         }}

@@ -1,6 +1,7 @@
 import { CommonError } from '../../types';
 import {
     P2P_PAYMENT_USER_FETCH,
+    P2P_PAYMENT_USER_FETCH_SINGLE,
     P2P_PAYMENT_USER_DATA,
     P2P_PAYMENT_USER_ERROR,
     P2P_PAYMENT_USER_CREATE,
@@ -17,6 +18,13 @@ import { IPaymentUser } from './types';
 
 export interface P2PPaymentUserFetch {
     type: typeof P2P_PAYMENT_USER_FETCH;
+}
+
+export interface P2PPaymentUserFetchSingle {
+    type: typeof P2P_PAYMENT_USER_FETCH_SINGLE;
+    payload: {
+        payment_user_uid?: string;
+    }
 }
 
 export interface P2PPaymentUserData {
