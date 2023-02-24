@@ -104,6 +104,11 @@ export const p2pPaymentUserFetch = (): P2PPaymentUserFetch => ({
     type: P2P_PAYMENT_USER_FETCH,
 });
 
+export const P2PPaymentUserFetchSingle = (payload: P2PPaymentUserFetchSingle['payload']): P2PPaymentUserFetchSingle =>({
+    type: P2P_PAYMENT_USER_FETCH,
+    payload
+})
+
 export const p2pPaymentUserData = (payload: P2PPaymentUserData['payload']): P2PPaymentUserData => ({
     type: P2P_PAYMENT_USER_DATA,
     payload,

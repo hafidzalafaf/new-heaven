@@ -4,6 +4,7 @@ import {
     P2P_PAYMENT_USER_DATA,
     P2P_PAYMENT_USER_ERROR,
     P2P_PAYMENT_USER_FETCH,
+    P2P_PAYMENT_USER_FETCH_SINGLE,
     P2P_PAYMENT_USER_CREATE,
     P2P_PAYMENT_USER_CREATE_DATA,
     P2P_PAYMENT_USER_CREATE_ERROR,
@@ -81,6 +82,13 @@ export const p2pPaymentUserFetchReducer = (state: P2PPaymentUserState['fetch'], 
                 success: false,
                 error: undefined,
             };
+        case P2P_PAYMENT_USER_FETCH_SINGLE:
+            return {
+                ...state,
+                fetching: true,
+                success: false,
+                error: undefined,
+            }
         case P2P_PAYMENT_USER_DATA:
             return {
                 ...state,
@@ -182,6 +190,7 @@ export const p2pPaymentDeleteReducer = (state: P2PPaymentUserState['delete'], ac
 export const p2pPaymentUserReducer = (state = initialP2PPaymentUserState, action: P2PPaymentUserActions) => {
     switch (action.type) {
         case P2P_PAYMENT_USER_FETCH:
+        case P2P_PAYMENT_USER_FETCH_SINGLE:
         case P2P_PAYMENT_USER_DATA:
         case P2P_PAYMENT_USER_ERROR:
             return {
