@@ -58,7 +58,7 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
         };
     }, [dispatch, p2pChatCreateSuccess]);
 
-    const handleSendChat = (e) => {
+    const handleSubmitChat = (e) => {
         if (message) {
             if (e.keyCode == 13 && e.shiftKey == false) {
                 e.preventDefault();
@@ -68,14 +68,15 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                 };
                 dispatch(orderChatCreate(payload));
             }
-            // } else {
-            //     const payload = {
-            //         message,
-            //         offer_number: order_number,
-            //     };
-            //     dispatch(orderChatCreate(payload));
-            // }
         }
+    };
+
+    const handleSendChat = (e) => {
+        const payload = {
+            message,
+            offer_number: order_number,
+        };
+        dispatch(orderChatCreate(payload));
     };
 
     return (
@@ -157,7 +158,12 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                         </div>
                         <form className="chat-writing">
                             <textarea
-                                onKeyDown={handleSendChat}
+                                disabled={
+                                    detail?.order?.state == 'canceled' ||
+                                    detail?.order?.state == 'accepted' ||
+                                    detail?.order?.state == 'success'
+                                }
+                                onKeyDown={handleSubmitChat}
                                 placeholder="write a message.."
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
@@ -166,8 +172,25 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                 <label htmlFor="attachment-file" className="cursor-pointer mb-0">
                                     <AttachmentIcon />
                                 </label>
-                                <input type="file" id="attachment-file" className="d-none" />
-                                <button onClick={handleSendChat} type="button" className="btn btn-transparent p-0 ml-2">
+                                <input
+                                    disabled={
+                                        detail?.order?.state == 'canceled' ||
+                                        detail?.order?.state == 'accepted' ||
+                                        detail?.order?.state == 'success'
+                                    }
+                                    type="file"
+                                    id="attachment-file"
+                                    className="d-none"
+                                />
+                                <button
+                                    disabled={
+                                        detail?.order?.state == 'canceled' ||
+                                        detail?.order?.state == 'accepted' ||
+                                        detail?.order?.state == 'success'
+                                    }
+                                    onClick={handleSendChat}
+                                    type="button"
+                                    className="btn btn-transparent p-0 ml-2">
                                     <SendIcon />
                                 </button>
                             </div>

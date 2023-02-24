@@ -12,6 +12,8 @@ import {
     selectShouldFetchP2POrderDetail,
     feedbackCreate,
     selectP2PCreateFeedbackSuccess,
+    selectP2PChat,
+    orderChat,
 } from 'src/modules';
 import { useDocumentTitle } from '../../../hooks';
 import { alertPush } from 'src/modules';
@@ -45,6 +47,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const cancelSuccess = useSelector(selectP2PCancelSuccess);
     const shouldFetchP2POrderDetail = useSelector(selectShouldFetchP2POrderDetail);
     const createFeedbackSuccess = useSelector(selectP2PCreateFeedbackSuccess);
+    const p2pChat = useSelector(selectP2PChat);
 
     const [firstCoundown, setFirstCountdown] = React.useState(0);
     const [firstCoundownActive, setFirstCountdownActive] = React.useState(true);
@@ -67,14 +70,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [showModalCancel, setShowModalCancel] = React.useState(false);
     const [date, setDate] = React.useState<any>();
     const [active, setActive] = React.useState('');
-
-    // const dateInFuture = (date) => {
-    //     return moment(date).format('YYYY-MM-DD HH:mm:ss');
-    // };
-
-    // const timeLeft = (date) => {
-    //     return Date.parse(dateInFuture(date)) - new Date().getTime();
-    // };
 
     const dateInFuture = moment(
         detail?.order?.state == 'prepare' ? detail?.order?.first_approve : detail?.order?.second_approve
@@ -112,6 +107,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
+        dispatch(orderChat({ offer_number: order_number }));
         const fetchInterval = setInterval(() => {
             dispatch(orderDetailFetch({ offer_number: order_number }));
         }, 5000);
@@ -693,7 +689,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         <div>
                             <p className="mb-2 text-lg white-text font-bold">
                                 {side === 'sell' ? 'Sell' : 'Buy'} {detail?.offer?.fiat}{' '}
-                                {side === 'sell' ? 'to' : 'from'} {detail?.order?.trades?.email}
+                                {side === 'sell' ? 'to' : 'from'} {p2pChat?.target?.member?.email}
                             </p>
                             <p className="mb-0 text-sm grey-text">
                                 Order has been made. Please wait for system confirmation.
