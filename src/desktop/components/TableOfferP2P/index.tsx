@@ -196,15 +196,15 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                             />
 
                                                             {/* <div onClick={handleShowPaymentOption}>
-                                                            <input
-                                                                disabled
-                                                                type="text"
-                                                                placeholder={'Select payment method'}
-                                                                value={amount}
-                                                                required
-                                                                className="form-control input-p2p-form white-text"
-                                                            />
-                                                        </div> */}
+                                                                <input
+                                                                    disabled
+                                                                    type="text"
+                                                                    placeholder={'Select payment method'}
+                                                                    value={amount}
+                                                                    required
+                                                                    className="form-control input-p2p-form white-text"
+                                                                />
+                                                            </div> */}
                                                         </div>
                                                     )}
 
@@ -216,10 +216,15 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                             Cancel
                                                         </button>
                                                         <button
+                                                            disabled={
+                                                                side == 'sell'
+                                                                    ? !payment_order || !price || !amount
+                                                                    : !price || !amount
+                                                            }
                                                             type="button"
                                                             onClick={handleCreacteOrder}
                                                             className="w-50 btn-primary">
-                                                            Buy {currency?.toUpperCase()}
+                                                            {side == 'buy' ? 'Buy' : 'Sell'} {currency?.toUpperCase()}
                                                         </button>
                                                     </div>
                                                 </form>

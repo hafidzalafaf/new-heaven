@@ -678,7 +678,9 @@ export const TableListP2P = () => {
                                     setExpandBuy('');
                                     resetForm();
                                 }}
-                                className="btn-side success">
+                                className={`btn-side white-text font-semibold text-sm ${
+                                    side == 'buy' ? 'success' : 'btn-transparent'
+                                }`}>
                                 Buy
                             </button>
                             <button
@@ -688,7 +690,9 @@ export const TableListP2P = () => {
                                     setExpandSell('');
                                     resetForm();
                                 }}
-                                className="btn-side danger">
+                                className={`btn-side white-text font-semibold text-sm ${
+                                    side == 'sell' ? 'danger' : 'btn-transparent'
+                                }`}>
                                 Sell
                             </button>
                         </div>
