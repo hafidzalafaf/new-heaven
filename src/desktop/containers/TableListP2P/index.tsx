@@ -199,8 +199,10 @@ export const TableListP2P = () => {
     React.useEffect(() => {
         if (createOrderSuccess) {
             dispatch(orderCreateData());
-            history.push(`/p2p/wallet/order/${createData?.order_number}`, { side: side });
+            history.push(`/p2p/wallet/order/${createData?.order_number}`, { side: createData?.side });
         }
+
+        console.log(createData);
     }, [createOrderSuccess, createData]);
 
     const optionFiats = fiats?.map((item) => {
@@ -274,9 +276,23 @@ export const TableListP2P = () => {
     };
 
     /* ============== FUNCTION CREATE ORDER START ============== */
-    const optionPaymentOrder = payment_option?.map((item) => {
-        return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.p2p_payment_user_id };
-    });
+    const filteredPayments = payments?.filter(({ bank_name }) =>
+        payment_option?.some(({ name }) => bank_name === name)
+    );
+
+    const optionPaymentOrder = isLoggedIn
+        ? filteredPayments?.map((item) => {
+              return {
+                  label: <p className="m-0 text-sm grey-text-accent">{item?.bank_name}</p>,
+                  value: item?.payment_user_uid,
+              };
+          })
+        : payment_option?.map((item) => {
+              return {
+                  label: <p className="m-0 text-sm grey-text-accent">{item?.name}</p>,
+                  value: item?.p2p_payment_user_id,
+              };
+          });
 
     React.useEffect(() => {
         const temp = +price / +price_actual;

@@ -38,3 +38,7 @@ export const selectP2PChatLoading = (state: RootState): boolean => state.user.p2
 export const selectP2PChatCreateSuccess = (state: RootState): boolean => state.user.p2pOrder.chat_create.success;
 
 export const selectP2PChatCreateLoading = (state: RootState): boolean => state.user.p2pOrder.chat_create.fetching;
+
+// REPORT
+export const selectP2PCreateReportSuccess = (state: RootState): boolean => state.user.p2pOrder.report_create.success;
+export const selectP2PCreateReportLoading = (state: RootState): boolean => state.user.p2pOrder.report_create.fetching;

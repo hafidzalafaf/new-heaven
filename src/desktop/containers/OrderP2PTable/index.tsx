@@ -131,9 +131,6 @@ export const OrderP2PTable = () => {
                     <p className="m-0 p-0 mr-6 text-xs grey-text">Order</p>
                     <HideIcon />
                 </div>
-                <p onClick={() => setShowModalCancel(true)} className="m-0 p-0 mr-6 text-xs grey-text cursor-pointer">
-                    Cancel
-                </p>
             </div>,
         ]);
     };
@@ -213,116 +210,116 @@ export const OrderP2PTable = () => {
         );
     };
 
-    const renderModalCancel = () => {
-        return (
-            <div>
-                <div className="w-100 d-flex align-items-center justify-content-center">
-                    <img src="/img/warningp2p.png" alt="warning" width={68} height={68} className="mb-16" />
-                </div>
+    // const renderModalCancel = () => {
+    //     return (
+    //         <div>
+    //             <div className="w-100 d-flex align-items-center justify-content-center">
+    //                 <img src="/img/warningp2p.png" alt="warning" width={68} height={68} className="mb-16" />
+    //             </div>
 
-                <p className="m-0 p-0 grey-text-accent text-sm">Tips</p>
-                <ul className="m-0 p-0 grey-text-accent text-sm mb-16 pl-16">
-                    <li>If you have already paid the seller, please do not cancel the order.</li>
-                    <li>
-                        If the seller cannot reply to the chat within 15 minutes, you will not be responsible for
-                        canceling this order. This will not affect your completion rate. You can make up to 5
-                        irresponsible cancellations in a day.
-                    </li>
-                    <li>
-                        Your account will be SUSPENDED for the day if you exceed 3 responsible cancellation times in a
-                        day.
-                    </li>
-                </ul>
+    //             <p className="m-0 p-0 grey-text-accent text-sm">Tips</p>
+    //             <ul className="m-0 p-0 grey-text-accent text-sm mb-16 pl-16">
+    //                 <li>If you have already paid the seller, please do not cancel the order.</li>
+    //                 <li>
+    //                     If the seller cannot reply to the chat within 15 minutes, you will not be responsible for
+    //                     canceling this order. This will not affect your completion rate. You can make up to 5
+    //                     irresponsible cancellations in a day.
+    //                 </li>
+    //                 <li>
+    //                     Your account will be SUSPENDED for the day if you exceed 3 responsible cancellation times in a
+    //                     day.
+    //                 </li>
+    //             </ul>
 
-                <div className="p-16 mb-16">
-                    <p className="m-0 p-0 grey-text-accent text-sm">Why do you want to cancel the order?</p>
-                    <div className="d-flex flex-column gap-16">
-                        <div className="d-flex align-items-center gap-8">
-                            {active == 'I dont want to trade anymore' ? (
-                                <span onClick={() => setActive('')}>
-                                    <ActiveCheck />
-                                </span>
-                            ) : (
-                                <span onClick={() => setActive('I dont want to trade anymore')}>
-                                    <GreyCheck />
-                                </span>
-                            )}
-                            <p className="m-0 p-0 grey-text text-sm">I dont want to trade anymore</p>
-                        </div>
-                        <div className="d-flex align-items-center gap-8">
-                            {active ==
-                            'I did not comply with the obligations related to the advertising trade terms and conditions' ? (
-                                <span onClick={() => setActive('')}>
-                                    <ActiveCheck />
-                                </span>
-                            ) : (
-                                <span
-                                    onClick={() =>
-                                        setActive(
-                                            'I did not comply with the obligations related to the advertising trade terms and conditions'
-                                        )
-                                    }>
-                                    <GreyCheck />
-                                </span>
-                            )}
-                            <p className="m-0 p-0 grey-text text-sm">
-                                I did not comply with the obligations related to the advertising trade terms and
-                                conditions
-                            </p>
-                        </div>
-                        <div className="d-flex align-items-center gap-8">
-                            {active == 'The seller asked for additional fees' ? (
-                                <span onClick={() => setActive('')}>
-                                    <ActiveCheck />
-                                </span>
-                            ) : (
-                                <span onClick={() => setActive('The seller asked for additional fees')}>
-                                    <GreyCheck />
-                                </span>
-                            )}
-                            <p className="m-0 p-0 grey-text text-sm">The seller asked for additional fees</p>
-                        </div>
-                        <div className="d-flex align-items-center gap-8">
-                            {active ==
-                            'An issue with the sellers payment method resulted in an unsuccessful payment' ? (
-                                <span onClick={() => setActive('')}>
-                                    <ActiveCheck />
-                                </span>
-                            ) : (
-                                <span
-                                    onClick={() =>
-                                        setActive(
-                                            'An issue with the sellers payment method resulted in an unsuccessful payment'
-                                        )
-                                    }>
-                                    <GreyCheck />
-                                </span>
-                            )}
-                            <p className="m-0 p-0 grey-text text-sm">
-                                An issue with the sellers payment method resulted in an unsuccessful payment
-                            </p>
-                        </div>
-                        <div className="d-flex align-items-center gap-8">
-                            {active == 'Another reason' ? (
-                                <span onClick={() => setActive('')}>
-                                    <ActiveCheck />
-                                </span>
-                            ) : (
-                                <span onClick={() => setActive('Another reason')}>
-                                    <GreyCheck />
-                                </span>
-                            )}
-                            <p className="m-0 p-0 grey-text text-sm">Another reason</p>
-                        </div>
-                    </div>
-                </div>
+    //             <div className="p-16 mb-16">
+    //                 <p className="m-0 p-0 grey-text-accent text-sm">Why do you want to cancel the order?</p>
+    //                 <div className="d-flex flex-column gap-16">
+    //                     <div className="d-flex align-items-center gap-8">
+    //                         {active == 'I dont want to trade anymore' ? (
+    //                             <span onClick={() => setActive('')}>
+    //                                 <ActiveCheck />
+    //                             </span>
+    //                         ) : (
+    //                             <span onClick={() => setActive('I dont want to trade anymore')}>
+    //                                 <GreyCheck />
+    //                             </span>
+    //                         )}
+    //                         <p className="m-0 p-0 grey-text text-sm">I dont want to trade anymore</p>
+    //                     </div>
+    //                     <div className="d-flex align-items-center gap-8">
+    //                         {active ==
+    //                         'I did not comply with the obligations related to the advertising trade terms and conditions' ? (
+    //                             <span onClick={() => setActive('')}>
+    //                                 <ActiveCheck />
+    //                             </span>
+    //                         ) : (
+    //                             <span
+    //                                 onClick={() =>
+    //                                     setActive(
+    //                                         'I did not comply with the obligations related to the advertising trade terms and conditions'
+    //                                     )
+    //                                 }>
+    //                                 <GreyCheck />
+    //                             </span>
+    //                         )}
+    //                         <p className="m-0 p-0 grey-text text-sm">
+    //                             I did not comply with the obligations related to the advertising trade terms and
+    //                             conditions
+    //                         </p>
+    //                     </div>
+    //                     <div className="d-flex align-items-center gap-8">
+    //                         {active == 'The seller asked for additional fees' ? (
+    //                             <span onClick={() => setActive('')}>
+    //                                 <ActiveCheck />
+    //                             </span>
+    //                         ) : (
+    //                             <span onClick={() => setActive('The seller asked for additional fees')}>
+    //                                 <GreyCheck />
+    //                             </span>
+    //                         )}
+    //                         <p className="m-0 p-0 grey-text text-sm">The seller asked for additional fees</p>
+    //                     </div>
+    //                     <div className="d-flex align-items-center gap-8">
+    //                         {active ==
+    //                         'An issue with the sellers payment method resulted in an unsuccessful payment' ? (
+    //                             <span onClick={() => setActive('')}>
+    //                                 <ActiveCheck />
+    //                             </span>
+    //                         ) : (
+    //                             <span
+    //                                 onClick={() =>
+    //                                     setActive(
+    //                                         'An issue with the sellers payment method resulted in an unsuccessful payment'
+    //                                     )
+    //                                 }>
+    //                                 <GreyCheck />
+    //                             </span>
+    //                         )}
+    //                         <p className="m-0 p-0 grey-text text-sm">
+    //                             An issue with the sellers payment method resulted in an unsuccessful payment
+    //                         </p>
+    //                     </div>
+    //                     <div className="d-flex align-items-center gap-8">
+    //                         {active == 'Another reason' ? (
+    //                             <span onClick={() => setActive('')}>
+    //                                 <ActiveCheck />
+    //                             </span>
+    //                         ) : (
+    //                             <span onClick={() => setActive('Another reason')}>
+    //                                 <GreyCheck />
+    //                             </span>
+    //                         )}
+    //                         <p className="m-0 p-0 grey-text text-sm">Another reason</p>
+    //                     </div>
+    //                 </div>
+    //             </div>
 
-                <button onClick={() => setShowModalCancel(false)} className="btn-primary w-100">
-                    Confirm
-                </button>
-            </div>
-        );
-    };
+    //             <button onClick={() => setShowModalCancel(false)} className="btn-primary w-100">
+    //                 Confirm
+    //             </button>
+    //         </div>
+    //     );
+    // };
 
     return (
         <React.Fragment>
@@ -510,7 +507,7 @@ export const OrderP2PTable = () => {
                     </div>
                 </div>
 
-                <Modal show={showModalCancel} content={renderModalCancel()} />
+                {/* <Modal show={showModalCancel} content={renderModalCancel()} /> */}
             </div>
         </React.Fragment>
     );

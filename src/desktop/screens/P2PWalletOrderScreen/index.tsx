@@ -14,6 +14,9 @@ import {
     selectP2PCreateFeedbackSuccess,
     selectP2PChat,
     orderChat,
+    selectP2PCreateReportLoading,
+    selectP2PCreateReportSuccess,
+    orderReportCreate,
 } from 'src/modules';
 import { useDocumentTitle } from '../../../hooks';
 import { alertPush } from 'src/modules';
@@ -48,11 +51,9 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const shouldFetchP2POrderDetail = useSelector(selectShouldFetchP2POrderDetail);
     const createFeedbackSuccess = useSelector(selectP2PCreateFeedbackSuccess);
     const p2pChat = useSelector(selectP2PChat);
+    const createReportSuccess = useSelector(selectP2PCreateReportSuccess);
+    const createReportLoading = useSelector(selectP2PCreateReportLoading);
 
-    const [firstCoundown, setFirstCountdown] = React.useState(0);
-    const [firstCoundownActive, setFirstCountdownActive] = React.useState(true);
-    const [secondCountdown, setSecondCountdown] = React.useState(0);
-    const [secondCoundownActive, setSecondCountdownActive] = React.useState(true);
     const [showPayment, setShowPayment] = React.useState(false);
     const [showChat, setShowChat] = React.useState(true);
     const [inputFile, setInputFile] = React.useState(null);
@@ -65,11 +66,15 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     const [comment, setComment] = React.useState('');
     const [showModalSellConfirm, setShowModalSellConfrim] = React.useState(false);
-    const [showModalReport, setShowModalReport] = React.useState(false);
     const [showModalBuyOrderCompleted, setShowModalBuyOrderCompleted] = React.useState(false);
     const [showModalCancel, setShowModalCancel] = React.useState(false);
-    const [date, setDate] = React.useState<any>();
     const [active, setActive] = React.useState('');
+
+    /* ============== REPORT STATE START =============== */
+    const [showModalReport, setShowModalReport] = React.useState(true);
+    const [reason, setReason] = React.useState([]);
+    const [upload_payment, setUplodPayment] = React.useState<any>();
+    /* ============== REPORT STATE END =============== */
 
     const dateInFuture = moment(
         detail?.order?.state == 'prepare' ? detail?.order?.first_approve : detail?.order?.second_approve
@@ -116,61 +121,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
             clearInterval(fetchInterval);
         };
     }, [dispatch, order_number]);
-
-    React.useEffect(() => {
-        setDate(moment(detail?.order?.first_approve).format('YYYY-MM-DD HH:mm:ss'));
-        if (detail?.order?.first_approve) {
-            let a = Math.floor(new Date(detail?.order?.first_approve).getTime() / 1000);
-            let timeArr: any;
-            timeArr = moment(a).format('HH:mm:ss').split(':');
-            let timeInMilliseconds = timeArr[0] * 3600000 + timeArr[1] * 60000;
-            setFirstCountdown(timeInMilliseconds - Date.now());
-        }
-
-        if (detail?.order?.second_approve) {
-            let a = Math.floor(new Date(detail?.order?.second_approve).getTime() / 1000);
-            let timeArr: any;
-            timeArr = moment(a).format('HH:mm:ss').split(':');
-            let timeInMilliseconds = timeArr[0] * 3600000 + timeArr[1] * 60000;
-            setSecondCountdown(timeInMilliseconds - Date.now());
-        }
-    }, [dispatch, paymentConfirmSuccess, confirmSellSuccess, cancelSuccess, shouldFetchP2POrderDetail]);
-
-    React.useEffect(() => {
-        if (detail?.order?.state == 'prepare') {
-            let timer = null;
-            if (firstCoundownActive) {
-                timer = setInterval(() => {
-                    setFirstCountdown((firstCoundown) => firstCoundown - 1000);
-
-                    if (firstCoundown === 0) {
-                        setFirstCountdown(0);
-                        setFirstCountdownActive(false);
-                    }
-                }, 1000);
-            }
-            return () => {
-                clearInterval(timer);
-            };
-        }
-
-        if (detail?.order?.state == 'waiting') {
-            let timer = null;
-            if (secondCoundownActive) {
-                timer = setInterval(() => {
-                    setSecondCountdown((secondCountdown) => secondCountdown - 1000);
-
-                    if (secondCountdown === 0) {
-                        setSecondCountdown(0);
-                        setSecondCountdownActive(false);
-                    }
-                }, 1000);
-            }
-            return () => {
-                clearInterval(timer);
-            };
-        }
-    });
 
     //countdown timer
     const Countdown = ({ days, hours, minutes, seconds }) => {
@@ -363,7 +313,27 @@ export const P2PWalletOrderScreen: React.FC = () => {
         setComment(e);
     };
 
-    const renderModalContent = () => {
+    /* ============== REPORT FUNCTION START =============== */
+    React.useEffect(() => {
+        setShowModalReport(false);
+    }, [createReportSuccess]);
+
+    React.useEffect(() => {
+        //Print data each time the checkbox is "checked" or "unchecked"
+        console.log(reason);
+    }, [reason]);
+
+    const handleChecked = (e) => {
+        let newArray = [...reason, { key: e.target.name, message: e.target.value }];
+        if (reason?.includes(e.target.value)) {
+            newArray = newArray.filter((value) => value !== e.target.value);
+        }
+        setReason(newArray);
+    };
+
+    /* ============== REPORT FUNCTION END =============== */
+
+    const renderModalReport = () => {
         return (
             <div>
                 <div className="d-flex align-items-center justify-content-between mb-24 radius-md border-b-1 dark-bg-accent p-3">
@@ -420,15 +390,15 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     </div>
 
                     <div className="mb-16 d-flex align-items-center gap-8">
-                        {/* <label htmlFor="stable-coin" className="m-0 p-0 grey-text-accent text-sm "></label> */}
                         <input
                             type="checkbox"
-                            id="stable-coin"
-                            // checked={true}
-                            readOnly={true}
+                            id="Didn’t Not Receive My Stable Coin"
+                            name="selected"
+                            onChange={handleChecked}
+                            value={'Didn’t Not Receive My Stable Coin'}
                             className="m-0 p-0 check-with-label"
                         />
-                        <label htmlFor="stable-coin" className="m-0 p-0 grey-text-accent text-sm">
+                        <label htmlFor="Didn’t Not Receive My Stable Coin" className="m-0 p-0 grey-text-accent text-sm">
                             Didn’t Not Receive My Stable Coin
                         </label>
                     </div>
@@ -436,12 +406,13 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     <div className="mb-16 d-flex align-items-center gap-8">
                         <input
                             type="checkbox"
-                            id="taking-long"
-                            // checked={true}
-                            readOnly={true}
+                            id="Transaction Taking To Long"
+                            name="selected"
+                            onChange={handleChecked}
+                            value={'Transaction Taking To Long'}
                             className="m-0 p-0"
                         />
-                        <label htmlFor="taking-long" className="m-0 p-0 grey-text-accent text-sm">
+                        <label htmlFor="Transaction Taking To Long" className="m-0 p-0 grey-text-accent text-sm">
                             Transaction Taking To Long
                         </label>
                     </div>
@@ -449,12 +420,15 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     <div className="mb-24 d-flex align-items-center gap-8">
                         <input
                             type="checkbox"
-                            id="different-order"
-                            // checked={true}
-                            readOnly={true}
+                            id="Transaction Ammount Is Different to Order Value"
+                            name="selected"
+                            onChange={handleChecked}
+                            value={'Transaction Ammount Is Different to Order Value'}
                             className="m-0 p-0"
                         />
-                        <label htmlFor="different-order" className="m-0 p-0 grey-text-accent text-sm">
+                        <label
+                            htmlFor="Transaction Ammount Is Different to Order Value"
+                            className="m-0 p-0 grey-text-accent text-sm">
                             Transaction Ammount Is Different to Order Value
                         </label>
                     </div>
@@ -463,6 +437,13 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         <label className="m-0 p-0 mb-16 white-text text-ms">Your Message</label>
                         <textarea
                             placeholder=""
+                            name="message"
+                            onFocus={(e) =>
+                                reason?.map((el) =>
+                                    el?.key == 'message' ? (el['message'].message = e.target.value) : e.target.value
+                                )
+                            }
+                            onBlur={handleChecked}
                             className="form-message border-1 radius-lg p-16 white-text w-100"></textarea>
                     </div>
 
@@ -768,7 +749,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     </div>
                 </div>
 
-                <Modal show={showModalReport} content={renderModalContent()} />
+                <Modal show={showModalReport} content={renderModalReport()} />
                 <Modal show={showModalSellConfirm} content={renderModalConfirmRelease()} />
                 <Modal show={showModalBuyOrderCompleted} content={renderModalBuyOrderCompleted()} />
                 <Modal show={showModalCancel} content={renderModalCancel()} />

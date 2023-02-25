@@ -138,7 +138,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                         <div className="d-flex align-items-center justify-content-between w-100">
                                             <form className="dark-bg-accent w-50 form-buy">
                                                 <h1 className="white-text text-lg mb-44">
-                                                    Buy {currency?.toUpperCase()} Crypto
+                                                    {side == 'buy' ? 'Buy' : 'Sell'} {currency?.toUpperCase()} Crypto
                                                 </h1>
 
                                                 <div className="position-relative mb-24">
