@@ -85,9 +85,13 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                             <div className="d-flex align-items-center">
                                                 <img src="/img/bigcoin.png" alt="coin" className="mr-24" />
                                                 <div>
-                                                    <h2 className="m-0 p-0 white-text mb-12 text-ms fontbold">
+                                                    <a
+                                                        href={`${window.location.href}/profile/${item?.trader?.uid}`}
+                                                        target="__blank"
+                                                        rel="noopener noreferrer"
+                                                        className="m-0 p-0 white-text mb-12 text-ms fontbold">
                                                         {item?.trader?.email}
-                                                    </h2>
+                                                    </a>
                                                     <div className="d-flex">
                                                         <p className="p-0 m-0 text-xs mr-8">{item?.sum_order} Orders</p>
                                                         <p className="p-0 m-0 text-xs ">

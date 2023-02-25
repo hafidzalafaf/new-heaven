@@ -190,9 +190,10 @@ export interface OrderReportError {
 export interface OrderReportCreate {
     type: typeof ORDER_REPORT_CREATE;
     payload?: {
-        order_number?: string;
-        reason?: any;
-        upload_payment?: any;
+        formData?: FormData,
+        reason?: any,
+        upload_payment?: any,
+        order_number: string
     };
 }
 

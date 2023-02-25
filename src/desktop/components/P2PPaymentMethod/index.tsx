@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { NoDataIcon } from '../../../assets/images/P2PIcon';
 import {
     p2pPaymentUserData,
@@ -10,7 +10,8 @@ import {
     selectUserInfo,
     p2pPaymentUserDelete,
     selectP2PPaymentUserDeleteSuccess,
-
+    selectP2PProfile,
+    p2pProfileFetch,
 } from 'src/modules';
 import { useDispatch, useSelector } from 'react-redux';
 import { ModalUserLevel } from '../../../desktop/components';
@@ -27,22 +28,25 @@ export interface P2PPaymentMethodProps {
 
 export const P2PPaymentMethod: React.FC = () => {
     const dispatch = useDispatch();
-    const currenciesData = useSelector(selectP2PCurrenciesData);
-    const user = useSelector(selectUserInfo);
-    const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
-    const deleteSuccess = useSelector(selectP2PPaymentUserDeleteSuccess);
+    const history = useHistory();
+    const { uid = '' } = useParams<{ uid?: string }>();
 
-    const history = useHistory()
+    const user = useSelector(selectUserInfo);
+    const userP2P = useSelector(selectP2PProfile);
+    const currenciesData = useSelector(selectP2PCurrenciesData);
+    const deleteSuccess = useSelector(selectP2PPaymentUserDeleteSuccess);
+    const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
 
     const [expandPayment, setExpandPayment] = React.useState(false);
     const [fiat, setFiat] = React.useState('IDR');
     const [bankData, setBankData] = React.useState([]);
     const [showModalUserLevel, setShowModalUserLevel] = React.useState(false);
     const [showModalDeletePayment, setModalDeletePayment] = React.useState(false);
-    const [deletePayment, setDeletePayment] = React.useState<any>({})
+    const [deletePayment, setDeletePayment] = React.useState<any>({});
 
     React.useEffect(() => {
         dispatch(p2pPaymentUserFetch());
+        dispatch(p2pProfileFetch());
     }, [dispatch, deleteSuccess]);
 
     React.useEffect(() => {
@@ -53,19 +57,19 @@ export const P2PPaymentMethod: React.FC = () => {
         setBankData(currenciesData?.payment);
     }, [currenciesData]);
 
-
     const handleDeletePayment = (e) => {
-        dispatch(p2pPaymentUserDelete({
-            payment_id: e
-        }))
-    }
+        dispatch(
+            p2pPaymentUserDelete({
+                payment_id: e,
+            })
+        );
+    };
     const ModalDeletePaymentMethod = () => {
         return (
             <form className="bg-black p-10 pt-20">
                 <div className="d-flex justify-content-between">
                     <h6 className="text-white my-20">Are you sure?</h6>
                     <svg
-                        
                         className="cursor-pointer"
                         width="20px"
                         height="20px"
@@ -80,14 +84,21 @@ export const P2PPaymentMethod: React.FC = () => {
                         />
                     </svg>
                 </div>
-                <p className="text-secondary">
-                You are about to delete payment info with the info below
-                </p>
-                <div className='d-flex flex-row justify-content-around'>
-                <div onClick={()=> setModalDeletePayment(false) } className='w-40 text-center cursor-pointer btn-danger'>Cancel</div>
-                <div onClick={() => [handleDeletePayment(deletePayment.payment_user_uid), setModalDeletePayment(false)]} className="text-center cursor-pointer btn-primary w-40">
-                    OK
-                </div>
+                <p className="text-secondary">You are about to delete payment info with the info below</p>
+                <div className="d-flex flex-row justify-content-around">
+                    <div
+                        onClick={() => setModalDeletePayment(false)}
+                        className="w-40 text-center cursor-pointer btn-danger">
+                        Cancel
+                    </div>
+                    <div
+                        onClick={() => [
+                            handleDeletePayment(deletePayment.payment_user_uid),
+                            setModalDeletePayment(false),
+                        ]}
+                        className="text-center cursor-pointer btn-primary w-40">
+                        OK
+                    </div>
                 </div>
             </form>
         );
@@ -109,18 +120,20 @@ export const P2PPaymentMethod: React.FC = () => {
                     </div>
                     <div className="w-20">
                         <div className="position-relative w-100">
-                            <button
-                                onClick={() => {
-                                    if (user?.level < 3) {
-                                        setShowModalUserLevel(true);
-                                    } else {
-                                        setExpandPayment(!expandPayment);
-                                    }
-                                }}
-                                type="button"
-                                className="btn-primary w-100">
-                                + Add a payment method
-                            </button>
+                            {uid == user?.uid && (
+                                <button
+                                    onClick={() => {
+                                        if (user?.level < 3) {
+                                            setShowModalUserLevel(true);
+                                        } else {
+                                            setExpandPayment(!expandPayment);
+                                        }
+                                    }}
+                                    type="button"
+                                    className="btn-primary w-100">
+                                    + Add a payment method
+                                </button>
+                            )}
 
                             {expandPayment && (
                                 <div className="position-absolute dropdown-payment w-100 dark-bg-main p-16 radius-lg">
@@ -154,10 +167,22 @@ export const P2PPaymentMethod: React.FC = () => {
                                         <p className="m-0 p-0 grey-text text-ms">{bank?.bank_name}</p>
                                     </div>
 
-                                    <div className="d-flex align-items-center gap-16">
-                                        <p onClick={()=> history.push(`/p2p/payment-method/edit/${bank?.payment_user_uid}`)} className="m-0 p-0 cursor-pointer grey-text text-ms cursor-pointer">Edit</p>
-                                        <p onClick={()=> [setDeletePayment(bank), setModalDeletePayment(true)]} className="m-0 p-0 cursor-pointer grey-text text-ms">Delete</p>
-                                    </div>
+                                    {uid == user?.uid && (
+                                        <div className="d-flex align-items-center gap-16">
+                                            <p
+                                                onClick={() =>
+                                                    history.push(`/p2p/payment-method/edit/${bank?.payment_user_uid}`)
+                                                }
+                                                className="m-0 p-0 cursor-pointer grey-text text-ms cursor-pointer">
+                                                Edit
+                                            </p>
+                                            <p
+                                                onClick={() => [setDeletePayment(bank), setModalDeletePayment(true)]}
+                                                className="m-0 p-0 cursor-pointer grey-text text-ms">
+                                                Delete
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="data-row-body w-100">

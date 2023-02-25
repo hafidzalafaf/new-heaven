@@ -19,9 +19,11 @@ import {
     selectP2PProfileChangeUsernameSuccess,
 } from 'src/modules';
 import moment from 'moment';
+import { useParams } from 'react-router';
 
 export const P2PUserInfo: React.FC = () => {
     const dispatch = useDispatch();
+    const { uid = '' } = useParams<{ uid?: string }>();
     const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
 
     const userP2P: P2PProfileFetchInterface = useSelector(selectP2PProfile);
@@ -98,28 +100,35 @@ export const P2PUserInfo: React.FC = () => {
                 <Modal show={showChangeUsernameModal}>
                     <ModalChangeName />
                 </Modal>
-                <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
-                    <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
-                        {userP2P?.trader_name
-                            ? userP2P?.trader_name?.slice(0, 1).toUpperCase()
-                            : userP2P?.member?.email?.slice(0, 1).toUpperCase()}
-                    </div>
-                    <p className="m-0 p-0 text-ms font-extrabold grey-text-accent">
-                        {userP2P?.trader_name ? userP2P?.trader_name : userP2P?.member?.email}
-                    </p>
-                    <RenameIcon
-                        onClick={() => setShowChangeUsernameModal(!showChangeUsernameModal)}
-                        className="cursor-pointer"
-                    />
-                    <div className="d-flex align-items-center gap-4 mr-12">
-                        <VerificationIcon />
 
-                        <p className="m-0 p-0 grey-text text-xxs font-semibold">Verified Merchant</p>
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
+                        <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
+                            {userP2P?.trader_name
+                                ? userP2P?.trader_name?.slice(0, 1).toUpperCase()
+                                : userP2P?.member?.email?.slice(0, 1).toUpperCase()}
+                        </div>
+                        <p className="m-0 p-0 text-ms font-extrabold grey-text-accent">
+                            {userP2P?.trader_name ? userP2P?.trader_name : userP2P?.member?.email}
+                        </p>
+                        {uid == userP2P?.member?.uid && (
+                            <RenameIcon
+                                onClick={() => setShowChangeUsernameModal(!showChangeUsernameModal)}
+                                className="cursor-pointer"
+                            />
+                        )}
+                        <div className="d-flex align-items-center gap-4 mr-12">
+                            <VerificationIcon />
+
+                            <p className="m-0 p-0 grey-text text-xxs font-semibold">Verified Merchant</p>
+                        </div>
+
+                        <div className="cursor-pointer">
+                            <ShareIcon />
+                        </div>
                     </div>
 
-                    <div className="cursor-pointer">
-                        <ShareIcon />
-                    </div>
+                    {uid !== userP2P?.member?.uid && <button className="btn btn-primary">Block</button>}
                 </div>
 
                 <div className="d-flex align-items-center gap-16 mb-16">

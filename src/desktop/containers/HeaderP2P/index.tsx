@@ -1,8 +1,17 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { HeaderOrderIcon, HeaderProfileIcon, HeaderGuideIcon, HeaderOthersIcon } from '../../../assets/images/P2PIcon';
+import { p2pProfileFetch, selectP2PProfile } from 'src/modules';
+import { useSelector, useDispatch } from 'react-redux';
 
 export const HeaderP2P = () => {
+    const dispatch = useDispatch();
+    const profile = useSelector(selectP2PProfile);
+
+    React.useEffect(() => {
+        dispatch(p2pProfileFetch());
+    }, [dispatch]);
+
     return (
         <React.Fragment>
             <div className="com-header-p2p d-flex justify-content-between align-items-center">
@@ -28,7 +37,7 @@ export const HeaderP2P = () => {
                     </Link>
 
                     <Link
-                        to={'/p2p/profile'}
+                        to={`/p2p/profile/${profile?.member?.uid}`}
                         className="d-flex justify-content-center align-content-center mr-24 cursor-pointer">
                         <span className="mr-8">
                             <HeaderProfileIcon fillColor={'var(--text-secondary-color)'} />

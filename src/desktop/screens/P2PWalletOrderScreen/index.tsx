@@ -18,6 +18,7 @@ import {
     selectP2PCreateReportSuccess,
     orderReportCreate,
 } from 'src/modules';
+
 import { useDocumentTitle } from '../../../hooks';
 import { alertPush } from 'src/modules';
 import { HeaderP2P, BannerP2P, P2PFAQ, P2PChat, P2POrderStep } from 'src/desktop/containers';
@@ -35,6 +36,12 @@ import {
 } from '../../../assets/images/P2PIcon';
 import ReactMomentCountDown from 'react-moment-countdown';
 import moment from 'moment';
+
+interface File extends Blob {
+    readonly lastModified: number;
+    readonly name: string;
+    readonly webkitRelativePath: string;
+}
 
 export const P2PWalletOrderScreen: React.FC = () => {
     useDocumentTitle('P2P || Order');
@@ -259,11 +266,11 @@ export const P2PWalletOrderScreen: React.FC = () => {
     };
 
     const handleConfirmBuy = () => {
-        // const payload = {
-        //     order_number: order_number,
-        // };
+        const payload = {
+            order_number: order_number,
+        };
 
-        // dispatch(orderConfirmSell(payload));
+        dispatch(orderConfirmSell(payload));
         setShowModalBuyOrderCompleted(false);
     };
 
@@ -324,11 +331,59 @@ export const P2PWalletOrderScreen: React.FC = () => {
     }, [reason]);
 
     const handleChecked = (e) => {
-        let newArray = [...reason, { key: e.target.name, message: e.target.value }];
+        let allFiles: File[] = [];
+        let maxDocsCount = 0;
+        let additionalFileList: File[] = [];
+        if (e.target.name == 'payment') {
+            setFileName(e.target.files[0].name);
+            console.log(e.target.files[0]);
+            allFiles = e.target.files;
+            maxDocsCount = 1;
+            additionalFileList =
+                Array.from(allFiles).length > maxDocsCount
+                    ? Array.from(allFiles).slice(0, maxDocsCount)
+                    : Array.from(allFiles);
+
+            if (!additionalFileList.length) {
+                return null;
+            }
+        }
+
+        let newArray = [
+            ...reason,
+            {
+                key: e.target.name,
+                message: e.target.name !== 'payment' ? e.target.value : e.target.files[0].name,
+                upload_payment: e.target.name == 'payment' ? additionalFileList[0] : null,
+            },
+        ];
         if (reason?.includes(e.target.value)) {
             newArray = newArray.filter((value) => value !== e.target.value);
         }
         setReason(newArray);
+    };
+
+    const handleReport = () => {
+        // const formData = new FormData();
+        // reason.forEach((item) => {
+        //     formData.append(`reason`, JSON.stringify(item));
+        // });
+        // formData.append('reason', reason);
+        // formData.append('order_number', order_number);
+
+        // const payload = {
+        //     formData,
+        //     order_number,
+        // };
+
+        const payload = {
+            reason,
+            order_number,
+        };
+
+        // console.log(payload, 'ini payload');
+
+        dispatch(orderReportCreate(payload));
     };
 
     /* ============== REPORT FUNCTION END =============== */
@@ -366,18 +421,20 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     <div className="mb-24">
                         <label className="m-0 p-0 mb-16 white-text text-ms">QR Code (Optional)</label>
                         <input
-                            id="custom-input-file"
+                            id="payment"
                             type="file"
                             // value={inputFile}
-                            onChange={(e) => {
-                                setInputFile(e.target.files[0]);
-                                setFileName(e.target.files[0].name);
-                            }}
+                            name="payment"
+                            onChange={handleChecked}
+                            // onChange={(e) => {
+                            //     setUplodPayment(e.target.files[0]);
+                            //     setFileName(e.target.files[0].name);
+                            // }}
                             placeholder="Enter Full Name"
                             className="custom-input-add-payment w-100 white-text d-none"
                         />
                         <label
-                            htmlFor="custom-input-file"
+                            htmlFor="payment"
                             className="d-flex justify-content-center align-content-center custom-input-file cursor-pointer dark-bg-accent border-1 p-16 radius-lg mb-16">
                             <div className="d-flex flex-column align-items-center justify-content-center">
                                 <UploadIcon />
@@ -439,15 +496,17 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             placeholder=""
                             name="message"
                             onFocus={(e) =>
-                                reason?.map((el) =>
-                                    el?.key == 'message' ? (el['message'].message = e.target.value) : e.target.value
+                                // reason?.map((item) => (item?.key?.message ? e.target.value : e.target.value))
+                                reason.splice(
+                                    reason.findIndex(({ key }) => key == 'message'),
+                                    reason.length
                                 )
                             }
                             onBlur={handleChecked}
                             className="form-message border-1 radius-lg p-16 white-text w-100"></textarea>
                     </div>
 
-                    <button className="btn-primary w-100" type="button">
+                    <button type="button" onClick={handleReport} className="btn-primary w-100">
                         Submit The Sidepute
                     </button>
                 </div>
@@ -525,7 +584,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     </div>
                 </div>
 
-                <button onClick={() => handleConfirmBuy()} className="btn-primary w-100">
+                <button onClick={handleConfirmBuy} className="btn-primary w-100">
                     Continue
                 </button>
             </React.Fragment>

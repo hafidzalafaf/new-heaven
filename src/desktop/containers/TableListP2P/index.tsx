@@ -201,8 +201,6 @@ export const TableListP2P = () => {
             dispatch(orderCreateData());
             history.push(`/p2p/wallet/order/${createData?.order_number}`, { side: createData?.side });
         }
-
-        console.log(createData);
     }, [createOrderSuccess, createData]);
 
     const optionFiats = fiats?.map((item) => {

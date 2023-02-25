@@ -109,7 +109,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                             <p className="m-0 p-0 font-semibold text-xs">Transaction end.</p>
                                         </React.Fragment>
                                     ) : (
-                                        detail?.order?.state !== 'prepare' &&
+                                        detail?.order?.payment !== null &&
                                         side == 'sell' && (
                                             <img
                                                 src={
@@ -164,7 +164,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                 <p className="m-0 p-0 font-semibold text-xs">Transaction end.</p>
                                             </div>
                                         </React.Fragment>
-                                    ) : paymentUser || detail?.order?.state !== 'prepare' ? (
+                                    ) : paymentUser || detail?.order?.state !== null ? (
                                         <React.Fragment>
                                             <div
                                                 className={`payment-method content-payment ${

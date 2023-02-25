@@ -7,16 +7,18 @@ import { OrderReportCreate, orderReportCreateData, orderReportCreateError } from
 const config = (csrfToken?: string): RequestOptions => {
     return {
         apiVersion: 'p2p',
-        headers: { 'X-CSRF-Token': csrfToken },
+        headers: { 
+            'X-CSRF-Token': csrfToken,
+            'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+            'Content-Type': 'multipart/form-data' },
     };
 };
 
 export function* orderReportCreateSaga(actionParam: OrderReportCreate) {
-    const { order_number, reason, upload_payment } = actionParam.payload;
+    const { order_number, formData, reason, upload_payment } = actionParam.payload;
     try {
         yield call(API.post(config(getCsrfToken())), `/market/orders/report/${order_number}`, {
-            reason,
-            upload_payment,
+           formData, reason, upload_payment
         });
         yield put(orderReportCreateData());
         yield put(alertPush({ message: ['success.order.chat'], type: 'success' }));
