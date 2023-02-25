@@ -19,6 +19,9 @@ import {
     selectP2POffersFetchLoading,
     selectP2PPaymentUser,
     p2pPaymentUserFetch,
+    selectP2POrderCreateLoading,
+    selectP2PCreateOffersLoading,
+    selectP2PCreateOffersSuccess,
 } from 'src/modules';
 import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import { RefreshIcon, FilterIcon, DropdownIcon, InfoSecondaryIcon } from 'src/assets/images/P2PIcon';
@@ -48,6 +51,9 @@ export const TableListP2P = () => {
     const user = useSelector(selectUserInfo);
     const createData = useSelector(selectP2POrderCreateData);
     const createOrderSuccess = useSelector(selectP2POrderCreateSuccess);
+    const createOrderLoading = useSelector(selectP2POrderCreateLoading);
+    const createOfferLoading = useSelector(selectP2PCreateOffersLoading);
+    const createOfferSuccess = useSelector(selectP2PCreateOffersSuccess);
     const loadingOffers = useSelector(selectP2POffersFetchLoading);
     const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
 
@@ -152,7 +158,30 @@ export const TableListP2P = () => {
                 )
             );
         }
-    }, [dispatch, side, fiat, currency, amountList, amountFilter, minPriceFilter, maxPriceFilter]);
+
+        const fetchInterval = setInterval(() => {
+            if (currency !== undefined && fiat !== undefined) {
+                dispatch(
+                    offersFetch(
+                        amountList
+                            ? amountListPayload
+                            : amountFilter
+                            ? amountFilterPayload
+                            : minPriceFilter && maxPriceFilter
+                            ? priceFilterPayload
+                            : minPriceFilter && maxPriceFilter && amountFilter
+                            ? filterPayload
+                            : defaultPayload
+                    )
+                );
+            }
+        }, 5000);
+
+        return () => {
+            clearInterval(fetchInterval);
+        };
+    }, [dispatch, side, fiat, currency, amountList, amountFilter, minPriceFilter, maxPriceFilter, createOfferSuccess]);
+
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
         dispatch(p2pPaymentUserFetch());
@@ -170,7 +199,7 @@ export const TableListP2P = () => {
     React.useEffect(() => {
         if (createOrderSuccess) {
             dispatch(orderCreateData());
-            history.push(`/p2p/wallet/order/${createData?.order_number}`);
+            history.push(`/p2p/wallet/order/${createData?.order_number}`, { side: side });
         }
     }, [createOrderSuccess, createData]);
 
@@ -246,7 +275,7 @@ export const TableListP2P = () => {
 
     /* ============== FUNCTION CREATE ORDER START ============== */
     const optionPaymentOrder = payment_option?.map((item) => {
-        return { label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>, value: item.payment_user_id };
+        return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.p2p_payment_user_id };
     });
 
     React.useEffect(() => {
@@ -656,7 +685,11 @@ export const TableListP2P = () => {
                         className="btn-secondary w-40">
                         Cancel
                     </button>
-                    <button onClick={handleConfirmOffer} className="btn-primary w-60">
+                    <button
+                        type="button"
+                        disabled={createOfferLoading}
+                        onClick={handleConfirmOffer}
+                        className="btn-primary w-60">
                         Confirm
                     </button>
                 </div>
@@ -678,7 +711,9 @@ export const TableListP2P = () => {
                                     setExpandBuy('');
                                     resetForm();
                                 }}
-                                className="btn-side success">
+                                className={`btn-side white-text font-semibold text-sm ${
+                                    side == 'buy' ? 'success' : 'btn-transparent'
+                                }`}>
                                 Buy
                             </button>
                             <button
@@ -688,7 +723,9 @@ export const TableListP2P = () => {
                                     setExpandSell('');
                                     resetForm();
                                 }}
-                                className="btn-side danger">
+                                className={`btn-side white-text font-semibold text-sm ${
+                                    side == 'sell' ? 'danger' : 'btn-transparent'
+                                }`}>
                                 Sell
                             </button>
                         </div>
@@ -839,6 +876,7 @@ export const TableListP2P = () => {
                         side={sideOffer}
                         term_of_condition={term_of_condition}
                         trade_amount={trade_amount}
+                        loading={createOfferLoading}
                         handleChangeAutoReplay={handleChangeAutoReplay}
                         handleChangeCurrency={handleChangeCurrencyOffer}
                         handleChangeFiat={handleChangeFiatOffer}

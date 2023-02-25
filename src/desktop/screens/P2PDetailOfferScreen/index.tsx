@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useDocumentTitle } from '../../../hooks';
 import { HeaderP2P, BannerP2P, OrderP2PTable } from 'src/desktop/containers';
 
-export const P2POrderScreen: React.FC = () => {
-    useDocumentTitle('P2P || My Order');
+export const P2PDetailOfferScreen: React.FC = () => {
+    useDocumentTitle('P2P || Detail Offer');
 
     return (
         <React.Fragment>

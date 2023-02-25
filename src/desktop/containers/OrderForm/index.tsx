@@ -129,19 +129,31 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
             <ul className="pl-2 mb-24 text-center style-none">
                 <li className="text-ms grey-text-accent font-semibold">
                     Sell in {amountSell} {currentMarket?.base_unit?.toUpperCase()} ={' '}
-                    {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalSell}
+                    {Decimal.format(
+                        totalSell,
+                        currentMarket?.price_precision,
+                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                    )}{' '}
+                    {currentMarket?.quote_unit?.toUpperCase()}
                 </li>
                 <li className="text-ms grey-text-accent font-semibold">
-                    Total spent {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalSell}
+                    Total spent ={' '}
+                    {Decimal.format(
+                        totalSell,
+                        currentMarket?.price_precision,
+                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                    )}{' '}
+                    {currentMarket?.quote_unit?.toUpperCase()}
                 </li>
-                <li className="text-ms grey-text-accent font-semibold">Fee {fee}%</li>
+                <li className="text-ms grey-text-accent font-semibold">Fee = {fee}%</li>
                 <li className="text-ms grey-text-accent font-semibold">
-                    Estimation receive = {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                    Estimation receive ={' '}
                     {Decimal.format(
                         willRecive,
                         currentMarket?.price_precision,
                         currentMarket?.quote_unit == 'idr' ? ',' : '.'
-                    )}
+                    )}{' '}
+                    {currentMarket?.quote_unit?.toUpperCase()}
                 </li>
             </ul>
             <div className="d-flex justify-content-center">
@@ -163,19 +175,31 @@ export const OrderForm: React.FunctionComponent<OrderFormProps> = (props) => {
             <ul className="pl-2 mb-24 text-center style-none">
                 <li className="text-ms grey-text-accent font-semibold">
                     Bought {amountBuy} {currentMarket?.base_unit?.toUpperCase()} ={' '}
-                    {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalBuy}
+                    {Decimal.format(
+                        totalBuy,
+                        currentMarket?.price_precision,
+                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                    )}{' '}
+                    {currentMarket?.quote_unit?.toUpperCase()}
                 </li>
                 <li className="text-ms grey-text-accent font-semibold">
-                    Total spent {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'} {totalBuy}
+                    Total spent ={' '}
+                    {Decimal.format(
+                        totalBuy,
+                        currentMarket?.price_precision,
+                        currentMarket?.quote_unit == 'idr' ? ',' : '.'
+                    )}{' '}
+                    {currentMarket?.quote_unit?.toUpperCase()}{' '}
                 </li>
-                <li className="text-ms grey-text-accent font-semibold">Fee {fee}%</li>
+                <li className="text-ms grey-text-accent font-semibold">Fee = {fee}%</li>
                 <li className="text-ms grey-text-accent font-semibold">
-                    Estimation payment = {currentMarket?.quote_unit == 'idr' ? 'Rp' : '$'}{' '}
+                    Estimation payment ={' '}
                     {Decimal.format(
                         willPay,
                         currentMarket?.price_precision,
                         currentMarket?.quote_unit == 'idr' ? ',' : '.'
-                    )}
+                    )}{' '}
+                    {currentMarket?.quote_unit?.toUpperCase()}
                 </li>
             </ul>
             <div className="d-flex justify-content-center">

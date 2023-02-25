@@ -231,7 +231,7 @@ export const WalletWithdrawalForm: React.FC = () => {
                     Please check the target address carefully before confirming the withdrawal.
                 </div>
                 <p className="text-ms grey-text-accent font-semibold mb-24">
-                    You've requested to withdraw {amount} {currency.toUpperCase()}, Are you sure to do Withdraw?
+                    You've requested to withdraw {amount} {currency?.toUpperCase()}, Are you sure to do Withdraw?
                 </p>
                 <div className="d-flex">
                     <button
@@ -525,34 +525,38 @@ export const WalletWithdrawalForm: React.FC = () => {
                 <div className="d-flex justify-content-between mb-12">
                     <p className="mb-0 text-ms grey-text-accent">Your Balance</p>
                     <p className="mb-0 text-ms grey-text-accent font-bold">
-                        {wallet?.balance} {currency.toUpperCase()}
+                        {wallet?.balance} {currency?.toUpperCase()}
                     </p>
                 </div>
                 <div className="d-flex justify-content-between mb-12">
                     <p className="mb-0 text-ms grey-text-accent">Daily Limit </p>
                     <p className="mb-0 text-ms grey-text-accent font-bold">
-                        {remainingWithdrawDaily} {currency.toUpperCase()}
+                        {remainingWithdrawDaily} {currency?.toUpperCase()}
                     </p>
                 </div>
                 <div className="d-flex justify-content-between mb-12">
                     <p className="mb-0 text-ms grey-text-accent">Monthly Limit </p>
                     <p className="mb-0 text-ms grey-text-accent font-bold">
-                        {remainingWithdrawMothly} {currency.toUpperCase()}
+                        {remainingWithdrawMothly} {currency?.toUpperCase()}
                     </p>
                 </div>
                 <div className="d-flex justify-content-between mb-12">
                     <p className="mb-0 text-ms grey-text-accent">Min Withdraw </p>
-                    <p className="mb-0 text-ms grey-text-accent font-bold">$ {minWithdraw ? minWithdraw : '0'}</p>
+                    <p className="mb-0 text-ms grey-text-accent font-bold">
+                        {minWithdraw ? minWithdraw : '0'} {currency?.toUpperCase()}
+                    </p>
                 </div>
                 <div className="d-flex justify-content-between mb-12">
                     <p className="mb-0 text-ms grey-text-accent">Fee</p>
-                    <p className="mb-0 text-ms grey-text-accent font-bold">$ {fee !== undefined ? fee : '0'}</p>
+                    <p className="mb-0 text-ms grey-text-accent font-bold">
+                        {fee !== undefined ? fee : '0'} {currency?.toUpperCase()}
+                    </p>
                 </div>
                 <div className="d-flex justify-content-between mb-24">
                     <p className="mb-0 text-ms grey-text-accent">You will Recive </p>
                     <p className="mb-0 text-ms grey-text-accent font-bold">
                         <Decimal fixed={currencyItem?.precision}>{amount !== '' ? withdrawRecive : '0'}</Decimal>{' '}
-                        {currency.toUpperCase()}
+                        {currency?.toUpperCase()}
                     </p>
                 </div>
                 <button

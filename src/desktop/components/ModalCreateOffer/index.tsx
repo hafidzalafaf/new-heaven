@@ -35,6 +35,7 @@ export interface ModalCreateOfferPost {
     fiats: any;
     currencies: any;
     payments: any;
+    loading: boolean;
 }
 
 export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (props) => {
@@ -69,7 +70,7 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
         currencies,
         fiats,
         payments,
-
+        loading,
     } = props;
 
     const history = useHistory();
@@ -91,6 +92,23 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
             value: item.payment_user_uid,
         };
     });
+
+    const isDisabled = () => {
+        if (
+            !currency ||
+            !fiat ||
+            !max_order ||
+            !min_order ||
+            !payment ||
+            !price ||
+            !trade_amount ||
+            !term_of_condition ||
+            !side ||
+            loading
+        ) {
+            return true;
+        }
+    };
 
     const renderContentModalCreateOffer = () => {
         return (
@@ -129,6 +147,7 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
                             handleChangeTermOfCondition={handleChangeTermOfCondition}
                             handleChangeTradeAmount={handleChangeTradeAmount}
                             handleCreateOffer={handleCreateOffer}
+                            isDisabled={isDisabled}
                         />
                     </Tab>
                     <Tab eventKey="sell" title="Sell" className="mb-32">
@@ -159,6 +178,7 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
                             handleChangeTermOfCondition={handleChangeTermOfCondition}
                             handleChangeTradeAmount={handleChangeTradeAmount}
                             handleCreateOffer={handleCreateOffer}
+                            isDisabled={isDisabled}
                         />
                     </Tab>
                 </Tabs>

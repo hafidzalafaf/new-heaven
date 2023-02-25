@@ -30,6 +30,7 @@ export interface OfferFormProps {
     handleChangeTermOfCondition: (e: string) => void;
     handleChangeAutoReplay: (e: string) => void;
     handleCreateOffer: () => void;
+    isDisabled: any;
 }
 
 export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
@@ -61,6 +62,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
         handleChangeTermOfCondition,
         handleChangeTradeAmount,
         handleCreateOffer,
+        isDisabled,
     } = props;
 
     const AddPayment = (props) => {
@@ -168,8 +170,11 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     <Select
                         isMulti
                         value={paymentValue}
+                        components={{ MenuList: AddPayment }}
                         styles={CustomStylesSelect}
                         options={optionPayment}
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
                         onChange={(e) => {
                             handleChangePayment(e);
                         }}
@@ -212,7 +217,11 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                 </div>
 
                 <div className="position-fixed btn-wrapper dark-bg-accent">
-                    <button type="button" onClick={handleCreateOffer} className="btn-secondary w-100 mb-24">
+                    <button
+                        type="button"
+                        onClick={handleCreateOffer}
+                        disabled={isDisabled()}
+                        className="btn-secondary w-100 mb-24">
                         Create Offers
                     </button>
                     <button type="button" onClick={onCloseModal} className="danger-text btn-danger btn-outline w-100">

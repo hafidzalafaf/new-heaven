@@ -368,13 +368,6 @@ class MobileProfileSecurityScreen extends React.Component<Props, ProfileSecurity
     // **PHONE NUMBER PUBLIC FUNCTION
     // Render phone modal
     public modalPhoneContent = () => {
-        // console.log(this.state.phone[0], 'phone');
-        // console.log(this.state.isChangeNumber, 'change');
-        // console.log(this.state.timerActive, 'timer');
-        // console.log('change number ', this.state.isChangeNumber);
-        // console.log('validate at ', this.state.phone[0]);
-        // console.log('timer active ', this.state.timerActive);
-
         return (
             <React.Fragment>
                 <p className="text-sm grey-text mb-24">

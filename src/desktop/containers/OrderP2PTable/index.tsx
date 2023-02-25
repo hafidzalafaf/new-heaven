@@ -24,7 +24,7 @@ export const OrderP2PTable = () => {
     const [endDate, setEndDate] = React.useState<string | number>();
     const [fiat, setFiat] = React.useState('');
     const [status, setStatus] = React.useState('');
-    const [side, setSide] = React.useState('all');
+    const [side, setSide] = React.useState('processing');
     const [data, setData] = React.useState([]);
     const [active, setActive] = React.useState('');
 
