@@ -8,6 +8,9 @@ import {
     p2pPaymentUserCreate,
     selectP2PPaymentUserCreateSuccess,
     selectUserInfo,
+    selectP2PPaymentUser,
+    p2pPaymentUserFetch,
+    P2PPaymentUserFetchSingle,
 } from 'src/modules';
 import Select from 'react-select';
 import { CustomStylesSelect } from '../../../desktop/components';
@@ -25,8 +28,9 @@ export const P2PEditPaymentScreen: React.FC = () => {
     const history = useHistory();
     const user = useSelector(selectUserInfo);
     const currenciesData = useSelector(selectP2PCurrenciesData);
+    const currentPaymentData = useSelector(selectP2PPaymentUser)
     const createPaymentSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
-    const payment_user_uid:uid  = useParams()
+    const payment_user_uid:any  = useParams()
     console.log(payment_user_uid, 'param')
     console.log('hello');
     
@@ -35,26 +39,28 @@ export const P2PEditPaymentScreen: React.FC = () => {
     const [fiat, setFiat] = React.useState('IDR');
     const [account_number, setAccountNumber] = React.useState('');
     const [bankData, setBankData] = React.useState<any>();
+    const [editPaymentItem, setEditPaymentItem] = React.useState<any>()
 
     console.log(currenciesData, 'curr')
     console.log(bankData, 'bankData')
+    console.log(currentPaymentData, 'coba')
     const profiles = user.profiles.slice(-1);
+    console.log(profiles, 'profiles')
     // const replacedDash = bank.payment.replace(/-/g, ' ');
     // const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
 
-    React.useEffect(() => {
-        dispatch(p2pCurrenciesFetch({ fiat }));
-    }, [dispatch, fiat]);
+    React.useEffect(()=>{
+        dispatch(P2PPaymentUserFetchSingle(payment_user_uid))
+    }, [dispatch])
 
-    React.useEffect(() => {
-        setBankData(currenciesData?.payment?.find((item) => item.payment_user_uid == payment_user_uid.payment));
-    }, [currenciesData]);
     
     React.useEffect(() => {
         if (createPaymentSuccess) {
             history.push('/p2p/profile');
         }
     }, [createPaymentSuccess]);
+
+    console.log(editPaymentItem, 'payment item')
 
     const handleCreatePayment = () => {
         const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bankData.symbol };
@@ -75,6 +81,11 @@ export const P2PEditPaymentScreen: React.FC = () => {
         }
     };
 
+    console.log(currentPaymentData)
+    React.useEffect(() => {
+        setEditPaymentItem(currentPaymentData?.find((item:any) => item.payment_user_uid === payment_user_uid.payment_user_uid));
+    }, [currentPaymentData]);
+    console.log(editPaymentItem)
     return (
         <React.Fragment>
             <div className="pg-screen-p2p-add-payment">
@@ -98,13 +109,13 @@ export const P2PEditPaymentScreen: React.FC = () => {
                             <input
                                 type="text"
                                 className="custom-input-add-payment w-100 white-text"
-                                defaultValue={bankData?.symbol}
+                                defaultValue={editPaymentItem?.symbol}
                                 readOnly
                                 disabled
                             />
                         </div>
 
-                        {bankData?.type === 'bank' ? (
+                        {editPaymentItem?.type === 'bank' ? (
                             <div className="mb-24">
                                 <label className="m-0 p-0 mb-16 white-text text-ms">Full Name</label>
                                 <input
@@ -129,7 +140,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
                             </div>
                         )}
 
-                        {bankData?.type === 'bank' ? (
+                        {editPaymentItem?.type === 'bank' ? (
                             <div className="mb-24">
                                 <label className="m-0 p-0 mb-16 white-text text-ms">Account Number</label>
                                 <input

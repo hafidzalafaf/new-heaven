@@ -13,3 +13,5 @@ export const selectP2PPaymentUserError = (state: RootState): CommonError | undef
 
 export const selectP2PPaymentUserCreateSuccess = (state: RootState): boolean =>
     state.user.p2pPaymentUser.create.success;
+
+export const selectP2PPaymentUserDeleteSuccess = (state: RootState): boolean => state.user.p2pPaymentUser.delete.success;
