@@ -60,7 +60,6 @@ export const P2PPaymentMethod: React.FC = () => {
         }))
     }
     const ModalDeletePaymentMethod = () => {
-        console.log(deletePayment)
         return (
             <form className="bg-black p-10 pt-20">
                 <div className="d-flex justify-content-between">
@@ -82,11 +81,13 @@ export const P2PPaymentMethod: React.FC = () => {
                     </svg>
                 </div>
                 <p className="text-secondary">
-                i=text <br /> Nickname can only be modified after KYC level 3.
+                You are about to delete payment info with the info below
                 </p>
-                <label className="text-white">Nickname</label>
-                <div onClick={() => [handleDeletePayment(deletePayment.payment_user_uid), setModalDeletePayment(false)]} className="text-center cursor-pointer btn-primary">
+                <div className='d-flex flex-row justify-content-around'>
+                <div onClick={()=> setModalDeletePayment(false) } className='w-40 text-center cursor-pointer btn-danger'>Cancel</div>
+                <div onClick={() => [handleDeletePayment(deletePayment.payment_user_uid), setModalDeletePayment(false)]} className="text-center cursor-pointer btn-primary w-40">
                     OK
+                </div>
                 </div>
             </form>
         );
