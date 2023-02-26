@@ -1,6 +1,6 @@
 import { RootState } from '../..';
 import { CommonError } from '../../types';
-import { Offer, P2PCurrency, P2PFiat, PaymentMethod } from './types';
+import { Offer, P2PCurrency, P2PFiat, PaymentMethod, P2PMerchantDetailInterface } from './types';
 
 /* P2P Offers fetch */
 export const selectP2POffers = (state: RootState): Offer[] => state.public.p2p.offers.list;
@@ -82,6 +82,17 @@ export const selectP2PPaymentMethodsTimestamp = (state: RootState): number | und
 
 export const selectShouldFetchP2PPaymentMethods = (state: RootState): boolean =>
     !selectP2PPaymentMethodsTimestamp(state) && !selectP2PPaymentMethodsLoading(state);
+
+/* P2P Merchant Detail */
+
+export const selectP2PMerchantDetail = (state: RootState): P2PMerchantDetailInterface => state.public.p2p?.merchant_detail?.data;
+
+export const selectP2PMerchantDetailLoading = (state: RootState): boolean => state.public.p2p.merchant_detail.fetching;
+
+export const selectP2PMerchantDetailSuccess = (state: RootState): boolean => state.public.p2p.merchant_detail.success;
+
+export const selectP2PMerchantDetailError = (state: RootState): CommonError | undefined =>
+    state.public.p2p.merchant_detail.error;
 
 /* P2P Highest Price Methods */
 export const selectP2PHighestPriceData = (state: RootState): string => state.public.p2p.highestPrice.data;

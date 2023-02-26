@@ -1,5 +1,5 @@
 import { CommonError } from '../../types';
-import { P2P_PROFILE_FETCH, P2P_PROFILE_FETCH_DATA, P2P_PROFILE_FETCH_ERROR, P2P_PROFILE_CHANGE_USERNAME_DATA, P2P_PROFILE_CHANGE_USERNAME, P2P_PROFILE_CHANGE_USERNAME_ERROR } from './constants';
+import { P2P_PROFILE_FETCH, P2P_PROFILE_FETCH_DATA, P2P_PROFILE_FETCH_ERROR, P2P_PROFILE_CHANGE_USERNAME_DATA, P2P_PROFILE_CHANGE_USERNAME, P2P_PROFILE_CHANGE_USERNAME_ERROR, P2P_PROFILE_BLOCK_MERCHANT, P2P_PROFILE_BLOCK_MERCHANT_DATA, P2P_PROFILE_BLOCK_MERCHANT_ERROR } from './constants';
 
 
 export interface P2PProfileFetch {
@@ -32,7 +32,25 @@ export interface P2PProfileChangeUsernameError {
     error: CommonError;
 }
 
-export type P2PProfileActions = P2PProfileFetch | P2PProfileData | P2PProfileError | P2PProfileChangeUsername | P2PProfileChangeUsernameData | P2PProfileChangeUsernameError;
+export interface P2PProfileBlockMerchant {
+    type: typeof P2P_PROFILE_BLOCK_MERCHANT;
+    payload: {
+        uid?: string;
+        state?: string;
+        reason?: string;
+    };
+}
+
+export interface P2PProfileBlockMerchantData {
+    type: typeof P2P_PROFILE_BLOCK_MERCHANT_DATA;
+}
+
+export interface P2PProfileBlockMerchantError {
+    type: typeof P2P_PROFILE_BLOCK_MERCHANT_ERROR;
+    error: CommonError;
+}
+
+export type P2PProfileActions = P2PProfileFetch | P2PProfileData | P2PProfileError | P2PProfileChangeUsername | P2PProfileChangeUsernameData | P2PProfileChangeUsernameError | P2PProfileBlockMerchant | P2PProfileBlockMerchantData | P2PProfileBlockMerchantError;
 
 export const p2pProfileFetch = (): P2PProfileFetch => ({
     type: P2P_PROFILE_FETCH,
@@ -59,5 +77,19 @@ export const p2pProfileChangeUsernameData = (): P2PProfileChangeUsernameData => 
 
 export const p2pProfileChangeUsernameError = (error: CommonError): P2PProfileChangeUsernameError => ({
     type: P2P_PROFILE_CHANGE_USERNAME_ERROR,
+    error,
+});
+
+export const p2pProfileBlockMerchant = (payload: P2PProfileBlockMerchant['payload']): P2PProfileBlockMerchant => ({
+    type: P2P_PROFILE_BLOCK_MERCHANT,
+    payload,
+});
+
+export const p2pProfileBlockMerchantData = (): P2PProfileBlockMerchantData => ({
+    type: P2P_PROFILE_BLOCK_MERCHANT_DATA,
+});
+
+export const p2pProfileBlockMerchantError = (error: CommonError): P2PProfileBlockMerchantError => ({
+    type: P2P_PROFILE_BLOCK_MERCHANT_ERROR,
     error,
 });

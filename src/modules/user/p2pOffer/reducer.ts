@@ -1,3 +1,5 @@
+import { defaultStorageLimit } from 'src/api';
+import { sliceArray } from 'src/helpers';
 import { CommonError } from '../../../modules/types';
 import { P2POfferActions } from './actions';
 import {
@@ -10,19 +12,6 @@ import {
 } from './constants';
 import { P2POffer } from './types';
 
-const defaultP2POffer: P2POffer = {
-    currency: '',
-    price: '',
-    fiat: '',
-    trade_amount: '',
-    min_order: '',
-    max_order: '',
-    payment: [],
-    payment_limit: '',
-    term_of_condition: '',
-    auto_replay: '',
-    side: '',
-};
 
 export interface P2POfferState {
     create: {
@@ -32,9 +21,16 @@ export interface P2POfferState {
         error?: CommonError;
     };
     fetch: {
-        data: P2POffer[];
+        page: number;
+        total: number;
+        list: P2POffer[];
+        side: string;
+        base: string;
+        quote: string;
+        payment_method?: number;
         fetching: boolean;
         success: boolean;
+        timestamp?: number;
         error?: CommonError;
     };
 }
@@ -46,7 +42,12 @@ export const initialP2POfferState: P2POfferState = {
         success: false,
     },
     fetch: {
-        data: [],
+        page: 0,
+        total: 0,
+        list: [],
+        side: '',
+        base: '',
+        quote: '',
         fetching: false,
         success: false,
     },
@@ -64,7 +65,13 @@ export const p2pOfferFetchReducer = (state: P2POfferState['fetch'], action: P2PO
         case P2P_OFFER_DATA:
             return {
                 ...state,
-                data: action.payload,
+                list: sliceArray(action.payload.list, defaultStorageLimit()),
+                page: action.payload.page,
+                total: action.payload.total,
+                side: action.payload.side,
+                base: action.payload.base,
+                quote: action.payload.quote,
+                payment_method: action.payload.payment_method,
                 fetching: false,
                 success: true,
                 error: undefined,
@@ -74,6 +81,10 @@ export const p2pOfferFetchReducer = (state: P2POfferState['fetch'], action: P2PO
                 ...state,
                 fetching: false,
                 success: false,
+                page: 0,
+                side: '',
+                total: 0,
+                list: [],
                 error: action.error,
             };
         default:

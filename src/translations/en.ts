@@ -919,6 +919,7 @@ export const en = {
     'success.payment.method.created': 'Payment method was created',
     'success.order.chat': 'Message has been sent',
     'success.order.confirm.payment': 'Payment method was confirmed',
+    'success.merchant.blocked': 'Merchant was blocked',
     'success.order.confirm': 'Order successfull completed',
     'success.username.changed': 'Username was changed',
     'success.order.done': 'Order successfully completed',

@@ -79,7 +79,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                     );
                                 }}
                                 className="white-text border-table cursor-pointer">
-                                {expand === item.offer_number ? (
+                                {expand === item?.offer_number ? (
                                     <td colSpan={5} className="row-description dark-bg-main radius-lg">
                                         <div className="d-flex align-items-center justify-content-between mb-24">
                                             <div className="d-flex align-items-center">
@@ -128,7 +128,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                             <div className="padding-4 d-flex align-items-center white-text text-xs font-bold">
                                                 <p className="m-0 p-0 mr-16">Seller's Payment Methods</p>
                                                 <div className="d-flex flex-wrap align-items-center label-bank-container">
-                                                    {item?.payment[0]
+                                                    {item?.payment && item?.payment[0]
                                                         ? item?.payment?.map((bank, i) => (
                                                               <div key={i} className="label-bank">
                                                                   <img src={bank?.logo} alt={bank?.bank_name} />

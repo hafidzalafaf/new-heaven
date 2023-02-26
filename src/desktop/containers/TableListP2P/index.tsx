@@ -6,6 +6,8 @@ import {
     selectUserLoggedIn,
     offersFetch,
     selectP2POffers,
+    p2pOfferFetch,
+    selectP2PAccountOffer,
     p2pFiatFetch,
     selectP2PFiatsData,
     p2pCurrenciesFetch,
@@ -45,7 +47,8 @@ export const TableListP2P = () => {
     const intl = useIntl();
 
     const isLoggedIn = useSelector(selectUserLoggedIn);
-    const list = useSelector(selectP2POffers);
+    const publicOffer = useSelector(selectP2POffers);
+    const privateOffer = useSelector(selectP2PAccountOffer);
     const fiats = useSelector(selectP2PFiatsData);
     const currenciesData = useSelector(selectP2PCurrenciesData);
     const user = useSelector(selectUserInfo);
@@ -144,23 +147,57 @@ export const TableListP2P = () => {
         };
 
         if (currency !== undefined && fiat !== undefined) {
-            dispatch(
-                offersFetch(
-                    amountList
-                        ? amountListPayload
-                        : amountFilter
-                        ? amountFilterPayload
-                        : minPriceFilter && maxPriceFilter
-                        ? priceFilterPayload
-                        : minPriceFilter && maxPriceFilter && amountFilter
-                        ? filterPayload
-                        : defaultPayload
-                )
-            );
+            if (isLoggedIn) {
+                dispatch(
+                    p2pOfferFetch(
+                        amountList
+                            ? amountListPayload
+                            : amountFilter
+                            ? amountFilterPayload
+                            : minPriceFilter && maxPriceFilter
+                            ? priceFilterPayload
+                            : minPriceFilter && maxPriceFilter && amountFilter
+                            ? filterPayload
+                            : defaultPayload
+                    )
+                );
+            } else {
+                dispatch(
+                    offersFetch(
+                        amountList
+                            ? amountListPayload
+                            : amountFilter
+                            ? amountFilterPayload
+                            : minPriceFilter && maxPriceFilter
+                            ? priceFilterPayload
+                            : minPriceFilter && maxPriceFilter && amountFilter
+                            ? filterPayload
+                            : defaultPayload
+                    )
+                );
+            }
         }
 
-        const fetchInterval = setInterval(() => {
-            if (currency !== undefined && fiat !== undefined) {
+        const fetchPrivateInterval = setInterval(() => {
+            if (currency !== undefined && fiat !== undefined && isLoggedIn) {
+                dispatch(
+                    p2pOfferFetch(
+                        amountList
+                            ? amountListPayload
+                            : amountFilter
+                            ? amountFilterPayload
+                            : minPriceFilter && maxPriceFilter
+                            ? priceFilterPayload
+                            : minPriceFilter && maxPriceFilter && amountFilter
+                            ? filterPayload
+                            : defaultPayload
+                    )
+                );
+            }
+        }, 5000);
+
+        const fetchPublicInterval = setInterval(() => {
+            if (currency !== undefined && fiat !== undefined && !isLoggedIn) {
                 dispatch(
                     offersFetch(
                         amountList
@@ -178,9 +215,21 @@ export const TableListP2P = () => {
         }, 5000);
 
         return () => {
-            clearInterval(fetchInterval);
+            clearInterval(fetchPrivateInterval);
+            clearInterval(fetchPublicInterval);
         };
-    }, [dispatch, side, fiat, currency, amountList, amountFilter, minPriceFilter, maxPriceFilter, createOfferSuccess]);
+    }, [
+        dispatch,
+        side,
+        fiat,
+        currency,
+        amountList,
+        amountFilter,
+        minPriceFilter,
+        maxPriceFilter,
+        createOfferSuccess,
+        isLoggedIn,
+    ]);
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
@@ -257,19 +306,35 @@ export const TableListP2P = () => {
         };
 
         if (currency !== undefined && fiat !== undefined) {
-            dispatch(
-                offersFetch(
-                    amountList
-                        ? amountListPayload
-                        : amountFilter
-                        ? amountFilterPayload
-                        : minPriceFilter && maxPriceFilter
-                        ? priceFilterPayload
-                        : minPriceFilter && maxPriceFilter && amountFilter
-                        ? filterPayload
-                        : defaultPayload
-                )
-            );
+            if (isLoggedIn) {
+                dispatch(
+                    p2pOfferFetch(
+                        amountList
+                            ? amountListPayload
+                            : amountFilter
+                            ? amountFilterPayload
+                            : minPriceFilter && maxPriceFilter
+                            ? priceFilterPayload
+                            : minPriceFilter && maxPriceFilter && amountFilter
+                            ? filterPayload
+                            : defaultPayload
+                    )
+                );
+            } else {
+                dispatch(
+                    offersFetch(
+                        amountList
+                            ? amountListPayload
+                            : amountFilter
+                            ? amountFilterPayload
+                            : minPriceFilter && maxPriceFilter
+                            ? priceFilterPayload
+                            : minPriceFilter && maxPriceFilter && amountFilter
+                            ? filterPayload
+                            : defaultPayload
+                    )
+                );
+            }
         }
     };
 
@@ -831,7 +896,7 @@ export const TableListP2P = () => {
                 {side === 'buy' && (
                     <TableOfferP2P
                         side="buy"
-                        list={list}
+                        list={isLoggedIn ? privateOffer : publicOffer}
                         expand={expandBuy}
                         currency={currency}
                         fiat={fiat}
@@ -851,7 +916,7 @@ export const TableListP2P = () => {
                 {side === 'sell' && (
                     <TableOfferP2P
                         side="sell"
-                        list={list}
+                        list={isLoggedIn ? privateOffer : publicOffer}
                         optionPaymentOrder={optionPaymentOrder}
                         expand={expandSell}
                         currency={currency}

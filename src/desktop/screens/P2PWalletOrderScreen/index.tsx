@@ -7,8 +7,10 @@ import {
     orderConfirmSell,
     orderCancel,
     selectP2PConfirmPaymentSuccess,
+    selectP2PConfirmPaymentLoading,
     selectP2PConfirmSellSuccess,
     selectP2PCancelSuccess,
+    selectP2PCancelLoading,
     selectShouldFetchP2POrderDetail,
     feedbackCreate,
     selectP2PCreateFeedbackSuccess,
@@ -34,8 +36,9 @@ import {
     GreyCheck,
     ActiveCheck,
 } from '../../../assets/images/P2PIcon';
-import ReactMomentCountDown from 'react-moment-countdown';
 import moment from 'moment';
+import { ArrowRight } from 'src/mobile/assets/Arrow';
+import { InfoIcon } from 'src/assets/images/InfoIcon';
 
 interface File extends Blob {
     readonly lastModified: number;
@@ -53,8 +56,10 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     const detail = useSelector(selectP2POrderDetail);
     const paymentConfirmSuccess = useSelector(selectP2PConfirmPaymentSuccess);
+    const paymentConfimLoading = useSelector(selectP2PConfirmPaymentLoading);
     const confirmSellSuccess = useSelector(selectP2PConfirmSellSuccess);
     const cancelSuccess = useSelector(selectP2PCancelSuccess);
+    const cancelLoading = useSelector(selectP2PCancelLoading);
     const shouldFetchP2POrderDetail = useSelector(selectShouldFetchP2POrderDetail);
     const createFeedbackSuccess = useSelector(selectP2PCreateFeedbackSuccess);
     const p2pChat = useSelector(selectP2PChat);
@@ -67,18 +72,19 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [fileName, setFileName] = React.useState('');
     const [paymentMethod, setPaymentMethod] = React.useState('');
     const [paymentUser, setPaymentUser] = React.useState<any>();
-    const [checkModalOne, setcheckModalOne] = React.useState(false);
-    const [checkModalTwo, setcheckModalTwo] = React.useState(false);
     const [orderNumber, setOrderNumber] = React.useState(order_number);
+    const [showModalPaymentConfirm, setShowModalPaymentConfirm] = React.useState(false);
+    const [selectConfirmRelease, setSelectConfirmRelease] = React.useState('');
+    const [selectConfirmPayment, setSelectConfirmPayment] = React.useState(false);
 
     const [comment, setComment] = React.useState('');
     const [showModalSellConfirm, setShowModalSellConfrim] = React.useState(false);
     const [showModalBuyOrderCompleted, setShowModalBuyOrderCompleted] = React.useState(false);
     const [showModalCancel, setShowModalCancel] = React.useState(false);
-    const [active, setActive] = React.useState('');
+    const [selectCancelReason, setSelectCancelReason] = React.useState('');
 
     /* ============== REPORT STATE START =============== */
-    const [showModalReport, setShowModalReport] = React.useState(true);
+    const [showModalReport, setShowModalReport] = React.useState(false);
     const [reason, setReason] = React.useState([]);
     const [upload_payment, setUplodPayment] = React.useState<any>();
     /* ============== REPORT STATE END =============== */
@@ -120,6 +126,21 @@ export const P2PWalletOrderScreen: React.FC = () => {
     React.useEffect(() => {
         dispatch(orderDetailFetch({ offer_number: order_number }));
         dispatch(orderChat({ offer_number: order_number }));
+        if (paymentConfirmSuccess) {
+            setShowModalPaymentConfirm(false);
+            setSelectConfirmPayment(false);
+        }
+
+        if (cancelSuccess) {
+            setShowModalCancel(false);
+            setSelectCancelReason('');
+        }
+
+        if (confirmSellSuccess) {
+            setShowModalSellConfrim(false);
+            setSelectConfirmRelease('');
+        }
+
         const fetchInterval = setInterval(() => {
             dispatch(orderDetailFetch({ offer_number: order_number }));
         }, 5000);
@@ -127,7 +148,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
         return () => {
             clearInterval(fetchInterval);
         };
-    }, [dispatch, order_number]);
+    }, [dispatch, order_number, paymentConfirmSuccess, cancelSuccess, confirmSellSuccess]);
 
     //countdown timer
     const Countdown = ({ days, hours, minutes, seconds }) => {
@@ -250,7 +271,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const handleConfirmPaymentBuy = () => {
         const payload = {
             order_number: order_number,
-            payment_method: paymentMethod,
+            payment_method: detail?.order?.payment !== null ? detail?.order?.payment?.payment_user_uid : paymentMethod,
         };
 
         dispatch(orderConfirmPayment(payload));
@@ -262,7 +283,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
         };
 
         dispatch(orderConfirmSell(payload));
-        setShowModalSellConfrim(false);
     };
 
     const handleConfirmBuy = () => {
@@ -280,15 +300,12 @@ export const P2PWalletOrderScreen: React.FC = () => {
         };
 
         dispatch(orderCancel(payload));
-        setShowModalCancel(false);
     };
 
     const doCopyNumber = () => {
         copy('kid-code');
         dispatch(alertPush({ message: ['Order Number copied'], type: 'success' }));
     };
-
-    const disableButton = !checkModalOne || !checkModalTwo;
 
     const handleChangePaymentMethod = (el) => {
         setPaymentMethod(el?.payment_user_uid);
@@ -327,7 +344,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     React.useEffect(() => {
         //Print data each time the checkbox is "checked" or "unchecked"
-        console.log(reason);
+        // console.log(reason);
     }, [reason]);
 
     const handleChecked = (e) => {
@@ -336,7 +353,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
         let additionalFileList: File[] = [];
         if (e.target.name == 'payment') {
             setFileName(e.target.files[0].name);
-            console.log(e.target.files[0]);
+            // console.log(e.target.files[0]);
             allFiles = e.target.files;
             maxDocsCount = 1;
             additionalFileList =
@@ -520,14 +537,17 @@ export const P2PWalletOrderScreen: React.FC = () => {
                 <div className="d-flex justify-content-center align-items-center mb-24">
                     <CommentIcon />
                 </div>
+                <h1 className="m-0 p-0 mb-24 text-center grey-text-accent text-lg font-bold">Confirm release</h1>
                 <div
                     className="d-flex align-items-center mb-24 cursor-pointer"
-                    onClick={() => setcheckModalOne(!checkModalOne)}>
-                    <div className="icon-sm">{checkModalOne ? <ActiveCheck /> : <GreyCheck />}</div>
+                    onClick={() => setSelectConfirmRelease('no-receive')}>
+                    <div className="icon-sm">
+                        {selectConfirmRelease == 'no-receive' ? <ActiveCheck /> : <GreyCheck />}
+                    </div>
                     <p className="mb-0 text-sm grey-text-accent ml-3">I have not receive payment from the buyer</p>
                 </div>
-                <div className="d-flex align-items-center mb-24" onClick={() => setcheckModalTwo(!checkModalTwo)}>
-                    <div className="icon-sm">{checkModalTwo ? <ActiveCheck /> : <GreyCheck />}</div>
+                <div className="d-flex align-items-center mb-24" onClick={() => setSelectConfirmRelease('receive')}>
+                    <div className="icon-sm">{selectConfirmRelease == 'receive' ? <ActiveCheck /> : <GreyCheck />}</div>
                     <p className="mb-0 text-sm grey-text-accent cursor-pointer ml-3">
                         I have received the correct amount. Payment sender matches the buyer’s verified name on Heaven
                         Ecchange, and i agree to release mu crypto to the buyer
@@ -550,10 +570,11 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     </li>
                 </ul>
                 <button
-                    className={`${
-                        disableButton ? 'button-grey white-text ' : 'btn-primary'
-                    } text-sm py-3 btn btn-block`}
-                    disabled={disableButton}
+                    // className={`${
+                    //     selectConfirmRelease ? 'button-grey white-text ' : 'btn-primary'
+                    // } text-sm py-3 btn btn-block`}
+                    className="btn-primary w-100"
+                    disabled={!selectConfirmRelease}
                     onClick={handleConfirmSell}>
                     Confirm
                 </button>
@@ -616,27 +637,27 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     <p className="m-0 p-0 grey-text-accent text-sm">Why do you want to cancel the order?</p>
                     <div className="d-flex flex-column gap-16">
                         <div className="d-flex align-items-center gap-8">
-                            {active == 'I dont want to trade anymore' ? (
-                                <span onClick={() => setActive('')}>
+                            {selectCancelReason == 'I dont want to trade anymore' ? (
+                                <span onClick={() => setSelectCancelReason('')}>
                                     <ActiveCheck />
                                 </span>
                             ) : (
-                                <span onClick={() => setActive('I dont want to trade anymore')}>
+                                <span onClick={() => setSelectCancelReason('I dont want to trade anymore')}>
                                     <GreyCheck />
                                 </span>
                             )}
                             <p className="m-0 p-0 grey-text text-sm">I dont want to trade anymore</p>
                         </div>
                         <div className="d-flex align-items-center gap-8">
-                            {active ==
+                            {selectCancelReason ==
                             'I did not comply with the obligations related to the advertising trade terms and conditions' ? (
-                                <span onClick={() => setActive('')}>
+                                <span onClick={() => setSelectCancelReason('')}>
                                     <ActiveCheck />
                                 </span>
                             ) : (
                                 <span
                                     onClick={() =>
-                                        setActive(
+                                        setSelectCancelReason(
                                             'I did not comply with the obligations related to the advertising trade terms and conditions'
                                         )
                                     }>
@@ -649,27 +670,27 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             </p>
                         </div>
                         <div className="d-flex align-items-center gap-8">
-                            {active == 'The seller asked for additional fees' ? (
-                                <span onClick={() => setActive('')}>
+                            {selectCancelReason == 'The seller asked for additional fees' ? (
+                                <span onClick={() => setSelectCancelReason('')}>
                                     <ActiveCheck />
                                 </span>
                             ) : (
-                                <span onClick={() => setActive('The seller asked for additional fees')}>
+                                <span onClick={() => setSelectCancelReason('The seller asked for additional fees')}>
                                     <GreyCheck />
                                 </span>
                             )}
                             <p className="m-0 p-0 grey-text text-sm">The seller asked for additional fees</p>
                         </div>
                         <div className="d-flex align-items-center gap-8">
-                            {active ==
+                            {selectCancelReason ==
                             'An issue with the sellers payment method resulted in an unsuccessful payment' ? (
-                                <span onClick={() => setActive('')}>
+                                <span onClick={() => setSelectCancelReason('')}>
                                     <ActiveCheck />
                                 </span>
                             ) : (
                                 <span
                                     onClick={() =>
-                                        setActive(
+                                        setSelectCancelReason(
                                             'An issue with the sellers payment method resulted in an unsuccessful payment'
                                         )
                                     }>
@@ -681,12 +702,12 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             </p>
                         </div>
                         <div className="d-flex align-items-center gap-8">
-                            {active == 'Another reason' ? (
-                                <span onClick={() => setActive('')}>
+                            {selectCancelReason == 'Another reason' ? (
+                                <span onClick={() => setSelectCancelReason('')}>
                                     <ActiveCheck />
                                 </span>
                             ) : (
-                                <span onClick={() => setActive('Another reason')}>
+                                <span onClick={() => setSelectCancelReason('Another reason')}>
                                     <GreyCheck />
                                 </span>
                             )}
@@ -695,7 +716,84 @@ export const P2PWalletOrderScreen: React.FC = () => {
                     </div>
                 </div>
 
-                <button onClick={handleCancelOrder} className="btn-primary w-100">
+                <button
+                    onClick={handleCancelOrder}
+                    type="button"
+                    disabled={!selectCancelReason || cancelLoading}
+                    className="btn-primary w-100">
+                    Confirm
+                </button>
+            </div>
+        );
+    };
+
+    const renderModalPaymentConfirmation = () => {
+        return (
+            <div>
+                <h1 className="m-0 p-0 mb-24 text-center grey-text-accent text-lg font-bold">Payment Confirmation</h1>
+                <p className="m-0 p-0 mb-24 grey-text-accent text-sm">
+                    Please confirm that you have successfully transfered the money to the seller throught the following
+                    payment method before clicking on the “Transferred, notify seller” button
+                </p>
+
+                <div className="modal-bank-info-container mb-24">
+                    <div className="d-flex justify-content-between align-items-center w-100">
+                        <div className="d-flex align-items-center gap-4">
+                            <div className="label-payment"></div>
+                            <p className="m-0 p-0">Bank Transfer</p>
+                        </div>
+
+                        <div className="d-flex align-items-center gap-16">
+                            <img src="/img/logo-bca.png" alt="logo" width={40} className="h-auto" />
+
+                            <ArrowRight className={''} />
+                        </div>
+                    </div>
+
+                    <p className="m-0 p-0">
+                        {detail?.order?.payment !== null
+                            ? detail.order?.payment?.account_name
+                            : paymentUser?.account_name}
+                    </p>
+                    <p className="m-0 p-0 font-bold">
+                        {detail?.order?.payment !== null
+                            ? detail.order?.payment?.account_number
+                            : paymentUser?.account_number}
+                    </p>
+                    <p className="m-0 p-0 grey-text">
+                        {detail?.order?.payment !== null ? detail.order?.payment?.bank : paymentUser?.bank}
+                    </p>
+                </div>
+
+                <div className="d-flex align-items-center gap-4 mb-24">
+                    <InfoIcon />
+                    <p className="m-0 p-0 text-xxs grey-text-accent">
+                        Tip : I uderstand that I must use the selected payment platform to complete the transfer myself.
+                        Heaven will not automatically transfer the payment on my behalf.
+                    </p>
+                </div>
+
+                <div className="d-flex align-items-center gap-4 mb-24">
+                    {selectConfirmPayment ? (
+                        <span className="cursor-pointer" onClick={() => setSelectConfirmPayment(!selectConfirmPayment)}>
+                            <ActiveCheck />
+                        </span>
+                    ) : (
+                        <span className="cursor-pointer" onClick={() => setSelectConfirmPayment(!selectConfirmPayment)}>
+                            <GreyCheck />
+                        </span>
+                    )}
+                    <p className="m-0 p-0 text-xxs grey-text-accent">
+                        I have made payment from my real-name verified payment account consistent with my registered
+                        name on Heaven.
+                    </p>
+                </div>
+
+                <button
+                    onClick={handleConfirmPaymentBuy}
+                    type="button"
+                    disabled={!selectConfirmPayment || paymentConfimLoading}
+                    className="btn-primary w-100">
                     Confirm
                 </button>
             </div>
@@ -786,6 +884,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         hours={hours}
                         minutes={minutes}
                         seconds={seconds}
+                        handleShowModalPaymentConfirm={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
                         handleShowModalSellConfirm={() => setShowModalSellConfrim(!showModalSellConfirm)}
                         handleShowModalCancel={() => setShowModalCancel(!showModalCancel)}
                         handleShowModalReport={() => setShowModalReport(!showModalReport)}
@@ -810,6 +909,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
                 <Modal show={showModalReport} content={renderModalReport()} />
                 <Modal show={showModalSellConfirm} content={renderModalConfirmRelease()} />
+                <Modal show={showModalPaymentConfirm} content={renderModalPaymentConfirmation()} />
                 <Modal show={showModalBuyOrderCompleted} content={renderModalBuyOrderCompleted()} />
                 <Modal show={showModalCancel} content={renderModalCancel()} />
             </div>

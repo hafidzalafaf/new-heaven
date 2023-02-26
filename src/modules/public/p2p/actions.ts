@@ -23,7 +23,7 @@ import {
     P2P_OFFER_DETAIL_ERROR,
     P2P_OFFER_DETAIL_FETCH,
 } from './constants';
-import { Offer, P2PCurrency, P2PFiat, PaymentMethod } from './types';
+import { Offer, P2PCurrency, P2PFiat, P2PMerchantDetailInterface, PaymentMethod } from './types';
 
 export interface OffersFetch {
     type: typeof P2P_OFFERS_FETCH;
@@ -89,14 +89,14 @@ export interface P2POfferDetailError {
 export interface P2PMerchantDetailFetch {
     type: typeof P2P_MERCHANT_DETAIL_FETCH;
     payload: {
-        merchant: string | number;
+        uid: string;
     };
 }
 
 export interface P2PMerchantDetailData {
     type: typeof P2P_MERCHANT_DETAIL_DATA;
     payload: {
-        data: [];
+        data: P2PMerchantDetailInterface[];
     };
 }
 

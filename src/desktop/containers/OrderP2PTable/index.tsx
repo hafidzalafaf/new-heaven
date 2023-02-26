@@ -23,12 +23,10 @@ export const OrderP2PTable = () => {
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
     const [fiat, setFiat] = React.useState('');
-    const [status, setStatus] = React.useState('');
-    const [side, setSide] = React.useState('processing');
+    const [side, setSide] = React.useState('');
+    const [state, setState] = React.useState('');
+    const [tab, setTab] = React.useState('processing');
     const [data, setData] = React.useState([]);
-    const [active, setActive] = React.useState('');
-
-    const [showModalCancel, setShowModalCancel] = React.useState(false);
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
@@ -38,37 +36,103 @@ export const OrderP2PTable = () => {
     }, [dispatch]);
 
     React.useEffect(() => {
-        dispatch(orderFetch());
+        const fiatDatePayload = {
+            fiat,
+            from: time_from,
+            to: time_to,
+        };
+
+        const sideDatePayload = {
+            side,
+            from: time_from,
+            to: time_to,
+        };
+
+        const stateDatePayload = {
+            state,
+            from: time_from,
+            to: time_to,
+        };
+
+        const fullPayload = {
+            fiat,
+            side,
+            state,
+            from: time_from,
+            to: time_to,
+        };
+        dispatch(
+            orderFetch(
+                fiat
+                    ? { fiat }
+                    : side
+                    ? { side }
+                    : state
+                    ? { state }
+                    : fiat && side
+                    ? { fiat, side }
+                    : fiat && state
+                    ? { fiat, state }
+                    : fiat && startDate && endDate
+                    ? fiatDatePayload
+                    : side && state
+                    ? { side, state }
+                    : side && startDate && endDate
+                    ? sideDatePayload
+                    : state && startDate && endDate
+                    ? stateDatePayload
+                    : fiat && side && state && startDate && endDate
+                    ? fullPayload
+                    : null
+            )
+        );
         const fetchInterval = setInterval(() => {
-            dispatch(orderFetch());
+            dispatch(
+                orderFetch(
+                    fiat
+                        ? { fiat }
+                        : side
+                        ? { side }
+                        : state
+                        ? { state }
+                        : fiat && side
+                        ? { fiat, side }
+                        : fiat && state
+                        ? { fiat, state }
+                        : fiat && startDate && endDate
+                        ? fiatDatePayload
+                        : side && state
+                        ? { side, state }
+                        : side && startDate && endDate
+                        ? sideDatePayload
+                        : state && startDate && endDate
+                        ? stateDatePayload
+                        : fiat && side && state && startDate && endDate
+                        ? fullPayload
+                        : null
+                )
+            );
         }, 5000);
 
         return () => {
             clearInterval(fetchInterval);
         };
-    }, [dispatch]);
+    }, [dispatch, startDate, endDate, state, fiat, side, time_from, time_to]);
 
     React.useEffect(() => {
         setData(
-            side == 'done'
-                ? order.filter((item) => item.state == 'accepted')
-                : side == 'processing'
-                ? order.filter((item) => item.state == 'success' || item.state == 'waiting' || item.state == 'prepare')
+            tab == 'done'
+                ? order.filter((item) => item?.state == 'accepted' || item?.state == 'success')
+                : tab == 'processing'
+                ? order.filter(
+                      (item) => item?.state == 'waiting' || item?.state?.includes('waiting') || item?.state == 'prepare'
+                  )
                 : order
         );
-    }, [order, side]);
+    }, [order, tab]);
 
     const handleSelect = (k) => {
-        setSide(k);
-    };
-
-    const filterredType = (type) => {
-        let filterredList;
-        let temp;
-        temp = data;
-
-        filterredList = temp.filter((item) => item.type === type);
-        setData(filterredList);
+        setTab(k);
     };
 
     // fiat, side, state, from, to
@@ -76,17 +140,17 @@ export const OrderP2PTable = () => {
         return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };
     });
 
-    const optionStatus = [
-        { label: <p className="m-0 text-sm grey-text-accent">All Status</p>, value: 'all' },
-        { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepared' },
+    const optionState = [
+        { label: <p className="m-0 text-sm grey-text-accent">All Status</p>, value: '' },
+        { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepare' },
         { label: <p className="m-0 text-sm grey-text-accent">Waiting</p>, value: 'waiting' },
         { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
         { label: <p className="m-0 text-sm grey-text-accent">Success</p>, value: 'success' },
-        { label: <p className="m-0 text-sm grey-text-accent">Acepted</p>, value: 'acepted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Acepted</p>, value: 'accepted' },
     ];
 
-    const optionType = [
+    const optionSide = [
         { label: <p className="m-0 text-sm grey-text-accent">Buy</p>, value: 'buy' },
         { label: <p className="m-0 text-sm grey-text-accent">Sell</p>, value: 'sell' },
     ];
@@ -146,38 +210,31 @@ export const OrderP2PTable = () => {
                         })}
                         styles={CustomStylesSelect}
                         options={optionFiats}
-                        onChange={(e) => {
-                            setFiat(e.value);
-                        }}
+                        onChange={(e) => setFiat(e.value)}
                     />
                 </div>
 
                 <div className="w-20">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">Order Type</p>
                     <Select
-                        // value={optionQuote.filter(function (option) {
-                        //     return option.value === status;
-                        // })}
+                        value={optionSide.filter(function (option) {
+                            return option.value === side;
+                        })}
                         styles={CustomStylesSelect}
-                        options={optionType}
-                        onChange={(e) => {
-                            filterredType(e.value);
-                        }}
+                        options={optionSide}
+                        onChange={(e) => setSide(e.value)}
                     />
                 </div>
 
                 <div className="w-20">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">Status</p>
                     <Select
-                        // value={optionQuote.filter(function (option) {
-                        //     return option.value === status;
-                        // })}
+                        value={optionState.filter(function (option) {
+                            return option.value === state;
+                        })}
                         styles={CustomStylesSelect}
-                        options={optionStatus}
-                        // onChange={(e) => {
-                        //     setStatus(e.value);
-                        //     filterredStatus(e.value);
-                        // }}
+                        options={optionState}
+                        onChange={(e) => setState(e.value)}
                     />
                 </div>
 
@@ -210,117 +267,6 @@ export const OrderP2PTable = () => {
         );
     };
 
-    // const renderModalCancel = () => {
-    //     return (
-    //         <div>
-    //             <div className="w-100 d-flex align-items-center justify-content-center">
-    //                 <img src="/img/warningp2p.png" alt="warning" width={68} height={68} className="mb-16" />
-    //             </div>
-
-    //             <p className="m-0 p-0 grey-text-accent text-sm">Tips</p>
-    //             <ul className="m-0 p-0 grey-text-accent text-sm mb-16 pl-16">
-    //                 <li>If you have already paid the seller, please do not cancel the order.</li>
-    //                 <li>
-    //                     If the seller cannot reply to the chat within 15 minutes, you will not be responsible for
-    //                     canceling this order. This will not affect your completion rate. You can make up to 5
-    //                     irresponsible cancellations in a day.
-    //                 </li>
-    //                 <li>
-    //                     Your account will be SUSPENDED for the day if you exceed 3 responsible cancellation times in a
-    //                     day.
-    //                 </li>
-    //             </ul>
-
-    //             <div className="p-16 mb-16">
-    //                 <p className="m-0 p-0 grey-text-accent text-sm">Why do you want to cancel the order?</p>
-    //                 <div className="d-flex flex-column gap-16">
-    //                     <div className="d-flex align-items-center gap-8">
-    //                         {active == 'I dont want to trade anymore' ? (
-    //                             <span onClick={() => setActive('')}>
-    //                                 <ActiveCheck />
-    //                             </span>
-    //                         ) : (
-    //                             <span onClick={() => setActive('I dont want to trade anymore')}>
-    //                                 <GreyCheck />
-    //                             </span>
-    //                         )}
-    //                         <p className="m-0 p-0 grey-text text-sm">I dont want to trade anymore</p>
-    //                     </div>
-    //                     <div className="d-flex align-items-center gap-8">
-    //                         {active ==
-    //                         'I did not comply with the obligations related to the advertising trade terms and conditions' ? (
-    //                             <span onClick={() => setActive('')}>
-    //                                 <ActiveCheck />
-    //                             </span>
-    //                         ) : (
-    //                             <span
-    //                                 onClick={() =>
-    //                                     setActive(
-    //                                         'I did not comply with the obligations related to the advertising trade terms and conditions'
-    //                                     )
-    //                                 }>
-    //                                 <GreyCheck />
-    //                             </span>
-    //                         )}
-    //                         <p className="m-0 p-0 grey-text text-sm">
-    //                             I did not comply with the obligations related to the advertising trade terms and
-    //                             conditions
-    //                         </p>
-    //                     </div>
-    //                     <div className="d-flex align-items-center gap-8">
-    //                         {active == 'The seller asked for additional fees' ? (
-    //                             <span onClick={() => setActive('')}>
-    //                                 <ActiveCheck />
-    //                             </span>
-    //                         ) : (
-    //                             <span onClick={() => setActive('The seller asked for additional fees')}>
-    //                                 <GreyCheck />
-    //                             </span>
-    //                         )}
-    //                         <p className="m-0 p-0 grey-text text-sm">The seller asked for additional fees</p>
-    //                     </div>
-    //                     <div className="d-flex align-items-center gap-8">
-    //                         {active ==
-    //                         'An issue with the sellers payment method resulted in an unsuccessful payment' ? (
-    //                             <span onClick={() => setActive('')}>
-    //                                 <ActiveCheck />
-    //                             </span>
-    //                         ) : (
-    //                             <span
-    //                                 onClick={() =>
-    //                                     setActive(
-    //                                         'An issue with the sellers payment method resulted in an unsuccessful payment'
-    //                                     )
-    //                                 }>
-    //                                 <GreyCheck />
-    //                             </span>
-    //                         )}
-    //                         <p className="m-0 p-0 grey-text text-sm">
-    //                             An issue with the sellers payment method resulted in an unsuccessful payment
-    //                         </p>
-    //                     </div>
-    //                     <div className="d-flex align-items-center gap-8">
-    //                         {active == 'Another reason' ? (
-    //                             <span onClick={() => setActive('')}>
-    //                                 <ActiveCheck />
-    //                             </span>
-    //                         ) : (
-    //                             <span onClick={() => setActive('Another reason')}>
-    //                                 <GreyCheck />
-    //                             </span>
-    //                         )}
-    //                         <p className="m-0 p-0 grey-text text-sm">Another reason</p>
-    //                     </div>
-    //                 </div>
-    //             </div>
-
-    //             <button onClick={() => setShowModalCancel(false)} className="btn-primary w-100">
-    //                 Confirm
-    //             </button>
-    //         </div>
-    //     );
-    // };
-
     return (
         <React.Fragment>
             <div className="com-order-p2p-table">
@@ -328,7 +274,7 @@ export const OrderP2PTable = () => {
                     <div className="position-relative w-100">
                         <Tabs
                             defaultActiveKey="all"
-                            activeKey={side}
+                            activeKey={tab}
                             onSelect={(k) => handleSelect(k)}
                             id="fill-tab-example"
                             className="mb-3"
@@ -506,8 +452,6 @@ export const OrderP2PTable = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* <Modal show={showModalCancel} content={renderModalCancel()} /> */}
             </div>
         </React.Fragment>
     );

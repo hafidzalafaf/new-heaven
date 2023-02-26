@@ -3,7 +3,6 @@ import { sendError } from '../../..';
 import { API, RequestOptions } from '../../../../api';
 import { buildQueryString, getOrderAPI } from 'src/helpers';
 import { offersData, offersError, OffersFetch } from '../actions';
-import axios from 'axios';
 
 const config: RequestOptions = {
     apiVersion: 'p2p',

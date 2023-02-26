@@ -25,10 +25,15 @@ export const selectShouldFetchP2POrderDetail = (state: RootState): boolean =>
 export const selectP2PConfirmPaymentSuccess = (state: RootState): boolean =>
     state.user.p2pOrder.payment_confirm.success;
 
+export const selectP2PConfirmPaymentLoading = (state: RootState): boolean =>
+    state.user.p2pOrder.payment_confirm.fetching;
+
 export const selectP2PConfirmSellSuccess = (state: RootState): boolean =>
     state.user.p2pOrder.order_confirm_sell.success;
 
 export const selectP2PCancelSuccess = (state: RootState): boolean => state.user.p2pOrder.cancel.success;
+
+export const selectP2PCancelLoading = (state: RootState): boolean => state.user.p2pOrder.cancel.fetching;
 
 // CHAT
 export const selectP2PChat = (state: RootState): any => state.user.p2pOrder.chat.data;

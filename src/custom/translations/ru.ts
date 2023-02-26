@@ -926,6 +926,7 @@ export const ru: LangType = {
     'success.payment.method.created': 'Способ оплаты создан',
     'success.order.chat': 'сообщение было отправлено',
     'success.order.confirm.payment': 'Способ оплаты подтвержден',
+    'success.merchant.blocked': 'Продавец был заблокирован',
     'success.order.confirm': 'Заказ успешно выполнен',
     'success.username.changed': 'Имя пользователя изменено',
     'success.order.done': 'Запрос успешно завершён',

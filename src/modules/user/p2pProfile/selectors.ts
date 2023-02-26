@@ -18,3 +18,12 @@ export const selectP2PProfileChangeUsernameSuccess = (state: RootState): boolean
 
 export const selectP2PProfileChangeUsernameError = (state: RootState): CommonError | undefined =>
     state.user.p2pProfile.changeUsername.error;
+
+export const selectP2PProfileBlockMerchantLoading = (state: RootState): boolean =>
+    state.user.p2pProfile.block_merchant.fetching;
+
+export const selectP2PProfileBlockMerchantSuccess = (state: RootState): boolean =>
+    state.user.p2pProfile.block_merchant.success;
+
+export const selectP2PProfileBlockMerchantError = (state: RootState): CommonError | undefined =>
+    state.user.p2pProfile.block_merchant.error;

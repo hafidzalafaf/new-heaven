@@ -7,18 +7,38 @@ import {
     P2P_OFFER_CREATE_DATA,
     P2P_OFFER_CREATE_ERROR,
 } from './constants';
-import { P2POffer } from './types';
+import { P2POffer,P2PCreateOffer } from './types';
 
 export interface P2POfferFetch {
     type: typeof P2P_OFFER_FETCH;
-    payload?: {
-        offer_id: string;
+    payload: {
+        page?: number;
+        limit?: number;
+        side?: string;
+        fiat?: string;
+        currency?: string;
+        sort?: string;
+        base?: string;
+        quote?: string;
+        payment_method?: number;
+        amount?: string;
+        min_price?: string;
+        max_price?: string;
     };
 }
 
 export interface P2POfferData {
     type: typeof P2P_OFFER_DATA;
-    payload: [];
+    payload: {
+        list: [];
+        page: number;
+        total: number;
+        side: string;
+        sort?: string;
+        base: string;
+        quote: string;
+        payment_method?: number;
+    }
 }
 
 export interface P2POfferError {
@@ -28,7 +48,7 @@ export interface P2POfferError {
 
 export interface P2POfferCreate {
     type: typeof P2P_OFFER_CREATE;
-    payload: P2POffer;
+    payload: P2PCreateOffer;
 }
 
 export interface P2POfferCreateData {

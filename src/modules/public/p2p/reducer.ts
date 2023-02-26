@@ -27,7 +27,7 @@ import {
     P2P_OFFER_DETAIL_ERROR,
     P2P_OFFER_DETAIL_FETCH,
 } from './constants';
-import { Offer, P2PCurrency, P2PFiat, PaymentMethod } from './types';
+import { Offer, P2PCurrency, P2PFiat, PaymentMethod, P2PMerchantDetailInterface } from './types';
 
 export interface P2PState {
     fiats: {
@@ -72,7 +72,7 @@ export interface P2PState {
         error?: CommonError;
     };
     merchant_detail: {
-        data: [];
+        data: P2PMerchantDetailInterface;
         fetching: boolean;
         success: boolean;
         timestamp?: number;
@@ -118,7 +118,30 @@ export const initialP2PState: P2PState = {
         success: false,
     },
     merchant_detail: {
-        data: [],
+        data: {
+            banned_state: false,
+            logo: '',
+            member: {
+                email: '',
+                uid: '',
+                group: '',
+            },
+            offer: 0,
+            feedback: {
+                negative: 0,
+                positive: 0,
+                total: 0,
+            },
+            success_rate: 0,
+            trade: {
+                completed_rate: '',
+                mount_trade: 0,
+                pay_time: '',
+                release_time: '',
+                total: 0,
+            },
+            trader_name: '',
+        },
         fetching: false,
         success: false,
     },

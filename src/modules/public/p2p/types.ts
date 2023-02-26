@@ -48,6 +48,31 @@ export interface PaymentMethod {
     options?: any;
 }
 
+export interface P2PMerchantDetailInterface {
+    banned_state: boolean;
+    logo: string;
+    member: {
+        email: string;
+        uid: string;
+        group: string;
+    };
+    offer: number;
+    feedback: {
+        negative: number;
+        positive: number;
+        total: number;
+    };
+    success_rate: number;
+    trade: {
+        completed_rate: string;
+        mount_trade: number;
+        pay_time: string;
+        release_time: string;
+        total: number;
+    };
+    trader_name: string;
+}
+
 // import { UserPaymentMethod } from "src/modules";
 
 // export interface Offer {

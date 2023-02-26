@@ -2,7 +2,6 @@ import { call, put } from 'redux-saga/effects';
 import { sendError } from '../../..';
 import { API, RequestOptions } from '../../../../api';
 import { p2pMerchantDetailData, p2pMerchantDetailError, P2PMerchantDetailFetch } from '../actions';
-import axios from 'axios';
 
 const config: RequestOptions = {
     apiVersion: 'p2p',
@@ -10,7 +9,7 @@ const config: RequestOptions = {
 
 export function* p2pMerchantDetailSaga(action: P2PMerchantDetailFetch) {
     try {
-        const data = yield call(API.get(config), `/public/trades/merchant/${action.payload.merchant}`);
+        const data = yield call(API.get(config), `/public/trades/merchant/${action.payload.uid}`);
 
         yield put(p2pMerchantDetailData(data));
     } catch (error) {

@@ -16,6 +16,7 @@ export interface P2POrderStepProps {
     handleChangeComment: (e: string) => void;
     handleConfirmPaymentBuy: () => void;
     handleShowPayment: () => void;
+    handleShowModalPaymentConfirm: () => void;
     handleShowModalBuyOrderCompleted: () => void;
     handleShowModalSellConfirm: () => void;
     handleShowModalCancel: () => void;
@@ -42,6 +43,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         handleChangePaymentMethod,
         handleChangeComment,
         handleShowPayment,
+        handleShowModalPaymentConfirm,
         handleConfirmPaymentBuy,
         handleShowModalBuyOrderCompleted,
         handleShowModalSellConfirm,
@@ -145,14 +147,18 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 <div className="payment">
                                     <div
                                         className="header-payment d-flex justify-content-between align-items-center mt-3 cursor-pointer"
-                                        onClick={detail?.order?.state == 'prepare' && handleShowPayment}>
+                                        onClick={
+                                            detail?.order?.state == 'prepare' &&
+                                            detail?.order?.payment == null &&
+                                            handleShowPayment
+                                        }>
                                         <p className="mb-0">
                                             <Wallet />
                                             <span className="mb-0 ml-3 text-sm white-text font-semibold">
                                                 Payment Methods
                                             </span>
                                         </p>
-                                        {detail?.order?.state == 'prepare' && (
+                                        {detail?.order?.state == 'prepare' && detail?.order?.payment == null && (
                                             <div className={`${showPayment ? 'rotate-180' : ''}`}>
                                                 <ArrowDown />
                                             </div>
@@ -164,7 +170,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                 <p className="m-0 p-0 font-semibold text-xs">Transaction end.</p>
                                             </div>
                                         </React.Fragment>
-                                    ) : paymentUser || detail?.order?.state !== null ? (
+                                    ) : paymentUser || detail?.order?.payment !== null ? (
                                         <React.Fragment>
                                             <div
                                                 className={`payment-method content-payment ${
@@ -346,11 +352,12 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                         <button
                                             disabled={timeLeft <= 0 || detail?.order?.state !== 'prepare'}
                                             type="button"
-                                            onClick={
-                                                detail?.order?.payment == null
-                                                    ? handleConfirmPaymentBuy
-                                                    : handleShowModalBuyOrderCompleted
-                                            }
+                                            onClick={handleShowModalPaymentConfirm}
+                                            // onClick={
+                                            //     detail?.order?.payment == null
+                                            //         ? handleShowModalPaymentConfirm
+                                            //         : handleShowModalBuyOrderCompleted
+                                            // }
                                             className="btn btn-primary px-5">
                                             Confirm
                                         </button>

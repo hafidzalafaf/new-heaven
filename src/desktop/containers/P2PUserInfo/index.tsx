@@ -1,4 +1,23 @@
 import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+import {
+    p2pProfileFetch,
+    P2PProfileFetchInterface,
+    selectP2PProfile,
+    p2pPaymentUserFetch,
+    selectP2PPaymentUser,
+    p2pProfileChangeUsername,
+    selectP2PProfileChangeUsernameSuccess,
+    p2pMerchantDetailFetch,
+    selectP2PMerchantDetail,
+    selectUserLoggedIn,
+    p2pProfileBlockMerchant,
+    selectP2PProfileBlockMerchantLoading,
+    selectP2PProfileBlockMerchantSuccess,
+} from 'src/modules';
+import { FormControl, Modal } from 'react-bootstrap';
+import { CardP2PUserInfo, Modal as ModalComponent } from '../../../desktop/components';
 import {
     VerificationIcon,
     ShareIcon,
@@ -7,45 +26,69 @@ import {
     UnLikeIcon,
     RenameIcon,
 } from '../../../assets/images/P2PIcon';
-import { CardP2PUserInfo } from '../../../desktop/components';
-import { useSelector } from 'react-redux';
-import { p2pProfileFetch, P2PProfileFetchInterface, selectP2PProfile } from 'src/modules/user/p2pProfile';
-import { FormControl, Modal } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import {
-    p2pPaymentUserFetch,
-    selectP2PPaymentUser,
-    p2pProfileChangeUsername,
-    selectP2PProfileChangeUsernameSuccess,
-} from 'src/modules';
 import moment from 'moment';
-import { useParams } from 'react-router';
+import { InfoWarningIcon } from 'src/assets/images/InfoIcon';
 
 export const P2PUserInfo: React.FC = () => {
     const dispatch = useDispatch();
     const { uid = '' } = useParams<{ uid?: string }>();
-    const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
 
-    const userP2P: P2PProfileFetchInterface = useSelector(selectP2PProfile);
+    const isLoggedIn = useSelector(selectUserLoggedIn);
+    const merchants = useSelector(selectP2PMerchantDetail);
     const userP2PPayment = useSelector(selectP2PPaymentUser);
+    const userP2P: P2PProfileFetchInterface = useSelector(selectP2PProfile);
+    const blockMerchantLoading = useSelector(selectP2PProfileBlockMerchantLoading);
+    const blockMerchantSuccess = useSelector(selectP2PProfileBlockMerchantSuccess);
     const changeUsernameSuccess = useSelector(selectP2PProfileChangeUsernameSuccess);
+
     const [username, setUsername] = React.useState(userP2P?.trader_name);
+    const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
+    const [showModalBlockAlert, setShowModalBlockAlert] = React.useState(false);
+    const [showModalBlockReason, setShowModalBlockReason] = React.useState(false);
+    const [state, setState] = React.useState('blocked');
+    const [reason, setReason] = React.useState('');
 
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
         dispatch(p2pPaymentUserFetch());
-    }, [dispatch, changeUsernameSuccess]);
+        dispatch(p2pMerchantDetailFetch({ uid }));
+
+        if (changeUsernameSuccess) {
+            setShowChangeUsernameModal(false);
+        }
+
+        if (blockMerchantSuccess) {
+            setShowModalBlockReason(false);
+        }
+    }, [dispatch, changeUsernameSuccess, uid, blockMerchantSuccess]);
 
     const changeUsername = () => {
         const payload = {
             username,
         };
         dispatch(p2pProfileChangeUsername(payload));
-        setShowChangeUsernameModal(false);
     };
 
-    const convertDurationtoMilliseconds = (duration: string) => {
-        const [hours, minutes, seconds] = duration.split(':');
+    const handleBlockMerchant = () => {
+        const payload = {
+            uid,
+            state,
+            reason,
+        };
+
+        dispatch(p2pProfileBlockMerchant(payload));
+    };
+
+    const reasonData = [
+        { name: 'Harrasment' },
+        { name: 'Bad credibility' },
+        { name: 'Malicious feedback' },
+        { name: 'Scam suspicion' },
+        { name: 'Other' },
+    ];
+
+    const convertDurationtoMilliseconds = (duration?: string) => {
+        const [hours, minutes, seconds] = duration?.split(':');
         return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
     };
 
@@ -94,6 +137,69 @@ export const P2PUserInfo: React.FC = () => {
         );
     };
 
+    const renderModalBlockAlert = () => {
+        return (
+            <div>
+                <div className="d-flex justify-content-center align-items-center mb-24">
+                    <img src="/img/modal-alert.png" alt="alert" width={116} height={116} />
+                </div>
+                <p className="m-0 p-0 mb-24 grey-text text-sm text-center">
+                    Aare you sure want to block this user? You will not be able to trade with the user after blocking.
+                </p>
+
+                <button
+                    onClick={() => {
+                        setShowModalBlockAlert(!showModalBlockAlert);
+                        setShowModalBlockReason(!showModalBlockReason);
+                    }}
+                    type="button"
+                    className="btn-primary w-100 white-text text-ms mb-16">
+                    Block
+                </button>
+                <button
+                    onClick={() => setShowModalBlockAlert(!showModalBlockAlert)}
+                    type="button"
+                    className="btn-success btn-outline w-100 contrast-text text-ms">
+                    Cancel
+                </button>
+            </div>
+        );
+    };
+
+    const renderModalBlockReason = () => {
+        return (
+            <div>
+                <h1 className="m-0 p-0 text-center font-bold text-md grey-text-accent mb-24">Select Reason</h1>
+                <div className="alert-warning-container d-flex align-items-center p-16 gap-8 radius-sm mb-24">
+                    <InfoWarningIcon />
+                    <p className="m-0 p-0 grey-text-accent text-xxs">
+                        You will not be able to trade with the user after blocking
+                    </p>
+                </div>
+
+                <ul className="style-none m-0 p-0 w-100 grey-text text-ms">
+                    {reasonData.map((item, i) => (
+                        <li
+                            key={i}
+                            onClick={() => setReason(item?.name)}
+                            className={`style-none w-100 cursor-pointer text-center py-10 mb-16 ${
+                                reason == item?.name && 'dark-bg-main'
+                            }`}>
+                            {item?.name}
+                        </li>
+                    ))}
+                    <button
+                        onClick={handleBlockMerchant}
+                        disabled={!reason || !state || blockMerchantLoading}
+                        type="button"
+                        className="btn-secondary w-100">
+                        Block
+                    </button>
+                </ul>
+            </div>
+        );
+    };
+
     return (
         <React.Fragment>
             <div className="container-p2p-user-info">
@@ -104,12 +210,12 @@ export const P2PUserInfo: React.FC = () => {
                 <div className="d-flex justify-content-between align-items-center">
                     <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
                         <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
-                            {userP2P?.trader_name
-                                ? userP2P?.trader_name?.slice(0, 1).toUpperCase()
-                                : userP2P?.member?.email?.slice(0, 1).toUpperCase()}
+                            {merchants?.trader_name
+                                ? merchants?.trader_name?.slice(0, 1).toUpperCase()
+                                : merchants?.member?.email?.slice(0, 1).toUpperCase()}
                         </div>
                         <p className="m-0 p-0 text-ms font-extrabold grey-text-accent">
-                            {userP2P?.trader_name ? userP2P?.trader_name : userP2P?.member?.email}
+                            {merchants?.trader_name ? merchants?.trader_name : merchants?.member?.email}
                         </p>
                         {uid == userP2P?.member?.uid && (
                             <RenameIcon
@@ -128,7 +234,14 @@ export const P2PUserInfo: React.FC = () => {
                         </div>
                     </div>
 
-                    {uid !== userP2P?.member?.uid && <button className="btn btn-primary">Block</button>}
+                    {isLoggedIn && uid !== userP2P?.member?.uid && (
+                        <button
+                            onClick={() => setShowModalBlockAlert(!showModalBlockAlert)}
+                            type="button"
+                            className="btn btn-secondary">
+                            Block
+                        </button>
+                    )}
                 </div>
 
                 <div className="d-flex align-items-center gap-16 mb-16">
@@ -155,11 +268,11 @@ export const P2PUserInfo: React.FC = () => {
                         title="Positive Feedback"
                         type="feedback"
                         percent={`${
-                            userP2P?.feedback?.positive !== 0
-                                ? Math.floor((userP2P?.feedback?.positive / userP2P?.feedback?.total) * 100)
+                            merchants?.feedback?.positive !== 0
+                                ? Math.floor((merchants?.feedback?.positive / merchants?.feedback?.total) * 100)
                                 : 0
                         }%`}
-                        amount={`${userP2P?.feedback?.total}`}
+                        amount={`${merchants?.feedback?.total}`}
                     />
 
                     <div className="d-flex flex-column justify-content-center gap-8">
@@ -169,9 +282,9 @@ export const P2PUserInfo: React.FC = () => {
                                     className="progress"
                                     style={{
                                         width: `${
-                                            userP2P?.feedback?.positive !== 0
+                                            merchants?.feedback?.positive !== 0
                                                 ? Math.floor(
-                                                      (userP2P?.feedback?.positive / userP2P?.feedback?.total) * 100
+                                                      (merchants?.feedback?.positive / merchants?.feedback?.total) * 100
                                                   ).toString()
                                                 : '0'
                                         }%`,
@@ -179,7 +292,7 @@ export const P2PUserInfo: React.FC = () => {
                                 />
                             </div>
                             <LikeIcon />
-                            <p className="m-0 p-0 grey-text text-sm">{userP2P?.feedback?.positive}</p>
+                            <p className="m-0 p-0 grey-text text-sm">{merchants?.feedback?.positive}</p>
                         </div>
 
                         <div className="d-flex justify-content-between align-items-center gap-4">
@@ -188,9 +301,9 @@ export const P2PUserInfo: React.FC = () => {
                                     className="progress"
                                     style={{
                                         width: `${
-                                            userP2P?.feedback?.negative !== 0
+                                            merchants?.feedback?.negative !== 0
                                                 ? Math.floor(
-                                                      (userP2P?.feedback?.negative / userP2P?.feedback?.total) * 100
+                                                      (merchants?.feedback?.negative / merchants?.feedback?.total) * 100
                                                   ).toString()
                                                 : '0'
                                         }%`,
@@ -198,32 +311,35 @@ export const P2PUserInfo: React.FC = () => {
                                 />
                             </div>
                             <UnLikeIcon />
-                            <p className="m-0 p-0 grey-text text-sm">{userP2P?.feedback?.negative}</p>
+                            <p className="m-0 p-0 grey-text text-sm">{merchants?.feedback?.negative}</p>
                         </div>
                     </div>
 
-                    <CardP2PUserInfo title="All Trade" type="all trade" amount={`${userP2P?.trade?.total}`} />
-                    <CardP2PUserInfo title="30d Trade" type="trade" time={`${userP2P?.trade.mount_trade} Time(s)`} />
+                    <CardP2PUserInfo title="All Trade" type="all trade" amount={`${merchants?.trade?.total}`} />
+                    <CardP2PUserInfo title="30d Trade" type="trade" time={`${merchants?.trade?.mount_trade} Time(s)`} />
                     <CardP2PUserInfo
                         title="30d Completion Rate"
                         type="completion"
-                        percent={`${userP2P?.trade?.completed_rate ? userP2P?.trade?.completed_rate + '%' : '-'} `}
+                        percent={`${merchants?.trade?.completed_rate ? merchants?.trade?.completed_rate + '%' : '-'} `}
                     />
                     <CardP2PUserInfo
                         title="Avg. Release Time"
                         type="release"
                         minutes={`${moment
-                            .utc(convertDurationtoMilliseconds(userP2P?.trade?.release_time))
+                            .utc(convertDurationtoMilliseconds(merchants?.trade?.release_time))
                             .format('m.ss')} Minute(s)`}
                     />
                     <CardP2PUserInfo
                         title="30d Pay Time"
                         type="pay"
                         minutes={`${moment
-                            .utc(convertDurationtoMilliseconds(userP2P?.trade?.pay_time))
+                            .utc(convertDurationtoMilliseconds(merchants?.trade?.pay_time))
                             .format('m.ss')} Minute(s)`}
                     />
                 </div>
+
+                <ModalComponent show={showModalBlockAlert} content={renderModalBlockAlert()} />
+                <ModalComponent show={showModalBlockReason} content={renderModalBlockReason()} />
             </div>
         </React.Fragment>
     );
