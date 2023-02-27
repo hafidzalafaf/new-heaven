@@ -8,7 +8,7 @@ import { CustomStylesSelect, NoData } from '../../../desktop/components';
 import { Loading, Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
-import { orderFetch, selectP2POrder, selectP2POrderLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
+import { orderFetch, selectP2POrder, selectP2POrdersLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
 import { Modal } from '../../../desktop/components';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -17,7 +17,7 @@ export const OrderP2PTable = () => {
     const dispatch = useDispatch();
 
     const order = useSelector(selectP2POrder);
-    const loading = useSelector(selectP2POrderLoading);
+    const loading = useSelector(selectP2POrdersLoading);
     const fiats = useSelector(selectP2PFiatsData);
 
     const [startDate, setStartDate] = React.useState<string | number>();
