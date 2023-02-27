@@ -27,6 +27,7 @@ export const OrderP2PTable = () => {
     const [state, setState] = React.useState('');
     const [tab, setTab] = React.useState('processing');
     const [data, setData] = React.useState([]);
+    const [orderLoading, setOrderLoading] = React.useState(false);
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
@@ -34,6 +35,13 @@ export const OrderP2PTable = () => {
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
     }, [dispatch]);
+
+    React.useEffect(() => {
+        setOrderLoading(true);
+        setTimeout(() => {
+            setOrderLoading(false);
+        }, 3000);
+    }, []);
 
     React.useEffect(() => {
         const fiatDatePayload = {
@@ -281,24 +289,30 @@ export const OrderP2PTable = () => {
                             fill>
                             <Tab eventKey="all" title="All Orders">
                                 <div className="w-100">{renderFilter()}</div>
-                                {/* {loading ? <Loading /> :  */}
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {/* } */}
+                                {orderLoading ? (
+                                    <Loading />
+                                ) : (
+                                    <Table header={getTableHeaders()} data={getTableData(data)} />
+                                )}
 
                                 {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="processing" title="Processing">
                                 <div className="w-100">{renderFilter()}</div>
-                                {/* {loading ? <Loading /> :  */}
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {/*  } */}
+                                {orderLoading ? (
+                                    <Loading />
+                                ) : (
+                                    <Table header={getTableHeaders()} data={getTableData(data)} />
+                                )}
                                 {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="done" title="Transaction Done">
                                 <div className="w-100">{renderFilter()}</div>
-                                {/* {loading ? <Loading /> :  */}
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {/* } */}
+                                {orderLoading ? (
+                                    <Loading />
+                                ) : (
+                                    <Table header={getTableHeaders()} data={getTableData(data)} />
+                                )}
                                 {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                         </Tabs>

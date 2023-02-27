@@ -128,7 +128,7 @@ export const P2PUserInfo: React.FC = () => {
                         maxLength={20}
                         className="bg-transparent border-0 border-bottom border-white text-white w-70"
                     />
-                    <label className="text-char">{username.length}/20</label>
+                    <label className="text-char">{username?.length}/20</label>
                 </div>
                 <div className="text-center cursor-pointer btn-primary" onClick={changeUsername}>
                     OK
