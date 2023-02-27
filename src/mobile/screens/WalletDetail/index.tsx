@@ -56,6 +56,7 @@ interface ExtendedWalletMobile extends Wallet {
     network?: any;
     last: any;
     marketId: string;
+    currencyItem: any;
 }
 
 const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
@@ -118,6 +119,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                 const p2pWallet = isP2PEnabled ? p2pWallets.find((i) => i.currency === cur.id) : null;
                 const market = markets.find((item) => item.base_unit == cur.id);
                 const ticker = tickers[market?.id];
+                const currencyItem = currencies.find((item) => item.id == cur.id);
 
                 return {
                     ...spotWallet,
@@ -129,6 +131,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     last: ticker ? ticker.last : null,
                     p2pBalance: p2pWallet ? p2pWallet.balance : '0',
                     p2pLocked: p2pWallet ? p2pWallet.locked : '0',
+                    currencyItem: currencyItem ? currencyItem : null,
                 };
             });
 
@@ -254,7 +257,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const fixed = Number(filteredList.map((item) => item.fixed));
 
     React.useEffect(() => {
-        setEstimatedValue(+filteredList.map((item) => item?.last * totalBalance));
+        setEstimatedValue(+filteredList.map((item) => item?.currencyItem?.price * totalBalance));
     }, [totalBalance, currency, filteredList]);
 
     return (
