@@ -39,6 +39,7 @@ interface ExtendedWallet extends Wallet {
     network?: any;
     last: any;
     marketId: string;
+    currencyItem: any;
 }
 
 const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
@@ -87,6 +88,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                 const p2pWallet = isP2PEnabled ? p2pWallets.find((i) => i.currency === cur.id) : null;
                 const market = markets.find((item) => item.base_unit == cur.id);
                 const ticker = tickers[market?.id];
+                const currencyItem = currencies.find((item) => item.id == cur.id);
 
                 return {
                     ...spotWallet,
@@ -98,6 +100,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                     last: ticker ? ticker.last : null,
                     p2pBalance: p2pWallet ? p2pWallet.balance : '0',
                     p2pLocked: p2pWallet ? p2pWallet.locked : '0',
+                    currencyItem: currencyItem ? currencyItem : null,
                 };
             });
 
@@ -126,9 +129,11 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                 ? [[]]
                 : filteredList.map((item, index) => {
                       const { currency, iconUrl, name, fixed, spotBalance, spotLocked } = item;
+                      //   const totalBalance =
+                      //       Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
                       const totalBalance = Number(spotBalance) + Number(spotLocked);
-                      const estimatedValue = item?.last !== null ? item.last * totalBalance : '0';
-
+                      const estimatedValue =
+                          item?.currencyItem?.price !== null ? item?.currencyItem?.price * totalBalance : '0';
                       return [
                           <Link
                               to={`/wallets/${currency}/detail`}
