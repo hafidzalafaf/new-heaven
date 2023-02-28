@@ -11,6 +11,7 @@ import {
     selectP2PPaymentUser,
     p2pPaymentUserFetch,
     P2PPaymentUserFetchSingle,
+    p2pPaymentUserUpdate,
 } from 'src/modules';
 import Select from 'react-select';
 import { CustomStylesSelect } from '../../../desktop/components';
@@ -62,10 +63,10 @@ export const P2PEditPaymentScreen: React.FC = () => {
 
     console.log(editPaymentItem, 'payment item')
 
-    const handleCreatePayment = () => {
-        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bankData.symbol };
+    const handleEditPayment = () => {
+        const payload = { payment_id: payment_user_uid.payment_user_uid, account_number, full_name: profiles[0]?.first_name, payment_method: editPaymentItem.symbol };
 
-        dispatch(p2pPaymentUserCreate(payload));
+        dispatch(p2pPaymentUserUpdate(payload));
     };
 
     const handleChangeAccountNumber = (e) => {
@@ -73,6 +74,11 @@ export const P2PEditPaymentScreen: React.FC = () => {
         setAccountNumber(value);
     };
 
+
+    const handleConfirmPayment = async () => {
+        handleEditPayment();
+        history.goBack();
+    }
     const disabledButton = () => {
         if (!profiles[0]?.first_name || !bankData?.symbol || !account_number) {
             return true;
@@ -198,8 +204,8 @@ export const P2PEditPaymentScreen: React.FC = () => {
                             </Link>
                             <button
                                 type="button"
-                                disabled={disabledButton()}
-                                onClick={handleCreatePayment}
+                                // disabled={disabledButton()}
+                                onClick={handleConfirmPayment}
                                 className="btn-primary w-49">
                                 Confirm
                             </button>

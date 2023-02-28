@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useDocumentTitle } from '../../../hooks';
 import { HeaderP2P, BannerP2P, OrderP2PTable } from 'src/desktop/containers';
+import { OfferP2PTable } from 'src/desktop/containers/OfferP2PTable';
 
 export const P2PDetailOfferScreen: React.FC = () => {
     useDocumentTitle('P2P || Detail Offer');
@@ -16,7 +17,7 @@ export const P2PDetailOfferScreen: React.FC = () => {
                     <div className="mb-24">
                         <HeaderP2P />
                     </div>
-                    <OrderP2PTable />
+                    <OfferP2PTable />
                 </div>
             </div>
         </React.Fragment>
