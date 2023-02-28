@@ -8,7 +8,7 @@ import { CustomStylesSelect, NoData } from '../../components';
 import { Loading, Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
-import { orderFetch, selectP2POrder, selectP2POrderLoading, p2pFiatFetch, selectP2PFiatsData, selectP2PUserOffers } from 'src/modules';
+import { orderFetch, selectP2POrder, p2pFiatFetch, selectP2POrdersLoading, selectP2PFiatsData, p2pUserOfferFetch, selectP2PUserAccountOffer } from 'src/modules';
 import { Modal } from '../../components';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -17,9 +17,9 @@ export const OfferP2PTable = () => {
     const dispatch = useDispatch();
 
     const order = useSelector(selectP2POrder);
-    const loading = useSelector(selectP2POrderLoading);
+    const loading = useSelector(selectP2POrdersLoading);
     const fiats = useSelector(selectP2PFiatsData);
-    const offer = useSelector(selectP2PUserOffers)
+    const offer = useSelector(selectP2PUserAccountOffer)
 
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
@@ -28,7 +28,6 @@ export const OfferP2PTable = () => {
     const [state, setState] = React.useState('');
     const [tab, setTab] = React.useState('processing');
     const [data, setData] = React.useState([]);
-    console.log(offer)
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
@@ -36,6 +35,19 @@ export const OfferP2PTable = () => {
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
     }, [dispatch]);
+
+    React.useEffect(()=>{
+        dispatch(p2pUserOfferFetch({
+            currency: '',
+            amount: '',
+            max_amount: '',
+            min_price: '',
+            max_price: '',
+            side: ''
+        }))
+    },[dispatch])
+
+    console.log(offer)
 
     React.useEffect(() => {
         const fiatDatePayload = {
@@ -121,17 +133,22 @@ export const OfferP2PTable = () => {
         };
     }, [dispatch, startDate, endDate, state, fiat, side, time_from, time_to]);
 
-    React.useEffect(() => {
-        setData(
-            tab == 'done'
-                ? order.filter((item) => item?.state == 'accepted' || item?.state == 'success')
-                : tab == 'processing'
-                ? order.filter(
-                      (item) => item?.state == 'waiting' || item?.state?.includes('waiting') || item?.state == 'prepare'
-                  )
-                : order
-        );
-    }, [order, tab]);
+    // React.useEffect(() => {
+    //     setData(
+    //         tab == 'done'
+    //             ? order.filter((item) => item?.state == 'accepted' || item?.state == 'success')
+    //             : tab == 'processing'
+    //             ? order.filter(
+    //                   (item) => item?.state == 'waiting' || item?.state?.includes('waiting') || item?.state == 'prepare'
+    //               )
+    //             : order
+    //     );
+    // }, [order, tab]);
+
+
+    React.useEffect(()=>{
+        setData(offer)
+    })
 
     const handleSelect = (k) => {
         setTab(k);
