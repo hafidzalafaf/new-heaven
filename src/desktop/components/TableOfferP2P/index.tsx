@@ -123,8 +123,10 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                 </div>
 
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
-                                                    <p className="m-0 p-0 mr-16">Payment Time Limit</p>
-                                                    <p className="m-0 p-0 mr-16">{item?.payment_time} Minutes</p>
+                                                    <p className="m-0 p-0 mr-16">Limit</p>
+                                                    <p className="m-0 p-0 mr-16">
+                                                        {item?.min_order}-{item?.max_order} {currency?.toUpperCase()}
+                                                    </p>
                                                 </div>
 
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold">
@@ -297,7 +299,9 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                 </div>
                                             </td>
                                             <td>
-                                                <button className={`${side == 'buy' ? 'btn-success' : 'btn-danger'}`}>
+                                                <button
+                                                    type="button"
+                                                    className={`${side == 'buy' ? 'btn-success' : 'btn-danger'}`}>
                                                     {side == 'buy' ? 'Buy' : 'Sell'} {currency?.toUpperCase()}
                                                 </button>
                                             </td>

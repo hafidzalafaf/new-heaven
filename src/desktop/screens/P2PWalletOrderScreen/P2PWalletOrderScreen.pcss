@@ -265,6 +265,15 @@
             justify-content: center;
             align-items: center;
         }
+
+        .btn.disabled,
+        .btn:disabled {
+            opacity: 1 !important;
+        }
+        button:disabled,
+        button[disabled] {
+            filter: brightness(1) !important;
+        }
     }
 
     .p2p-chat-component-container {
