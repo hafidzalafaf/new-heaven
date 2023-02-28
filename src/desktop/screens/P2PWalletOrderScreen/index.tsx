@@ -20,7 +20,6 @@ import {
     selectP2PCreateReportSuccess,
     orderReportCreate,
 } from 'src/modules';
-
 import { useDocumentTitle } from '../../../hooks';
 import { alertPush } from 'src/modules';
 import { HeaderP2P, BannerP2P, P2PFAQ, P2PChat, P2POrderStep } from 'src/desktop/containers';
@@ -39,6 +38,7 @@ import {
 import moment from 'moment';
 import { ArrowRight } from 'src/mobile/assets/Arrow';
 import { InfoIcon } from 'src/assets/images/InfoIcon';
+import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 
 interface File extends Blob {
     readonly lastModified: number;
@@ -164,48 +164,47 @@ export const P2PWalletOrderScreen: React.FC = () => {
             <>
                 {timeLeft > 0 ? (
                     <div className="d-flex flex-row">
-                    {
-                        detail?.order?.state === 'waiting' &&                         
-                        <>
-                        <div className="d-flex flex-row">
-                            <h2 className="text-white countdown-number mb-0">
-                                {days >= 10
-                                    ? dayArray[0]
-                                    : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
-                                    ? 0
-                                    : 0}
-                            </h2>
-                            <h2 className="text-white countdown-number mb-0">
-                                {days >= 10
-                                    ? dayArray[1]
-                                    : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
-                                    ? 0
-                                    : dayArray[0]}
-                            </h2>
-                        </div>
+                        {detail?.order?.state === 'waiting' && (
+                            <>
+                                <div className="d-flex flex-row">
+                                    <h2 className="text-white countdown-number mb-0">
+                                        {days >= 10
+                                            ? dayArray[0]
+                                            : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
+                                            ? 0
+                                            : 0}
+                                    </h2>
+                                    <h2 className="text-white countdown-number mb-0">
+                                        {days >= 10
+                                            ? dayArray[1]
+                                            : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
+                                            ? 0
+                                            : dayArray[0]}
+                                    </h2>
+                                </div>
 
-                        <h2 className="mt-2">:</h2>
+                                <h2 className="mt-2">:</h2>
 
-                        <div className="d-flex flex-row">
-                            <h2 className="text-white countdown-number mb-0">
-                                {hours >= 10
-                                    ? hourArray[0]
-                                    : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
-                                    ? 0
-                                    : 0}
-                            </h2>
-                            <h2 className="text-white countdown-number mb-0">
-                                {hours >= 10
-                                    ? hourArray[1]
-                                    : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
-                                    ? 0
-                                    : hourArray[0]}
-                            </h2>
-                        </div>
+                                <div className="d-flex flex-row">
+                                    <h2 className="text-white countdown-number mb-0">
+                                        {hours >= 10
+                                            ? hourArray[0]
+                                            : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
+                                            ? 0
+                                            : 0}
+                                    </h2>
+                                    <h2 className="text-white countdown-number mb-0">
+                                        {hours >= 10
+                                            ? hourArray[1]
+                                            : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
+                                            ? 0
+                                            : hourArray[0]}
+                                    </h2>
+                                </div>
 
-                        <h2 className="mt-2">:</h2>
-                    </>
-                    }
+                                <h2 className="mt-2">:</h2>
+                            </>
+                        )}
                         <div className="d-flex flex-row">
                             <h2 className="text-white countdown-number mb-0">
                                 {minutes >= 10
@@ -412,6 +411,11 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const renderModalReport = () => {
         return (
             <div>
+                <div className="d-flex justify-content-end mb-8">
+                    <span onClick={() => setShowModalReport(!showModalReport)} className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
                 <div className="d-flex align-items-center justify-content-between mb-24 radius-md border-b-1 dark-bg-accent p-3">
                     <div className="d-flex align-items-center">
                         <img src="/img/coin.png" className="icon-lg" alt="" />
@@ -538,6 +542,11 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const renderModalConfirmRelease = () => {
         return (
             <div>
+                <div className="d-flex justify-content-end mb-8">
+                    <span onClick={() => setShowModalSellConfrim(!showModalSellConfirm)} className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
                 <div className="d-flex justify-content-center align-items-center mb-24">
                     <CommentIcon />
                 </div>
@@ -589,6 +598,13 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const renderModalBuyOrderCompleted = () => {
         return (
             <React.Fragment>
+                <div className="d-flex justify-content-end mb-8">
+                    <span
+                        onClick={() => setShowModalBuyOrderCompleted(!showModalBuyOrderCompleted)}
+                        className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
                 <div className="d-flex justify-content-center align-items-center w-100 mb-24">
                     <img src="/img/p2pcalendar.png" alt="completed" width={104} height={106} />
                 </div>
@@ -619,6 +635,11 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const renderModalCancel = () => {
         return (
             <div>
+                <div className="d-flex justify-content-end mb-8">
+                    <span onClick={() => setShowModalCancel(!showModalCancel)} className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
                 <div className="w-100 d-flex align-items-center justify-content-center">
                     <img src="/img/warningp2p.png" alt="warning" width={68} height={68} className="mb-16" />
                 </div>
@@ -734,6 +755,13 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const renderModalPaymentConfirmation = () => {
         return (
             <div>
+                <div className="d-flex justify-content-end mb-8">
+                    <span
+                        onClick={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
+                        className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
                 <h1 className="m-0 p-0 mb-24 text-center grey-text-accent text-lg font-bold">Payment Confirmation</h1>
                 <p className="m-0 p-0 mb-24 grey-text-accent text-sm">
                     Please confirm that you have successfully transfered the money to the seller throught the following

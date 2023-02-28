@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useParams, useHistory } from 'react-router';
 import {
     p2pProfileFetch,
     P2PProfileFetchInterface,
@@ -15,6 +15,7 @@ import {
     p2pProfileBlockMerchant,
     selectP2PProfileBlockMerchantLoading,
     selectP2PProfileBlockMerchantSuccess,
+    selectUserInfo,
 } from 'src/modules';
 import { FormControl, Modal } from 'react-bootstrap';
 import { CardP2PUserInfo, Modal as ModalComponent } from '../../../desktop/components';
@@ -31,6 +32,7 @@ import { InfoWarningIcon } from 'src/assets/images/InfoIcon';
 
 export const P2PUserInfo: React.FC = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const { uid = '' } = useParams<{ uid?: string }>();
 
     const isLoggedIn = useSelector(selectUserLoggedIn);
@@ -40,6 +42,7 @@ export const P2PUserInfo: React.FC = () => {
     const blockMerchantLoading = useSelector(selectP2PProfileBlockMerchantLoading);
     const blockMerchantSuccess = useSelector(selectP2PProfileBlockMerchantSuccess);
     const changeUsernameSuccess = useSelector(selectP2PProfileChangeUsernameSuccess);
+    const myProfile = useSelector(selectUserInfo);
 
     const [username, setUsername] = React.useState(userP2P?.trader_name);
     const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
@@ -58,6 +61,7 @@ export const P2PUserInfo: React.FC = () => {
 
         if (blockMerchantSuccess) {
             setShowModalBlockReason(false);
+            history.push(`/p2p/profile/${myProfile?.uid}`, { types: 'block' });
         }
     }, [dispatch, changeUsernameSuccess, uid, blockMerchantSuccess]);
 
@@ -189,7 +193,7 @@ export const P2PUserInfo: React.FC = () => {
                     ))}
                     <button
                         onClick={handleBlockMerchant}
-                        disabled={!reason || !state || blockMerchantLoading}
+                        disabled={!reason || blockMerchantLoading}
                         type="button"
                         className="btn-secondary w-100">
                         Block

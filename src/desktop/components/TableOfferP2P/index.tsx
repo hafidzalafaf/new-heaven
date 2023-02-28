@@ -6,6 +6,7 @@ import '../../../styles/colors.pcss';
 import { CustomStylePaymentOrder } from 'src/desktop/containers/TableListP2P/CustomStylePaymentOrder';
 import Select from 'react-select';
 import { Loading } from 'src/components';
+import { Link } from 'react-router-dom';
 
 export interface TableOfferP2PProps {
     side: string;
@@ -85,13 +86,11 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                 <div className="d-flex align-items-center">
                                                     <img src="/img/bigcoin.png" alt="coin" className="mr-24" />
                                                     <div>
-                                                        <a
-                                                            href={`${window.location.href}/profile/${item?.trader?.uid}`}
-                                                            target="__blank"
-                                                            rel="noopener noreferrer"
+                                                        <Link
+                                                            to={`/p2p/profile/${item?.trader?.uid}`}
                                                             className="m-0 p-0 white-text mb-12 text-ms fontbold">
                                                             {item?.trader?.email}
-                                                        </a>
+                                                        </Link>
                                                         <div className="d-flex">
                                                             <p className="p-0 m-0 text-xs mr-8">
                                                                 {item?.sum_order} Orders

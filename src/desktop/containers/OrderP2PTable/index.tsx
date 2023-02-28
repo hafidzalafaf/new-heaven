@@ -8,7 +8,7 @@ import { CustomStylesSelect, NoData } from '../../../desktop/components';
 import { Loading, Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
-import { orderFetch, selectP2POrder, selectP2POrdersLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
+import { orderFetch, selectP2POrder, selectP2POrderLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
 import { Modal } from '../../../desktop/components';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -17,7 +17,7 @@ export const OrderP2PTable = () => {
     const dispatch = useDispatch();
 
     const order = useSelector(selectP2POrder);
-    const loading = useSelector(selectP2POrdersLoading);
+    const loading = useSelector(selectP2POrderLoading);
     const fiats = useSelector(selectP2PFiatsData);
 
     const [startDate, setStartDate] = React.useState<string | number>();
@@ -187,14 +187,11 @@ export const OrderP2PTable = () => {
             <p className="m-0 p-0 white-text text-sm font-semibold">
                 {item?.amount} {item?.currency?.name?.toUpperCase()}
             </p>,
-            // <a
-            //     target="_blank"
-            //     rel="noreferrer"
-            //     href={'https://api.heavenexchange.io/'}
-            //     className="text-underline blue-text text-sm font-semibold">
-            //     {item?.trades?.uid}
-            // </a>,
-            <p className="m-0 p-0 text-underline blue-text text-sm font-semibold">{item?.trades?.uid}</p>,
+            <Link
+                to={`/p2p/profile/${item?.trades?.uid}`}
+                className="m-0 p-0 text-underline blue-text text-sm font-semibold cursor-pointer">
+                {item?.trades?.uid}
+            </Link>,
             <p className="m-0 p-0 white-text text-sm font-semibold">{capitalizeFirstLetter(item?.state)}</p>,
             <div className="d-flex align-items-center">
                 <div

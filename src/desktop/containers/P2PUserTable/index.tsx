@@ -2,7 +2,7 @@ import * as React from 'react';
 import { P2PBlockedUser, P2PFeedback, P2PPaymentMethod } from 'src/desktop/components';
 import { Tabs, Tab } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router';
+import { useParams, useLocation } from 'react-router';
 import {
     feedbackFetch,
     selectP2PFeedbackUser,
@@ -15,6 +15,7 @@ import {
 export const P2PUserTable: React.FC = () => {
     const dispatch = useDispatch();
     const { uid = '' } = useParams<{ uid?: string }>();
+    const location: { state: { types: string } } = useLocation();
 
     const isLoggedIn = useSelector(selectUserLoggedIn);
     const feedbacks = useSelector(selectP2PFeedbackUser);
@@ -25,11 +26,19 @@ export const P2PUserTable: React.FC = () => {
         dispatch(p2pProfileFetch());
     }, [dispatch]);
 
+    console.log(location?.state?.types);
+
     return (
         <React.Fragment>
             <div className="container-p2p-user-table">
                 <Tabs
-                    defaultActiveKey={isLoggedIn && uid == userP2P?.member?.uid ? 'payment' : 'feedback'}
+                    defaultActiveKey={
+                        isLoggedIn && uid == userP2P?.member?.uid
+                            ? 'payment'
+                            : isLoggedIn && location?.state?.types
+                            ? location?.state?.types
+                            : 'feedback'
+                    }
                     transition={false}
                     id="noanim-tab-example"
                     className="mb-3">
