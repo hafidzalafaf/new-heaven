@@ -13,6 +13,7 @@ interface ExtendedWallet extends Wallet {
     network?: any;
     last: any;
     marketId: string;
+    currencyItem: any;
 }
 
 interface ParentProps {

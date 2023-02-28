@@ -26,6 +26,7 @@ import {
     User,
     createConfirmationCodeFetch,
     selectConfirmationCodeCreateSuccess,
+    signUpRequireVerification,
 } from '../../../modules';
 import { CommonError } from '../../../modules/types';
 import { Link } from 'react-router-dom';
@@ -47,6 +48,7 @@ interface DispatchProps {
     emailVerificationFetch: typeof emailVerificationFetch;
     resetCaptchaState: typeof resetCaptchaState;
     createConfirmationCodeFetch: typeof createConfirmationCodeFetch;
+    signUpRequireVerification: typeof signUpRequireVerification;
 }
 
 interface ReduxProps {
@@ -152,11 +154,13 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
                             <span>
                                 <p className="white-text font-bold">
                                     Already have an account?
-                                    <Link to="/signin">
-                                        <span className="contrast-text ml-1 cursor-pointer decoration-none">
-                                            Sign In
-                                        </span>{' '}
-                                    </Link>
+                                    {/* <Link to="/signin"> */}
+                                    <span
+                                        onClick={this.handleSignInWithAnotherAccount}
+                                        className="contrast-text ml-1 cursor-pointer decoration-none">
+                                        Sign In
+                                    </span>{' '}
+                                    {/* </Link> */}
                                 </p>
                             </span>
                         </div>
@@ -194,6 +198,7 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
                                             <Spinner animation="border" variant="primary" />
                                         ) : (
                                             <button
+                                                type="button"
                                                 disabled={this.state.timerActive}
                                                 className={`btn-send-again text-sm border-none bg-transparent cursor-pointer p-0 ${
                                                     this.state.timerActive ? 'grey-text' : 'contrast-text'
@@ -233,6 +238,11 @@ class EmailVerificationComponent extends React.Component<Props, EmailVerificatio
         this.setState({
             code: value,
         });
+    };
+
+    public handleSignInWithAnotherAccount = () => {
+        this.props.signUpRequireVerification({ requireVerification: false });
+        this.props.history.push('/signin');
     };
 
     public codeConfirm = () => {
@@ -309,6 +319,7 @@ const mapDispatchToProps = {
     emailVerificationFetch,
     resetCaptchaState,
     createConfirmationCodeFetch,
+    signUpRequireVerification,
 };
 
 export const EmailVerificationScreen = compose(
