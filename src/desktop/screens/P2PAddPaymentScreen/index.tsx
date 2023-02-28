@@ -61,7 +61,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
     }, [createPaymentSuccess]);
 
     const handleCreatePayment = () => {
-        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bank.payment, otp_code: otp_code, qrcode: inputFile};
+        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bank.payment, otp_code: otp_code};
 
         dispatch(p2pPaymentUserCreate(payload));
     };
@@ -199,7 +199,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
                             </Link>
                             <button
                                 type="button"
-                                disabled={disabledButton()}
+                                // disabled={disabledButton()}
                                 onClick={handleCreatePayment}
                                 className="btn-primary w-49">
                                 Confirm
