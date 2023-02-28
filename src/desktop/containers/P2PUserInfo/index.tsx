@@ -91,10 +91,11 @@ export const P2PUserInfo: React.FC = () => {
         { name: 'Other' },
     ];
 
-    const convertDurationtoMilliseconds = (duration?: string) => {
-        const [hours, minutes, seconds] = duration?.split(':');
-        return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
-    };
+    // const convertDurationtoMilliseconds = (duration?: string) => {
+    //     const [hours, minutes, seconds] = duration?.split(':');
+    //     console.log(hours, minutes, seconds);
+    //     return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
+    // };
 
     const ModalChangeName = () => {
         return (
@@ -334,16 +335,18 @@ export const P2PUserInfo: React.FC = () => {
                     <CardP2PUserInfo
                         title="Avg. Release Time"
                         type="release"
-                        minutes={`${moment
-                            .utc(convertDurationtoMilliseconds(merchants?.trade?.release_time))
-                            .format('m.ss')} Minute(s)`}
+                        // minutes={`${moment
+                        //     .utc(convertDurationtoMilliseconds(merchants?.trade?.release_time))
+                        //     .format('m.ss')} Minute(s)`}
+                        minutes={merchants?.trade?.release_time}
                     />
                     <CardP2PUserInfo
                         title="30d Pay Time"
                         type="pay"
-                        minutes={`${moment
-                            .utc(convertDurationtoMilliseconds(merchants?.trade?.pay_time))
-                            .format('m.ss')} Minute(s)`}
+                        minutes={merchants?.trade?.pay_time}
+                        // minutes={`${moment
+                        //     .utc(convertDurationtoMilliseconds(merchants?.trade?.pay_time))
+                        //     .format('m.ss')} Minute(s)`}
                     />
                 </div>
 
