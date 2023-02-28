@@ -164,6 +164,9 @@ export const P2PWalletOrderScreen: React.FC = () => {
             <>
                 {timeLeft > 0 ? (
                     <div className="d-flex flex-row">
+                    {
+                        detail?.order?.state === 'waiting' &&                         
+                        <>
                         <div className="d-flex flex-row">
                             <h2 className="text-white countdown-number mb-0">
                                 {days >= 10
@@ -201,7 +204,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         </div>
 
                         <h2 className="mt-2">:</h2>
-
+                    </>
+                    }
                         <div className="d-flex flex-row">
                             <h2 className="text-white countdown-number mb-0">
                                 {minutes >= 10
