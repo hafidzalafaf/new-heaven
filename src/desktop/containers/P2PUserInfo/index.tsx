@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useParams, useHistory } from 'react-router';
 import {
     p2pProfileFetch,
     P2PProfileFetchInterface,
@@ -15,6 +15,7 @@ import {
     p2pProfileBlockMerchant,
     selectP2PProfileBlockMerchantLoading,
     selectP2PProfileBlockMerchantSuccess,
+    selectUserInfo,
 } from 'src/modules';
 import { FormControl, Modal } from 'react-bootstrap';
 import { CardP2PUserInfo, Modal as ModalComponent } from '../../../desktop/components';
@@ -28,9 +29,11 @@ import {
 } from '../../../assets/images/P2PIcon';
 import moment from 'moment';
 import { InfoWarningIcon } from 'src/assets/images/InfoIcon';
+import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 
 export const P2PUserInfo: React.FC = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const { uid = '' } = useParams<{ uid?: string }>();
 
     const isLoggedIn = useSelector(selectUserLoggedIn);
@@ -40,6 +43,7 @@ export const P2PUserInfo: React.FC = () => {
     const blockMerchantLoading = useSelector(selectP2PProfileBlockMerchantLoading);
     const blockMerchantSuccess = useSelector(selectP2PProfileBlockMerchantSuccess);
     const changeUsernameSuccess = useSelector(selectP2PProfileChangeUsernameSuccess);
+    const myProfile = useSelector(selectUserInfo);
 
     const [username, setUsername] = React.useState(userP2P?.trader_name);
     const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
@@ -58,6 +62,7 @@ export const P2PUserInfo: React.FC = () => {
 
         if (blockMerchantSuccess) {
             setShowModalBlockReason(false);
+            history.push(`/p2p/profile/${myProfile?.uid}`, { types: 'block' });
         }
     }, [dispatch, changeUsernameSuccess, uid, blockMerchantSuccess]);
 
@@ -168,6 +173,11 @@ export const P2PUserInfo: React.FC = () => {
     const renderModalBlockReason = () => {
         return (
             <div>
+                <div className="d-flex justify-content-end mb-8">
+                    <span onClick={() => setShowModalBlockReason(!showModalBlockReason)} className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
                 <h1 className="m-0 p-0 text-center font-bold text-md grey-text-accent mb-24">Select Reason</h1>
                 <div className="alert-warning-container d-flex align-items-center p-16 gap-8 radius-sm mb-24">
                     <InfoWarningIcon />
@@ -189,7 +199,7 @@ export const P2PUserInfo: React.FC = () => {
                     ))}
                     <button
                         onClick={handleBlockMerchant}
-                        disabled={!reason || !state || blockMerchantLoading}
+                        disabled={!reason || blockMerchantLoading}
                         type="button"
                         className="btn-secondary w-100">
                         Block

@@ -399,7 +399,8 @@ export const TableListP2P = () => {
     };
 
     const handleChangePrice = (e: string) => {
-        setPrice(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setPrice(value);
     };
 
     const handleChangePaymentOrder = (e: string) => {

@@ -15,11 +15,17 @@ export function* p2pProfileBlockMerchantSaga(actionParam: P2PProfileBlockMerchan
     try {
         const { uid, reason, state } = actionParam.payload;
         yield call(API.put(config(getCsrfToken())), `/account/merchants/blocked/${uid}`, {
-            reason, state,
+            reason,
+            state,
         });
 
         yield put(p2pProfileBlockMerchantData());
-        yield put(alertPush({ message: ['success.merchant.blocked'], type: 'success' }));
+        yield put(
+            alertPush({
+                message: state === 'unblocked' ? ['success.merchant.unblocked'] : ['success.merchant.blocked'],
+                type: 'success',
+            })
+        );
     } catch (error) {
         yield put(
             sendError({

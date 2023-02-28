@@ -150,6 +150,8 @@ export const OfferP2PTable = () => {
         setData(offer)
     })
 
+    console.log(data, 'data')
+
     const handleSelect = (k) => {
         setTab(k);
     };

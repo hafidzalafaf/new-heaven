@@ -12,19 +12,29 @@ import { Modal } from '../Modal';
 
 export const P2PBlockedUser: React.FC = () => {
     const dispatch = useDispatch();
+
     const blocks = useSelector(selectP2PProfileListBlockMerchant);
+    const loading = useSelector(selectP2PProfileBlockMerchantLoading);
+    const success = useSelector(selectP2PProfileBlockMerchantSuccess);
+
+    const [uid, setUid] = React.useState('');
+    const [reason, setReason] = React.useState('');
 
     const [showModalUnblock, setShowModalUnblock] = React.useState(false);
 
     React.useEffect(() => {
         dispatch(p2pProfileListBlockMerchant());
-    }, [dispatch]);
+
+        if (success) {
+            setShowModalUnblock(false);
+        }
+    }, [dispatch, success]);
 
     const handleUnblocklockMerchant = () => {
         const payload = {
-            uid: '',
+            uid,
             state: 'unblocked',
-            reason: 'aku labil kak',
+            reason,
         };
 
         dispatch(p2pProfileBlockMerchant(payload));
@@ -42,12 +52,14 @@ export const P2PBlockedUser: React.FC = () => {
 
                 <button
                     onClick={handleUnblocklockMerchant}
+                    disabled={loading}
                     type="button"
                     className="btn-primary w-100 white-text text-ms mb-16">
                     Unblock
                 </button>
                 <button
                     onClick={() => setShowModalUnblock(!showModalUnblock)}
+                    disabled={loading}
                     type="button"
                     className="btn-success btn-outline w-100 contrast-text text-ms">
                     Cancel
@@ -56,10 +68,12 @@ export const P2PBlockedUser: React.FC = () => {
         );
     };
 
+    console.log(blocks);
+
     return (
         <React.Fragment>
             <div className="com-p2p-blocked-user">
-                {!blocks ? (
+                {!blocks || !blocks[0] ? (
                     <div className="d-flex flex-column justify-content-center align-items-center gap-24 no-data-container">
                         <NoDataIcon />
                         <p className="m-0 p-0 grey-text text-sm font-bold">No Blocked User</p>
@@ -77,14 +91,24 @@ export const P2PBlockedUser: React.FC = () => {
                                 <div className="d-flex align-items-center">
                                     <div className="d-flex align-items-center gap-16">
                                         <div className="ava-container d-flex justify-content-center align-items-center white-text text-xxs font-bold">
-                                            {block?.state?.slice(0, 1).toUpperCase()}
+                                            {block?.target_user?.trader_name
+                                                ? block?.target_user?.trader_name.slice(0, 1).toUpperCase()
+                                                : block?.target_user?.member?.email.slice(0, 1).toUpperCase()}
                                         </div>
-                                        <p className="m-0 p-0 grey-text-accent text-sm">{block.state}</p>
+                                        <p className="m-0 p-0 grey-text-accent text-sm">
+                                            {block?.target_user?.trader_name
+                                                ? block?.target_user?.trader_name
+                                                : block?.target_user?.member?.email}
+                                        </p>
                                     </div>
                                 </div>
                                 <p className="m-0 p-0 grey-text text-xxs">{block?.reason}</p>
                                 <p
-                                    onClick={() => setShowModalUnblock(!showModalUnblock)}
+                                    onClick={() => {
+                                        setShowModalUnblock(!showModalUnblock);
+                                        setReason(block?.reason);
+                                        setUid(block?.target_user?.member?.uid);
+                                    }}
                                     className="reason-block m-0 p-0 text-sm gradient-text cursor-pointer">
                                     Unblock
                                 </p>

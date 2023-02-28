@@ -350,7 +350,9 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 <div className="d-flex gap-24">
                                     {detail?.order?.state == 'prepare' ? (
                                         <button
-                                            disabled={timeLeft <= 0 || detail?.order?.state !== 'prepare'}
+                                            disabled={
+                                                timeLeft <= 0 || detail?.order?.state !== 'prepare' || !paymentUser
+                                            }
                                             type="button"
                                             onClick={handleShowModalPaymentConfirm}
                                             // onClick={
