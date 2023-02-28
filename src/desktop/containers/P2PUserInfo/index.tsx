@@ -45,7 +45,6 @@ export const P2PUserInfo: React.FC = () => {
     const [showChangeUsernameModal, setShowChangeUsernameModal] = React.useState(false);
     const [showModalBlockAlert, setShowModalBlockAlert] = React.useState(false);
     const [showModalBlockReason, setShowModalBlockReason] = React.useState(false);
-    const [state, setState] = React.useState('blocked');
     const [reason, setReason] = React.useState('');
 
     React.useEffect(() => {
@@ -72,7 +71,7 @@ export const P2PUserInfo: React.FC = () => {
     const handleBlockMerchant = () => {
         const payload = {
             uid,
-            state,
+            state: 'blocked',
             reason,
         };
 
@@ -128,7 +127,7 @@ export const P2PUserInfo: React.FC = () => {
                         maxLength={20}
                         className="bg-transparent border-0 border-bottom border-white text-white w-70"
                     />
-                    <label className="text-char">{username.length}/20</label>
+                    <label className="text-char">{username?.length}/20</label>
                 </div>
                 <div className="text-center cursor-pointer btn-primary" onClick={changeUsername}>
                     OK
@@ -144,7 +143,7 @@ export const P2PUserInfo: React.FC = () => {
                     <img src="/img/modal-alert.png" alt="alert" width={116} height={116} />
                 </div>
                 <p className="m-0 p-0 mb-24 grey-text text-sm text-center">
-                    Aare you sure want to block this user? You will not be able to trade with the user after blocking.
+                    Are you sure want to block this user? You will not be able to trade with the user after blocking.
                 </p>
 
                 <button

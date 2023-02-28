@@ -104,10 +104,10 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
 
     const myWithdrawLimit = withdrawLimits.find((group) => group?.group == memberGroup?.group);
     const remainingWithdrawDaily = myWithdrawLimit
-        ? Number(myWithdrawLimit?.limit_24_hour) - Number(withdrawSum?.last_24_hours)
+        ? (Number(myWithdrawLimit?.limit_24_hour) - Number(withdrawSum?.last_24_hours)) / Number(currencyItem?.price)
         : 0;
     const remainingWithdrawMothly = myWithdrawLimit
-        ? Number(myWithdrawLimit?.limit_1_month) - Number(withdrawSum?.last_1_month)
+        ? (Number(myWithdrawLimit?.limit_1_month) - Number(withdrawSum?.last_1_month)) / Number(currencyItem?.price)
         : 0;
 
     const blockchainKeyValue =
@@ -422,14 +422,16 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                 <div className="my-2">
                                     <p className="mb-0 text-sm grey-text-accent">Daily Limit</p>
                                     <p className="mb-0  text-base grey-text-accent font-bold">
-                                        {remainingWithdrawDaily} {currency?.toUpperCase()}
+                                        <Decimal fixed={currencyItem?.precision}>{remainingWithdrawDaily}</Decimal>{' '}
+                                        {currency?.toUpperCase()}
                                     </p>
                                 </div>
 
                                 <div className="my-2">
                                     <p className="mb-0 text-sm grey-text-accent">Monthly Limit</p>
                                     <p className="mb-0  text-base grey-text-accent font-bold">
-                                        {remainingWithdrawMothly} {currency?.toUpperCase()}
+                                        <Decimal fixed={currencyItem?.precision}>{remainingWithdrawMothly}</Decimal>{' '}
+                                        {currency?.toUpperCase()}
                                     </p>
                                 </div>
 

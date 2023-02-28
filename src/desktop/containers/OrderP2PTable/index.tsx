@@ -8,7 +8,7 @@ import { CustomStylesSelect, NoData } from '../../../desktop/components';
 import { Loading, Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
-import { orderFetch, selectP2POrder, selectP2POrderLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
+import { orderFetch, selectP2POrder, selectP2POrdersLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
 import { Modal } from '../../../desktop/components';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -17,7 +17,7 @@ export const OrderP2PTable = () => {
     const dispatch = useDispatch();
 
     const order = useSelector(selectP2POrder);
-    const loading = useSelector(selectP2POrderLoading);
+    const loading = useSelector(selectP2POrdersLoading);
     const fiats = useSelector(selectP2PFiatsData);
 
     const [startDate, setStartDate] = React.useState<string | number>();
@@ -27,6 +27,7 @@ export const OrderP2PTable = () => {
     const [state, setState] = React.useState('');
     const [tab, setTab] = React.useState('processing');
     const [data, setData] = React.useState([]);
+    const [orderLoading, setOrderLoading] = React.useState(false);
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
@@ -34,6 +35,13 @@ export const OrderP2PTable = () => {
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
     }, [dispatch]);
+
+    React.useEffect(() => {
+        setOrderLoading(true);
+        setTimeout(() => {
+            setOrderLoading(false);
+        }, 3000);
+    }, []);
 
     React.useEffect(() => {
         const fiatDatePayload = {
@@ -281,24 +289,30 @@ export const OrderP2PTable = () => {
                             fill>
                             <Tab eventKey="all" title="All Orders">
                                 <div className="w-100">{renderFilter()}</div>
-                                {/* {loading ? <Loading /> :  */}
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {/* } */}
+                                {orderLoading ? (
+                                    <Loading />
+                                ) : (
+                                    <Table header={getTableHeaders()} data={getTableData(data)} />
+                                )}
 
                                 {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="processing" title="Processing">
                                 <div className="w-100">{renderFilter()}</div>
-                                {/* {loading ? <Loading /> :  */}
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {/*  } */}
+                                {orderLoading ? (
+                                    <Loading />
+                                ) : (
+                                    <Table header={getTableHeaders()} data={getTableData(data)} />
+                                )}
                                 {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="done" title="Transaction Done">
                                 <div className="w-100">{renderFilter()}</div>
-                                {/* {loading ? <Loading /> :  */}
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {/* } */}
+                                {orderLoading ? (
+                                    <Loading />
+                                ) : (
+                                    <Table header={getTableHeaders()} data={getTableData(data)} />
+                                )}
                                 {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
                             </Tab>
                         </Tabs>

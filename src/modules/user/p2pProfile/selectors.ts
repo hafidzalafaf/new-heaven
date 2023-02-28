@@ -27,3 +27,15 @@ export const selectP2PProfileBlockMerchantSuccess = (state: RootState): boolean 
 
 export const selectP2PProfileBlockMerchantError = (state: RootState): CommonError | undefined =>
     state.user.p2pProfile.block_merchant.error;
+
+export const selectP2PProfileListBlockMerchant = (state: RootState): any =>
+    state.user.p2pProfile.list_block_merchant.data;
+
+export const selectP2PProfileListBlockMerchantLoading = (state: RootState): boolean =>
+    state.user.p2pProfile.list_block_merchant.fetching;
+
+export const selectP2PProfileListBlockMerchantSuccess = (state: RootState): boolean =>
+    state.user.p2pProfile.list_block_merchant.success;
+
+export const selectP2PProfileListBlockMerchantError = (state: RootState): CommonError | undefined =>
+    state.user.p2pProfile.list_block_merchant.error;

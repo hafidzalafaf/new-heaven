@@ -47,18 +47,20 @@ export function* p2pFetchOfferSaga(action: P2POfferFetch) {
             page,
         };
 
-        const {data, headers} = yield call(API.get(config), `/account/offer?${buildQueryString(params)}`);
+        const { data, headers } = yield call(API.get(config), `/market/trades?${buildQueryString(params)}`);
 
-        yield put(p2pOfferData({
-            list: data,
-            total: headers.total,
-            page: action.payload.page,
-            side,
-            sort,
-            base,
-            quote,
-            payment_method,
-        }));
+        yield put(
+            p2pOfferData({
+                list: data,
+                total: headers.total,
+                page: action.payload.page,
+                side,
+                sort,
+                base,
+                quote,
+                payment_method,
+            })
+        );
     } catch (error) {
         yield put(
             sendError({

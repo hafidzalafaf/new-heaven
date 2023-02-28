@@ -35,6 +35,7 @@ interface ExtendedWallet extends Wallet {
     network?: any;
     last: any;
     marketId: string;
+    currencyItem: any;
 }
 
 const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
@@ -77,6 +78,7 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                 const p2pWallet = isP2PEnabled ? p2pWallets.find((i) => i.currency === cur.id) : null;
                 const market = markets.find((item) => item.base_unit == cur.id);
                 const ticker = tickers[market?.id];
+                const currencyItem = currencies.find((item) => item.id == cur.id);
 
                 return {
                     ...(spotWallet || p2pWallet),
@@ -88,6 +90,7 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                     last: ticker ? ticker.last : null,
                     p2pBalance: p2pWallet ? p2pWallet.balance : '0',
                     p2pLocked: p2pWallet ? p2pWallet.locked : '0',
+                    currencyItem: currencyItem ? currencyItem : null,
                 };
             });
 
@@ -143,17 +146,18 @@ const WalletsOverview: FC<Props> = (props: Props): ReactElement => {
                 i.currency?.toLocaleLowerCase().includes(filterValue.toLowerCase())
         );
 
-        // const filteredList = [];
-
         return !filteredList.length && !filterValue && !nonZeroSelected
             ? [[[''], [''], <Loading />, [''], [''], ['']]]
             : !filteredList.length && !loading
             ? [['no data found']]
             : filteredList.map((item, index) => {
                   const { currency, iconUrl, name, fixed, spotBalance, spotLocked, p2pBalance, p2pLocked } = item;
-                  const totalBalance =
-                      Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
-                  const estimatedValue = item?.last !== null ? item.last * totalBalance : '0';
+
+                  //   const totalBalance =
+                  //       Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
+                  const totalBalance = Number(spotBalance) + Number(spotLocked);
+                  const estimatedValue =
+                      item?.currencyItem?.price !== null ? item?.currencyItem?.price * totalBalance : '0';
                   const disableDeposit = item?.network?.filter((net) => net.deposit_enabled == true);
                   const disableWithdrawal = item?.network?.filter((net) => net.withdrawal_enabled == true);
 

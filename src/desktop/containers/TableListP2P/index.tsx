@@ -40,6 +40,7 @@ import '../../../styles/colors.pcss';
 import { CustomStyleFiat } from './CustomStyleFiat';
 import { CustomStylePaymentOrder } from './CustomStylePaymentOrder';
 import { Modal } from '../../../desktop/components';
+import { Loading } from 'src/components';
 
 export const TableListP2P = () => {
     const dispatch = useDispatch();
@@ -72,6 +73,7 @@ export const TableListP2P = () => {
     const [showSelectedPayment, setShowSelectedPayment] = React.useState(false);
     const [showModalUserLevel, setShowModalUserLevel] = React.useState(false);
     const [title, setTitle] = React.useState('');
+    const [offerLoading, setOfferLoading] = React.useState(false);
 
     /* ========== ORDER FETCH STATE START ========== */
     const [side, setSide] = React.useState('buy');
@@ -107,6 +109,13 @@ export const TableListP2P = () => {
     const [sideOffer, setSideOffer] = React.useState('buy');
     const [showModalConfirmation, setShowModalConfirmation] = React.useState(false);
     /* ============== CREATE OFFER STATE END ============== */
+
+    React.useEffect(() => {
+        setOfferLoading(true);
+        setTimeout(() => {
+            setOfferLoading(false);
+        }, 3000);
+    }, []);
 
     React.useEffect(() => {
         const defaultPayload = {
@@ -907,7 +916,7 @@ export const TableListP2P = () => {
                         handleSelectOffer={handleSelectOfferBuy}
                         handleCloseExpand={handleCloseExpandBuy}
                         resetForm={resetForm}
-                        loading={loadingOffers}
+                        loading={offerLoading}
                     />
                 )}
                 {/* ========= TABLE BUY END ========= */}
@@ -931,7 +940,7 @@ export const TableListP2P = () => {
                         handleSelectOffer={handleSelectOfferSell}
                         handleCloseExpand={handleCloseExpandSell}
                         resetForm={resetForm}
-                        loading={loadingOffers}
+                        loading={offerLoading}
                     />
                 )}
                 {/* ========= TABLE SELL END ========= */}

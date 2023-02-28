@@ -256,6 +256,37 @@
                 }
             }
         }
+
+        .chat-loading {
+            height: 500px;
+            padding-bottom: 24px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    .p2p-chat-component-container {
+        .custom-modal-dialog {
+            max-width: 768px !important;
+
+            .custom-modal-content {
+                padding-top: 0 !important;
+                width: 100% !important;
+                max-height: 99% !important;
+                overflow-y: scroll;
+            }
+        }
+
+        .btn-close {
+            right: 8px;
+        }
+
+        .btn-zoom {
+            left: 8px;
+            bottom: 0;
+        }
     }
 
     .custom-modal-dialog {
