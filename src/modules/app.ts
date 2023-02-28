@@ -57,6 +57,7 @@ import { p2pOfferAvailableReducer } from './user/p2pAvailableOffer';
 import { p2pProfileReducer } from './user/p2pProfile';
 import { p2pUserSettingReducer } from './user/p2pUserSetting';
 import { p2pPaymentUserReducer } from './user/p2pPaymentUser/reducer';
+import { p2pUserOfferReducer } from './user/p2pUserOffer';
 
 export const publicReducer = combineReducers({
     alerts: alertReducer,
@@ -123,6 +124,7 @@ export const userReducer = combineReducers({
     p2pProfile: p2pProfileReducer,
     p2pUserSetting: p2pUserSettingReducer,
     p2pPaymentUser: p2pPaymentUserReducer,
+    p2pUserOffer: p2pUserOfferReducer
 });
 
 export const adminReducer = combineReducers({

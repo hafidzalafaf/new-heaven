@@ -7,7 +7,7 @@ import {
     P2P_USER_OFFER_CREATE_DATA,
     P2P_USER_OFFER_CREATE_ERROR,
 } from './constants';
-import { P2PUserOffer,P2PCreateUserOffer } from './types';
+import { P2PUserOffer, P2PCreateUserOffer } from './types';
 
 export interface P2PUserOfferFetch {
     type: typeof P2P_USER_OFFER_FETCH;
@@ -22,6 +22,7 @@ export interface P2PUserOfferFetch {
         quote?: string;
         payment_method?: number;
         amount?: string;
+        max_amount?: string;
         min_price?: string;
         max_price?: string;
     };

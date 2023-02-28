@@ -46,7 +46,7 @@ export function* p2pFetchUserOfferSaga(action: P2PUserOfferFetch) {
             limit,
             page,
         };
-
+        
         const {data, headers} = yield call(API.get(config), `/account/offer?${buildQueryString(params)}`);
 
         yield put(p2pUserOfferData({
