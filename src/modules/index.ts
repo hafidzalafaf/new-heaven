@@ -65,6 +65,7 @@ import { rootP2PPaymentUserSaga, P2PPaymentUserState } from './user/p2pPaymentUs
 import { P2PUserSettingState } from './user/p2pUserSetting/reducer';
 import { GroupMemberState, rootMemberGroupSaga } from './user/memberGroup';
 import { rootP2PUserSettingSaga } from './user/p2pUserSetting';
+import { P2PUserOfferState, rootP2PUserOfferSaga } from './user/p2pUserOffer';
 
 export * from './admin/config';
 export * from './admin/markets';
@@ -122,7 +123,7 @@ export * from './user/p2pAvailableOffer';
 export * from './user/p2pProfile';
 export * from './user/p2pUserSetting';
 export * from './user/p2pPaymentUser';
-
+export * from './user/p2pUserOffer'
 export interface RootState {
     public: {
         alerts: AlertState;
@@ -188,6 +189,7 @@ export interface RootState {
         p2pProfile: P2PProfileState;
         p2pUserSetting: P2PUserSettingState;
         p2pPaymentUser: P2PPaymentUserState;
+        p2pUserOffer : P2PUserOfferState;
     };
     admin: {
         configUpdate: ConfigUpdateState;
@@ -259,5 +261,6 @@ export function* rootSaga() {
         call(rootP2PProfileSaga),
         call(rootP2PUserSettingSaga),
         call(rootP2PPaymentUserSaga),
+        call(rootP2PUserOfferSaga)
     ]);
 }

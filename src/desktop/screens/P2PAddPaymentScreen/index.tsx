@@ -27,10 +27,17 @@ export const P2PAddPaymentScreen: React.FC = () => {
     const currenciesData = useSelector(selectP2PCurrenciesData);
     const createPaymentSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
 
-    const [inputFile, setInputFile] = React.useState(null);
+    const [inputFile, setInputFile] = React.useState({
+        lastModified: 0,
+        name: '',
+        size: 0,
+        type: '',
+        webKitRelativePath: ''
+    });
     const [fileName, setFileName] = React.useState('');
     const [fiat, setFiat] = React.useState('IDR');
     const [account_number, setAccountNumber] = React.useState('');
+    const [otp_code, setOtpCode] = React.useState('')
     const [bankData, setBankData] = React.useState<any>();
     const bank: Bank = useParams();
     console.log(bank)
@@ -54,7 +61,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
     }, [createPaymentSuccess]);
 
     const handleCreatePayment = () => {
-        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bank.payment };
+        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bank.payment, otp_code: otp_code, qrcode: inputFile};
 
         dispatch(p2pPaymentUserCreate(payload));
     };
@@ -145,8 +152,15 @@ export const P2PAddPaymentScreen: React.FC = () => {
                                     type="file"
                                     // value={inputFile}
                                     onChange={(e) => {
-                                        setInputFile(e.target.files[0]);
+                                        setInputFile({
+                                            lastModified: e.target.files[0].lastModified,
+                                            name: e.target.files[0].name,
+                                            size: e.target.files[0].size,
+                                            type: e.target.files[0].type,
+                                            webKitRelativePath: e.target.files[0].webkitRelativePath
+                                        });
                                         setFileName(e.target.files[0].name);
+                                        console.log(e.target.files[0])
                                     }}
                                     placeholder="Enter Full Name"
                                     className="custom-input-add-payment w-100 white-text d-none"
@@ -168,6 +182,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
                                 type="text"
                                 placeholder="Enter Verfication Code"
                                 className="custom-input-add-payment w-100 mb-24 white-text"
+                                onChange={(e)=> setOtpCode(e.target.value)}
                             />
 
                             <p className="m-0 p-0 grey-text text-xxs font-normal text-right">
