@@ -87,6 +87,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [showModalReport, setShowModalReport] = React.useState(false);
     const [reason, setReason] = React.useState([]);
     const [upload_payment, setUplodPayment] = React.useState<any>();
+
     /* ============== REPORT STATE END =============== */
 
     const dateInFuture = moment(
@@ -350,38 +351,41 @@ export const P2PWalletOrderScreen: React.FC = () => {
         // console.log(reason);
     }, [reason]);
 
+    console.log(reason);
+
     const handleChecked = (e) => {
-        let allFiles: File[] = [];
-        let maxDocsCount = 0;
-        let additionalFileList: File[] = [];
-        if (e.target.name == 'payment') {
-            setFileName(e.target.files[0].name);
-            // console.log(e.target.files[0]);
-            allFiles = e.target.files;
-            maxDocsCount = 1;
-            additionalFileList =
-                Array.from(allFiles).length > maxDocsCount
-                    ? Array.from(allFiles).slice(0, maxDocsCount)
-                    : Array.from(allFiles);
+        //     let allFiles: File[] = [];
+        //     let maxDocsCount = 0;
+        //     let additionalFileList: File[] = [];
+        //     if (e.target.name == 'payment') {
+        //         setFileName(e.target.files[0].name);
+        //         // console.log(e.target.files[0]);
+        //         allFiles = e.target.files;
+        //         maxDocsCount = 1;
+        //         additionalFileList =
+        //             Array.from(allFiles).length > maxDocsCount
+        //                 ? Array.from(allFiles).slice(0, maxDocsCount)
+        //                 : Array.from(allFiles);
 
-            if (!additionalFileList.length) {
-                return null;
-            }
-        }
+        //         if (!additionalFileList.length) {
+        //             return null;
+        //         }
+        //     }
 
-        let newArray = [
+        setReason([
             ...reason,
             {
                 key: e.target.name,
                 message: e.target.name !== 'payment' ? e.target.value : e.target.files[0].name,
-                upload_payment: e.target.name == 'payment' ? additionalFileList[0] : null,
+                //             upload_payment: e.target.name == 'payment' ? additionalFileList[0] : null,
             },
-        ];
-        if (reason?.includes(e.target.value)) {
-            newArray = newArray.filter((value) => value !== e.target.value);
+        ]);
+        if (!e.target.checked) {
+            setReason(reason.filter((item) => item.message !== e.target.id));
         }
-        setReason(newArray);
     };
+
+    console.log(reason.find((item) => item.key == 'message'));
 
     const handleReport = () => {
         // const formData = new FormData();
@@ -477,6 +481,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             id="Didn’t Not Receive My Stable Coin"
                             name="selected"
                             onChange={handleChecked}
+                            checked={reason.find((item) => item.message.includes('Didn’t Not Receive My Stable Coin'))}
                             value={'Didn’t Not Receive My Stable Coin'}
                             className="m-0 p-0 check-with-label"
                         />
@@ -491,6 +496,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             id="Transaction Taking To Long"
                             name="selected"
                             onChange={handleChecked}
+                            checked={reason.find((item) => item.message.includes('Transaction Taking To Long'))}
                             value={'Transaction Taking To Long'}
                             className="m-0 p-0"
                         />
@@ -505,6 +511,9 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             id="Transaction Ammount Is Different to Order Value"
                             name="selected"
                             onChange={handleChecked}
+                            checked={reason.find((item) =>
+                                item.message.includes('Transaction Ammount Is Different to Order Value')
+                            )}
                             value={'Transaction Ammount Is Different to Order Value'}
                             className="m-0 p-0"
                         />
@@ -520,6 +529,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         <textarea
                             placeholder=""
                             name="message"
+                            id={reason.find((item) => item.key == 'message')?.message}
                             onFocus={(e) =>
                                 // reason?.map((item) => (item?.key?.message ? e.target.value : e.target.value))
                                 reason.splice(

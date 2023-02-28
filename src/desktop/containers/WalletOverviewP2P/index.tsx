@@ -163,6 +163,8 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                 i.currency?.toLocaleLowerCase().includes(filterValue.toLowerCase())
         );
 
+        console.log(filteredList);
+
         return !filteredList.length && !filterValue
             ? [[[''], [''], <Loading />, [''], [''], ['']]]
             : !filteredList.length && !loading
@@ -172,16 +174,6 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                   const totalBalance =
                       Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
                   const estimatedValue = item?.last !== null ? item.last * totalBalance : '0';
-                  //   Number(totalBalance) && currency
-                  //       ? estimateUnitValue(
-                  //             currency.toUpperCase(),
-                  //             VALUATION_PRIMARY_CURRENCY,
-                  //             +totalBalance,
-                  //             currencies,
-                  //             markets,
-                  //             tickers
-                  //         )
-                  //       : Decimal.format(0, fixed);
 
                   return [
                       <div key={index} className="d-flex">
@@ -206,27 +198,13 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                           {spotLocked ? spotLocked.toString() : '0'}
                       </Decimal>,
                       <div key={index} className="ml-auto">
+                          <Link to={`/p2p`} className={`bg-transparent border-none mr-24 blue-text`}>
+                              P2P Trade
+                          </Link>
                           <button
-                              onClick={() => {
-                                  item && item.network && item.network[0] ? handleClickDeposit(currency) : null;
-                              }}
-                              className={`bg-transparent border-none mr-24 ${
-                                  item && item.network && item.network[0] ? 'blue-text' : 'grey-text'
-                              }`}>
-                              {item && item.network && item.network[0] ? 'P2P Trade' : 'Disabled'}
-                          </button>
-                          <button
-                              onClick={() =>
-                                  item && item.network && item.network[0] && handleTransferP2P(filteredList[index])
-                              }
-                              className={`bg-transparent border-none ${
-                                  item && item.network && item.network[0] && item.network[0].withdrawal_enabled
-                                      ? 'warning-text'
-                                      : 'grey-text'
-                              }`}>
-                              {item && item.network && item.network[0] && item.network[0].withdrawal_enabled
-                                  ? 'Transfer'
-                                  : 'Disabled'}
+                              onClick={() => handleTransferP2P(filteredList[index])}
+                              className={`bg-transparent border-none warning-text`}>
+                              Transfer
                           </button>
                       </div>,
                   ];
