@@ -26,8 +26,6 @@ export const P2PUserTable: React.FC = () => {
         dispatch(p2pProfileFetch());
     }, [dispatch]);
 
-    console.log(location?.state?.types);
-
     return (
         <React.Fragment>
             <div className="container-p2p-user-table">

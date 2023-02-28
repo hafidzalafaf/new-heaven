@@ -29,6 +29,7 @@ import {
 } from '../../../assets/images/P2PIcon';
 import moment from 'moment';
 import { InfoWarningIcon } from 'src/assets/images/InfoIcon';
+import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 
 export const P2PUserInfo: React.FC = () => {
     const dispatch = useDispatch();
@@ -172,6 +173,11 @@ export const P2PUserInfo: React.FC = () => {
     const renderModalBlockReason = () => {
         return (
             <div>
+                <div className="d-flex justify-content-end mb-8">
+                    <span onClick={() => setShowModalBlockReason(!showModalBlockReason)} className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
                 <h1 className="m-0 p-0 text-center font-bold text-md grey-text-accent mb-24">Select Reason</h1>
                 <div className="alert-warning-container d-flex align-items-center p-16 gap-8 radius-sm mb-24">
                     <InfoWarningIcon />
