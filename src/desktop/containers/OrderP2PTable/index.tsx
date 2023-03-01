@@ -292,7 +292,7 @@ export const OrderP2PTable = () => {
                                     <Table header={getTableHeaders()} data={getTableData(data)} />
                                 )}
 
-                                {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
+                                {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="processing" title="Processing">
                                 <div className="w-100">{renderFilter()}</div>
@@ -301,7 +301,7 @@ export const OrderP2PTable = () => {
                                 ) : (
                                     <Table header={getTableHeaders()} data={getTableData(data)} />
                                 )}
-                                {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
+                                {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="done" title="Transaction Done">
                                 <div className="w-100">{renderFilter()}</div>
@@ -310,7 +310,7 @@ export const OrderP2PTable = () => {
                                 ) : (
                                     <Table header={getTableHeaders()} data={getTableData(data)} />
                                 )}
-                                {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
+                                {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
                         </Tabs>
 
