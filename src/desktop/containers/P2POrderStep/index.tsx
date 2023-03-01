@@ -404,14 +404,17 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                         </div>
                     </div>
                 </div>
-                {(detail?.order?.state == 'success' || detail?.order?.state == 'accepted') && (
+                {side == 'buy' && (detail?.order?.state == 'success' || detail?.order?.state == 'accepted') && (
                     <div className="mb-5">
                         <CustomInput
+                            isDisabled={detail?.feedback?.comment ? true : false}
                             inputValue={comment}
                             type="text"
                             label={'Comment'}
                             defaultLabel={'Comment'}
-                            placeholder={'Enter Comment'}
+                            placeholder={`${
+                                detail?.feedback?.comment ? 'You have already given a feedback' : 'Enter Comment'
+                            }`}
                             labelVisible
                             classNameLabel="grey-text-accent text-sm font-semibold"
                             handleChangeInput={(e) => handleChangeComment(e)}
@@ -419,12 +422,14 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
 
                         <div className="d-flex justify-content-between">
                             <button
+                                disabled={detail?.feedback?.comment ? true : false}
                                 type="button"
                                 onClick={handleSendFeedbackPositive}
                                 className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
                                 Positive <LikeSuccessIcon />{' '}
                             </button>
                             <button
+                                disabled={detail?.feedback?.comment ? true : false}
                                 type="button"
                                 onClick={handleSendFeedbackNegative}
                                 className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
