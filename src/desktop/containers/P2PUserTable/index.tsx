@@ -7,9 +7,10 @@ import {
     feedbackFetch,
     selectP2PFeedbackUser,
     p2pProfileFetch,
-    P2PProfileFetchInterface,
-    selectP2PProfile,
     selectUserLoggedIn,
+    selectUserInfo,
+    p2pMerchantDetailFetch,
+    selectP2PMerchantDetail,
 } from 'src/modules';
 
 export const P2PUserTable: React.FC = () => {
@@ -19,19 +20,21 @@ export const P2PUserTable: React.FC = () => {
 
     const isLoggedIn = useSelector(selectUserLoggedIn);
     const feedbacks = useSelector(selectP2PFeedbackUser);
-    const userP2P: P2PProfileFetchInterface = useSelector(selectP2PProfile);
+    const merchants = useSelector(selectP2PMerchantDetail);
+    const myProfile = useSelector(selectUserInfo);
 
     React.useEffect(() => {
         dispatch(feedbackFetch());
         dispatch(p2pProfileFetch());
-    }, [dispatch]);
+        dispatch(p2pMerchantDetailFetch({ uid }));
+    }, [dispatch, uid]);
 
     return (
         <React.Fragment>
             <div className="container-p2p-user-table">
                 <Tabs
                     defaultActiveKey={
-                        isLoggedIn && uid == userP2P?.member?.uid
+                        isLoggedIn && uid == myProfile?.uid
                             ? 'payment'
                             : isLoggedIn && location?.state?.types
                             ? location?.state?.types
@@ -40,15 +43,19 @@ export const P2PUserTable: React.FC = () => {
                     transition={false}
                     id="noanim-tab-example"
                     className="mb-3">
-                    {isLoggedIn && uid == userP2P?.member?.uid && (
+                    {isLoggedIn && uid == myProfile?.uid && (
                         <Tab eventKey="payment" title="Payment Methods P2P">
                             <P2PPaymentMethod />
                         </Tab>
                     )}
-                    <Tab eventKey="feedback" title={`Feedback (${feedbacks?.length})`}>
+                    <Tab
+                        eventKey="feedback"
+                        title={`Feedback (${
+                            uid === myProfile?.uid ? feedbacks?.length : merchants?.feedbacks?.length
+                        })`}>
                         <P2PFeedback />
                     </Tab>
-                    {isLoggedIn && uid == userP2P?.member?.uid && (
+                    {isLoggedIn && uid == myProfile?.uid && (
                         <Tab eventKey="block" title="Blocked User">
                             <P2PBlockedUser />
                         </Tab>
