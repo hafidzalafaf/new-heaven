@@ -40,7 +40,6 @@ export const P2PAddPaymentScreen: React.FC = () => {
     const [otp_code, setOtpCode] = React.useState('')
     const [bankData, setBankData] = React.useState<any>();
     const bank: Bank = useParams();
-    console.log(bank)
 
     const profiles = user.profiles.slice(-1);
     const replacedDash = bank.payment.replace(/-/g, ' ');
@@ -160,7 +159,6 @@ export const P2PAddPaymentScreen: React.FC = () => {
                                             webKitRelativePath: e.target.files[0].webkitRelativePath
                                         });
                                         setFileName(e.target.files[0].name);
-                                        console.log(e.target.files[0])
                                     }}
                                     placeholder="Enter Full Name"
                                     className="custom-input-add-payment w-100 white-text d-none"
