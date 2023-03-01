@@ -7,6 +7,8 @@ import { CustomStylePaymentOrder } from 'src/desktop/containers/TableListP2P/Cus
 import Select from 'react-select';
 import { Loading } from 'src/components';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { p2pProfileFetch, selectP2PProfile } from 'src/modules';
 
 export interface TableOfferP2PProps {
     side: string;
@@ -48,9 +50,13 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
         resetForm,
         loading,
     } = props;
+    const dispatch = useDispatch();
+    const profile = useSelector(selectP2PProfile);
     const history = useHistory();
     const intl = useIntl();
-
+    React.useEffect(()=>{
+        dispatch(p2pProfileFetch())
+    }, [dispatch])
     return (
         <React.Fragment>
             {loading ? (
@@ -72,14 +78,19 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                 <tr
                                     key={i}
                                     onClick={() => {
+                                        expand !== item?.offer_number ?
+                                        [
+                                        handleCloseExpand(),
                                         handleSelectOffer(
                                             item?.offer_number,
                                             item?.offer_number,
                                             item?.price,
                                             item?.payment
-                                        );
+                                        )
+                                        ]
+                                        : null
                                     }}
-                                    className="white-text border-table cursor-pointer">
+                                    className={`white-text border-table ${expand !== item?.offer_number ? `cursor-pointer`: ``}`}>
                                     {expand === item?.offer_number ? (
                                         <td colSpan={5} className="row-description dark-bg-main radius-lg">
                                             <div className="d-flex align-items-center justify-content-between mb-24">
@@ -101,7 +112,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <span className="btn-close" onClick={() => handleCloseExpand()}>
+                                                <span className="btn-close cursor-pointer" onClick={() => handleCloseExpand()}>
                                                     <CloseIcon />
                                                 </span>
                                             </div>
@@ -124,12 +135,12 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold divide">
                                                     <p className="m-0 p-0 mr-16">Limit</p>
                                                     <p className="m-0 p-0 mr-16">
-                                                        {item?.min_order}-{item?.max_order} {currency?.toUpperCase()}
+                                                        {item?.min_order} - {item?.max_order} {currency?.toUpperCase()}
                                                     </p>
                                                 </div>
 
                                                 <div className="padding-4 d-flex align-items-center white-text text-xs font-bold">
-                                                    <p className="m-0 p-0 mr-16">Seller's Payment Methods</p>
+                                                    <p className="m-0 p-0 mr-16">{side === 'buy'? `Seller's Payment Methods` : `Buyer's Payment Methods` }</p>
                                                     <div className="d-flex flex-wrap align-items-center label-bank-container">
                                                         {item?.payment && item?.payment[0]
                                                             ? item?.payment?.map((bank, i) => (
@@ -171,7 +182,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                             side == 'sell' ? 'mb-24' : 'mb-44'
                                                         }`}>
                                                         <label className="white-text text-xs font-semibold mb-8">
-                                                            I Will Recieve
+                                                            I Will Receive
                                                         </label>
                                                         <input
                                                             type="text"
@@ -211,6 +222,13 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                                     className="form-control input-p2p-form white-text"
                                                                 />
                                                             </div> */}
+                                                        <Link className='m-2' to={`/p2p/profile/${profile?.member?.uid}`}>
+                                                            <div className="add-payment-select">
+                                                                <p className="m-0 p-0 gradient-text text-ms font-semibold text-center ">
+                                                                    Add payment method
+                                                                </p>
+                                                            </div>
+                                                        </Link>
                                                         </div>
                                                     )}
 
@@ -224,8 +242,8 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                         <button
                                                             disabled={
                                                                 side == 'sell'
-                                                                    ? !payment_order || !price || !amount
-                                                                    : !price || !amount
+                                                                    ? !payment_order || !price || !amount || Number(item?.min_order) > Number(amount) || Number(item?.max_order) < Number(amount)
+                                                                    : !price || !amount || Number(item?.min_order) > Number(amount) || Number(item?.max_order) < Number(amount)
                                                             }
                                                             type="button"
                                                             onClick={handleCreacteOrder}

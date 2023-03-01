@@ -407,22 +407,18 @@ export const TableListP2P = () => {
         setPaymentOrder(e);
     };
 
-    const handleSelectOfferBuy = (expand: string, offer_number: string, price: string, payment?: any) => {
-        if (!expandBuy) {
+    const handleSelectOfferBuy = (expand: string, offer_number: string, price: string, payment?: any) => {   
             setExpandBuy(expand);
             setOfferNumber(offer_number);
             setPriceActual(price);
             setPaymentOption([]);
-        }
     };
 
     const handleSelectOfferSell = (expand: string, offer_number: string, price: string, payment: any) => {
-        if (!expandSell) {
             setExpandSell(expand);
             setOfferNumber(offer_number);
             setPriceActual(price);
             setPaymentOption(payment);
-        }
     };
 
     const handleCloseExpandBuy = () => {
