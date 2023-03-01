@@ -41,6 +41,7 @@ import { CustomStyleFiat } from './CustomStyleFiat';
 import { CustomStylePaymentOrder } from './CustomStylePaymentOrder';
 import { Modal } from '../../../desktop/components';
 import { Loading } from 'src/components';
+import { Spinner } from 'react-bootstrap';
 
 export const TableListP2P = () => {
     const dispatch = useDispatch();
@@ -74,6 +75,7 @@ export const TableListP2P = () => {
     const [showModalUserLevel, setShowModalUserLevel] = React.useState(false);
     const [title, setTitle] = React.useState('');
     const [offerLoading, setOfferLoading] = React.useState(false);
+    const [loadingRefresh, setLoadingRefresh] = React.useState(false);
 
     /* ========== ORDER FETCH STATE START ========== */
     const [side, setSide] = React.useState('buy');
@@ -187,46 +189,37 @@ export const TableListP2P = () => {
             }
         }
 
-        const fetchPrivateInterval = setInterval(() => {
-            if (currency !== undefined && fiat !== undefined && isLoggedIn) {
-                dispatch(
-                    p2pOfferFetch(
-                        amountList
-                            ? amountListPayload
-                            : amountFilter
-                            ? amountFilterPayload
-                            : minPriceFilter && maxPriceFilter
-                            ? priceFilterPayload
-                            : minPriceFilter && maxPriceFilter && amountFilter
-                            ? filterPayload
-                            : defaultPayload
-                    )
-                );
-            }
-        }, 5000);
+        if (currency !== undefined && fiat !== undefined && isLoggedIn) {
+            dispatch(
+                p2pOfferFetch(
+                    amountList
+                        ? amountListPayload
+                        : amountFilter
+                        ? amountFilterPayload
+                        : minPriceFilter && maxPriceFilter
+                        ? priceFilterPayload
+                        : minPriceFilter && maxPriceFilter && amountFilter
+                        ? filterPayload
+                        : defaultPayload
+                )
+            );
+        }
 
-        const fetchPublicInterval = setInterval(() => {
-            if (currency !== undefined && fiat !== undefined && !isLoggedIn) {
-                dispatch(
-                    offersFetch(
-                        amountList
-                            ? amountListPayload
-                            : amountFilter
-                            ? amountFilterPayload
-                            : minPriceFilter && maxPriceFilter
-                            ? priceFilterPayload
-                            : minPriceFilter && maxPriceFilter && amountFilter
-                            ? filterPayload
-                            : defaultPayload
-                    )
-                );
-            }
-        }, 5000);
-
-        return () => {
-            clearInterval(fetchPrivateInterval);
-            clearInterval(fetchPublicInterval);
-        };
+        if (currency !== undefined && fiat !== undefined && !isLoggedIn) {
+            dispatch(
+                offersFetch(
+                    amountList
+                        ? amountListPayload
+                        : amountFilter
+                        ? amountFilterPayload
+                        : minPriceFilter && maxPriceFilter
+                        ? priceFilterPayload
+                        : minPriceFilter && maxPriceFilter && amountFilter
+                        ? filterPayload
+                        : defaultPayload
+                )
+            );
+        }
     }, [
         dispatch,
         side,
@@ -277,6 +270,8 @@ export const TableListP2P = () => {
     });
 
     const handleRefresh = () => {
+        setLoadingRefresh(true);
+
         const defaultPayload = {
             fiat: fiat,
             currency: currency,
@@ -314,37 +309,36 @@ export const TableListP2P = () => {
             amount: amountFilter,
         };
 
-        if (currency !== undefined && fiat !== undefined) {
-            if (isLoggedIn) {
+        setTimeout(() => {
+            setLoadingRefresh(false);
+            if (currency !== undefined && fiat !== undefined) {
                 dispatch(
-                    p2pOfferFetch(
-                        amountList
-                            ? amountListPayload
-                            : amountFilter
-                            ? amountFilterPayload
-                            : minPriceFilter && maxPriceFilter
-                            ? priceFilterPayload
-                            : minPriceFilter && maxPriceFilter && amountFilter
-                            ? filterPayload
-                            : defaultPayload
-                    )
-                );
-            } else {
-                dispatch(
-                    offersFetch(
-                        amountList
-                            ? amountListPayload
-                            : amountFilter
-                            ? amountFilterPayload
-                            : minPriceFilter && maxPriceFilter
-                            ? priceFilterPayload
-                            : minPriceFilter && maxPriceFilter && amountFilter
-                            ? filterPayload
-                            : defaultPayload
-                    )
+                    isLoggedIn
+                        ? p2pOfferFetch(
+                              amountList
+                                  ? amountListPayload
+                                  : amountFilter
+                                  ? amountFilterPayload
+                                  : minPriceFilter && maxPriceFilter
+                                  ? priceFilterPayload
+                                  : minPriceFilter && maxPriceFilter && amountFilter
+                                  ? filterPayload
+                                  : defaultPayload
+                          )
+                        : offersFetch(
+                              amountList
+                                  ? amountListPayload
+                                  : amountFilter
+                                  ? amountFilterPayload
+                                  : minPriceFilter && maxPriceFilter
+                                  ? priceFilterPayload
+                                  : minPriceFilter && maxPriceFilter && amountFilter
+                                  ? filterPayload
+                                  : defaultPayload
+                          )
                 );
             }
-        }
+        }, 1500);
     };
 
     /* ============== FUNCTION CREATE ORDER START ============== */
@@ -876,7 +870,12 @@ export const TableListP2P = () => {
 
                     <div className="d-flex align-items-center flex-wrap">
                         <button onClick={handleRefresh} type="button" className="grey-text btn-secondary mr-16 mb-24">
-                            <RefreshIcon fillColor={'var(--text-grey-color)'} /> Refresh
+                            {loadingRefresh ? (
+                                <Spinner animation="border" variant="secondary" size="sm" />
+                            ) : (
+                                <RefreshIcon fillColor={'var(--text-grey-color)'} />
+                            )}
+                            Refresh
                         </button>
 
                         <button
@@ -914,6 +913,7 @@ export const TableListP2P = () => {
                         handleCloseExpand={handleCloseExpandBuy}
                         resetForm={resetForm}
                         loading={offerLoading}
+                        refresh={loadingRefresh}
                     />
                 )}
                 {/* ========= TABLE BUY END ========= */}
@@ -938,6 +938,7 @@ export const TableListP2P = () => {
                         handleCloseExpand={handleCloseExpandSell}
                         resetForm={resetForm}
                         loading={offerLoading}
+                        refresh={loadingRefresh}
                     />
                 )}
                 {/* ========= TABLE SELL END ========= */}

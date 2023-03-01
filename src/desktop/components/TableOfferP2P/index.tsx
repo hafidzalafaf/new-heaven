@@ -28,6 +28,7 @@ export interface TableOfferP2PProps {
     handleCloseExpand: () => void;
     resetForm: () => void;
     loading: boolean;
+    refresh: boolean;
 }
 
 export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props) => {
@@ -49,6 +50,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
         handleCloseExpand,
         resetForm,
         loading,
+        refresh,
     } = props;
     const dispatch = useDispatch();
     const profile = useSelector(selectP2PProfile);
@@ -59,7 +61,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
     }, [dispatch])
     return (
         <React.Fragment>
-            {loading ? (
+            {loading || refresh ? (
                 <Loading />
             ) : (
                 <table className="w-100">

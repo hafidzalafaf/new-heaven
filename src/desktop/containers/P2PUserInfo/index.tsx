@@ -50,6 +50,7 @@ export const P2PUserInfo: React.FC = () => {
     const [showModalBlockAlert, setShowModalBlockAlert] = React.useState(false);
     const [showModalBlockReason, setShowModalBlockReason] = React.useState(false);
     const [reason, setReason] = React.useState('');
+    const [data, setData] = React.useState<any>();
 
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
@@ -65,6 +66,14 @@ export const P2PUserInfo: React.FC = () => {
             history.push(`/p2p/profile/${myProfile?.uid}`, { types: 'block' });
         }
     }, [dispatch, changeUsernameSuccess, uid, blockMerchantSuccess]);
+
+    React.useEffect(() => {
+        if (uid === myProfile?.uid) {
+            setData(userP2P);
+        } else {
+            setData(merchants);
+        }
+    }, [myProfile, merchants, uid, userP2P]);
 
     const changeUsername = () => {
         const payload = {
@@ -91,10 +100,10 @@ export const P2PUserInfo: React.FC = () => {
         { name: 'Other' },
     ];
 
-    // const convertDurationtoMilliseconds = (duration?: string) => {
-    //     const [hours, minutes, seconds] = duration?.split(':');
-    //     return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
-    // };
+    const convertDurationtoMilliseconds = (duration?: string) => {
+        const [hours, minutes, seconds] = duration?.split(':');
+        return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
+    };
 
     const ModalChangeName = () => {
         return (
@@ -219,12 +228,22 @@ export const P2PUserInfo: React.FC = () => {
                 <div className="d-flex justify-content-between align-items-center">
                     <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
                         <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
-                            {merchants?.trader_name
-                                ? merchants?.trader_name?.slice(0, 1).toUpperCase()
-                                : merchants?.member?.email?.slice(0, 1).toUpperCase()}
+                            {uid === myProfile?.uid
+                                ? data?.trader_name
+                                    ? data?.trader_name?.slice(0, 1).toUpperCase()
+                                    : data?.member?.email?.slice(0, 1).toUpperCase()
+                                : data?.merchant?.username
+                                ? data?.merchant?.username?.slice(0, 1).toUpperCase()
+                                : data?.merchant?.member?.email?.slice(0, 1).toUpperCase()}
                         </div>
                         <p className="m-0 p-0 text-ms font-extrabold grey-text-accent">
-                            {merchants?.trader_name ? merchants?.trader_name : merchants?.member?.email}
+                            {uid === myProfile?.uid
+                                ? data?.trader_name
+                                    ? data?.trader_name
+                                    : data?.member?.email
+                                : data?.merchant?.username
+                                ? data?.merchant?.username
+                                : data?.merchant?.member?.email}
                         </p>
                         {uid == userP2P?.member?.uid && (
                             <RenameIcon
@@ -276,12 +295,23 @@ export const P2PUserInfo: React.FC = () => {
                     <CardP2PUserInfo
                         title="Positive Feedback"
                         type="feedback"
-                        percent={`${
-                            merchants?.feedback?.positive !== 0
-                                ? Math.floor((merchants?.feedback?.positive / merchants?.feedback?.total) * 100)
-                                : 0
-                        }%`}
-                        amount={`${merchants?.feedback?.total}`}
+                        percent={
+                            uid === myProfile?.uid
+                                ? `${
+                                      data?.feedback?.positive !== 0
+                                          ? Math.floor((data?.feedback?.positive / data?.feedback?.total) * 100)
+                                          : '0'
+                                  }%`
+                                : `${
+                                      data?.merchant?.feedback?.positive !== 0
+                                          ? Math.floor(
+                                                (data?.merchant?.feedback?.positive / data?.merchant?.feedback?.total) *
+                                                    100
+                                            )
+                                          : '0'
+                                  }%`
+                        }
+                        amount={`${uid === myProfile?.uid ? data?.feedback?.total : data?.merchant?.feedback?.total}`}
                     />
 
                     <div className="d-flex flex-column justify-content-center gap-8">
@@ -291,9 +321,17 @@ export const P2PUserInfo: React.FC = () => {
                                     className="progress"
                                     style={{
                                         width: `${
-                                            merchants?.feedback?.positive !== 0
+                                            uid === myProfile?.uid
+                                                ? data?.feedback?.positive !== 0
+                                                    ? Math.floor(
+                                                          (data?.feedback?.positive / data?.feedback?.total) * 100
+                                                      ).toString()
+                                                    : '0'
+                                                : data?.merchant?.feedback?.positive !== 0
                                                 ? Math.floor(
-                                                      (merchants?.feedback?.positive / merchants?.feedback?.total) * 100
+                                                      (data?.merchant?.feedback?.positive /
+                                                          data?.merchant?.feedback?.total) *
+                                                          100
                                                   ).toString()
                                                 : '0'
                                         }%`,
@@ -301,7 +339,9 @@ export const P2PUserInfo: React.FC = () => {
                                 />
                             </div>
                             <LikeIcon />
-                            <p className="m-0 p-0 grey-text text-sm">{merchants?.feedback?.positive}</p>
+                            <p className="m-0 p-0 grey-text text-sm">
+                                {uid === myProfile?.uid ? data?.feedback?.positive : data?.merchant?.feedback?.positive}
+                            </p>
                         </div>
 
                         <div className="d-flex justify-content-between align-items-center gap-4">
@@ -310,9 +350,17 @@ export const P2PUserInfo: React.FC = () => {
                                     className="progress"
                                     style={{
                                         width: `${
-                                            merchants?.feedback?.negative !== 0
+                                            uid === myProfile?.uid
+                                                ? data?.feedback?.negative !== 0
+                                                    ? Math.floor(
+                                                          (data?.feedback?.negative / data?.feedback?.total) * 100
+                                                      ).toString()
+                                                    : '0'
+                                                : data?.merchant?.feedback?.negative !== 0
                                                 ? Math.floor(
-                                                      (merchants?.feedback?.negative / merchants?.feedback?.total) * 100
+                                                      (data?.merchant?.feedback?.negative /
+                                                          data?.merchant?.feedback?.total) *
+                                                          100
                                                   ).toString()
                                                 : '0'
                                         }%`,
@@ -320,32 +368,80 @@ export const P2PUserInfo: React.FC = () => {
                                 />
                             </div>
                             <UnLikeIcon />
-                            <p className="m-0 p-0 grey-text text-sm">{merchants?.feedback?.negative}</p>
+                            <p className="m-0 p-0 grey-text text-sm">
+                                {uid === myProfile?.uid ? data?.feedback?.negative : data?.merchant?.feedback?.negative}
+                            </p>
                         </div>
                     </div>
 
-                    <CardP2PUserInfo title="All Trade" type="all trade" amount={`${merchants?.trade?.total}`} />
-                    <CardP2PUserInfo title="30d Trade" type="trade" time={`${merchants?.trade?.mount_trade} Time(s)`} />
+                    <CardP2PUserInfo
+                        title="All Trade"
+                        type="all trade"
+                        amount={uid === myProfile?.uid ? `${data?.trade?.total}` : `${data?.merchant?.trade?.total}`}
+                    />
+                    <CardP2PUserInfo
+                        title="30d Trade"
+                        type="trade"
+                        time={
+                            uid === myProfile?.uid
+                                ? `${data?.trade?.mount_trade} Time(s)`
+                                : `${data?.merchant?.trade?.mount_trade} Time(s)`
+                        }
+                    />
                     <CardP2PUserInfo
                         title="30d Completion Rate"
                         type="completion"
-                        percent={`${merchants?.trade?.completed_rate ? merchants?.trade?.completed_rate + '%' : '-'} `}
+                        percent={
+                            uid === myProfile?.uid
+                                ? `${data?.trade?.completed_rate ? data?.trade?.completed_rate + '%' : '-'} `
+                                : `${
+                                      data?.merchant?.trade?.completed_rate
+                                          ? data?.merchant?.trade?.completed_rate + '%'
+                                          : '-'
+                                  } `
+                        }
                     />
                     <CardP2PUserInfo
                         title="Avg. Release Time"
                         type="release"
-                        // minutes={`${moment
-                        //     .utc(convertDurationtoMilliseconds(merchants?.trade?.release_time))
-                        //     .format('m.ss')} Minute(s)`}
-                        minutes={merchants?.trade?.release_time}
+                        minutes={
+                            uid === myProfile?.uid
+                                ? `${
+                                      data?.trade?.release_time
+                                          ? moment
+                                                .utc(convertDurationtoMilliseconds(data?.trade?.release_time))
+                                                .format('m.ss')
+                                          : '0'
+                                  } Minute(s)`
+                                : `${
+                                      data?.merchant?.trade?.release_time
+                                          ? moment
+                                                .utc(convertDurationtoMilliseconds(data?.merchant?.trade?.release_time))
+                                                .format('m.ss')
+                                          : '0'
+                                  } Minute(s)`
+                        }
                     />
                     <CardP2PUserInfo
                         title="30d Pay Time"
                         type="pay"
-                        minutes={merchants?.trade?.pay_time}
-                        // minutes={`${moment
-                        //     .utc(convertDurationtoMilliseconds(merchants?.trade?.pay_time))
-                        //     .format('m.ss')} Minute(s)`}
+                        minutes={
+                            uid === myProfile?.uid
+                                ? `${
+                                      data?.trade?.pay_time
+                                          ? moment
+                                                .utc(convertDurationtoMilliseconds(data?.trade?.pay_time))
+                                                .format('m.ss')
+                                          : '0'
+                                  } Minute(s)`
+                                : `${
+                                      data?.merchant?.trade?.pay_time
+                                          ? moment
+                                                .utc(convertDurationtoMilliseconds(data?.merchant?.trade?.pay_time))
+                                                .format('m.ss')
+                                          : '0'
+                                  } Minute(s)`
+                        }
                     />
                 </div>
 
