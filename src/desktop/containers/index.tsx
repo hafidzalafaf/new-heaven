@@ -42,3 +42,4 @@ export * from './P2PFAQ';
 export * from './FAQHeader';
 export * from './P2PChat';
 export * from './P2POrderStep';
+export * from './OfferP2PTable';

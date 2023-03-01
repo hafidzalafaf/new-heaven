@@ -1,159 +1,49 @@
 import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Tabs, Tab, Dropdown } from 'react-bootstrap';
 import '../../../styles/colors.pcss';
 import Select from 'react-select';
 import moment from 'moment';
 import { CustomStylesSelect, NoData } from '../../components';
 import { Loading, Table } from '../../../components';
-import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
-import { Link, useHistory } from 'react-router-dom';
-import { orderFetch, selectP2POrder, p2pFiatFetch, selectP2POrdersLoading, selectP2PFiatsData, p2pUserOfferFetch, selectP2PUserAccountOffer } from 'src/modules';
-import { Modal } from '../../components';
+import { HideIcon } from '../../../assets/images/P2PIcon';
+import { Link } from 'react-router-dom';
 import { capitalizeFirstLetter } from 'src/helpers';
 
-export const OfferP2PTable = () => {
-    const history = useHistory();
-    const dispatch = useDispatch();
+export interface OfferP2PTableProps {
+    type: string;
+    fiat: string;
+    state: string;
+    side: string;
+    startDate: string | number;
+    endDate: string | number;
+    data: any;
+    fiats: any;
+    loading: boolean;
+    handleShowModalCancel?: () => void;
+    handleChangeFiat: (e: string) => void;
+    handleChangeState: (e: string) => void;
+    handleChangeSide: (e: string) => void;
+    handleChangeStartDate: (e: string) => void;
+    handleChangeEndDate: (e: string) => void;
+}
 
-    const order = useSelector(selectP2POrder);
-    const loading = useSelector(selectP2POrdersLoading);
-    const fiats = useSelector(selectP2PFiatsData);
-    const offer = useSelector(selectP2PUserAccountOffer)
-
-    const [startDate, setStartDate] = React.useState<string | number>();
-    const [endDate, setEndDate] = React.useState<string | number>();
-    const [fiat, setFiat] = React.useState('');
-    const [side, setSide] = React.useState('');
-    const [state, setState] = React.useState('');
-    const [tab, setTab] = React.useState('processing');
-    const [data, setData] = React.useState([]);
-
-    const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
-    const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
-
-    React.useEffect(() => {
-        dispatch(p2pFiatFetch());
-    }, [dispatch]);
-
-    React.useEffect(()=>{
-        dispatch(p2pUserOfferFetch({
-            currency: '',
-            amount: '',
-            max_amount: '',
-            min_price: '',
-            max_price: '',
-            side: ''
-        }))
-    },[dispatch])
-
-    console.log(offer)
-
-    React.useEffect(() => {
-        const fiatDatePayload = {
-            fiat,
-            from: time_from,
-            to: time_to,
-        };
-
-        const sideDatePayload = {
-            side,
-            from: time_from,
-            to: time_to,
-        };
-
-        const stateDatePayload = {
-            state,
-            from: time_from,
-            to: time_to,
-        };
-
-        const fullPayload = {
-            fiat,
-            side,
-            state,
-            from: time_from,
-            to: time_to,
-        };
-        dispatch(
-            orderFetch(
-                fiat
-                    ? { fiat }
-                    : side
-                    ? { side }
-                    : state
-                    ? { state }
-                    : fiat && side
-                    ? { fiat, side }
-                    : fiat && state
-                    ? { fiat, state }
-                    : fiat && startDate && endDate
-                    ? fiatDatePayload
-                    : side && state
-                    ? { side, state }
-                    : side && startDate && endDate
-                    ? sideDatePayload
-                    : state && startDate && endDate
-                    ? stateDatePayload
-                    : fiat && side && state && startDate && endDate
-                    ? fullPayload
-                    : null
-            )
-        );
-        const fetchInterval = setInterval(() => {
-            dispatch(
-                orderFetch(
-                    fiat
-                        ? { fiat }
-                        : side
-                        ? { side }
-                        : state
-                        ? { state }
-                        : fiat && side
-                        ? { fiat, side }
-                        : fiat && state
-                        ? { fiat, state }
-                        : fiat && startDate && endDate
-                        ? fiatDatePayload
-                        : side && state
-                        ? { side, state }
-                        : side && startDate && endDate
-                        ? sideDatePayload
-                        : state && startDate && endDate
-                        ? stateDatePayload
-                        : fiat && side && state && startDate && endDate
-                        ? fullPayload
-                        : null
-                )
-            );
-        }, 5000);
-
-        return () => {
-            clearInterval(fetchInterval);
-        };
-    }, [dispatch, startDate, endDate, state, fiat, side, time_from, time_to]);
-
-    // React.useEffect(() => {
-    //     setData(
-    //         tab == 'done'
-    //             ? order.filter((item) => item?.state == 'accepted' || item?.state == 'success')
-    //             : tab == 'processing'
-    //             ? order.filter(
-    //                   (item) => item?.state == 'waiting' || item?.state?.includes('waiting') || item?.state == 'prepare'
-    //               )
-    //             : order
-    //     );
-    // }, [order, tab]);
-
-
-    React.useEffect(()=>{
-        setData(offer)
-    })
-
-    const handleSelect = (k) => {
-        setTab(k);
-    };
-
+export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props) => {
+    const {
+        type,
+        fiat,
+        state,
+        side,
+        startDate,
+        endDate,
+        data,
+        fiats,
+        loading,
+        handleShowModalCancel,
+        handleChangeFiat,
+        handleChangeState,
+        handleChangeSide,
+        handleChangeStartDate,
+        handleChangeEndDate,
+    } = props;
     // fiat, side, state, from, to
     const optionFiats = fiats?.map((item) => {
         return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };
@@ -175,7 +65,15 @@ export const OfferP2PTable = () => {
     ];
 
     const getTableHeaders = () => {
-        return ['Order Type', 'Coin', 'Fiat Amount', 'Price', `Crypto Amount`, `Counter Party`, 'Status', 'Action'];
+        return [
+            `${type === 'offer' ? 'Offer' : 'Order'} Type`,
+            'Coin',
+            'Amount',
+            'Sale',
+            `Available`,
+            'Status',
+            'Action',
+        ];
     };
 
     const getTableData = (data) => {
@@ -191,29 +89,28 @@ export const OfferP2PTable = () => {
             </div>,
             <div className="d-flex align-items-center">
                 <img src={item?.fiat?.icon_url} alt={item?.fiat?.name} className="mr-12" height={32} width={32} />
-                <p className="white-text text-sm font-semibold m-0 p-0">{item?.fiat?.name}</p>
+                <p className="white-text text-sm font-semibold m-0 p-0">{item?.fiat?.name?.toUpperCase()}</p>
             </div>,
-            <p className="m-0 p-0 grey-text text-sm font-semibold">{item.fiat_amount}</p>,
-            <p className="m-0 p-0 white-text text-sm font-semibold">{item.price}</p>,
+            <p className="m-0 p-0 white-text text-sm font-semibold">{item?.stats_offer?.bought}</p>,
+            <p className="m-0 p-0 white-text text-sm font-semibold">{item?.stats_offer?.sold}</p>,
             <p className="m-0 p-0 white-text text-sm font-semibold">
-                {item?.amount} {item?.currency?.name?.toUpperCase()}
+                {item?.available_amount} {item?.currency?.name?.toUpperCase()}
             </p>,
-            // <a
-            //     target="_blank"
-            //     rel="noreferrer"
-            //     href={'https://api.heavenexchange.io/'}
-            //     className="text-underline blue-text text-sm font-semibold">
-            //     {item?.trades?.uid}
-            // </a>,
-            <p className="m-0 p-0 text-underline blue-text text-sm font-semibold">{item?.trades?.uid}</p>,
-            <p className="m-0 p-0 white-text text-sm font-semibold">{capitalizeFirstLetter(item?.state)}</p>,
-            <div className="d-flex align-items-center">
-                <div
-                    onClick={() => history.push(`/p2p/offer/${item?.order_number}`, { side: item?.side })}
+            <p className="m-0 p-0 white-text text-sm font-semibold">{capitalizeFirstLetter(item?.side)}</p>,
+            <div className="d-flex align-items-center gap-24">
+                <Link
+                    to={
+                        type == 'offer' ? `/p2p/offer/${item?.offer_number}` : `/p2p/wallet/order/${item?.order_number}`
+                    }
                     className="d-flex align-items-center cursor-pointer mr-8">
-                    <p className="m-0 p-0 mr-6 text-xs grey-text">Order</p>
+                    <p className="m-0 p-0 mr-6 text-xs grey-text">Detail</p>
                     <HideIcon />
-                </div>
+                </Link>
+                {type === 'offer' && (
+                    <p onClick={handleShowModalCancel} className="m-0 p-0 mr-6 text-xs grey-text cursor-pointer">
+                        Cancel
+                    </p>
+                )}
             </div>,
         ]);
     };
@@ -229,19 +126,21 @@ export const OfferP2PTable = () => {
                         })}
                         styles={CustomStylesSelect}
                         options={optionFiats}
-                        onChange={(e) => setFiat(e.value)}
+                        onChange={(e) => handleChangeFiat(e.value)}
                     />
                 </div>
 
                 <div className="w-20">
-                    <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">Order Type</p>
+                    <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">
+                        {type == 'offer' ? 'Offer' : 'Order'} Type
+                    </p>
                     <Select
                         value={optionSide.filter(function (option) {
                             return option.value === side;
                         })}
                         styles={CustomStylesSelect}
                         options={optionSide}
-                        onChange={(e) => setSide(e.value)}
+                        onChange={(e) => handleChangeSide(e.value)}
                     />
                 </div>
 
@@ -253,7 +152,7 @@ export const OfferP2PTable = () => {
                         })}
                         styles={CustomStylesSelect}
                         options={optionState}
-                        onChange={(e) => setState(e.value)}
+                        onChange={(e) => handleChangeState(e.value)}
                     />
                 </div>
 
@@ -263,7 +162,7 @@ export const OfferP2PTable = () => {
                         type="date"
                         className="form-control mb-24"
                         onChange={(e) => {
-                            setStartDate(e.target.value);
+                            handleChangeStartDate(e.target.value);
                         }}
                         value={startDate}
                         defaultValue={new Date().toISOString().slice(0, 10)}
@@ -276,7 +175,7 @@ export const OfferP2PTable = () => {
                         type="date"
                         className="form-control mb-24"
                         onChange={(e) => {
-                            setEndDate(e.target.value);
+                            handleChangeEndDate(e.target.value);
                         }}
                         value={endDate}
                         defaultValue={new Date().toISOString().slice(0, 10)}
@@ -291,184 +190,11 @@ export const OfferP2PTable = () => {
             <div className="com-order-p2p-table">
                 <div className="d-flex justify-content-between align-items-start mb-24">
                     <div className="position-relative w-100">
-                        <Tabs
-                            defaultActiveKey="all"
-                            activeKey={tab}
-                            onSelect={(k) => handleSelect(k)}
-                            id="fill-tab-example"
-                            className="mb-3"
-                            fill>
-                            <Tab eventKey="all" title="All Orders">
-                                <div className="w-100">{renderFilter()}</div>
-                                {/* {loading ? <Loading /> :  */}
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {/* } */}
-
-                                {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
-                            </Tab>
-                            <Tab eventKey="processing" title="Processing">
-                                <div className="w-100">{renderFilter()}</div>
-                                {/* {loading ? <Loading /> :  */}
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {/*  } */}
-                                {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
-                            </Tab>
-                            <Tab eventKey="done" title="Transaction Done">
-                                <div className="w-100">{renderFilter()}</div>
-                                {/* {loading ? <Loading /> :  */}
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {/* } */}
-                                {(!data || !data[0]) && !loading && <NoData text="No Order Yet" />}
-                            </Tab>
-                        </Tabs>
-
-                        <div className="btn-warning-container position-absolute">
-                            <Dropdown>
-                                <Dropdown.Toggle
-                                    variant="warning"
-                                    id="dropdown-basic"
-                                    className="btn-warning white-text text-ms font-extrabold radius-sm cursor-pointer">
-                                    Unread Message (8)
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Tabs defaultActiveKey="order" id="fill-tab-example" className="mb-3" fill>
-                                        <Tab eventKey="order" title="Order">
-                                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                                                <div className="d-flex align-items-start justify-content-start gap-8">
-                                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
-                                                    <div>
-                                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">
-                                                            Buy USDT
-                                                        </p>
-                                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                                                </div>
-                                            </div>
-                                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                                                <div className="d-flex align-items-start justify-content-start gap-8">
-                                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
-                                                    <div>
-                                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">
-                                                            Buy USDT
-                                                        </p>
-                                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                                                </div>
-                                            </div>
-                                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                                                <div className="d-flex align-items-start justify-content-start gap-8">
-                                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
-                                                    <div>
-                                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">
-                                                            Buy USDT
-                                                        </p>
-                                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                                                </div>
-                                            </div>
-                                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                                                <div className="d-flex align-items-start justify-content-start gap-8">
-                                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
-                                                    <div>
-                                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">
-                                                            Buy USDT
-                                                        </p>
-                                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                                                </div>
-                                            </div>
-                                        </Tab>
-                                        <Tab eventKey="offer" title="Offer">
-                                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                                                <div className="d-flex align-items-start justify-content-start gap-8">
-                                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
-                                                    <div>
-                                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">
-                                                            Buy USDT
-                                                        </p>
-                                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                                                </div>
-                                            </div>
-                                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                                                <div className="d-flex align-items-start justify-content-start gap-8">
-                                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
-                                                    <div>
-                                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">
-                                                            Buy USDT
-                                                        </p>
-                                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                                                </div>
-                                            </div>
-                                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                                                <div className="d-flex align-items-start justify-content-start gap-8">
-                                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
-                                                    <div>
-                                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">
-                                                            Buy USDT
-                                                        </p>
-                                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                                                </div>
-                                            </div>
-                                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                                                <div className="d-flex align-items-start justify-content-start gap-8">
-                                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
-                                                    <div>
-                                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">
-                                                            Buy USDT
-                                                        </p>
-                                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                                                </div>
-                                            </div>
-                                        </Tab>
-                                    </Tabs>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
+                        <div className="w-100">{renderFilter()}</div>
+                        {loading ? <Loading /> : <Table header={getTableHeaders()} data={getTableData(data)} />}
+                        {(!data || !data[0]) && !loading && (
+                            <NoData text={type === 'offer' ? 'No Offer Yet' : 'No Order Yet'} />
+                        )}
                     </div>
                 </div>
             </div>
