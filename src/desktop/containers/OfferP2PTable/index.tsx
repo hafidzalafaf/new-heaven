@@ -47,8 +47,6 @@ export const OfferP2PTable = () => {
         }))
     },[dispatch])
 
-    console.log(offer)
-
     React.useEffect(() => {
         const fiatDatePayload = {
             fiat,

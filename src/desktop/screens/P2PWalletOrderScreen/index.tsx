@@ -348,7 +348,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
 
     React.useEffect(() => {
         //Print data each time the checkbox is "checked" or "unchecked"
-        // console.log(reason);
     }, [reason]);
 
     console.log(reason);

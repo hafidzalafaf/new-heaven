@@ -93,7 +93,6 @@ export const P2PUserInfo: React.FC = () => {
 
     // const convertDurationtoMilliseconds = (duration?: string) => {
     //     const [hours, minutes, seconds] = duration?.split(':');
-    //     console.log(hours, minutes, seconds);
     //     return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
     // };
 

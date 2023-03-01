@@ -104,7 +104,6 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
     };
 
     const onImageChange = (e) => {
-        console.log(e.target.files[0]);
 
         if (e.target.files && e.target.files[0]) {
             let img = e.target.files[0];

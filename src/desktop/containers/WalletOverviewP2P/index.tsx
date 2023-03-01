@@ -163,8 +163,6 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                 i.currency?.toLocaleLowerCase().includes(filterValue.toLowerCase())
         );
 
-        console.log(filteredList);
-
         return !filteredList.length && !filterValue
             ? [[[''], [''], <Loading />, [''], [''], ['']]]
             : !filteredList.length && !loading
