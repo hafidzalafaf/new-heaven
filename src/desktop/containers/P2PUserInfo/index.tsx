@@ -75,8 +75,6 @@ export const P2PUserInfo: React.FC = () => {
         }
     }, [myProfile, merchants, uid, userP2P]);
 
-    console.log(merchants);
-
     const changeUsername = () => {
         const payload = {
             username,
@@ -104,7 +102,6 @@ export const P2PUserInfo: React.FC = () => {
 
     const convertDurationtoMilliseconds = (duration?: string) => {
         const [hours, minutes, seconds] = duration?.split(':');
-        console.log(hours, minutes, seconds);
         return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
     };
 
@@ -235,17 +232,18 @@ export const P2PUserInfo: React.FC = () => {
                                 ? data?.trader_name
                                     ? data?.trader_name?.slice(0, 1).toUpperCase()
                                     : data?.member?.email?.slice(0, 1).toUpperCase()
-                                : 'test'}
-                            {/* {data?.trader_name
-                                ? data?.trader_name?.slice(0, 1).toUpperCase()
-                                : data?.member?.email?.slice(0, 1).toUpperCase()} */}
+                                : data?.merchant?.username
+                                ? data?.merchant?.username?.slice(0, 1).toUpperCase()
+                                : data?.merchant?.member?.email?.slice(0, 1).toUpperCase()}
                         </div>
                         <p className="m-0 p-0 text-ms font-extrabold grey-text-accent">
                             {uid === myProfile?.uid
                                 ? data?.trader_name
                                     ? data?.trader_name
                                     : data?.member?.email
-                                : 'test'}
+                                : data?.merchant?.username
+                                ? data?.merchant?.username
+                                : data?.merchant?.member?.email}
                         </p>
                         {uid == userP2P?.member?.uid && (
                             <RenameIcon
@@ -302,11 +300,18 @@ export const P2PUserInfo: React.FC = () => {
                                 ? `${
                                       data?.feedback?.positive !== 0
                                           ? Math.floor((data?.feedback?.positive / data?.feedback?.total) * 100)
-                                          : 0
+                                          : '0'
                                   }%`
-                                : `test`
+                                : `${
+                                      data?.merchant?.feedback?.positive !== 0
+                                          ? Math.floor(
+                                                (data?.merchant?.feedback?.positive / data?.merchant?.feedback?.total) *
+                                                    100
+                                            )
+                                          : '0'
+                                  }%`
                         }
-                        amount={`${data?.feedback?.total}`}
+                        amount={`${uid === myProfile?.uid ? data?.feedback?.total : data?.merchant?.feedback?.total}`}
                     />
 
                     <div className="d-flex flex-column justify-content-center gap-8">
@@ -322,6 +327,12 @@ export const P2PUserInfo: React.FC = () => {
                                                           (data?.feedback?.positive / data?.feedback?.total) * 100
                                                       ).toString()
                                                     : '0'
+                                                : data?.merchant?.feedback?.positive !== 0
+                                                ? Math.floor(
+                                                      (data?.merchant?.feedback?.positive /
+                                                          data?.merchant?.feedback?.total) *
+                                                          100
+                                                  ).toString()
                                                 : '0'
                                         }%`,
                                     }}
@@ -329,7 +340,7 @@ export const P2PUserInfo: React.FC = () => {
                             </div>
                             <LikeIcon />
                             <p className="m-0 p-0 grey-text text-sm">
-                                {uid === myProfile?.uid ? data?.feedback?.positive : 'test'}
+                                {uid === myProfile?.uid ? data?.feedback?.positive : data?.merchant?.feedback?.positive}
                             </p>
                         </div>
 
@@ -345,6 +356,12 @@ export const P2PUserInfo: React.FC = () => {
                                                           (data?.feedback?.negative / data?.feedback?.total) * 100
                                                       ).toString()
                                                     : '0'
+                                                : data?.merchant?.feedback?.negative !== 0
+                                                ? Math.floor(
+                                                      (data?.merchant?.feedback?.negative /
+                                                          data?.merchant?.feedback?.total) *
+                                                          100
+                                                  ).toString()
                                                 : '0'
                                         }%`,
                                     }}
@@ -352,7 +369,7 @@ export const P2PUserInfo: React.FC = () => {
                             </div>
                             <UnLikeIcon />
                             <p className="m-0 p-0 grey-text text-sm">
-                                {uid === myProfile?.uid ? data?.feedback?.negative : 'test'}
+                                {uid === myProfile?.uid ? data?.feedback?.negative : data?.merchant?.feedback?.negative}
                             </p>
                         </div>
                     </div>
@@ -360,12 +377,16 @@ export const P2PUserInfo: React.FC = () => {
                     <CardP2PUserInfo
                         title="All Trade"
                         type="all trade"
-                        amount={uid === myProfile?.uid ? `${data?.trade?.total}` : `test`}
+                        amount={uid === myProfile?.uid ? `${data?.trade?.total}` : `${data?.merchant?.trade?.total}`}
                     />
                     <CardP2PUserInfo
                         title="30d Trade"
                         type="trade"
-                        time={uid === myProfile?.uid ? `${data?.trade?.mount_trade} Time(s)` : `test`}
+                        time={
+                            uid === myProfile?.uid
+                                ? `${data?.trade?.mount_trade} Time(s)`
+                                : `${data?.merchant?.trade?.mount_trade} Time(s)`
+                        }
                     />
                     <CardP2PUserInfo
                         title="30d Completion Rate"
@@ -373,7 +394,11 @@ export const P2PUserInfo: React.FC = () => {
                         percent={
                             uid === myProfile?.uid
                                 ? `${data?.trade?.completed_rate ? data?.trade?.completed_rate + '%' : '-'} `
-                                : `test`
+                                : `${
+                                      data?.merchant?.trade?.completed_rate
+                                          ? data?.merchant?.trade?.completed_rate + '%'
+                                          : '-'
+                                  } `
                         }
                     />
                     <CardP2PUserInfo
@@ -388,7 +413,13 @@ export const P2PUserInfo: React.FC = () => {
                                                 .format('m.ss')
                                           : '0'
                                   } Minute(s)`
-                                : `test`
+                                : `${
+                                      data?.merchant?.trade?.release_time
+                                          ? moment
+                                                .utc(convertDurationtoMilliseconds(data?.merchant?.trade?.release_time))
+                                                .format('m.ss')
+                                          : '0'
+                                  } Minute(s)`
                         }
                     />
                     <CardP2PUserInfo
@@ -403,7 +434,13 @@ export const P2PUserInfo: React.FC = () => {
                                                 .format('m.ss')
                                           : '0'
                                   } Minute(s)`
-                                : `test`
+                                : `${
+                                      data?.merchant?.trade?.pay_time
+                                          ? moment
+                                                .utc(convertDurationtoMilliseconds(data?.merchant?.trade?.pay_time))
+                                                .format('m.ss')
+                                          : '0'
+                                  } Minute(s)`
                         }
                     />
                 </div>

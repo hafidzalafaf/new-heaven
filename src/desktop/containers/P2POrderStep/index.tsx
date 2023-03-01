@@ -295,7 +295,9 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                         <div className="payment-form last">
                             <p className="mb-3 text-ms font-semibold white-text">
                                 {side == 'sell'
-                                    ? 'After conffirming the payment, be sure to click the “Payment Received” button'
+                                    ? detail?.order?.state === 'prepare'
+                                        ? 'The transaction will be canceled automatically if the countdown has been completed but the buyer has not made a payment'
+                                        : 'After conffirming the payment, be sure to click the “Payment Received” button'
                                     : 'After transferring funds. Click the button "Confirm"'}
                             </p>
                             {detail?.order?.state == 'success' || detail?.order?.state == 'accepted' ? (
@@ -330,22 +332,30 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 )
                             ) : (detail?.order?.state !== 'success' || detail?.order?.state !== 'accepted') &&
                               side == 'sell' ? (
-                                <div className="d-flex gap-24">
+                                detail?.order?.state === 'prepare' ? (
                                     <button
-                                        disabled={detail?.order?.state !== 'waiting'}
                                         type="button"
-                                        onClick={() => handleShowModalSellConfirm()}
-                                        className="btn btn-secondary px-5 text-sm">
-                                        {detail?.order?.state == 'waiting' ? 'Payment Received' : 'Waiting Payment'}
+                                        className="btn btn-transparent btn-inline w-auto font-semibold grey-text">
+                                        Waiting for buyer payment in ({`${minutes} : ${seconds}`})
                                     </button>
+                                ) : (
+                                    <div className="d-flex gap-24">
+                                        <button
+                                            disabled={detail?.order?.state !== 'waiting'}
+                                            type="button"
+                                            onClick={() => handleShowModalSellConfirm()}
+                                            className="btn btn-secondary px-5 text-sm">
+                                            {detail?.order?.state == 'waiting' ? 'Payment Received' : 'Waiting Payment'}
+                                        </button>
 
-                                    <button
-                                        type="button"
-                                        onClick={() => side == 'sell' && handleShowModalReport()}
-                                        className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
-                                        Report
-                                    </button>
-                                </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => side == 'sell' && handleShowModalReport()}
+                                            className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
+                                            Report
+                                        </button>
+                                    </div>
+                                )
                             ) : (
                                 <div className="d-flex gap-24">
                                     {detail?.order?.state == 'prepare' ? (

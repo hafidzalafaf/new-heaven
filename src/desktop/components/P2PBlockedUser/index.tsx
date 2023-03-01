@@ -68,8 +68,6 @@ export const P2PBlockedUser: React.FC = () => {
         );
     };
 
-    console.log(blocks);
-
     return (
         <React.Fragment>
             <div className="com-p2p-blocked-user">

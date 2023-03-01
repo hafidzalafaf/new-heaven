@@ -119,28 +119,8 @@ export const initialP2PState: P2PState = {
     },
     merchant_detail: {
         data: {
-            banned_state: false,
-            logo: '',
-            member: {
-                email: '',
-                uid: '',
-                group: '',
-            },
-            offer: 0,
-            feedback: {
-                negative: 0,
-                positive: 0,
-                total: 0,
-            },
-            success_rate: 0,
-            trade: {
-                completed_rate: '',
-                mount_trade: 0,
-                pay_time: '',
-                release_time: '',
-                total: 0,
-            },
-            trader_name: '',
+            merchant: {},
+            feedbacks: [],
         },
         fetching: false,
         success: false,

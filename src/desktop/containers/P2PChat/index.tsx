@@ -11,6 +11,7 @@ import {
     orderChatCreate,
     p2pProfileFetch,
 } from 'src/modules';
+import { Link } from 'react-router-dom';
 import { ArrowDownMd, CheckFillIcon, AttachmentIcon, SendIcon, ZoomIcon } from 'src/assets/images/P2PIcon';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 import { DownloadSecondaryIcon } from 'src/assets/images/DownloadIcon';
@@ -104,7 +105,7 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
     };
 
     const onImageChange = (e) => {
-        console.log(e.target.files[0]);
+        // console.log(e.target.files[0]);
 
         if (e.target.files && e.target.files[0]) {
             let img = e.target.files[0];
@@ -167,19 +168,26 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                     <div className="d-flex align-items-center">
                         <img src="/img/coin.png" className="icon-lg" alt="" />
                         <div className="ml-3">
-                            <p className="text-ms mb-2 white-text font-normal">
+                            <Link
+                                to={`/p2p/profile/${p2pChat?.target?.member?.uid}`}
+                                className="text-ms mb-2 white-text font-normal">
                                 {p2pChat?.target?.member?.email} <CheckFillIcon />
-                            </p>
+                            </Link>
                             <p className="mb-1 grey-text-accent text-sm">30D Trades</p>
                             <p className="mb-1 grey-text-accent text-sm">30D Completetition Rate</p>
                         </div>
                     </div>
                     <div className="ml-2">
-                        <p
-                            onClick={handleModalReport}
-                            className="text-xs my-2 danger-text font-normal text-right cursor-pointer">
-                            Report
-                        </p>
+                        {detail?.offer?.side === 'sell' && (
+                            <button
+                                disabled={detail?.order?.state === 'prepare'}
+                                onClick={handleModalReport}
+                                className={`text-xs my-2 danger-text font-normal text-right btn-transparent ${
+                                    detail?.order?.state !== 'prepare' && 'cursor-pointer'
+                                }`}>
+                                Report
+                            </button>
+                        )}
                         <p className="mb-1 grey-text-accent text-sm text-right">{detail?.order?.stats?.mount_trade}</p>
                         <p className="mb-1 grey-text-accent text-sm text-right">
                             {detail?.order?.stats?.completed_rate} %
