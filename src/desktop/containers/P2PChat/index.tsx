@@ -40,11 +40,11 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
     const p2pChatCreateLoading = useSelector(selectP2PChatCreateLoading);
     const p2pChatCreateSuccess = useSelector(selectP2PChatCreateSuccess);
     const [message, setMessage] = React.useState('');
-    const [image, setImage] = React.useState(null);
+    const [image, setImage] = React.useState<File[]>();
     const [chats, setChats] = React.useState([]);
     const [showImage, setShowImage] = React.useState(false);
     const [imageView, setImageView] = React.useState('');
-    const [imageBlog, setImageBlob] = React.useState('');
+    const [imageBlob, setImageBlob] = React.useState('');
     const [chatLoading, setChatLoading] = React.useState(false);
 
     React.useEffect(() => {
@@ -82,29 +82,25 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
         if (message) {
             if (e.keyCode == 13 && e.shiftKey == false) {
                 e.preventDefault();
+                const formData = new FormData();
 
-                // const formData = new FormData();
-                // formData.append('message', message);
-                // formData.append('order_number', order_number);
+                formData.append('message', imageBlob ? image[0] : message);
 
-                const payload = {
-                    message: imageBlog ? image : message,
-                    offer_number: order_number,
-                };
-                dispatch(orderChatCreate(payload));
+                dispatch(orderChatCreate({ message: formData, offer_number: order_number }));
             }
         }
     };
 
     const handleSendChat = (e) => {
         e.preventDefault();
-        // const formData = new FormData();
-        // formData.append('message', message);
-        const payload = {
-            message: imageBlog ? image : message,
-            offer_number: order_number,
-        };
-        dispatch(orderChatCreate(payload));
+        const formData = new FormData();
+        formData.append('message', imageBlob ? image[0] : message);
+
+        const payload = { message: formData, offer_number: order_number };
+        // formData.append('offer_number', order_number);
+        console.log(payload, 'FOrm Data');
+
+        dispatch(orderChatCreate({ message: formData, offer_number: order_number }));
     };
 
     const onImageChange = (e) => {
@@ -115,13 +111,14 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
             setImageBlob(URL.createObjectURL(img));
             // setImage({
             //     lastModified: e.target.files[0].lastModified,
-            //     lastModifiedDate: e.target.files[0].lastModifiedDate,
+            //     // lastModifiedDate: e.target.files[0].lastModifiedDate,
             //     name: e.target.files[0].name,
             //     size: e.target.files[0].size,
             //     type: e.target.files[0].type,
             //     webkitRelativePath: e.target.files[0].webkitRelativePath,
             // });
-            // setImage(e.target.files[0]);
+            setImage(e.target.files);
+            console.log(e.target.files[0]);
         }
     };
 
@@ -242,28 +239,17 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                                     </p>
 
                                                     <div className="buble-chat">
-                                                        {chat?.chat?.includes('{') ? (
-                                                            <p
-                                                                className={`white-text text-xs content-chat ${
-                                                                    chat?.p2p_user?.member?.uid === profile?.member?.uid
-                                                                        ? 'text-right'
-                                                                        : 'text-left'
-                                                                }`}>
-                                                                {chat?.chat.toString().replaceAll('=>', ':')}
-                                                            </p>
+                                                        {chat?.chat == null ? (
+                                                            <img
+                                                                src={chat?.upload?.image?.url}
+                                                                onClick={() => {
+                                                                    setShowImage(true);
+                                                                    setImageView(chat?.upload?.image?.url);
+                                                                }}
+                                                                alt="chat"
+                                                                width={200}
+                                                            />
                                                         ) : (
-                                                            // <img
-                                                            //     src={URL.createObjectURL(
-                                                            //         JSON.parse(chat?.chat?.toString().replaceAll('=>', ':'))
-                                                            //     )}
-                                                            //     onClick={() => {
-                                                            //         setShowImage(true);
-                                                            //         setImageView(chat?.chat);
-                                                            //     }}
-                                                            //     alt="chat"
-                                                            //     width={200}
-                                                            // />
-                                                            // ) : (
                                                             <span className={`white-text text-xs content-chat`}>
                                                                 {chat?.chat}
                                                             </span>
@@ -313,9 +299,9 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                             </div>
                         )}
 
-                        {imageBlog?.includes('blob') && (
+                        {imageBlob?.includes('blob') && (
                             <div style={{ width: '200px' }} className="position-relative">
-                                <img src={imageBlog} alt="chat" width={200}></img>
+                                <img src={imageBlob} alt="chat" width={200}></img>
                                 <span
                                     onClick={() => {
                                         setMessage(null);
@@ -328,7 +314,7 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                 <span
                                     onClick={() => {
                                         setShowImage(true);
-                                        setImageView(imageBlog);
+                                        setImageView(imageBlob);
                                     }}
                                     className="position-absolute btn-zoom cursor-pointer">
                                     <ZoomIcon />
@@ -341,11 +327,11 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                     detail?.order?.state == 'canceled' ||
                                     detail?.order?.state == 'accepted' ||
                                     detail?.order?.state == 'success' ||
-                                    (imageBlog && true)
+                                    (imageBlob && true)
                                 }
                                 onKeyDown={handleSubmitChat}
                                 placeholder={
-                                    imageBlog
+                                    imageBlob
                                         ? 'Send image..'
                                         : detail?.order?.state == 'prepare' ||
                                           detail?.order?.state == 'waiting' ||
@@ -353,7 +339,7 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                         ? 'write a message..'
                                         : 'Trasaction end.'
                                 }
-                                value={imageBlog ? '' : message}
+                                value={imageBlob ? '' : message}
                                 onChange={(e) => {
                                     setMessage(e.target.value);
                                 }}

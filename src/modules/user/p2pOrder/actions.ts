@@ -156,8 +156,8 @@ export interface OrderChatError {
 export interface OrderChatCreate {
     type: typeof ORDER_CHAT_CREATE;
     payload?: {
-        offer_number?: string;
-        message?: string;
+        message: FormData;
+        offer_number: string;
     };
 }
 
@@ -190,10 +190,10 @@ export interface OrderReportError {
 export interface OrderReportCreate {
     type: typeof ORDER_REPORT_CREATE;
     payload?: {
-        formData?: FormData,
-        reason?: any,
-        upload_payment?: any,
-        order_number: string
+        formData?: FormData;
+        reason?: any;
+        upload_payment?: any;
+        order_number: string;
     };
 }
 
