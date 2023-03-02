@@ -83,9 +83,7 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
             if (e.keyCode == 13 && e.shiftKey == false) {
                 e.preventDefault();
                 const formData = new FormData();
-
                 formData.append('message', imageBlob ? image[0] : message);
-
                 dispatch(orderChatCreate({ message: formData, offer_number: order_number }));
             }
         }
@@ -95,30 +93,14 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('message', imageBlob ? image[0] : message);
-
-        const payload = { message: formData, offer_number: order_number };
-        // formData.append('offer_number', order_number);
-        console.log(payload, 'FOrm Data');
-
         dispatch(orderChatCreate({ message: formData, offer_number: order_number }));
     };
 
     const onImageChange = (e) => {
-        // console.log(e.target.files[0]);
-
         if (e.target.files && e.target.files[0]) {
             let img = e.target.files[0];
             setImageBlob(URL.createObjectURL(img));
-            // setImage({
-            //     lastModified: e.target.files[0].lastModified,
-            //     // lastModifiedDate: e.target.files[0].lastModifiedDate,
-            //     name: e.target.files[0].name,
-            //     size: e.target.files[0].size,
-            //     type: e.target.files[0].type,
-            //     webkitRelativePath: e.target.files[0].webkitRelativePath,
-            // });
             setImage(e.target.files);
-            console.log(e.target.files[0]);
         }
     };
 

@@ -350,8 +350,6 @@ export const P2PWalletOrderScreen: React.FC = () => {
         //Print data each time the checkbox is "checked" or "unchecked"
     }, [reason]);
 
-    console.log(reason);
-
     const handleChecked = (e) => {
         //     let allFiles: File[] = [];
         //     let maxDocsCount = 0;
