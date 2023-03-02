@@ -89,8 +89,6 @@ export const P2PMyOfferScreen: React.FC = () => {
         );
     };
 
-    console.log(offer);
-
     return (
         <React.Fragment>
             <div className="pg-screen-p2p">
