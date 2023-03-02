@@ -401,18 +401,18 @@ export const TableListP2P = () => {
         setPaymentOrder(e);
     };
 
-    const handleSelectOfferBuy = (expand: string, offer_number: string, price: string, payment?: any) => {   
-            setExpandBuy(expand);
-            setOfferNumber(offer_number);
-            setPriceActual(price);
-            setPaymentOption([]);
+    const handleSelectOfferBuy = (expand: string, offer_number: string, price: string, payment?: any) => {
+        setExpandBuy(expand);
+        setOfferNumber(offer_number);
+        setPriceActual(price);
+        setPaymentOption([]);
     };
 
     const handleSelectOfferSell = (expand: string, offer_number: string, price: string, payment: any) => {
-            setExpandSell(expand);
-            setOfferNumber(offer_number);
-            setPriceActual(price);
-            setPaymentOption(payment);
+        setExpandSell(expand);
+        setOfferNumber(offer_number);
+        setPriceActual(price);
+        setPaymentOption(payment);
     };
 
     const handleCloseExpandBuy = () => {
@@ -682,7 +682,15 @@ export const TableListP2P = () => {
                     </div>
 
                     <div className="d-flex align-items-center gap-16">
-                        <button type="button" onClick={() => setShowFilter(false)} className="btn-secondary w-50">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setShowFilter(false);
+                                setAmountFilter('');
+                                setMaxPriceFilter('');
+                                setMinPriceFilter('');
+                            }}
+                            className="btn-secondary w-50">
                             Reset
                         </button>
                         <button type="button" onClick={() => setShowFilter(false)} className="btn-primary w-50">

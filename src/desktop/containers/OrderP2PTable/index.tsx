@@ -77,6 +77,8 @@ export const OrderP2PTable = () => {
                     ? { side }
                     : state
                     ? { state }
+                    : startDate && endDate
+                    ? { from: time_from, to: time_to }
                     : fiat && side
                     ? { fiat, side }
                     : fiat && state
@@ -103,6 +105,8 @@ export const OrderP2PTable = () => {
                         ? { side }
                         : state
                         ? { state }
+                        : startDate && endDate
+                        ? { from: time_from, to: time_to }
                         : fiat && side
                         ? { fiat, side }
                         : fiat && state
@@ -133,7 +137,11 @@ export const OrderP2PTable = () => {
                 ? order.filter((item) => item?.state == 'accepted' || item?.state == 'success')
                 : tab == 'processing'
                 ? order.filter(
-                      (item) => item?.state == 'waiting' || item?.state?.includes('waiting') || item?.state == 'prepare'
+                      (item) =>
+                          item?.state == 'waiting' ||
+                          item?.state?.includes('waiting') ||
+                          item?.state == 'prepare' ||
+                          item?.state == 'rejected'
                   )
                 : order
         );
@@ -192,7 +200,16 @@ export const OrderP2PTable = () => {
                 className="m-0 p-0 text-underline blue-text text-sm font-semibold cursor-pointer">
                 {item?.trades?.uid}
             </Link>,
-            <p className="m-0 p-0 white-text text-sm font-semibold">{capitalizeFirstLetter(item?.state)}</p>,
+            <p
+                className={`m-0 p-0 text-sm font-semibold ${
+                    item?.state == 'success' || item?.state == 'accepted'
+                        ? 'contrast-text'
+                        : item?.state?.includes('waiting') || item?.state == 'prepare'
+                        ? 'warning-text'
+                        : 'danger-text'
+                }`}>
+                {capitalizeFirstLetter(item?.state)}
+            </p>,
             <div className="d-flex align-items-center">
                 <div
                     onClick={() => history.push(`/p2p/wallet/order/${item?.order_number}`, { side: item?.side })}

@@ -172,27 +172,32 @@
                 align-items: end;
                 margin-bottom: 12px;
 
-                .buble-chat {
-                    background: var(--border-color);
-                    padding: 8px;
-                    border-radius: 4px 4px 0px 4px;
-                    max-width: 80%;
-                    min-width: 100px;
-                    position: relative;
-                    padding-bottom: 24px;
-                    .time {
-                        position: absolute;
-                        right: 4px;
-                        bottom: 4px;
-                    }
-
-                    img {
+                .bubble-chat-container {
+                    max-width: 80% !important;
+                    min-width: 100px !important;
+                    .buble-chat {
+                        background: var(--border-color);
+                        padding: 8px;
+                        border-radius: 4px 4px 0px 4px;
                         max-width: 100%;
-                        max-height: 200px;
-                    }
+                        min-width: 100px;
+                        position: relative;
+                        padding-bottom: 24px;
+                        .time {
+                            position: absolute;
+                            right: 4px;
+                            bottom: 4px;
+                        }
 
-                    .content-chat {
-                        overflow-wrap: break-word;
+                        img {
+                            max-width: 100%;
+                            max-height: 200px;
+                        }
+
+                        .content-chat {
+                            text-align: right;
+                            overflow-wrap: break-word;
+                        }
                     }
                 }
             }
@@ -204,27 +209,35 @@
                 align-items: start;
                 margin-bottom: 12px;
 
-                .buble-chat {
-                    background: #4062bb;
-                    padding: 8px;
-                    border-radius: 4px 4px 4px 0px;
-                    max-width: 80%;
-                    min-width: 100px;
-                    position: relative;
-                    padding-bottom: 24px;
-                    .time {
-                        position: absolute;
-                        right: 4px;
-                        bottom: 4px;
-                    }
+                .bubble-chat-container {
+                    max-width: 80% !important;
+                    min-width: 100px !important;
+                    /* padding-bottom: 24px !important; */
 
-                    img {
+                    .buble-chat {
+                        background: #4062bb;
+                        padding: 8px;
+                        padding-bottom: 24px;
+                        border-radius: 4px 4px 4px 0px;
                         max-width: 100%;
-                        max-height: 200px;
-                    }
+                        min-width: 100px;
+                        position: relative;
+                        margin: 0;
 
-                    .content-chat {
-                        overflow-wrap: break-word;
+                        .time {
+                            position: absolute;
+                            right: 4px;
+                            bottom: 4px;
+                        }
+
+                        img {
+                            max-width: 100%;
+                            max-height: 200px;
+                        }
+
+                        .content-chat {
+                            overflow-wrap: break-word;
+                        }
                     }
                 }
             }
@@ -273,6 +286,13 @@
         button:disabled,
         button[disabled] {
             filter: brightness(1) !important;
+        }
+
+        .ava-container {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--text-grey-color);
         }
     }
 

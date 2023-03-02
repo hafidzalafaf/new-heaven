@@ -69,7 +69,10 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                     </div>
                     <div
                         className={`arrow arrow-right ${
-                            detail?.order?.state !== 'waiting' && detail?.order?.state !== 'prepare' && 'active'
+                            detail?.order?.state !== 'waiting' &&
+                            detail?.order?.state !== 'rejected' &&
+                            detail?.order?.state !== 'prepare' &&
+                            'active'
                         }`}>
                         {' '}
                         Completed Order
@@ -83,7 +86,12 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Amount</span>
-                                    <p className="text-sm white-text font-semibold">Rp {detail?.order?.amount}</p>
+                                    <p
+                                        className={`text-sm font-semibold ${
+                                            side == 'buy' ? 'danger-text' : 'white-text'
+                                        }`}>
+                                        Rp {detail?.order?.amount}
+                                    </p>
                                 </div>
                                 <div className="mb-1">
                                     <span className="text-xs grey-text-accent">Price</span>
@@ -341,19 +349,32 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 ) : (
                                     <div className="d-flex gap-24">
                                         <button
-                                            disabled={detail?.order?.state !== 'waiting'}
+                                            disabled={
+                                                detail?.order?.state !== 'waiting' &&
+                                                detail?.order?.state !== 'rejected'
+                                            }
                                             type="button"
                                             onClick={() => handleShowModalSellConfirm()}
                                             className="btn btn-secondary px-5 text-sm">
-                                            {detail?.order?.state == 'waiting' ? 'Payment Received' : 'Waiting Payment'}
+                                            {detail?.order?.state == 'waiting' || detail?.order?.state == 'rejected'
+                                                ? 'Payment Received'
+                                                : 'Waiting Payment'}
                                         </button>
 
-                                        <button
-                                            type="button"
-                                            onClick={() => side == 'sell' && handleShowModalReport()}
-                                            className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
-                                            Report
-                                        </button>
+                                        {detail?.order?.state == 'rejected' ? (
+                                            <button
+                                                type="button"
+                                                className="btn btn-transparent btn-inline w-auto font-semibold danger-text cursor-auto">
+                                                You has rejected this order
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={() => side == 'sell' && handleShowModalReport()}
+                                                className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
+                                                Report
+                                            </button>
+                                        )}
                                     </div>
                                 )
                             ) : (
@@ -371,7 +392,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                             className="btn btn-primary px-5">
                                             Confirm
                                         </button>
-                                    ) : detail?.order?.state == 'waiting' ? (
+                                    ) : detail?.order?.state == 'waiting' || detail?.order?.state == 'rejected' ? (
                                         <button
                                             type="button"
                                             onClick={() => side == 'buy' && handleShowModalCancel()}
@@ -392,9 +413,15 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                     ) : detail?.order?.state == 'waiting' ? (
                                         <button
                                             type="button"
-                                            className="btn btn-transparent btn-inline w-auto font-semibold grey-text">
+                                            className="btn btn-transparent btn-inline w-auto font-semibold grey-text cursor-auto">
                                             Transaction Issue; appeal after (
                                             {`${days} : ${hours} : ${minutes} : ${seconds}`})
+                                        </button>
+                                    ) : detail?.order?.state === 'rejected' ? (
+                                        <button
+                                            type="button"
+                                            className="btn btn-transparent btn-inline w-auto font-semibold grey-text cursor-auto">
+                                            Seller has rejected this order
                                         </button>
                                     ) : (
                                         ''

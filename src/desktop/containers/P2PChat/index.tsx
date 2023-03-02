@@ -11,7 +11,7 @@ import {
     orderChatCreate,
     p2pProfileFetch,
 } from 'src/modules';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ArrowDownMd, CheckFillIcon, AttachmentIcon, SendIcon, ZoomIcon } from 'src/assets/images/P2PIcon';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 import { DownloadSecondaryIcon } from 'src/assets/images/DownloadIcon';
@@ -29,6 +29,9 @@ export interface P2PChatProps {
 
 export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
     const { detail, order_number, showChat, handleExpandChat, handleModalReport } = props;
+
+    const location: { state: { side: string } } = useLocation();
+    const side = location.state?.side;
     const dispatch = useDispatch();
     const profile = useSelector(selectP2PProfile);
     const p2pChat = useSelector(selectP2PChat);
@@ -178,14 +181,14 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                         </div>
                     </div>
                     <div className="ml-2">
-                        {detail?.offer?.side === 'sell' && (
+                        {side === 'sell' && (
                             <button
-                                disabled={detail?.order?.state === 'prepare'}
+                                disabled={detail?.order?.state === 'prepare' || detail?.order?.state === 'rejected'}
                                 onClick={handleModalReport}
                                 className={`text-xs my-2 danger-text font-normal text-right btn-transparent ${
                                     detail?.order?.state !== 'prepare' && 'cursor-pointer'
                                 }`}>
-                                Report
+                                {detail?.order?.state === 'rejected' ? 'Reported' : 'Report'}
                             </button>
                         )}
                         <p className="mb-1 grey-text-accent text-sm text-right">{detail?.order?.stats?.mount_trade}</p>
@@ -210,39 +213,79 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                                     ? 'my-chat'
                                                     : 'sender-chat'
                                             }>
-                                            <p className="sender-name text-xxs text-white">
-                                                {chat?.p2p_user?.member?.uid === profile?.member?.uid
-                                                    ? 'You'
-                                                    : chat?.p2p_user?.username
-                                                    ? chat?.p2p_user?.username
-                                                    : chat?.p2p_user?.member?.email}
-                                            </p>
-                                            <div className="buble-chat">
-                                                {chat?.chat?.includes('{') ? (
-                                                    <p className="white-text text-xs content-chat">
-                                                        {chat?.chat.toString().replaceAll('=>', ':')}
-                                                    </p>
-                                                ) : (
-                                                    // <img
-                                                    //     src={URL.createObjectURL(
-                                                    //         JSON.parse(chat?.chat?.toString().replaceAll('=>', ':'))
-                                                    //     )}
-                                                    //     onClick={() => {
-                                                    //         setShowImage(true);
-                                                    //         setImageView(chat?.chat);
-                                                    //     }}
-                                                    //     alt="chat"
-                                                    //     width={200}
-                                                    // />
-                                                    // ) : (
-                                                    <span className="white-text text-xs content-chat">
-                                                        {chat?.chat}
-                                                    </span>
+                                            <div
+                                                className={`d-flex justify-content-start align-items-end gap-16 bubble-chat-container`}>
+                                                {chat?.p2p_user?.member?.uid !== profile?.member?.uid && (
+                                                    <div className="ava-container d-flex justify-content-center align-items-center">
+                                                        <img
+                                                            src="/img/ava-sender.png"
+                                                            alt="ava"
+                                                            width={32}
+                                                            height={32}
+                                                            className=""
+                                                        />
+                                                    </div>
                                                 )}
 
-                                                <div className="time grey-text-accent text-xxs">
-                                                    {moment(chat?.updated_at).format('HH:mm')}
+                                                <div
+                                                    className={`w-100 d-flex flex-column  ${
+                                                        chat?.p2p_user?.member?.uid === profile?.member?.uid
+                                                            ? 'align-items-end justify-content-end'
+                                                            : 'align-items-start justify-content-start'
+                                                    }`}>
+                                                    <p className="sender-name text-xxs text-white">
+                                                        {chat?.p2p_user?.member?.uid === profile?.member?.uid
+                                                            ? 'You'
+                                                            : chat?.p2p_user?.username
+                                                            ? chat?.p2p_user?.username
+                                                            : chat?.p2p_user?.member?.email}
+                                                    </p>
+
+                                                    <div className="buble-chat">
+                                                        {chat?.chat?.includes('{') ? (
+                                                            <p
+                                                                className={`white-text text-xs content-chat ${
+                                                                    chat?.p2p_user?.member?.uid === profile?.member?.uid
+                                                                        ? 'text-right'
+                                                                        : 'text-left'
+                                                                }`}>
+                                                                {chat?.chat.toString().replaceAll('=>', ':')}
+                                                            </p>
+                                                        ) : (
+                                                            // <img
+                                                            //     src={URL.createObjectURL(
+                                                            //         JSON.parse(chat?.chat?.toString().replaceAll('=>', ':'))
+                                                            //     )}
+                                                            //     onClick={() => {
+                                                            //         setShowImage(true);
+                                                            //         setImageView(chat?.chat);
+                                                            //     }}
+                                                            //     alt="chat"
+                                                            //     width={200}
+                                                            // />
+                                                            // ) : (
+                                                            <span className={`white-text text-xs content-chat`}>
+                                                                {chat?.chat}
+                                                            </span>
+                                                        )}
+
+                                                        <div className={`time grey-text-accent text-xxs`}>
+                                                            {moment(chat?.updated_at).format('HH:mm')}
+                                                        </div>
+                                                    </div>
                                                 </div>
+
+                                                {chat?.p2p_user?.member?.uid == profile?.member?.uid && (
+                                                    <div className="ava-container d-flex justify-content-center align-items-center">
+                                                        <img
+                                                            src="/img/avatar.png"
+                                                            alt="ava"
+                                                            width={32}
+                                                            height={32}
+                                                            className=""
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </React.Fragment>
@@ -256,12 +299,16 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                 </div>
                                 <div className="chat-notification py-1 px-2 my-1">
                                     <p className="mb-0 text-xxs text-center font-normal primary-text">
-                                        Successfully placed an order, please pay within the time limit.
+                                        {side === 'buy'
+                                            ? 'Successfully placed an order, please pay within the time limit.'
+                                            : 'You have a new order, please wait for the buyer to make payment'}
                                     </p>
                                 </div>
 
                                 <div className="date my-2">
-                                    <p className="mb-0 text-xs grey-text text-center">12-01-2022</p>
+                                    <p className="mb-0 text-xs grey-text text-center">
+                                        {moment(detail?.order?.created_at).format('DD-MM-YYYY')}
+                                    </p>
                                 </div>
                             </div>
                         )}
@@ -300,7 +347,9 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                 placeholder={
                                     imageBlog
                                         ? 'Send image..'
-                                        : detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting'
+                                        : detail?.order?.state == 'prepare' ||
+                                          detail?.order?.state == 'waiting' ||
+                                          detail?.order?.state == 'rejected'
                                         ? 'write a message..'
                                         : 'Trasaction end.'
                                 }
@@ -313,12 +362,16 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                 <label
                                     htmlFor="attachment-file"
                                     className={`mb-0 ${
-                                        (detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting') &&
+                                        (detail?.order?.state == 'prepare' ||
+                                            detail?.order?.state == 'waiting' ||
+                                            detail?.order?.state == 'rejected') &&
                                         'cursor-pointer'
                                     }`}>
                                     <AttachmentIcon
                                         fillColor={
-                                            detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting'
+                                            detail?.order?.state == 'prepare' ||
+                                            detail?.order?.state == 'waiting' ||
+                                            detail?.order?.state == 'rejected'
                                                 ? '#B5B3BC'
                                                 : '#6F6F6F'
                                         }
@@ -346,7 +399,9 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                     className="btn btn-transparent p-0 ml-2">
                                     <SendIcon
                                         fillColor={
-                                            detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting'
+                                            detail?.order?.state == 'prepare' ||
+                                            detail?.order?.state == 'waiting' ||
+                                            detail?.order?.state == 'rejected'
                                                 ? '#B5B3BC'
                                                 : '#6F6F6F'
                                         }
