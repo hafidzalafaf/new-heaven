@@ -38,6 +38,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
     const [fiat, setFiat] = React.useState('IDR');
     const [account_number, setAccountNumber] = React.useState('');
     const [bankData, setBankData] = React.useState<any>();
+    const [image, setImage] = React.useState<File | null>(null);
     const [editPaymentItem, setEditPaymentItem] = React.useState<any>()
 
     const profiles = user.profiles.slice(-1);
@@ -56,9 +57,15 @@ export const P2PEditPaymentScreen: React.FC = () => {
     }, [createPaymentSuccess]);
 
     const handleEditPayment = () => {
-        const payload = { payment_id: payment_user_uid.payment_user_uid, account_number, full_name: profiles[0]?.first_name, payment_method: editPaymentItem.symbol };
 
-        dispatch(p2pPaymentUserUpdate(payload));
+        const formData = new FormData()
+        formData.append('payment_id', payment_user_uid.payment_user_uid);
+        formData.append('account_number', account_number);
+        formData.append('full_name', profiles[0]?.first_name);
+        formData.append('payment_method', editPaymentItem.symbol);
+        formData.append('qr_code', image)
+        const payment_id = formData.get('payment_id').toString();
+        dispatch(p2pPaymentUserUpdate(formData, payment_id));
     };
 
     const handleChangeAccountNumber = (e) => {
@@ -81,6 +88,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
     React.useEffect(() => {
         setEditPaymentItem(currentPaymentData?.find((item:any) => item.payment_user_uid === payment_user_uid.payment_user_uid));
     }, [currentPaymentData]);
+
     return (
         <React.Fragment>
             <div className="pg-screen-p2p-add-payment">
@@ -110,7 +118,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
                             />
                         </div>
 
-                        {editPaymentItem?.type === 'bank' ? (
+                        {editPaymentItem?.tipe === 'bank' ? (
                             <div className="mb-24">
                                 <label className="m-0 p-0 mb-16 white-text text-ms">Full Name</label>
                                 <input
@@ -135,7 +143,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
                             </div>
                         )}
 
-                        {editPaymentItem?.type === 'bank' ? (
+                        {editPaymentItem?.tipe === 'bank' ? (
                             <div className="mb-24">
                                 <label className="m-0 p-0 mb-16 white-text text-ms">Account Number</label>
                                 <input
@@ -154,8 +162,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
                                     type="file"
                                     // value={inputFile}
                                     onChange={(e) => {
-                                        setInputFile(e.target.files[0]);
-                                        setFileName(e.target.files[0].name);
+                                        setImage(e.target.files[0])
                                     }}
                                     placeholder="Enter Full Name"
                                     className="custom-input-add-payment w-100 white-text d-none"
@@ -165,7 +172,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
                                     className="d-flex justify-content-center align-content-center custom-input-file cursor-pointer dark-bg-accent">
                                     <div className="d-flex flex-column align-items-center justify-content-center">
                                         <QRIcon />
-                                        <p className="m-0 p-0 text-xxs grey-text">{fileName ? fileName : 'Upload'}</p>
+                                        <p className="m-0 p-0 text-xxs grey-text">{image?.name ? image?.name : 'Upload'}</p>
                                     </div>
                                 </label>
                             </div>

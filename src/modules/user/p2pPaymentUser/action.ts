@@ -39,7 +39,7 @@ export interface P2PPaymentUserError {
 
 export interface P2PPaymentUserCreate {
     type: typeof P2P_PAYMENT_USER_CREATE;
-    payload: IPaymentUser;
+    payload: FormData
 }
 
 export interface P2PPaymentUserCreateData {
@@ -53,12 +53,8 @@ export interface P2PPaymentUserCreateError {
 
 export interface P2PPaymentUserUpdate {
     type: typeof P2P_PAYMENT_USER_UPDATE;
-    payload: {
-        payment_method?: string;
-        account_number?: string;
-        full_name?: string;
-        payment_id?: string;
-    };
+    payload: FormData;
+    payment_id: string
 }
 
 export interface P2PPaymentUserUpdateData {
@@ -133,13 +129,15 @@ export const p2pPaymentUserCreateError = (error: CommonError): P2PPaymentUserCre
     error,
 });
 
-export const p2pPaymentUserUpdate = (payload: P2PPaymentUserUpdate['payload']): P2PPaymentUserUpdate => ({
+export const p2pPaymentUserUpdate = (payload: P2PPaymentUserUpdate['payload'], payment_id: P2PPaymentUserUpdate['payment_id'] ): P2PPaymentUserUpdate => ({
     type: P2P_PAYMENT_USER_UPDATE,
     payload,
+    payment_id
 });
 
 export const p2pPaymentUserUpdateData = (): P2PPaymentUserUpdateData => ({
     type: P2P_PAYMENT_USER_UPDATE_DATA,
+
 });
 
 export const p2pPaymentUserUpdateError = (error: CommonError): P2PPaymentUserUpdateError => ({

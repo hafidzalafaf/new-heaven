@@ -39,6 +39,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
     const [account_number, setAccountNumber] = React.useState('');
     const [otp_code, setOtpCode] = React.useState('')
     const [bankData, setBankData] = React.useState<any>();
+    const [image, setImage] = React.useState<File | null>(null);
     const bank: Bank = useParams();
 
     const profiles = user.profiles.slice(-1);
@@ -60,9 +61,17 @@ export const P2PAddPaymentScreen: React.FC = () => {
     }, [createPaymentSuccess]);
 
     const handleCreatePayment = () => {
-        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bank.payment, otp_code: otp_code};
-
-        dispatch(p2pPaymentUserCreate(payload));
+        const formData = new FormData()
+        formData.append('account_number', account_number);
+        formData.append('qr_code', image);
+        formData.append('full_name', profiles[0]?.first_name);
+        formData.append('payment_method', bank.payment);
+        formData.append('otp_code', otp_code);
+        formData.append('qrcode', image)
+        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bank.payment, otp_code: otp_code, qr_code: formData};
+        console.log(formData)
+        console.log(image)
+        dispatch(p2pPaymentUserCreate(formData));
     };
 
     const handleChangeAccountNumber = (e) => {
@@ -150,16 +159,9 @@ export const P2PAddPaymentScreen: React.FC = () => {
                                     id="custom-input-file"
                                     type="file"
                                     // value={inputFile}
-                                    onChange={(e) => {
-                                        setInputFile({
-                                            lastModified: e.target.files[0].lastModified,
-                                            name: e.target.files[0].name,
-                                            size: e.target.files[0].size,
-                                            type: e.target.files[0].type,
-                                            webKitRelativePath: e.target.files[0].webkitRelativePath
-                                        });
-                                        setFileName(e.target.files[0].name);
-                                    }}
+                                    onChange={(e) =>
+                                        setImage(e.target.files[0])
+                                    }
                                     placeholder="Enter Full Name"
                                     className="custom-input-add-payment w-100 white-text d-none"
                                 />
