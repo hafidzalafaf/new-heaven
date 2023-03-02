@@ -86,7 +86,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
     /* ============== REPORT STATE START =============== */
     const [showModalReport, setShowModalReport] = React.useState(false);
     const [reason, setReason] = React.useState([]);
-    const [upload_payment, setUplodPayment] = React.useState<any>();
+    const [text_message, setTextMessage] = React.useState('');
+    const [upload_payment, setUplodPayment] = React.useState(null);
 
     /* ============== REPORT STATE END =============== */
 
@@ -346,35 +347,12 @@ export const P2PWalletOrderScreen: React.FC = () => {
         setShowModalReport(false);
     }, [createReportSuccess]);
 
-    React.useEffect(() => {
-        //Print data each time the checkbox is "checked" or "unchecked"
-    }, [reason]);
-
     const handleChecked = (e) => {
-        //     let allFiles: File[] = [];
-        //     let maxDocsCount = 0;
-        //     let additionalFileList: File[] = [];
-        //     if (e.target.name == 'payment') {
-        //         setFileName(e.target.files[0].name);
-        //         // console.log(e.target.files[0]);
-        //         allFiles = e.target.files;
-        //         maxDocsCount = 1;
-        //         additionalFileList =
-        //             Array.from(allFiles).length > maxDocsCount
-        //                 ? Array.from(allFiles).slice(0, maxDocsCount)
-        //                 : Array.from(allFiles);
-
-        //         if (!additionalFileList.length) {
-        //             return null;
-        //         }
-        //     }
-
         setReason([
             ...reason,
             {
                 key: e.target.name,
                 message: e.target.name !== 'payment' ? e.target.value : e.target.files[0].name,
-                //             upload_payment: e.target.name == 'payment' ? additionalFileList[0] : null,
             },
         ]);
         if (!e.target.checked) {
@@ -382,29 +360,18 @@ export const P2PWalletOrderScreen: React.FC = () => {
         }
     };
 
-    console.log(reason.find((item) => item.key == 'message'));
-
     const handleReport = () => {
-        // const formData = new FormData();
-        // reason.forEach((item) => {
-        //     formData.append(`reason`, JSON.stringify(item));
-        // });
-        // formData.append('reason', reason);
-        // formData.append('order_number', order_number);
+        const formData = new FormData();
+        formData.append('reason', JSON.stringify(reason));
+        formData.append('text_message', text_message);
+        formData.append('upload_payment', upload_payment);
 
-        // const payload = {
-        //     formData,
-        //     order_number,
-        // };
-
-        const payload = {
-            reason,
-            order_number,
-        };
-
-        // console.log(payload, 'ini payload');
-
-        dispatch(orderReportCreate(payload));
+        dispatch(
+            orderReportCreate({
+                FormData: formData,
+                order_number: order_number,
+            })
+        );
     };
 
     /* ============== REPORT FUNCTION END =============== */
@@ -449,13 +416,11 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         <input
                             id="payment"
                             type="file"
-                            // value={inputFile}
                             name="payment"
-                            onChange={handleChecked}
-                            // onChange={(e) => {
-                            //     setUplodPayment(e.target.files[0]);
-                            //     setFileName(e.target.files[0].name);
-                            // }}
+                            onChange={(e) => {
+                                setUplodPayment(e.target.files[0]);
+                                setFileName(e.target.files[0].name);
+                            }}
                             placeholder="Enter Full Name"
                             className="custom-input-add-payment w-100 white-text d-none"
                         />
@@ -526,15 +491,8 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         <textarea
                             placeholder=""
                             name="message"
-                            id={reason.find((item) => item.key == 'message')?.message}
-                            onFocus={(e) =>
-                                // reason?.map((item) => (item?.key?.message ? e.target.value : e.target.value))
-                                reason.splice(
-                                    reason.findIndex(({ key }) => key == 'message'),
-                                    reason.length
-                                )
-                            }
-                            onBlur={handleChecked}
+                            value={text_message}
+                            onChange={(e) => setTextMessage(e.target.value)}
                             className="form-message border-1 radius-lg p-16 white-text w-100"></textarea>
                     </div>
 
