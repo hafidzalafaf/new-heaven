@@ -431,38 +431,85 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                         </div>
                     </div>
                 </div>
-                {side == 'buy' && (detail?.order?.state == 'success' || detail?.order?.state == 'accepted') && (
+                {(detail?.order?.state == 'success' || detail?.order?.state == 'accepted') && (
                     <div className="mb-5">
                         <CustomInput
-                            isDisabled={detail?.feedback?.comment ? true : false}
+                            isDisabled={side == 'sell' ? true : detail?.feedback?.assesment ? true : false}
                             inputValue={comment}
                             type="text"
-                            label={'Comment'}
-                            defaultLabel={'Comment'}
-                            placeholder={`${
-                                detail?.feedback?.comment ? 'You have already given a feedback' : 'Enter Comment'
-                            }`}
+                            label={
+                                side == 'sell' && !detail?.feedback?.assesment
+                                    ? 'Waiting feedback'
+                                    : side == 'sell' && detail?.feedback?.assesment
+                                    ? 'Buyer feedback'
+                                    : side == 'buy' && detail?.feedback?.assesment
+                                    ? 'Your comment'
+                                    : 'Comment'
+                            }
+                            defaultLabel={
+                                side == 'sell' && !detail?.feedback?.assesment
+                                    ? 'Waiting feedback'
+                                    : side == 'sell' && detail?.feedback?.assesment
+                                    ? 'Buyer feedback'
+                                    : side == 'buy' && detail?.feedback?.assesment
+                                    ? 'Your comment'
+                                    : 'Comment'
+                            }
+                            placeholder={
+                                side == 'sell' && !detail?.feedback?.assesment
+                                    ? '-'
+                                    : side == 'sell' && detail?.feedback?.assesment && detail?.feedback?.comment
+                                    ? detail?.feedback?.comment
+                                    : side == 'sell' && detail?.feedback?.assesment && !detail?.feedback?.comment
+                                    ? detail?.feedback?.assesment
+                                    : side == 'buy' && detail?.feedback?.assesment && detail?.feedback?.comment
+                                    ? detail?.feedback?.comment
+                                    : side == 'buy' && detail?.feedback?.assesment && !detail?.feedback?.comment
+                                    ? detail?.feedback?.assesment
+                                    : 'Enter comment'
+                            }
                             labelVisible
                             classNameLabel="grey-text-accent text-sm font-semibold"
                             handleChangeInput={(e) => handleChangeComment(e)}
                         />
 
-                        <div className="d-flex justify-content-between">
-                            <button
-                                disabled={detail?.feedback?.comment ? true : false}
-                                type="button"
-                                onClick={handleSendFeedbackPositive}
-                                className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
-                                Positive <LikeSuccessIcon />{' '}
-                            </button>
-                            <button
-                                disabled={detail?.feedback?.comment ? true : false}
-                                type="button"
-                                onClick={handleSendFeedbackNegative}
-                                className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
-                                Negative <UnLikeDangerIcon />{' '}
-                            </button>
-                        </div>
+                        {detail?.feedback?.assesment ? (
+                            <div className="d-flex justify-content-between">
+                                {detail?.feedback?.assesment == 'positive' && (
+                                    <button
+                                        disabled={true}
+                                        type="button"
+                                        className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
+                                        Positive <LikeSuccessIcon />{' '}
+                                    </button>
+                                )}
+                                {detail?.feedback?.assesment == 'negative' && (
+                                    <button
+                                        disabled={true}
+                                        type="button"
+                                        className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
+                                        Negative <UnLikeDangerIcon />{' '}
+                                    </button>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="d-flex justify-content-between">
+                                <button
+                                    disabled={side == 'sell' ? true : detail?.feedback?.assesment ? true : false}
+                                    type="button"
+                                    onClick={handleSendFeedbackPositive}
+                                    className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
+                                    Positive <LikeSuccessIcon />{' '}
+                                </button>
+                                <button
+                                    disabled={side == 'sell' ? true : detail?.feedback?.assesment ? true : false}
+                                    type="button"
+                                    onClick={handleSendFeedbackNegative}
+                                    className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
+                                    Negative <UnLikeDangerIcon />{' '}
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
