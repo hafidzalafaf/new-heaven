@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useSelector } from 'react-redux';
+import { selectUserInfo } from 'src/modules';
 import Select, { components } from 'react-select';
 import { CustomStylesSelect } from '..';
 import { Link } from 'react-router-dom';
@@ -65,12 +67,14 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
         isDisabled,
     } = props;
 
+    const user = useSelector(selectUserInfo);
+
     const AddPayment = (props) => {
         return (
             <React.Fragment>
                 <components.MenuList {...props}>
                     <div>{props.children}</div>
-                    <Link to={`/p2p/profile`}>
+                    <Link to={`/p2p/profile/${user?.uid}`}>
                         <div className="add-payment-select">
                             <p className="m-0 p-0 gradient-text text-ms font-semibold text-center ">
                                 Add payment method
