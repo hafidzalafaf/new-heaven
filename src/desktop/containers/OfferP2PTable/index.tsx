@@ -18,7 +18,7 @@ export interface OfferP2PTableProps {
     data: any;
     fiats: any;
     loading: boolean;
-    handleShowModalCancel?: () => void;
+    handleShowModalCancel?: (e: string) => void;
     handleChangeFiat: (e: string) => void;
     handleChangeState: (e: string) => void;
     handleChangeSide: (e: string) => void;
@@ -97,7 +97,7 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
             <p className="m-0 p-0 white-text text-sm font-semibold">
                 {item?.available_amount} {item?.currency?.name?.toUpperCase()}
             </p>,
-            <p className="m-0 p-0 white-text text-sm font-semibold">{type === 'detail' ? item.state : capitalizeFirstLetter(item?.side)}</p>,
+            <p className={`m-0 p-0 text-sm font-semibold ${item.state === 'canceled' ? `danger-text`: `white-text`}`}>{type === 'detail' || type === 'offer' ? item.state : capitalizeFirstLetter(item?.side)}</p>,
             <div className="d-flex align-items-center gap-24">
                 <Link
                     to={
@@ -108,9 +108,9 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
                     <HideIcon />
                 </Link>
                 {type === 'offer' && (
-                    <p onClick={handleShowModalCancel} className="m-0 p-0 mr-6 text-xs grey-text cursor-pointer">
+                    <button disabled={item?.state === 'canceled'} onClick={() => handleShowModalCancel(item?.offer_number)} className={`btn-transparent m-0 px-3 py-2 mr-6 text-xs ${item?.state === 'canceled' ? `white-text` : `gradient-text`}`}>
                         Cancel
-                    </p>
+                    </button>
                 )}
             </div>,
         ]);
