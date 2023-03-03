@@ -345,6 +345,9 @@ export const P2PWalletOrderScreen: React.FC = () => {
     /* ============== REPORT FUNCTION START =============== */
     React.useEffect(() => {
         setShowModalReport(false);
+        setReason([]);
+        setTextMessage('');
+        setUplodPayment(null);
     }, [createReportSuccess]);
 
     const handleChecked = (e) => {
@@ -496,7 +499,11 @@ export const P2PWalletOrderScreen: React.FC = () => {
                             className="form-message border-1 radius-lg p-16 white-text w-100"></textarea>
                     </div>
 
-                    <button type="button" onClick={handleReport} className="btn-primary w-100">
+                    <button
+                        type="button"
+                        onClick={handleReport}
+                        disabled={(!reason && !reason[0]) || !text_message || createReportLoading}
+                        className="btn-primary w-100">
                         Submit The Sidepute
                     </button>
                 </div>
