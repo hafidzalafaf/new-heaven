@@ -12,7 +12,6 @@ import {
 } from './constants';
 import { P2POffer } from './types';
 
-
 export interface P2POfferState {
     create: {
         // data: P2POffer;
@@ -27,7 +26,7 @@ export interface P2POfferState {
         side: string;
         base: string;
         quote: string;
-        payment_method?: number;
+        payment?: [];
         fetching: boolean;
         success: boolean;
         timestamp?: number;
@@ -71,7 +70,7 @@ export const p2pOfferFetchReducer = (state: P2POfferState['fetch'], action: P2PO
                 side: action.payload.side,
                 base: action.payload.base,
                 quote: action.payload.quote,
-                payment_method: action.payload.payment_method,
+                payment: action.payload.payment,
                 fetching: false,
                 success: true,
                 error: undefined,

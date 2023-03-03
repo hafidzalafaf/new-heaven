@@ -201,6 +201,12 @@
         background: #15191d;
         min-width: 100px;
         border-radius: 4px;
+
+        &.active {
+            background: linear-gradient(var(--main-background-color), var(--main-background-color)) padding-box,
+                var(--text-gradient-color) border-box !important;
+            border: 1px solid transparent;
+        }
     }
 
     .add-payment-select {

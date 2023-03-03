@@ -9,13 +9,6 @@ const config: RequestOptions = {
     withHeaders: true,
 };
 
-// const config = (csrfToken?: string): RequestOptions => {
-//     return {
-//         apiVersion: 'p2p',
-//         headers: { 'X-CSRF-Token': csrfToken },
-//     };
-// };
-
 export function* p2pFetchOfferSaga(action: P2POfferFetch) {
     try {
         const {
@@ -23,7 +16,7 @@ export function* p2pFetchOfferSaga(action: P2POfferFetch) {
             sort,
             base,
             quote,
-            payment_method,
+            payment,
             currency,
             fiat,
             amount,
@@ -37,7 +30,7 @@ export function* p2pFetchOfferSaga(action: P2POfferFetch) {
             sort,
             base,
             quote,
-            payment_method,
+            payment,
             currency,
             fiat,
             amount,
@@ -58,7 +51,7 @@ export function* p2pFetchOfferSaga(action: P2POfferFetch) {
                 sort,
                 base,
                 quote,
-                payment_method,
+                payment,
             })
         );
     } catch (error) {

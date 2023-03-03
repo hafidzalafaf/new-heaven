@@ -85,6 +85,8 @@ export const TableListP2P = () => {
     const [amountFilter, setAmountFilter] = React.useState('');
     const [minPriceFilter, setMinPriceFilter] = React.useState('');
     const [maxPriceFilter, setMaxPriceFilter] = React.useState('');
+    const [paymentFilterValue, setPaymentFilterValue] = React.useState([]);
+    const [paymentFilter, setPaymentFilter] = React.useState([]);
     /* ========== ORDER FETCH STATE END ========== */
 
     /* ========== ORDER CREATE STATE START ========== */
@@ -148,6 +150,13 @@ export const TableListP2P = () => {
             max_price: maxPriceFilter,
         };
 
+        const paymentFilterPayload = {
+            fiat: fiat,
+            currency: currency,
+            side: side,
+            payment: paymentFilter,
+        };
+
         const filterPayload = {
             fiat: fiat,
             currency: currency,
@@ -155,39 +164,8 @@ export const TableListP2P = () => {
             min_price: minPriceFilter,
             max_price: maxPriceFilter,
             amount: amountFilter,
+            paymentFilter: paymentFilter,
         };
-
-        if (currency !== undefined && fiat !== undefined) {
-            if (isLoggedIn) {
-                dispatch(
-                    p2pOfferFetch(
-                        amountList
-                            ? amountListPayload
-                            : amountFilter
-                            ? amountFilterPayload
-                            : minPriceFilter && maxPriceFilter
-                            ? priceFilterPayload
-                            : minPriceFilter && maxPriceFilter && amountFilter
-                            ? filterPayload
-                            : defaultPayload
-                    )
-                );
-            } else {
-                dispatch(
-                    offersFetch(
-                        amountList
-                            ? amountListPayload
-                            : amountFilter
-                            ? amountFilterPayload
-                            : minPriceFilter && maxPriceFilter
-                            ? priceFilterPayload
-                            : minPriceFilter && maxPriceFilter && amountFilter
-                            ? filterPayload
-                            : defaultPayload
-                    )
-                );
-            }
-        }
 
         if (currency !== undefined && fiat !== undefined && isLoggedIn) {
             dispatch(
@@ -198,7 +176,9 @@ export const TableListP2P = () => {
                         ? amountFilterPayload
                         : minPriceFilter && maxPriceFilter
                         ? priceFilterPayload
-                        : minPriceFilter && maxPriceFilter && amountFilter
+                        : paymentFilter
+                        ? paymentFilterPayload
+                        : minPriceFilter && maxPriceFilter && amountFilter && paymentFilter
                         ? filterPayload
                         : defaultPayload
                 )
@@ -214,7 +194,9 @@ export const TableListP2P = () => {
                         ? amountFilterPayload
                         : minPriceFilter && maxPriceFilter
                         ? priceFilterPayload
-                        : minPriceFilter && maxPriceFilter && amountFilter
+                        : paymentFilter
+                        ? paymentFilterPayload
+                        : minPriceFilter && maxPriceFilter && amountFilter && paymentFilter
                         ? filterPayload
                         : defaultPayload
                 )
@@ -229,6 +211,7 @@ export const TableListP2P = () => {
         amountFilter,
         minPriceFilter,
         maxPriceFilter,
+        paymentFilter,
         createOfferSuccess,
         isLoggedIn,
     ]);
@@ -244,7 +227,7 @@ export const TableListP2P = () => {
 
     React.useEffect(() => {
         setCurrencies(currenciesData?.currency);
-        setPayments(paymentMethods);
+        setPayments(currenciesData?.payment);
     }, [currenciesData, paymentMethods]);
 
     React.useEffect(() => {
@@ -266,8 +249,24 @@ export const TableListP2P = () => {
     });
 
     const optionPayment = payments?.map((item) => {
-        return { label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>, value: item.payment_user_id };
+        return { label: <p className="m-0 text-sm grey-text-accent">{item.bank_name}</p>, value: item.payment_id };
     });
+
+    const handleSelectPaymentFilter = (e: any) => {
+        if (paymentFilter?.includes(e)) {
+            setPaymentFilter(paymentFilter.filter((item) => item !== e));
+        } else {
+            setPaymentFilter([...paymentFilter, e]);
+        }
+    };
+
+    const handleSelectPaymentFilterDropdown = (e: any) => {
+        if (paymentFilter?.includes(e)) {
+            setPaymentFilter(paymentFilter.filter((item) => item !== e));
+        } else {
+            setPaymentFilter([e]);
+        }
+    };
 
     const handleRefresh = () => {
         setLoadingRefresh(true);
@@ -671,8 +670,20 @@ export const TableListP2P = () => {
                         <div className="d-flex flex-wrap align-items-center gap-8">
                             {payments && payments[0] ? (
                                 payments?.map((payment, i) => (
-                                    <div key={i} className="badge-payment text-center text-sm grey-text">
-                                        {payment?.bank_name}
+                                    <div
+                                        onClick={() => handleSelectPaymentFilter(payment?.payment_id)}
+                                        key={i}
+                                        className={`badge-payment text-center text-sm cursor-pointer ${
+                                            paymentFilter?.find((item) => item == payment?.payment_id) && 'active'
+                                        }`}>
+                                        <span
+                                            className={` ${
+                                                paymentFilter?.find((item) => item == payment?.payment_id)
+                                                    ? 'gradient-text'
+                                                    : 'grey-text'
+                                            }`}>
+                                            {payment?.bank_name}
+                                        </span>
                                     </div>
                                 ))
                             ) : (
@@ -689,6 +700,7 @@ export const TableListP2P = () => {
                                 setAmountFilter('');
                                 setMaxPriceFilter('');
                                 setMinPriceFilter('');
+                                setPaymentFilter([]);
                             }}
                             className="btn-secondary w-50">
                             Reset
@@ -856,15 +868,14 @@ export const TableListP2P = () => {
                         </div>
                         <div className="select-filter mr-16">
                             <Select
-                                // value={optionPayment.filter(function (option) {
-                                //     return option.value === status;
-                                // })}
+                                value={optionPayment?.filter(function (option) {
+                                    return option.value == paymentFilter[0];
+                                })}
                                 styles={CustomStylesSelect}
                                 options={optionPayment}
-                                // onChange={(e) => {
-                                //     setStatus(e.value);
-                                //     filterredStatus(e.value);
-                                // }}
+                                onChange={(e) => {
+                                    handleSelectPaymentFilterDropdown(e.value);
+                                }}
                             />
                         </div>
 
