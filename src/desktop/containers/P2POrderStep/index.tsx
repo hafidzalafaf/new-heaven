@@ -128,6 +128,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                         : detail?.order?.payment?.logo
                                                 }
                                                 className="bank-logo mx-2"
+                                                height={13}
                                                 alt="bank logo"
                                             />
                                         )
@@ -195,6 +196,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                                 : paymentUser?.logo
                                                         }
                                                         className="bank-logo mx-2"
+                                                        height={13}
                                                         alt="bank logo"
                                                     />
                                                     <div>
@@ -232,6 +234,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                                         : el?.logo
                                                                 }
                                                                 className="bank-logo"
+                                                                height={13}
                                                                 alt="bank"
                                                             />
                                                         </div>
@@ -259,6 +262,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                                         : el?.logo
                                                                 }
                                                                 className="bank-logo mx-2"
+                                                                height={13}
                                                                 alt="bank logo"
                                                             />
                                                         </div>
@@ -283,6 +287,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                                         : el?.logo
                                                                 }
                                                                 className="bank-logo"
+                                                                height={13}
                                                                 alt="bank"
                                                             />
                                                         </div>

@@ -29,7 +29,7 @@ export const P2PWalletScreen: React.FC = () => {
                 </div>
                 <div className="px-24 dark-bg-accent">
                     <HeaderP2P />
-                    <EstimatedValue wallets={wallets} />
+                    <EstimatedValue wallets={wallets} type="p2p" />
                     <WalletOverviewP2P />
                 </div>
             </div>

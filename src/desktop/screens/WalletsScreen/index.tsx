@@ -40,7 +40,7 @@ export const WalletsScreen: FC = (): ReactElement => {
                     </div>
                 </div>
                 <div className="px-24">
-                    <EstimatedValue wallets={wallets} />
+                    <EstimatedValue wallets={wallets} type="spot" />
                     <WalletsOverview />
                 </div>
             </div>

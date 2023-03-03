@@ -1,15 +1,11 @@
 import { CommonError } from '../../types';
-import {
-    CREATE_P2P_TRANSFERS_DATA,
-    CREATE_P2P_TRANSFERS_ERROR,
-    CREATE_P2P_TRANSFERS_FETCH,
-} from './constants';
+import { CREATE_P2P_TRANSFERS_DATA, CREATE_P2P_TRANSFERS_ERROR, CREATE_P2P_TRANSFERS_FETCH } from './constants';
 
 export interface CreateP2PTranfersPayload {
-    amount: string;
+    amount: number;
     currency: string;
-    from: string;
-    to: string;
+    base_wallet: string;
+    target_wallet: string;
 }
 
 export interface CreateP2PTransfersFetch {
@@ -26,10 +22,7 @@ export interface CreateP2PTransfersError {
     error: CommonError;
 }
 
-export type CreateP2PTransfersActions =
-    CreateP2PTransfersFetch
-    | CreateP2PTransfersData
-    | CreateP2PTransfersError;
+export type CreateP2PTransfersActions = CreateP2PTransfersFetch | CreateP2PTransfersData | CreateP2PTransfersError;
 
 export const createP2PTransfersFetch = (payload: CreateP2PTransfersFetch['payload']): CreateP2PTransfersFetch => ({
     type: CREATE_P2P_TRANSFERS_FETCH,

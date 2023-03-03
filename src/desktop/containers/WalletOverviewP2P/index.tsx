@@ -1,10 +1,9 @@
 import React, { FC, ReactElement, useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, Link } from 'react-router-dom';
 import Select from 'react-select';
 import { CustomStylesSelect } from '../../../desktop/components';
-
 import { PercentageTransferP2P } from '../../components';
 import { Decimal, formatWithSeparators, Loading, Table } from 'src/components';
 import { Modal as ModalTransfer } from 'react-bootstrap';
@@ -21,6 +20,9 @@ import {
     selectUserInfo,
     Currency,
     selectWalletsLoading,
+    createP2PTransfersFetch,
+    selectP2PTransfersCreateSuccess,
+    selectP2PTransfersCreateLoading,
 } from 'src/modules';
 import { estimateUnitValue } from 'src/helpers/estimateValue';
 import { VALUATION_PRIMARY_CURRENCY } from 'src/constants';
@@ -39,19 +41,17 @@ interface ExtendedWallet extends Wallet {
     p2pBalance?: string;
     p2pLocked?: string;
     status?: string;
-    network?: any;
+    // network?: any;
     last: any;
     marketId: string;
-}
-
-interface CoinDetailProps {
-    id: any;
-    currency: string;
-    name: string;
-    iconUrl: string;
+    p2p_balance?: string;
+    p2p_locked?: string;
+    currencyItem: any;
 }
 
 const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
+    const dispatch = useDispatch();
+
     const [filterValue, setFilterValue] = React.useState<string>('');
     const [filteredWallets, setFilteredWallets] = React.useState<ExtendedWallet[]>([]);
     const [mergedWallets, setMergedWallets] = React.useState<ExtendedWallet[]>([]);
@@ -59,8 +59,16 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
     const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [showModalP2PTransfer, setShowModalP2PTransfer] = React.useState<boolean>(false);
-    const [currId, setCurrId] = React.useState<CoinDetailProps>({} as CoinDetailProps);
+    const [selectedCurrency, setSelectedCurrency] = React.useState<any>();
     //const [currenciesObj, setCurrencyObj] = React.useState<CoinDetailProps>({} as CoinDetailProps);
+
+    // State Transfer
+    const [amount, setAmount] = React.useState('');
+    const [currency, setCurrency] = React.useState('');
+    const [base_wallet, setBaseWallet] = React.useState('p2p');
+    const [target_wallet, setTargetWallet] = React.useState('spot');
+    const [percentageValue, setPercentage] = React.useState(0);
+    const [isSwitch, setIsSwitch] = React.useState(false);
 
     const { formatMessage } = useIntl();
     const { isP2PEnabled } = props;
@@ -76,6 +84,8 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
     const markets = useSelector(selectMarkets);
     const tickers = useSelector(selectMarketTickers);
     const user: User = useSelector(selectUserInfo);
+    const transferSuccess = useSelector(selectP2PTransfersCreateSuccess);
+    const transferLoading = useSelector(selectP2PTransfersCreateLoading);
 
     useWalletsFetch();
     useP2PWalletsFetch();
@@ -93,6 +103,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                 const p2pWallet = isP2PEnabled ? p2pWallets.find((i) => i.currency === cur.id) : null;
                 const market = markets.find((item) => item.base_unit == cur.id);
                 const ticker = tickers[market?.id];
+                const currencyItem = currencies.find((item) => item.id == cur.id);
 
                 return {
                     ...(spotWallet || p2pWallet),
@@ -104,6 +115,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                     last: ticker ? ticker.last : null,
                     p2pBalance: p2pWallet ? p2pWallet.balance : '0',
                     p2pLocked: p2pWallet ? p2pWallet.locked : '0',
+                    currencyItem: currencyItem ? currencyItem : null,
                 };
             });
 
@@ -112,7 +124,17 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
             setFilteredWallets(extendedWalletsFilter);
             setMergedWallets(extendedWalletsFilter);
         }
-    }, [wallets, p2pWallets, currencies, isP2PEnabled, markets, tickers]);
+    }, [wallets, p2pWallets, currencies, isP2PEnabled, markets, tickers, transferSuccess]);
+
+    React.useEffect(() => {
+        if (transferSuccess) {
+            setShowModalP2PTransfer(false);
+            setAmount('');
+            setCurrency('');
+            setBaseWallet('p2p');
+            setTargetWallet('spot');
+        }
+    }, [transferSuccess]);
 
     React.useEffect(() => {
         setLoading(true);
@@ -122,33 +144,12 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
     }, [wallets]);
 
     const headerTitles = useCallback(
-        () => [
-            'Assets',
-            translate('page.body.wallets.overview.header.total'),
-            'Estimated Value',
-            'Spot Balance',
-            'Locked Balance',
-            '',
-        ],
+        () => ['Assets', 'P2P Total Balance', 'P2P Estimated Value', 'P2P Balance', 'P2P Locked Balance', ''],
         [isP2PEnabled]
     );
 
-    const handleClickDeposit = useCallback(
-        (currency) => {
-            history.push(`/wallets/${currency}/deposit`);
-        },
-        [history]
-    );
-
-    const handleClickWithdraw = useCallback(
-        (currency) => {
-            user.otp ? history.push(`/wallets/${currency}/withdraw`) : setShowModalLocked(!showModalLocked);
-        },
-        [history]
-    );
-
     const handleTransferP2P = (curr) => {
-        setCurrId(curr);
+        setSelectedCurrency(curr);
         setShowModalP2PTransfer((prevState) => !prevState);
     };
 
@@ -168,10 +169,21 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
             : !filteredList.length && !loading
             ? [[]]
             : filteredList.map((item, index) => {
-                  const { currency, iconUrl, name, fixed, spotBalance, spotLocked, p2pBalance, p2pLocked } = item;
-                  const totalBalance =
-                      Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
-                  const estimatedValue = item?.last !== null ? item.last * totalBalance : '0';
+                  const {
+                      currency,
+                      iconUrl,
+                      name,
+                      fixed,
+                      spotBalance,
+                      spotLocked,
+                      p2pBalance,
+                      p2pLocked,
+                      p2p_locked,
+                      p2p_balance,
+                  } = item;
+                  const totalBalance = Number(p2p_balance) + Number(p2p_locked);
+                  const estimatedValue =
+                      item?.currencyItem?.price !== null ? item?.currencyItem?.price * totalBalance : '0';
 
                   return [
                       <div key={index} className="d-flex">
@@ -183,17 +195,17 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                           <p className="text-sm white-text">{currency.toUpperCase()}</p>
                           <p className="ml-1 text-sm grey-text-accent">{name}</p>
                       </div>,
-                      <Decimal key={index} fixed={fixed} thousSep=",">
+                      <Decimal key={index} fixed={fixed}>
                           {totalBalance ? totalBalance.toString() : '0'}
                       </Decimal>,
-                      <Decimal key={index} fixed={fixed} thousSep=",">
+                      <Decimal key={index} fixed={fixed}>
                           {estimatedValue ? estimatedValue.toString() : '0'}
                       </Decimal>,
-                      <Decimal key={index} fixed={fixed} thousSep=",">
-                          {spotBalance ? spotBalance.toString() : '0'}
+                      <Decimal key={index} fixed={fixed}>
+                          {p2p_balance ? p2p_balance.toString() : '0'}
                       </Decimal>,
-                      <Decimal key={index} fixed={fixed} thousSep=",">
-                          {spotLocked ? spotLocked.toString() : '0'}
+                      <Decimal key={index} fixed={fixed}>
+                          {p2p_locked ? p2p_locked.toString() : '0'}
                       </Decimal>,
                       <div key={index} className="ml-auto">
                           <Link to={`/p2p`} className={`bg-transparent border-none mr-24 blue-text`}>
@@ -237,7 +249,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
 
     const optionsAssets = [
         {
-            value: 'spotWallet',
+            value: 'spot',
             label: (
                 <div className="w-full d-flex align-items-center">
                     <div className="mr-2">
@@ -250,7 +262,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
             ),
         },
         {
-            value: 'p2pWallet',
+            value: 'p2p',
             label: (
                 <div className="w-full d-flex align-items-center">
                     <div className="mr-2">
@@ -264,19 +276,53 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
         },
     ];
 
-    const newOption = currencies.map((item) => ({ value: item.id, label: item.name }));
-
-    const [fromAddress, setFromAddress] = React.useState(null);
-    const [toAddress, setToAddress] = React.useState(null);
-    const [coinList, setCoinList] = React.useState(null);
-    const [percentageValue, setPercentage] = React.useState(0);
-
-    const [isSwitch, setIsSwitch] = React.useState(false);
-
     const switchAddress = () => {
-        setFromAddress(toAddress);
-        setToAddress(fromAddress);
+        setBaseWallet(target_wallet);
+        setTargetWallet(base_wallet);
         setIsSwitch((prevState) => !prevState);
+    };
+
+    const handleChangeAmount = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setAmount(value);
+        setPercentage(0);
+    };
+
+    const handleTransferAsset = () => {
+        const payload = {
+            base_wallet,
+            target_wallet,
+            currency: selectedCurrency?.currency,
+            amount: +amount,
+        };
+
+        dispatch(createP2PTransfersFetch(payload));
+    };
+
+    React.useEffect(() => {
+        if (percentageValue != 0) {
+            const p2pAmount = (+selectedCurrency?.p2p_balance * percentageValue) / 100;
+            const spotAmount = (+selectedCurrency?.spotBalance * percentageValue) / 100;
+            setAmount(base_wallet === 'p2p' ? p2pAmount.toString() : spotAmount.toString());
+        }
+    }, [percentageValue, switchAddress]);
+
+    const disabledButton = () => {
+        if (!base_wallet || !target_wallet || !currency || !amount || transferLoading) {
+            return true;
+        }
+
+        if (base_wallet == 'p2p') {
+            if (+amount < selectedCurrency?.p2p_balance || +amount > selectedCurrency?.p2p_balance) {
+                return true;
+            }
+        }
+
+        if (base_wallet == 'spot') {
+            if (+amount < selectedCurrency?.spotBalance || +amount > selectedCurrency?.spotBalance) {
+                return true;
+            }
+        }
     };
 
     return (
@@ -314,9 +360,9 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                                         isSearchable={false}
                                         styles={CustomStylesSelect}
                                         value={optionsAssets.filter(function (option) {
-                                            return option.value === fromAddress;
+                                            return option.value === base_wallet;
                                         })}
-                                        onChange={(e) => setFromAddress(e.value)}
+                                        onChange={(e) => setBaseWallet(e.value)}
                                         options={optionsAssets}
                                     />
                                 </div>
@@ -340,27 +386,31 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                                         isSearchable={false}
                                         styles={CustomStylesSelect}
                                         value={optionsAssets.filter(function (option) {
-                                            return option.value === toAddress;
+                                            return option.value === target_wallet;
                                         })}
-                                        onChange={(e) => setToAddress(e.value)}
+                                        onChange={(e) => setTargetWallet(e.value)}
                                         options={optionsAssets}
                                     />
                                 </div>
                             </div>
                             <div className="form-group">
                                 <div className="w-full d-flex align-items-center coin-selected">
-                                    <img src={currId.iconUrl} alt="icon" className="mr-12 small-coin-icon" />
+                                    <img src={selectedCurrency.iconUrl} alt="icon" className="mr-12 small-coin-icon" />
                                     <div>
-                                        <p className="m-0 text-sm grey-text-accent">{currId.currency.toUpperCase()}</p>
-                                        <p className="m-0 text-xs grey-text-accent">{currId.name}</p>
+                                        <p className="m-0 text-sm grey-text-accent">
+                                            {selectedCurrency.currency.toUpperCase()}
+                                        </p>
+                                        <p className="m-0 text-xs grey-text-accent">{selectedCurrency.name}</p>
                                     </div>
-                                    {/* <h4 className="text-white">{currId}</h4> */}
+                                    {/* <h4 className="text-white">{selectedCurrency}</h4> */}
                                 </div>
                             </div>
                             <div>
                                 <div className="form-group">
                                     <label className="text-white">Amount</label>
                                     <input
+                                        value={amount}
+                                        onChange={(e) => handleChangeAmount(e.target.value)}
                                         type="number"
                                         className="form-control"
                                         id="exampleFormControlInput1"
@@ -377,9 +427,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                                     label50="50"
                                     label75="75"
                                     label100="100"
-                                    handleSide={() => ''}
-                                    side={''}
-                                    amount={''}
+                                    amount={amount}
                                 />
                             </div>
                             <div className="mt-5">
@@ -388,7 +436,12 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                                         <h6 className="text-light">Available Amount :</h6>
                                     </div>
                                     <div>
-                                        <h6 className="green-text">00,00</h6>
+                                        <h6 className="green-text">
+                                            {base_wallet == 'p2p'
+                                                ? selectedCurrency?.p2p_balance
+                                                : selectedCurrency?.spotBalance}{' '}
+                                            {selectedCurrency?.currency?.toUpperCase()}
+                                        </h6>
                                     </div>
                                 </div>
                                 <div className="d-flex justify-content-between">
@@ -396,14 +449,22 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                                         <h6 className="text-light">Total Transfer : </h6>
                                     </div>
                                     <div>
-                                        <h6 className="green-text">00,00</h6>
+                                        <h6 className="green-text">
+                                            {amount ? amount : '0'} {selectedCurrency?.currency?.toUpperCase()}
+                                        </h6>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </ModalTransfer.Body>
                     <ModalTransfer.Footer className="border-0">
-                        <button className="btn btn-block btn-primary">Transfer Assets</button>
+                        <button
+                            type="button"
+                            // disabled={disabledButton()}
+                            onClick={handleTransferAsset}
+                            className="btn btn-block btn-primary">
+                            Transfer Assets
+                        </button>
                     </ModalTransfer.Footer>
                 </ModalTransfer>
             )}

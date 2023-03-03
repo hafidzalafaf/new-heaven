@@ -3,7 +3,15 @@ import { useDocumentTitle } from '../../../hooks';
 import { HeaderP2P, BannerP2P, OfferP2PTable } from 'src/desktop/containers';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
-import { p2pFiatFetch, selectP2PFiatsData, p2pUserOfferFetch, selectP2PUserAccountOffer, selectP2PUserAccountOfferDetail, p2pUserOfferDetailFetch, P2PUserOfferDetail } from 'src/modules';
+import {
+    p2pFiatFetch,
+    selectP2PFiatsData,
+    p2pUserOfferFetch,
+    selectP2PUserAccountOffer,
+    selectP2PUserAccountOfferDetail,
+    p2pUserOfferDetailFetch,
+    P2PUserOfferDetail,
+} from 'src/modules';
 
 export const P2PDetailOfferScreen: React.FC = () => {
     useDocumentTitle('P2P || Detail Offer');
@@ -12,7 +20,7 @@ export const P2PDetailOfferScreen: React.FC = () => {
 
     const fiats = useSelector(selectP2PFiatsData);
     const offer = useSelector(selectP2PUserAccountOffer);
-    const offerDetail : P2PUserOfferDetail = useSelector(selectP2PUserAccountOfferDetail)
+    const offerDetail: P2PUserOfferDetail = useSelector(selectP2PUserAccountOfferDetail);
 
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
@@ -23,9 +31,7 @@ export const P2PDetailOfferScreen: React.FC = () => {
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
-    const ordersFromOfferDetail = offerDetail.order
-
-    console.log(ordersFromOfferDetail)
+    const ordersFromOfferDetail = offerDetail.order;
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
@@ -46,11 +52,12 @@ export const P2PDetailOfferScreen: React.FC = () => {
                 side: '',
             })
         );
-        dispatch(p2pUserOfferDetailFetch({
-            offer_number: offer_number
-        }))
+        dispatch(
+            p2pUserOfferDetailFetch({
+                offer_number: offer_number,
+            })
+        );
     }, [dispatch]);
-    console.log(offerDetail, 'offerDetail')
     const handleChangeFiat = (e: string) => {
         setFiat(e);
     };

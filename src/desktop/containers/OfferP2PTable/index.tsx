@@ -77,7 +77,6 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
     };
 
     const getTableData = (data) => {
-        console.log(data)
         return data?.map((item) => [
             <div>
                 <p
@@ -97,7 +96,9 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
             <p className="m-0 p-0 white-text text-sm font-semibold">
                 {item?.available_amount} {item?.currency?.name?.toUpperCase()}
             </p>,
-            <p className="m-0 p-0 white-text text-sm font-semibold">{type === 'detail' ? item.state : capitalizeFirstLetter(item?.side)}</p>,
+            <p className="m-0 p-0 white-text text-sm font-semibold">
+                {type === 'detail' ? item.state : capitalizeFirstLetter(item?.side)}
+            </p>,
             <div className="d-flex align-items-center gap-24">
                 <Link
                     to={

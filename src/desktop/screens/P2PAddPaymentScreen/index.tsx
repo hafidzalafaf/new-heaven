@@ -32,12 +32,12 @@ export const P2PAddPaymentScreen: React.FC = () => {
         name: '',
         size: 0,
         type: '',
-        webKitRelativePath: ''
+        webKitRelativePath: '',
     });
     const [fileName, setFileName] = React.useState('');
     const [fiat, setFiat] = React.useState('IDR');
     const [account_number, setAccountNumber] = React.useState('');
-    const [otp_code, setOtpCode] = React.useState('')
+    const [otp_code, setOtpCode] = React.useState('');
     const [bankData, setBankData] = React.useState<any>();
     const [image, setImage] = React.useState<File | null>(null);
     const bank: Bank = useParams();
@@ -53,7 +53,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
     React.useEffect(() => {
         setBankData(currenciesData?.payment?.find((item) => item.symbol == bank.payment));
     }, [currenciesData]);
-    
+
     React.useEffect(() => {
         if (createPaymentSuccess) {
             history.push('/p2p/profile');
@@ -61,16 +61,20 @@ export const P2PAddPaymentScreen: React.FC = () => {
     }, [createPaymentSuccess]);
 
     const handleCreatePayment = () => {
-        const formData = new FormData()
+        const formData = new FormData();
         formData.append('account_number', account_number);
         formData.append('qr_code', image);
         formData.append('full_name', profiles[0]?.first_name);
         formData.append('payment_method', bank.payment);
         formData.append('otp_code', otp_code);
-        formData.append('qrcode', image)
-        const payload = { account_number, full_name: profiles[0]?.first_name, payment_method: bank.payment, otp_code: otp_code, qr_code: formData};
-        console.log(formData)
-        console.log(image)
+        formData.append('qrcode', image);
+        const payload = {
+            account_number,
+            full_name: profiles[0]?.first_name,
+            payment_method: bank.payment,
+            otp_code: otp_code,
+            qr_code: formData,
+        };
         dispatch(p2pPaymentUserCreate(formData));
     };
 
@@ -159,9 +163,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
                                     id="custom-input-file"
                                     type="file"
                                     // value={inputFile}
-                                    onChange={(e) =>
-                                        setImage(e.target.files[0])
-                                    }
+                                    onChange={(e) => setImage(e.target.files[0])}
                                     placeholder="Enter Full Name"
                                     className="custom-input-add-payment w-100 white-text d-none"
                                 />
@@ -182,7 +184,7 @@ export const P2PAddPaymentScreen: React.FC = () => {
                                 type="text"
                                 placeholder="Enter Verfication Code"
                                 className="custom-input-add-payment w-100 mb-24 white-text"
-                                onChange={(e)=> setOtpCode(e.target.value)}
+                                onChange={(e) => setOtpCode(e.target.value)}
                             />
 
                             <p className="m-0 p-0 grey-text text-xxs font-normal text-right">

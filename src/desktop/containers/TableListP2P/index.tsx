@@ -76,6 +76,7 @@ export const TableListP2P = () => {
     const [title, setTitle] = React.useState('');
     const [offerLoading, setOfferLoading] = React.useState(false);
     const [loadingRefresh, setLoadingRefresh] = React.useState(false);
+    const [paymentListUser, setPaymentListUser] = React.useState([]);
 
     /* ========== ORDER FETCH STATE START ========== */
     const [side, setSide] = React.useState('buy');
@@ -228,6 +229,7 @@ export const TableListP2P = () => {
     React.useEffect(() => {
         setCurrencies(currenciesData?.currency);
         setPayments(currenciesData?.payment);
+        setPaymentListUser(paymentMethods);
     }, [currenciesData, paymentMethods]);
 
     React.useEffect(() => {
@@ -968,7 +970,7 @@ export const TableListP2P = () => {
                         onCloseModal={handleCloseModalCreateOffer}
                         currencies={currencies}
                         fiats={fiats}
-                        payments={payments}
+                        payments={paymentListUser}
                         auto_replay={auto_replay}
                         currency={currencyOffer}
                         fiat={fiatOffer}
