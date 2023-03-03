@@ -10,3 +10,5 @@ export const selectP2PUserOffersAccountLoading = (state: RootState): boolean => 
 export const selectP2PUserOffersAccountSuccess = (state: RootState): boolean => state.user.p2pUserOffer.fetch.success;
 
 export const selectP2PUserOffersAccountError = (state: RootState): CommonError | undefined => state.user.p2pUserOffer.fetch.error;
+
+export const selectP2PUserAccountOfferCancelSuccess = (state: RootState): boolean => state.user.p2pUserOffer.cancel.success

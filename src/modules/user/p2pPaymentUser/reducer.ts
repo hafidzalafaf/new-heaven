@@ -15,13 +15,6 @@ import {
     P2P_PAYMENT_USER_DELETE_DATA,
     P2P_PAYMENT_USER_DELETE_ERROR,
 } from './constants';
-import { IPaymentUser } from './types';
-
-const defaultP2PPaymentUser: IPaymentUser = {
-    payment_method: '',
-    account_number: '',
-    full_name: '',
-};
 
 export interface P2PPaymentUserState {
     fetch: {
