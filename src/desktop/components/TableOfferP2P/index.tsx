@@ -343,7 +343,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                     {item?.payment && item?.payment[0]
                                                         ? item?.payment?.map((bank, i) => (
                                                               <div key={i} className="label-bank">
-                                                                  <img src={bank?.logo} alt={bank?.bank_name} />
+                                                                  <img src={bank?.logo_url} alt={bank?.bank_name} />
                                                               </div>
                                                           ))
                                                         : '-'}
