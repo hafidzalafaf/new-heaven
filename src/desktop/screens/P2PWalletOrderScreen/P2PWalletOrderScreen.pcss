@@ -238,6 +238,10 @@
                         .content-chat {
                             overflow-wrap: break-word;
                         }
+
+                        &.admin {
+                            background: #ef8943;
+                        }
                     }
                 }
             }
@@ -247,6 +251,10 @@
             }
 
             .chat-notification {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
                 background: var(--light-background-color);
                 padding: 8px;
                 border-radius: 8px;

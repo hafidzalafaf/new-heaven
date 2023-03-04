@@ -197,7 +197,11 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                                 {chat?.p2p_user?.member?.uid !== profile?.member?.uid && (
                                                     <div className="ava-container d-flex justify-content-center align-items-center">
                                                         <img
-                                                            src="/img/ava-sender.png"
+                                                            src={
+                                                                chat?.p2p_user?.member?.role == 'superadmin'
+                                                                    ? '/img/ava-admin.png'
+                                                                    : '/img/ava-sender.png'
+                                                            }
                                                             alt="ava"
                                                             width={32}
                                                             height={32}
@@ -215,12 +219,17 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                                     <p className="sender-name text-xxs text-white">
                                                         {chat?.p2p_user?.member?.uid === profile?.member?.uid
                                                             ? 'You'
+                                                            : chat?.p2p_user?.member?.role == 'superadmin'
+                                                            ? 'Admin Support'
                                                             : chat?.p2p_user?.username
                                                             ? chat?.p2p_user?.username
                                                             : chat?.p2p_user?.member?.email}
                                                     </p>
 
-                                                    <div className="buble-chat">
+                                                    <div
+                                                        className={`buble-chat ${
+                                                            chat?.p2p_user?.member?.role == 'superadmin' && 'admin'
+                                                        }`}>
                                                         {chat?.chat == null ? (
                                                             <img
                                                                 src={chat?.upload?.image?.url}
@@ -260,16 +269,24 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                 ))}
 
                                 <div className="chat-notification py-1 px-2 my-1">
-                                    <p className="mb-0 text-xxs text-center font-normal primary-text">
-                                        You have marked the order as paid, please wait for seller to confirm and release
-                                        the asset.
-                                    </p>
-                                </div>
-                                <div className="chat-notification py-1 px-2 my-1">
-                                    <p className="mb-0 text-xxs text-center font-normal primary-text">
-                                        {side === 'buy'
+                                    <p className="mb-0 text-xxs text-center font-normal primary-text text-nowrap">
+                                        {side === 'buy' && detail?.order?.state == 'prepare'
                                             ? 'Successfully placed an order, please pay within the time limit.'
-                                            : 'You have a new order, please wait for the buyer to make payment'}
+                                            : side === 'buy' && detail?.order?.state == 'waiting'
+                                            ? 'You have made a payment, please wait for the seller to confirm your payment.'
+                                            : side === 'sell' && detail?.order?.state == 'prepare'
+                                            ? 'You have a new order, please wait for the buyer to make payment.'
+                                            : side === 'sell' && detail?.order?.state == 'waiting'
+                                            ? `Buyer has made payment, please check your ${detail?.order?.payment?.symbol} account to confirm`
+                                            : detail?.order?.state === 'canceled'
+                                            ? 'Order was canceled'
+                                            : detail?.order?.state === 'rejected' &&
+                                              !chats?.find((chat) => chat?.p2p_user?.member?.role == 'superadmin')
+                                            ? 'Waiting for support to join...'
+                                            : detail?.order?.state === 'rejected' &&
+                                              chats?.find((chat) => chat?.p2p_user?.member?.role == 'superadmin')
+                                            ? 'Support has joined.'
+                                            : 'Order was completed'}
                                     </p>
                                 </div>
 
