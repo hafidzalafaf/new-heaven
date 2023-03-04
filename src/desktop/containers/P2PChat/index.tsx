@@ -268,13 +268,6 @@ export const P2PChat: React.FunctionComponent<P2PChatProps> = (props) => {
                                     </React.Fragment>
                                 ))}
 
-                                {console.log(
-                                    chats?.find(
-                                        (chat) =>
-                                            chat?.p2p_user == null || chat?.p2p_user?.member?.uid?.includes('admin')
-                                    )
-                                )}
-
                                 <div className="chat-notification py-1 px-2 my-1">
                                     <p className="mb-0 text-xxs text-center font-normal primary-text text-nowrap">
                                         {side === 'buy' && detail?.order?.state == 'prepare'
