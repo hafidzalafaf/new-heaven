@@ -299,7 +299,7 @@ export const OrderP2PTable = () => {
                             activeKey={tab}
                             onSelect={(k) => handleSelect(k)}
                             id="fill-tab-example"
-                            className="mb-3"
+                            className="mb-3 w-70"
                             fill>
                             <Tab eventKey="all" title="All Orders">
                                 <div className="w-100">{renderFilter()}</div>
