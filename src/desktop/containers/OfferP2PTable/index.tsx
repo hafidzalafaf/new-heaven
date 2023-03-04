@@ -59,6 +59,12 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
         { label: <p className="m-0 text-sm grey-text-accent">Acepted</p>, value: 'accepted' },
     ];
 
+    const optionStateOffer = [
+        { label: <p className="m-0 text-sm grey-text-accent">All Status</p>, value: '' },
+        { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
+        { label: <p className="m-0 text-sm grey-text-accent">Active</p>, value: 'active' },
+    ]
+
     const optionSide = [
         { label: <p className="m-0 text-sm grey-text-accent">Buy</p>, value: 'buy' },
         { label: <p className="m-0 text-sm grey-text-accent">Sell</p>, value: 'sell' },
@@ -96,8 +102,8 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
             <p className="m-0 p-0 white-text text-sm font-semibold">
                 {item?.available_amount} {item?.currency?.name?.toUpperCase()}
             </p>,
-            <p className={`m-0 p-0 text-sm font-semibold ${item.state === 'canceled' ? `danger-text` : `white-text`}`}>
-                {type === 'detail' || type === 'offer' ? item.state : capitalizeFirstLetter(item?.side)}
+            <p className={`m-0 p-0 text-sm font-semibold ${item?.state === 'canceled' ? `danger-text` : item?.state === 'active' ? `contrast-text` : `white-text`}`}>
+                {type === 'detail' || type === 'offer' ? capitalizeFirstLetter(item?.state) : capitalizeFirstLetter(item?.side)}
             </p>,
             <div className="d-flex align-items-center gap-24">
                 <Link
@@ -153,14 +159,26 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
 
                 <div className="w-20">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">Status</p>
-                    <Select
-                        value={optionState.filter(function (option) {
+                    {
+                        type === 'offer' ? 
+                        <Select
+                        value={optionStateOffer.filter(function (option) {
                             return option.value === state;
                         })}
                         styles={CustomStylesSelect}
-                        options={optionState}
+                        options={optionStateOffer}
                         onChange={(e) => handleChangeState(e.value)}
                     />
+                    :
+                    <Select
+                    value={optionState.filter(function (option) {
+                        return option.value === state;
+                    })}
+                    styles={CustomStylesSelect}
+                    options={optionState}
+                    onChange={(e) => handleChangeState(e.value)}
+                />
+                    }
                 </div>
 
                 <div className="w-20">

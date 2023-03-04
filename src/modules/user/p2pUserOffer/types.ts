@@ -13,6 +13,7 @@ export interface P2PUserOffer {
     term_of_condition: string;
     trader: any;
     payment: Payment[];
+    state: string;
 }
 
 export interface P2PCreateUserOffer {

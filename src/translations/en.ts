@@ -1464,6 +1464,9 @@ export const en = {
     'success.payment_method.updated': 'Payment method was updated',
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
 
+    //p2p error messages
+    'p2p_user.user.insuffient_balance': 'You have insufficient balance',
+
     ...nationalitiesNames,
     ...customTranslations,
     ...mobileTranslations,

@@ -42,19 +42,20 @@ export const P2PMyOfferScreen: React.FC = () => {
         }, 3000);
         dispatch(
             p2pUserOfferFetch({
-                currency: '',
+                currency: fiat,
                 amount: '',
                 max_amount: '',
                 min_price: '',
                 max_price: '',
                 side: side,
+                state: state
             })
         );
         if (cancelPaymentSuccess){
             console.log(cancelPaymentSuccess)
             setShowModalCancelOffer(false)
         }
-    }, [dispatch, side, cancelPaymentSuccess]);
+    }, [dispatch, side, cancelPaymentSuccess, state, fiat]);
 
     const handleShowModalCancel = (e:string) => {
         setShowModalCancelOffer(!showModalCancelOffer);

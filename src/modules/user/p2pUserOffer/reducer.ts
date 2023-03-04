@@ -30,6 +30,7 @@ export interface P2PUserOfferState {
         side: string;
         base: string;
         quote: string;
+        state: string;
         payment_method?: number;
         fetching: boolean;
         success: boolean;
@@ -56,6 +57,7 @@ export const initialP2PUserOfferState: P2PUserOfferState = {
         side: '',
         base: '',
         quote: '',
+        state: '',
         fetching: false,
         success: false,
     },

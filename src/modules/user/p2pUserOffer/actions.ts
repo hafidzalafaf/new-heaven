@@ -45,6 +45,7 @@ export interface P2PUserOfferFetch {
         max_amount?: string;
         min_price?: string;
         max_price?: string;
+        state?: string;
     };
 }
 
@@ -59,6 +60,7 @@ export interface P2PUserOfferData {
         base: string;
         quote: string;
         payment_method?: number;
+        state?: string;
     }
 }
 

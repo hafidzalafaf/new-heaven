@@ -31,6 +31,7 @@ export function* p2pFetchUserOfferSaga(action: P2PUserOfferFetch) {
             min_price,
             limit,
             page,
+            state
         } = action.payload;
         let params: any = {
             side,
@@ -45,6 +46,7 @@ export function* p2pFetchUserOfferSaga(action: P2PUserOfferFetch) {
             min_price,
             limit,
             page,
+            state
         };
         
         const {data, headers} = yield call(API.get(config), `/account/offer?${buildQueryString(params)}`);
@@ -58,6 +60,7 @@ export function* p2pFetchUserOfferSaga(action: P2PUserOfferFetch) {
             base,
             quote,
             payment_method,
+            state
         }));
     } catch (error) {
         yield put(
