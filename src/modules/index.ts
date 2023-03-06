@@ -8,7 +8,7 @@ import { BlocklistAccessState, rootBlocklistAccessSaga } from './public/blocklis
 import { BlogsState, rootBlogsSaga } from './public/blog';
 import { ConfigsState, rootConfigsSaga } from './public/configs';
 import { CurrenciesState } from './public/currencies';
-import { TradingFeeState } from './public/TradingFee';
+import { TradingFeeState } from './public/tradingFee';
 import { MaxWithdrawLimitState } from './public/maxWithdrawLimit';
 import { ErrorHandlerState, rootErrorHandlerSaga } from './public/errorHandler';
 import { ColorThemeState } from './public/globalSettings';
