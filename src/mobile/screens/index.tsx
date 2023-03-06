@@ -37,3 +37,4 @@ export * from './P2PDetailOrderMobileScreen';
 export * from './P2PWalletOrderMobileScreen';
 export * from './P2PWalletMobileScreen';
 export * from './P2PCreateOfferMobileScreen';
+export * from './P2PProfileMobileScreen';
