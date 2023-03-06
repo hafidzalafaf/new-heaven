@@ -32,3 +32,8 @@ export * from './DeviceManagementMobileScreen';
 export * from './OrderHistoryMobileScreen';
 export * from './AnnouncementMobileScreen';
 export * from './FAQMobileScreen';
+export * from './P2PMobileScreen';
+export * from './P2PDetailOrderMobileScreen';
+export * from './P2PWalletOrderMobileScreen';
+export * from './P2PWalletMobileScreen';
+export * from './P2PCreateOfferMobileScreen';

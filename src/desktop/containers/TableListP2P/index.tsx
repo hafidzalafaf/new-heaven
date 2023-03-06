@@ -64,7 +64,6 @@ export const TableListP2P = () => {
 
     const [currencies, setCurrencies] = React.useState([]);
     const [payments, setPayments] = React.useState([]);
-    const [payment, setPayment] = React.useState('');
     const [expandBuy, setExpandBuy] = React.useState('');
     const [expandSell, setExpandSell] = React.useState('');
     const [showModalCreateOffer, setShowModalCreateOffer] = React.useState(false);
