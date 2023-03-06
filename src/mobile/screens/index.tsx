@@ -32,3 +32,4 @@ export * from './DeviceManagementMobileScreen';
 export * from './OrderHistoryMobileScreen';
 export * from './AnnouncementMobileScreen';
 export * from './FAQMobileScreen';
+export * from './P2PProfileMobileScreen';
