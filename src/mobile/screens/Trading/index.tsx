@@ -358,11 +358,17 @@ export const TradingMobileScreen: React.FC = (): React.ReactElement => {
     // ganti select persenan
     const handleSelectPercentageSell = (e: number) => {
         setOrderPercentageSell(e);
+        if (e == 0) {
+            setAmountSell('0');
+        }
     };
 
     // ganti select persenan
     const handleSelectPercentageBuy = (e: number) => {
         setOrderPercentageBuy(e);
+        if (e == 0) {
+            setAmountBuy('0');
+        }
     };
 
     // close modal sell
