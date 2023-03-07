@@ -2,15 +2,19 @@ import * as React from 'react';
 import { VerificationIcon } from 'src/assets/images/P2PIcon';
 import { capitalizeFirstLetter } from 'src/helpers';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 export interface CardOfferListMobileProps {
     side: string;
+    fiat: string;
+    currency: string;
     offer: any;
     symbol: string;
 }
 
 export const CardOfferListMobile: React.FC<CardOfferListMobileProps> = (props) => {
-    const { side, offer, symbol } = props;
+    const { side, fiat, currency, offer, symbol } = props;
+    const history = useHistory();
 
     return (
         <div className="d-flex flex-column gap-8 p-16 radius-xl dark-bg-accent com-mobile-card-offer-list">
@@ -52,11 +56,17 @@ export const CardOfferListMobile: React.FC<CardOfferListMobileProps> = (props) =
                         </div>
                     ))}
                 </div>
-                <Link
-                    to={`/p2p/order/${offer?.offer_number}`}
+                <div
+                    onClick={() =>
+                        history.push(`/p2p/order/${offer?.offer_number}`, {
+                            side: side,
+                            currency: currency,
+                            fiat: fiat,
+                        })
+                    }
                     className={`${side == 'buy' ? 'btn-primary' : 'btn-danger'} text-ms font-normal`}>
                     {capitalizeFirstLetter(side)}
-                </Link>
+                </div>
             </div>
         </div>
     );

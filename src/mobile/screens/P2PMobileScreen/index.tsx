@@ -396,7 +396,13 @@ export const P2PMobileScreen: React.FC = () => {
                     isLoggedIn &&
                     privateOffer?.map((offer, i) => (
                         <div key={i} className="mb-8">
-                            <CardOfferListMobile side={side} offer={offer} symbol={symbol} />
+                            <CardOfferListMobile
+                                side={side}
+                                fiat={fiat}
+                                currency={currency}
+                                offer={offer}
+                                symbol={symbol}
+                            />
                         </div>
                     ))
                 )}
@@ -407,7 +413,13 @@ export const P2PMobileScreen: React.FC = () => {
                     !isLoggedIn &&
                     publicOffer?.map((offer, i) => (
                         <div key={i} className="mb-8">
-                            <CardOfferListMobile side={side} offer={offer} symbol={symbol} />
+                            <CardOfferListMobile
+                                side={side}
+                                fiat={fiat}
+                                currency={currency}
+                                offer={offer}
+                                symbol={symbol}
+                            />
                         </div>
                     ))
                 )}
