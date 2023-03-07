@@ -14,7 +14,7 @@ export const CardOfferListMobile: React.FC<CardOfferListMobileProps> = (props) =
 
     return (
         <div className="d-flex flex-column gap-8 p-16 radius-xl dark-bg-accent com-mobile-card-offer-list">
-            <div className="d-flex align-items-center gap-8">
+            <Link to={`/p2p/profile/${offer?.trader?.uid}`} className="d-flex align-items-center gap-8">
                 <div className="ava-container d-flex justify-content-center align-items-center white-text text-xxs font-bold">
                     {offer?.trader?.email?.toUpperCase()?.slice(0, 1)}
                 </div>
@@ -23,7 +23,7 @@ export const CardOfferListMobile: React.FC<CardOfferListMobileProps> = (props) =
                 <span>
                     <VerificationIcon />
                 </span>
-            </div>
+            </Link>
 
             <p className="m-0 p-0 text-xxs grey-text">
                 Trade(s) {offer?.trader?.offer} Completion {offer?.trader?.success_rate}%
@@ -52,7 +52,9 @@ export const CardOfferListMobile: React.FC<CardOfferListMobileProps> = (props) =
                         </div>
                     ))}
                 </div>
-                <Link to={`/p2p/order/${offer?.offer_number}`} className="btn-primary text-ms font-normal">
+                <Link
+                    to={`/p2p/order/${offer?.offer_number}`}
+                    className={`${side == 'buy' ? 'btn-primary' : 'btn-danger'} text-ms font-normal`}>
                     {capitalizeFirstLetter(side)}
                 </Link>
             </div>
