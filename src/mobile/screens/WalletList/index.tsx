@@ -183,6 +183,19 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
         [filteredWallets, nonZeroSelected, abilities, currencies, markets, tickers]
     );
 
+    const dataWallet = wallets.map((item) => ({
+        ...item,
+        currencyItem: currencies.find((curr) => curr.id == item.currency),
+    }));
+
+    const spotBalance = dataWallet.map(
+        (sum) => (Number(sum?.balance) + Number(sum?.locked)) * Number(sum?.currencyItem?.price)
+    );
+
+    const totalEstimateSpot = spotBalance?.reduce((accumulator, current) => {
+        return accumulator + current;
+    }, 0);
+
     const estimatedValue = React.useMemo(() => {
         return estimateValue(VALUATION_PRIMARY_CURRENCY, currencies, wallets, markets, tickers);
     }, [currencies, wallets, markets, tickers]);
@@ -254,12 +267,11 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                         </h3>
                         <div className="total-value d-flex justify-content-between align-items-center">
                             <h4 className="text-sm grey-text-accent font-bold">
-                                {formatWithSeparators(estimatedValue, ',')} {VALUATION_PRIMARY_CURRENCY.toUpperCase()}
+                                <Decimal fixed={2}>{totalEstimateSpot}</Decimal>{' '}
+                                {VALUATION_PRIMARY_CURRENCY.toUpperCase()}
                             </h4>
                         </div>
                     </div>
-
-                    {/* <div>{VALUATION_SECONDARY_CURRENCY && renderSecondaryCurrencyValuation(estimatedValue)}</div> */}
 
                     <div className="action-container w-100 d-flex flex-row justify-content-center align-items-center">
                         <button

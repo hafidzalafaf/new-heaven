@@ -12,6 +12,8 @@ export interface Wallet {
     p2p_locked?: string;
     deposit_addresses?: WalletAddress[];
     networks: WalletBlockchain[];
+    p2p_balance?: string;
+    p2p_locked?: string;
 }
 
 export interface WalletBlockchain {
