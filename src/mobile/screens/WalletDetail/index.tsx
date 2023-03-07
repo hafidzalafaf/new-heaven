@@ -33,16 +33,17 @@ import Select from 'react-select';
 import moment from 'moment';
 import { PaginationMobile } from 'src/mobile/components';
 import { Decimal } from '../../../components';
-import { estimateUnitValue } from 'src/helpers/estimateValue';
-import { VALUATION_PRIMARY_CURRENCY } from 'src/constants';
 import { CustomStylesSelect } from '../../../desktop/components';
 import { Modal } from 'react-bootstrap';
+import { Modal as ModalComponent } from '../../../desktop/components';
 import { ArrowLeft } from '../../assets/Arrow';
 import { WithdrawlIcon, DepositIcon, TransferIcon, FilterIcon, DocIcon } from '../../assets/Wallet';
 import { Table } from '../../../components';
 import { CircleCloseModalNetworkIcon } from '../../../assets/images/CircleCloseIcon';
 import { InfoModalNetworkIcon } from '../../../assets/images/InfoIcon';
 import { GearIcon } from 'src/mobile/assets/Gear';
+import { CircleCloseDangerLargeIcon } from 'src/assets/images/CircleCloseIcon';
+import { capitalizeFirstLetter } from 'src/helpers';
 
 interface Props {
     isP2PEnabled?: boolean;
@@ -86,6 +87,8 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const memberLevel = useSelector(selectMemberLevels);
 
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
+    const enableDesposit = currencyItem?.networks?.filter((item) => item.deposit_enabled == true);
+    const enableWithdraw = currencyItem?.networks?.filter((item) => item.withdrawal_enabled == true);
 
     const [filteredWallets, setFilteredWallets] = React.useState([]);
     const wallets = useSelector(selectWallets);
@@ -103,6 +106,9 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const [showFilter, setShowFilter] = React.useState(false);
     const [estimatedValue, setEstimatedValue] = React.useState<string | number>();
     const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
+    const [showModal2FA, setShowModal2FA] = React.useState<boolean>(false);
+
+    const [typeModal, setTypeModal] = React.useState('');
 
     // Handle get item pagination
     const firstElementIndex = useSelector((state: RootState) => selectFirstElemIndex(state, 5));
@@ -145,6 +151,16 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const handleSelectNetwork = (blockchain_key, protocol) => {
         history.push(`/wallets/${currency}/deposit`, { blockchain_key: blockchain_key, protocol: protocol });
     };
+
+    const handleClickWithdraw = React.useCallback(() => {
+        if (!user?.otp) {
+            setShowModal2FA(true);
+        } else if (user.level < memberLevel?.withdraw?.minimum_level) {
+            setShowModalLocked(true);
+        } else {
+            history.push(`/wallets/${currency}/withdraw`);
+        }
+    }, []);
 
     const handleChangeType = (e) => {
         setType(e);
@@ -260,6 +276,34 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
         setEstimatedValue(+filteredList.map((item) => item?.currencyItem?.price * totalBalance));
     }, [totalBalance, currency, filteredList]);
 
+    const renderHeaderModalLocked = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-center align-items-center w-100">
+                    <CircleCloseDangerLargeIcon />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const renderContentModalLocked = () => {
+        return (
+            <React.Fragment>
+                <h1 className="white-text text-lg mb-24 text-center ">{capitalizeFirstLetter(typeModal)} Locked</h1>
+                <p className="grey-text text-ms font-extrabold mb-24 text-center">
+                    To {typeModal} you have to enable 2FA
+                </p>
+                <div className="d-flex justify-content-center align-items-center w-100 mb-0">
+                    <Link to={`/two-fa-activation`}>
+                        <button type="button" className="btn btn-primary sm px-5 mr-3">
+                            Enable 2FA
+                        </button>
+                    </Link>
+                </div>
+            </React.Fragment>
+        );
+    };
+
     return (
         <>
             <div className="mobile-container wallet-detail dark-bg-main position-relative pg-mobile-wallet-detail">
@@ -308,6 +352,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     <button
                         id="network-canvas"
                         type="button"
+                        disabled={enableDesposit?.length <= 0}
                         onClick={() => setShowNetwork(true)}
                         className="btn btn-primary btn-sm font-normal m-1">
                         <DepositIcon className={''} />
@@ -315,8 +360,12 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     </button>
                     <button
                         type="button"
+                        disabled={enableWithdraw?.length <= 0}
                         onClick={() => {
-                            if (user.level < memberLevel?.withdraw?.minimum_level) {
+                            setTypeModal('withdraw');
+                            if (!user?.otp) {
+                                setShowModal2FA(true);
+                            } else if (user.level < memberLevel?.withdraw?.minimum_level) {
                                 setShowModalLocked(true);
                             } else {
                                 history.push(`/wallets/${currency}/withdraw`);
@@ -328,7 +377,14 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     </button>
                     <button
                         type="button"
-                        onClick={() => history.push(`/wallets/${currency}/transfer`)}
+                        onClick={() => {
+                            setTypeModal('internal transfer');
+                            if (!user?.otp) {
+                                setShowModal2FA(true);
+                            } else {
+                                history.push(`/wallets/${currency}/transfer`);
+                            }
+                        }}
                         className="btn btn-primary btn-sm font-normal m-1">
                         <TransferIcon className={''} />
                         {formatMessage({ id: 'page.mobile.wallets.transfer' })}
@@ -436,8 +492,12 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                             </p>
                         </div>
 
-                        {currencyItem &&
-                            currencyItem.networks.map((item, i) => (
+                        {!enableDesposit || !enableDesposit[0] ? (
+                            <div className="d-flex align-items-center">
+                                <p className="m-0 p-0 grey-text text-xxs italic">No network enabled</p>
+                            </div>
+                        ) : (
+                            enableDesposit?.map((item, i) => (
                                 <div
                                     onClick={() =>
                                         handleSelectNetwork(item && item.blockchain_key, item && item.protocol)
@@ -446,9 +506,18 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                                     className="cursor-pointer mb-8">
                                     <h3 className="p-0 m-0 text-ms grey-text-accent">{item && item.protocol}</h3>
                                 </div>
-                            ))}
+                            ))
+                        )}
                     </div>
                 </div>
+
+                {showModal2FA && (
+                    <ModalComponent
+                        show={showModal2FA}
+                        header={renderHeaderModalLocked()}
+                        content={renderContentModalLocked()}
+                    />
+                )}
 
                 {/* =================================== Modal filter Date ========================= */}
 
