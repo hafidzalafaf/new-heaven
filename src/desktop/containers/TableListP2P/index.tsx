@@ -22,10 +22,9 @@ import {
     selectP2PPaymentUser,
     p2pPaymentUserFetch,
     selectP2POrderCreateLoading,
-    selectP2PCreateOffersLoading,
-    selectP2PCreateOffersSuccess,
+    selectP2PCreateOfferLoading,
+    selectP2PCreateOfferSuccess,
 } from 'src/modules';
-import { DEFAULT_CCY_PRECISION, DEFAULT_TABLE_PAGE_LIMIT, DEFAULT_FIAT_PRECISION, HOST_URL } from 'src/constants';
 import { RefreshIcon, FilterIcon, DropdownIcon, InfoSecondaryIcon } from 'src/assets/images/P2PIcon';
 import {
     CustomStylesSelect,
@@ -38,9 +37,7 @@ import {
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
 import { CustomStyleFiat } from './CustomStyleFiat';
-import { CustomStylePaymentOrder } from './CustomStylePaymentOrder';
 import { Modal } from '../../../desktop/components';
-import { Loading } from 'src/components';
 import { Spinner } from 'react-bootstrap';
 
 export const TableListP2P = () => {
@@ -57,8 +54,8 @@ export const TableListP2P = () => {
     const createData = useSelector(selectP2POrderCreateData);
     const createOrderSuccess = useSelector(selectP2POrderCreateSuccess);
     const createOrderLoading = useSelector(selectP2POrderCreateLoading);
-    const createOfferLoading = useSelector(selectP2PCreateOffersLoading);
-    const createOfferSuccess = useSelector(selectP2PCreateOffersSuccess);
+    const createOfferLoading = useSelector(selectP2PCreateOfferLoading);
+    const createOfferSuccess = useSelector(selectP2PCreateOfferSuccess);
     const loadingOffers = useSelector(selectP2POffersFetchLoading);
     const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
 

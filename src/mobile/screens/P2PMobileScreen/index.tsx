@@ -14,6 +14,7 @@ import {
     selectP2PPaymentUser,
     offersFetch,
     p2pOfferFetch,
+    P2PFiat,
 } from 'src/modules';
 import { ModalMobile, CardOfferListMobile, ModalFullScreenMobile } from 'src/mobile/components';
 import { ActiveCheck, GreyCheck } from 'src/assets/images/P2PIcon';
@@ -27,15 +28,17 @@ import {
 import { InfoIcon } from 'src/assets/images/InfoIcon';
 import { NoData, FilterInput } from 'src/desktop/components';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export const P2PMobileScreen: React.FC = () => {
     useDocumentTitle('P2P');
-
     const dispatch = useDispatch();
+    const location = useLocation<{ side?: string; currency?: string; fiat?: string }>();
+
     const isLoggedIn = useSelector(selectUserLoggedIn);
     const publicOffer = useSelector(selectP2POffers);
     const privateOffer = useSelector(selectP2PAccountOffer);
-    const fiats: [] = useSelector(selectP2PFiatsData);
+    const fiats: P2PFiat[] = useSelector(selectP2PFiatsData);
     const currenciesData = useSelector(selectP2PCurrenciesData);
     const user = useSelector(selectUserInfo);
     const paymentMethods = useSelector(selectP2PPaymentUser);
@@ -53,9 +56,13 @@ export const P2PMobileScreen: React.FC = () => {
     const [filterValue, setFilterValue] = React.useState<string>('');
     const [filteredCurrency, setFilteredCurrency] = React.useState([]);
 
-    const [side, setSide] = React.useState('buy');
-    const [fiat, setFiat] = React.useState('IDR');
-    const [currency, setCurrency] = React.useState(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
+    const [side, setSide] = React.useState(
+        location?.state?.side ? (location?.state?.side == 'buy' ? 'sell' : 'buy') : 'buy'
+    );
+    const [fiat, setFiat] = React.useState(location?.state?.fiat ? location?.state?.fiat : 'IDR');
+    const [currency, setCurrency] = React.useState(
+        location?.state?.currency ? location?.state?.currency : currencies?.length > 0 ? currencies[0]?.currency : 'eth'
+    );
     const [symbol, setSymbol] = React.useState('Rp');
     const [amountList, setAmountList] = React.useState('');
     const [amountFilter, setAmountFilter] = React.useState('');
@@ -180,11 +187,11 @@ export const P2PMobileScreen: React.FC = () => {
         isLoggedIn,
     ]);
 
-    // React.useEffect(() => {
-    //     setTimeout(() => {
-    //         setShowModalAnnouncement(true);
-    //     }, 3000);
-    // }, []);
+    React.useEffect(() => {
+        setTimeout(() => {
+            setShowModalAnnouncement(true);
+        }, 3000);
+    }, []);
 
     const searchFilter = (row, searchKey: string) => {
         setFilterValue(searchKey);

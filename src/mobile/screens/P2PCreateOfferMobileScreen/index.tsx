@@ -9,18 +9,20 @@ import {
     selectP2PPaymentUser,
     selectP2PFiatsData,
     selectP2PCurrenciesData,
-    selectP2PCreateOffersLoading,
-    selectP2PCreateOffersSuccess,
-    selectP2POrderCreateData,
+    selectP2PCreateOfferLoading,
+    selectP2PCreateOfferSuccess,
     selectUserInfo,
 } from 'src/modules';
 import { P2PPaymentMethodProps } from 'src/desktop/components';
 import { useHistory } from 'react-router';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import Select, { components } from 'react-select';
-import { CustomStylesSelect } from 'src/mobile/components';
-import { CustomStyleFiat } from 'src/desktop/containers/TableListP2P/CustomStyleFiat';
+import { CustomStyleSelectFiatMobile } from './CustomStyleSelectFiatMobile';
 import { Link } from 'react-router-dom';
+import { CustomStyleSelectCreateOfferMobile } from './CustomStyleSelectCreateOfferMobile';
+import { capitalizeFirstLetter } from 'src/helpers';
+import { CloseMobileIcon } from 'src/mobile/assets/P2PMobileIcon';
+import { InfoIcon } from 'src/assets/images/InfoIcon';
 
 export const P2PCreateOfferMobileScreen: React.FC = () => {
     useDocumentTitle('P2P || Create Offer');
@@ -31,12 +33,13 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
     const fiats = useSelector(selectP2PFiatsData);
     const currenciesData = useSelector(selectP2PCurrenciesData);
     const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
-    const createOfferLoading = useSelector(selectP2PCreateOffersLoading);
-    const createOfferSuccess = useSelector(selectP2PCreateOffersSuccess);
+    const createOfferLoading = useSelector(selectP2PCreateOfferLoading);
+    const createOfferSuccess = useSelector(selectP2PCreateOfferSuccess);
 
     const [currencies, setCurrencies] = React.useState([]);
     const [payments, setPayments] = React.useState([]);
     const [paymentListUser, setPaymentListUser] = React.useState([]);
+    const [showConfirmation, setShowConfirmation] = React.useState(false);
 
     const [side, setSide] = React.useState('buy');
     const [currency, setCurrency] = React.useState(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
@@ -60,6 +63,13 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
     }, [fiat, currency, price]);
 
     React.useEffect(() => {
+        if (createOfferSuccess) {
+            setShowConfirmation(!showConfirmation);
+            history.push(`/p2p`, { side: side, currency: currency, fiat: fiat });
+        }
+    }, [createOfferSuccess]);
+
+    React.useEffect(() => {
         setCurrencies(currenciesData?.currency);
         setPayments(currenciesData?.payment);
         setPaymentListUser(paymentMethods);
@@ -81,14 +91,6 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
         };
 
         dispatch(p2pOfferCreate(payload));
-        setTradeAmount('');
-        setMinOrder('');
-        setMaxOrder('');
-        setPaymentValue([]);
-        setTermOfCondition('');
-        setAutoReplay('');
-        setPrice('');
-        setCurrency('');
     };
 
     const handleChangeCurrency = (e: string) => {
@@ -130,6 +132,26 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
         setAutoReplay(e);
     };
 
+    const dataFiat = fiats?.find((item) => item?.name == fiat);
+    const filteredPayment = paymentListUser?.filter((item) => paymentOffer?.includes(item?.payment_user_uid));
+
+    const isDisabled = () => {
+        if (
+            !currency ||
+            !fiat ||
+            !max_order ||
+            !min_order ||
+            !paymentOffer ||
+            !price ||
+            !trade_amount ||
+            !term_of_condition ||
+            !side ||
+            createOfferLoading
+        ) {
+            return true;
+        }
+    };
+
     const optionFiats = fiats?.map((item) => {
         return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };
     });
@@ -167,129 +189,272 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
 
     return (
         <React.Fragment>
-            <div className="pg-mobile-screen-p2p-create-offer mobile-container dark-bg-main">
-                <div className="d-flex justify-content-center align-items-center position-relative mb-24">
-                    <p className="m-0 p-0 grey-text-accent text-md font-extrabold">Create Offers</p>
-                    <span onClick={() => history.goBack()} className="back position-absolute">
-                        <ArrowLeft className={'cursor-pointer'} />
-                    </span>
-                </div>
+            <div className="pg-mobile-screen-p2p-create-offer mobile-container px-0 dark-bg-main">
+                <div className="position-relative ">
+                    <div className="position-sticky px-12 top-nav-create-offer pb-2">
+                        <div className="d-flex justify-content-center align-items-center position-relative mb-24">
+                            <p className="m-0 p-0 grey-text-accent text-md font-extrabold">Create Offers</p>
+                            <span onClick={() => history.goBack()} className="back position-absolute">
+                                <ArrowLeft className={'cursor-pointer'} />
+                            </span>
+                        </div>
+                        <div className="d-flex align-items-center gap-16 mb-16">
+                            <button
+                                onClick={() => setSide('buy')}
+                                type="button"
+                                className={`btn-transparent py-10 w-auto ${side == 'buy' && 'active'}`}>
+                                <span className={` ${side == 'buy' ? 'gradient-text' : 'grey-text'}`}>Buy</span>
+                            </button>
 
-                <div className="d-flex align-items-center gap-16 mb-16">
-                    <button
-                        onClick={() => setSide('buy')}
-                        type="button"
-                        className={`btn-transparent py-10 w-auto ${side == 'buy' && 'active'}`}>
-                        <span className={` ${side == 'buy' ? 'gradient-text' : 'grey-text'}`}>Buy</span>
-                    </button>
-
-                    <button
-                        onClick={() => setSide('sell')}
-                        type="button"
-                        className={`btn-transparent py-10 w-auto ${side == 'sell' && 'active'}`}>
-                        <span className={` ${side == 'sell' ? 'gradient-text' : 'grey-text'}`}>Sell</span>
-                    </button>
-                </div>
-
-                <form className="form-crete-offer">
-                    <div className="mb-16">
-                        <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">CRYPTOCURRENCY</p>
-                        <Select
-                            value={optionCurrency?.filter(function (option) {
-                                return option.value === currency;
-                            })}
-                            styles={CustomStylesSelect}
-                            options={optionCurrency}
-                            onChange={(e) => {
-                                handleChangeCurrency(e.value);
-                            }}
-                        />
+                            <button
+                                onClick={() => setSide('sell')}
+                                type="button"
+                                className={`btn-transparent py-10 w-auto ${side == 'sell' && 'active'}`}>
+                                <span className={` ${side == 'sell' ? 'gradient-text' : 'grey-text'}`}>Sell</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="mb-16">
-                        <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">PRICE</p>
-                        <div className="d-flex align-items-center">
-                            <input
-                                style={{
-                                    color: 'white',
-                                }}
-                                value={price}
-                                onChange={(e) => handleChangePrice(e.target.value)}
-                                type="text"
-                                placeholder="00.00"
-                                className="input-filter-fiat dark-bg-accent filter-input"
-                            />
-
+                    <form className="form-crete-offer">
+                        <div className="mb-16 px-12">
+                            <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">CRYPTOCURRENCY</p>
                             <Select
-                                value={optionFiats?.filter(function (option) {
-                                    return option.value === fiat;
+                                value={optionCurrency?.filter(function (option) {
+                                    return option.value === currency;
                                 })}
-                                styles={CustomStyleFiat}
-                                options={optionFiats}
+                                styles={CustomStyleSelectCreateOfferMobile}
+                                options={optionCurrency}
                                 onChange={(e) => {
-                                    setFiat(e.value);
+                                    handleChangeCurrency(e.value);
                                 }}
                             />
                         </div>
-                    </div>
 
-                    <div className="mb-16">
-                        <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">TRADING AMOUNT</p>
-                        <input
-                            type="text"
-                            required
-                            value={trade_amount}
-                            onChange={(e) => handleChangeTradeAmount(e.target.value)}
-                            placeholder="00.00"
-                            className="custom-input-offer w-100 white-text"
-                        />
-                    </div>
+                        <div className="mb-16 px-12">
+                            <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">PRICE</p>
+                            <div className="d-flex align-items-center">
+                                <div className="w-80">
+                                    <input
+                                        style={{
+                                            color: 'white',
+                                        }}
+                                        value={price}
+                                        onChange={(e) => handleChangePrice(e.target.value)}
+                                        type="text"
+                                        placeholder="Enter amount"
+                                        className="input-filter-fiat w-100 filter-input"
+                                    />
+                                </div>
 
-                    <div className="mb-16">
-                        <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">ORDER LIMIT</p>
-
-                        <div className="d-flex align-items-center gap-16 w-100">
-                            <div className="w-50 m-0 position-relative">
-                                <input
-                                    type="text"
-                                    required
-                                    value={min_order}
-                                    onChange={(e) => handleChangeMinOrder(e.target.value)}
-                                    placeholder="00.00"
-                                    className="custom-input-offer white-text w-100"
-                                />
-                                <label className="input-label-right text-sm grey-text position-absolute">min</label>
+                                <div className="w-20">
+                                    <Select
+                                        value={optionFiats?.filter(function (option) {
+                                            return option.value === fiat;
+                                        })}
+                                        styles={CustomStyleSelectFiatMobile}
+                                        options={optionFiats}
+                                        onChange={(e) => {
+                                            setFiat(e.value);
+                                        }}
+                                    />
+                                </div>
                             </div>
-                            <div className="w-50 m-0 position-relative">
-                                <input
-                                    type="text"
-                                    required
-                                    value={max_order}
-                                    onChange={(e) => handleChangeMaxOrder(e.target.value)}
-                                    placeholder="00.00"
-                                    className="custom-input-offer white-text w-100"
-                                />
-                                <label className="input-label-right text-sm grey-text position-absolute">max</label>
+                        </div>
+
+                        <div className="mb-16 px-12">
+                            <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">TRADING AMOUNT</p>
+                            <input
+                                type="text"
+                                required
+                                value={trade_amount}
+                                onChange={(e) => handleChangeTradeAmount(e.target.value)}
+                                placeholder="00.00"
+                                className="custom-input-offer w-100 white-text"
+                            />
+                        </div>
+
+                        <div className="mb-16 px-12">
+                            <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">ORDER LIMIT</p>
+
+                            <div className="d-flex align-items-center gap-16 w-100">
+                                <div className="w-50 m-0 position-relative">
+                                    <input
+                                        type="text"
+                                        required
+                                        value={min_order}
+                                        onChange={(e) => handleChangeMinOrder(e.target.value)}
+                                        placeholder="00.00"
+                                        className="custom-input-offer white-text w-100"
+                                    />
+                                    <label className="input-label-right text-sm grey-text position-absolute">min</label>
+                                </div>
+                                <div className="w-50 m-0 position-relative">
+                                    <input
+                                        type="text"
+                                        required
+                                        value={max_order}
+                                        onChange={(e) => handleChangeMaxOrder(e.target.value)}
+                                        placeholder="00.00"
+                                        className="custom-input-offer white-text w-100"
+                                    />
+                                    <label className="input-label-right text-sm grey-text position-absolute">max</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mb-16 px-12">
+                            <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">PAYMENT METHOD</p>
+                            <Select
+                                isMulti
+                                value={paymentValue}
+                                components={{ MenuList: AddPayment }}
+                                styles={CustomStyleSelectCreateOfferMobile}
+                                options={optionPayment}
+                                closeMenuOnSelect={false}
+                                hideSelectedOptions={false}
+                                onChange={(e) => {
+                                    handleChangePayment(e);
+                                }}
+                            />
+                        </div>
+
+                        <div className="mb-16 px-12">
+                            <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">TERM CONDITIONS</p>
+                            <textarea
+                                required
+                                value={term_of_condition}
+                                onChange={(e) => handleChangeTermOfCondition(e.target.value)}
+                                placeholder="Enter term conditions"
+                                className="custom-textarea-offer w-100 white-text"
+                            />
+                        </div>
+
+                        <div className="pb-5 px-12">
+                            <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">AUTO REPLY (OPTIONAL)</p>
+                            <textarea
+                                value={auto_replay}
+                                onChange={(e) => handleChangeAutoReplay(e.target.value)}
+                                placeholder="Enter message"
+                                className="custom-textarea-offer w-100 white-text"
+                            />
+                        </div>
+                        <div className="mb-5"></div>
+
+                        <div className="bottom-nav-create-offer">
+                            <button
+                                type="button"
+                                disabled={isDisabled()}
+                                onClick={() => setShowConfirmation(!showConfirmation)}
+                                className="btn-primary w-100 text-ms font-normal">
+                                Create Offers
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div
+                    id="off-canvas-confirmation"
+                    className={`position-fixed off-canvas-confirmation ${showConfirmation ? 'show' : ''}`}>
+                    <div className="fixed-bottom off-canvas-content-container-confirmation overflow-auto">
+                        <div className="d-flex justify-content-center align-items-center w-100 position-relative mb-24">
+                            <h1 className="text-md grey-text-accent font-extrabold">
+                                {capitalizeFirstLetter(side)} Offer Confirm
+                            </h1>
+
+                            <span
+                                onClick={() => setShowConfirmation(!showConfirmation)}
+                                className="position-absolute close-canvas cursor-pointer">
+                                <CloseMobileIcon />
+                            </span>
+                        </div>
+
+                        <div className="w-100">
+                            <div className="p-16 border-bottom-canvas">
+                                <div className="d-flex justify-content-between align-items-center mb-16">
+                                    <p className="m-0 p-0 grey-text text-sm">Assets</p>
+                                    <div className="d-flex align-items-center gap-8">
+                                        <p className="m-0 p-0 white-text text-sm font-bold">
+                                            {currency?.toUpperCase()}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="d-flex justify-content-between align-items-center mb-16">
+                                    <p className="m-0 p-0 grey-text text-sm">Currency(Fiat)</p>
+                                    <div className="d-flex align-items-center gap-8">
+                                        <p className="m-0 p-0 white-text text-sm font-bold">{fiat?.toUpperCase()}</p>
+                                    </div>
+                                </div>
+
+                                <div className="d-flex justify-content-between align-items-center mb-16">
+                                    <p className="m-0 p-0 grey-text text-sm">Price</p>
+                                    <div className="d-flex align-items-center gap-8">
+                                        <p className="m-0 p-0 white-text text-sm font-bold">
+                                            {dataFiat?.symbol} {price}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="d-flex justify-content-between align-items-center mb-16">
+                                    <p className="m-0 p-0 grey-text text-sm">Trading Amount</p>
+                                    <div className="d-flex align-items-center gap-8">
+                                        <p className="m-0 p-0 white-text text-sm font-bold">
+                                            {trade_amount} {currency?.toUpperCase()}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <p className="m-0 p-0 grey-text text-sm">Order Limit</p>
+                                    <div className="d-flex align-items-center gap-8">
+                                        <p className="m-0 p-0 white-text text-sm font-bold">
+                                            {min_order} - {max_order} {fiat?.toUpperCase()}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-16 border-bottom-canvas">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <p className="m-0 p-0 grey-text text-sm">Payment Method</p>
+                                    {filteredPayment?.map((pay, i) => (
+                                        <div key={i} className="payment d-flex align-items-center gap-4">
+                                            <div className="payment-label"></div>
+                                            <p className="m-0 p-0 text-xxs grey-text">{pay?.bank_name}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="d-flex gap-4 align-items-center mb-24 p-16">
+                                <span>
+                                    <InfoIcon />
+                                </span>
+                                <p className="m-0 p-0 grey-text text-xxs font-bold">
+                                    After confirmation od the {side?.toUpperCase()} order, the trading assets will be
+                                    frozen.
+                                </p>
+                            </div>
+
+                            <div>
+                                <button
+                                    type="button"
+                                    disabled={createOfferLoading}
+                                    onClick={handleConfirmOffer}
+                                    className="w-100 btn-primary mb-16 text-ms white-text font-normal">
+                                    Confirm
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmation(!showConfirmation)}
+                                    className="w-100 btn-secondary text-ms white-text font-normal">
+                                    Cancel
+                                </button>
                             </div>
                         </div>
                     </div>
-
-                    <div className="mb-16">
-                        <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">PAYMENT METHOD</p>
-                        <Select
-                            isMulti
-                            value={paymentValue}
-                            components={{ MenuList: AddPayment }}
-                            styles={CustomStylesSelect}
-                            options={optionPayment}
-                            closeMenuOnSelect={false}
-                            hideSelectedOptions={false}
-                            onChange={(e) => {
-                                handleChangePayment(e);
-                            }}
-                        />
-                    </div>
-                </form>
+                </div>
             </div>
         </React.Fragment>
     );

@@ -8,8 +8,6 @@ export interface Wallet {
     locked?: string;
     iconUrl?: string;
     active?: boolean;
-    p2p_balance?: string;
-    p2p_locked?: string;
     deposit_addresses?: WalletAddress[];
     networks: WalletBlockchain[];
     p2p_balance?: string;
