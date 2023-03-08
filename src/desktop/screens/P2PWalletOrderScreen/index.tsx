@@ -40,12 +40,6 @@ import { ArrowRight } from 'src/mobile/assets/Arrow';
 import { InfoIcon } from 'src/assets/images/InfoIcon';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 
-interface File extends Blob {
-    readonly lastModified: number;
-    readonly name: string;
-    readonly webkitRelativePath: string;
-}
-
 export const P2PWalletOrderScreen: React.FC = () => {
     useDocumentTitle('P2P || Order');
     const dispatch = useDispatch();
