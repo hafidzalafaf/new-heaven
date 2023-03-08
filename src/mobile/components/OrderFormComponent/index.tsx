@@ -135,7 +135,7 @@ export const OrderFormComponent: React.FunctionComponent<OrderFormProps> = (prop
                         }}
                         className="form-control"
                         id={labelAmount}
-                        placeholder="Amount"
+                        placeholder={`Amount ${currentMarket && currentMarket?.base_unit?.toUpperCase()}`}
                     />
                     <div className="input-group-append">
                         <span className="input-group-text" onClick={() => handleChangeValueAmountByButton(false, side)}>

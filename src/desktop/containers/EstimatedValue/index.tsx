@@ -2,10 +2,9 @@ import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch } from 'src/hooks';
-import { formatWithSeparators } from '../../../components';
+import { formatWithSeparators, Decimal } from '../../../components';
 import { VALUATION_PRIMARY_CURRENCY, VALUATION_SECONDARY_CURRENCY } from '../../../constants';
 import { selectCurrencies, selectMarkets, selectMarketTickers, Wallet } from '../../../modules';
-import { Decimal } from 'src/components';
 
 interface EstimatedValueProps {
     wallets: Wallet[];

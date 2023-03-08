@@ -134,20 +134,20 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
 
     const isDisabled = !coinAddress || !coinBeneficiaryName || !coinAddressValid || !coinBlockchainName.blockchainKey;
 
-    const optionNetworks =
-        currencyItem &&
-        currencyItem.networks.map((item) => {
-            const customLabel = (
-                <div className="d-flex align-items-center cursor-pointer" onClick={() => setProtocol(item?.protocol)}>
-                    <p className="m-0 grey-text-accent text-sm">{item.protocol}</p>
-                </div>
-            );
+    const enableWithdraw = currencyItem?.networks?.filter((item) => item.withdrawal_enabled == true);
 
-            return {
-                label: customLabel,
-                value: item.blockchain_key,
-            };
-        });
+    const optionNetworks = enableWithdraw?.map((item) => {
+        const customLabel = (
+            <div className="d-flex align-items-center cursor-pointer" onClick={() => setProtocol(item?.protocol)}>
+                <p className="m-0 grey-text-accent text-sm">{item.protocol}</p>
+            </div>
+        );
+
+        return {
+            label: customLabel,
+            value: item.blockchain_key,
+        };
+    });
 
     const renderHeaderModalBeneficiary = () => {
         return (

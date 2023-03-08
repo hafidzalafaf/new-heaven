@@ -193,8 +193,6 @@ export const ModalCreateOffer: React.FunctionComponent<ModalCreateOfferPost> = (
                 show={showModalCreateOffer}
                 content={renderContentModalCreateOffer()}
             />
-
-            {/* <Modal show={true} content={renderModalConfirmation()} /> */}
         </React.Fragment>
     );
 };

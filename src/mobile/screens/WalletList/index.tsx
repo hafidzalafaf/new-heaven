@@ -14,6 +14,7 @@ import {
     memberLevelsFetch,
     selectMemberLevels,
     selectP2PWallets,
+    Currency,
 } from '../../../modules';
 import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch, useDocumentTitle } from '../../../hooks';
 import { Table, Decimal, formatWithSeparators } from '../../../components';
@@ -22,9 +23,11 @@ import { estimateUnitValue, estimateValue } from '../../../helpers/estimateValue
 import { VALUATION_PRIMARY_CURRENCY, VALUATION_SECONDARY_CURRENCY } from '../../../constants';
 import { WithdrawlIcon, DepositIcon, TransferIcon } from '../../assets/Wallet';
 import { Modal } from 'react-bootstrap';
+import { Modal as ModalComponent } from '../../../desktop/components';
 import { CoinTransfer } from '../../../mobile/components/CoinTransfer/CoinTransfer';
 import { ArrowRight } from '../../assets/Arrow';
 import { GearIcon } from 'src/mobile/assets/Gear';
+import { CircleCloseDangerLargeIcon } from 'src/assets/images/CircleCloseIcon';
 
 interface Props {
     isP2PEnabled?: boolean;
@@ -63,6 +66,8 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
     const [filteredWallets, setFilteredWallets] = React.useState<ExtendedWallet[]>([]);
     const [nonZeroSelected, setNonZeroSelected] = React.useState<boolean>(false);
     const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
+    const [showModal2FA, setShowModal2FA] = React.useState<boolean>(false);
+    const [currency, setCurrency] = React.useState('');
 
     const translate = React.useCallback((id: string, value?: any) => formatMessage({ id: id }, { ...value }), [
         formatMessage,
@@ -183,6 +188,19 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
         [filteredWallets, nonZeroSelected, abilities, currencies, markets, tickers]
     );
 
+    const dataWallet = wallets.map((item) => ({
+        ...item,
+        currencyItem: currencies.find((curr) => curr.id == item.currency),
+    }));
+
+    const spotBalance = dataWallet.map(
+        (sum) => (Number(sum?.balance) + Number(sum?.locked)) * Number(sum?.currencyItem?.price)
+    );
+
+    const totalEstimateSpot = spotBalance?.reduce((accumulator, current) => {
+        return accumulator + current;
+    }, 0);
+
     const estimatedValue = React.useMemo(() => {
         return estimateValue(VALUATION_PRIMARY_CURRENCY, currencies, wallets, markets, tickers);
     }, [currencies, wallets, markets, tickers]);
@@ -236,12 +254,44 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
     );
 
     const handleClickWithdraw = React.useCallback(() => {
-        if (user.level < memberLevel?.withdraw?.minimum_level) {
+        if (!user?.otp) {
+            setShowModal2FA(true);
+        } else if (user.level < memberLevel?.withdraw?.minimum_level) {
             setShowModalLocked(true);
         } else {
             setShowModal(true);
         }
     }, []);
+
+    const renderHeaderModalLocked = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-center align-items-center w-100">
+                    <CircleCloseDangerLargeIcon />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const renderContentModalLocked = () => {
+        return (
+            <React.Fragment>
+                <h1 className="white-text text-lg mb-24 text-center ">
+                    {modalType == 'withdraw' ? 'Witdraw' : 'Internal transfer'} Locked
+                </h1>
+                <p className="grey-text text-ms font-extrabold mb-24 text-center">
+                    To {modalType} you have to enable 2FA
+                </p>
+                <div className="d-flex justify-content-center align-items-center w-100 mb-0">
+                    <Link to={`/two-fa-activation`}>
+                        <button type="button" className="btn btn-primary sm px-5 mr-3">
+                            Enable 2FA
+                        </button>
+                    </Link>
+                </div>
+            </React.Fragment>
+        );
+    };
 
     return (
         <React.Fragment>
@@ -254,12 +304,11 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                         </h3>
                         <div className="total-value d-flex justify-content-between align-items-center">
                             <h4 className="text-sm grey-text-accent font-bold">
-                                {formatWithSeparators(estimatedValue, ',')} {VALUATION_PRIMARY_CURRENCY.toUpperCase()}
+                                <Decimal fixed={2}>{totalEstimateSpot}</Decimal>{' '}
+                                {VALUATION_PRIMARY_CURRENCY.toUpperCase()}
                             </h4>
                         </div>
                     </div>
-
-                    {/* <div>{VALUATION_SECONDARY_CURRENCY && renderSecondaryCurrencyValuation(estimatedValue)}</div> */}
 
                     <div className="action-container w-100 d-flex flex-row justify-content-center align-items-center">
                         <button
@@ -283,9 +332,18 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                             {formatMessage({ id: 'page.mobile.wallets.withdraw' })}
                         </button>
                         <button
+                            // onClick={() => {
+                            //     handleClickWithdraw();
+                            //     setModalType('transfer');
+                            // }}
+
                             onClick={() => {
-                                handleClickWithdraw();
                                 setModalType('transfer');
+                                if (!user?.otp) {
+                                    setShowModal2FA(true);
+                                } else {
+                                    setShowModal(true);
+                                }
                             }}
                             className="btn btn-primary btn-sm d-flex">
                             <TransferIcon className={'mr-2'} />
@@ -349,6 +407,14 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                     <Table data={renderTableData(wallets)} />
                 )}
             </div>
+
+            {showModal2FA && (
+                <ModalComponent
+                    show={showModal2FA}
+                    header={renderHeaderModalLocked()}
+                    content={renderContentModalLocked()}
+                />
+            )}
 
             {/* ========= Show Modal Locked 2FA =========== */}
 

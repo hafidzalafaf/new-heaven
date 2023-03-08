@@ -1482,6 +1482,8 @@ export const ru: LangType = {
     'success.payment_method.updated': 'Способ оплаты обновлен',
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
 
+    'p2p_user.user.insuffient_balance': 'У вас недостаточно средств на балансе',
+
     ...nationalitiesNames,
     ...mobileTranslationsRu,
 };
