@@ -1,11 +1,14 @@
+import moment from 'moment'
 import React, { useState } from 'react'
+import { Tabs, Tab } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory, useParams } from 'react-router-dom'
-import { RenameIcon, VerificationIcon, ShareIcon, CheckFillIcon, MobileFeedback, MobileCompletionRate, MobileLastMonthTrade, MobileMoreArrow, MobileThumbsUp, MobileCreditCard, MobileNotification, MobileUserIcon } from 'src/assets/images/P2PIcon'
+import { RenameIcon, VerificationIcon, ShareIcon, CheckFillIcon, MobileFeedback, MobileCompletionRate, MobileLastMonthTrade, MobileMoreArrow, MobileThumbsUp, MobileCreditCard, MobileNotification, MobileUserIcon, LikeSuccessIcon, UnLikeDangerIcon } from 'src/assets/images/P2PIcon'
 import { useDocumentTitle } from 'src/hooks'
 import { ArrowLeft } from 'src/mobile/assets/Arrow'
 import { ModalFullScreenMobile } from 'src/mobile/components/ModalFullScreen'
-import { selectUserLoggedIn, selectP2PMerchantDetail, selectP2PPaymentUser, P2PProfileFetchInterface, selectP2PProfile, selectP2PProfileBlockMerchantLoading, selectP2PProfileBlockMerchantSuccess, selectP2PProfileChangeUsernameSuccess, selectUserInfo, p2pPaymentUserFetch, p2pProfileFetch } from 'src/modules'
+import { P2PFeedbackTab } from 'src/mobile/components/P2PFeedbackTab'
+import { selectUserLoggedIn, selectP2PMerchantDetail, selectP2PPaymentUser, P2PProfileFetchInterface, selectP2PProfile, selectP2PProfileBlockMerchantLoading, selectP2PProfileBlockMerchantSuccess, selectP2PProfileChangeUsernameSuccess, selectUserInfo, p2pPaymentUserFetch, p2pProfileFetch, selectP2PFeedbackUser } from 'src/modules'
 
 const P2PProfileMobileScreen :React.FC = () => {
   useDocumentTitle('P2P || Profile');
@@ -25,8 +28,9 @@ const P2PProfileMobileScreen :React.FC = () => {
   const [data, setData] = React.useState<any>();
   const [showModalMoreUserInfo, setShowModalMoreUserInfo] = React.useState(false);
   const [showModalUserFeedbackInfo, setShowModalUserFeedbackInfo] = React.useState(false);
+  const [showModalBlockedUserInfo, setShowModalBlockedUserInfo] = React.useState(false);
 
-
+  const temp_uid = data?.member?.uid
 
   React.useEffect(()=>{
     dispatch(p2pProfileFetch());
@@ -36,29 +40,6 @@ const P2PProfileMobileScreen :React.FC = () => {
   React.useEffect(()=>{
     setData(userP2P)
   }, [myProfile, userP2P])
-
-  console.log(data);
-
-  const ModalUserFeedbackInfo = () => {
-    return (
-      <section className='container-p2p-user-info'>
-        <div className='grey-text d-flex flex-row'>
-          <div onClick={()=> setShowModalUserFeedbackInfo(false)} className="cursor-pointer mr-2">
-            <ArrowLeft className={'back'} />
-          </div>
-          <div className='font-semibold text-md mx-auto'>Received Feedbacks</div>
-        </div>
-        <section className='mt-3 p-3 grey-text'>
-        <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
-        <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
-                        {data?.trader_name?.slice(0, 1).toUpperCase()}
-                        </div>
-          <div>Nusatech Exchange</div>
-</div>
-        </section>
-      </section>
-    )
-  }
 
   const ModalUserInfo = () => {
     return (
@@ -100,10 +81,57 @@ const P2PProfileMobileScreen :React.FC = () => {
     )
   }
 
+  const ModalUserFeedbackInfo = () => {
+    return (
+      <section className='container-p2p-user-info px-2'>
+        <div className='grey-text d-flex flex-row'>
+          <div onClick={()=> setShowModalUserFeedbackInfo(false)} className="cursor-pointer mr-2">
+            <ArrowLeft className={'back'} />
+          </div>
+          <div className='font-semibold text-md mx-auto'>Received Feedbacks</div>
+        </div>
+        <section className='mt-3 grey-text d-flex flex-row items-center justify-content-between'>
+        <div className="d-flex justify-content-start align-items-center user-info-header-container gap-8 mb-16">
+          <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
+            {data?.trader_name?.slice(0, 1).toUpperCase()}
+          </div>
+          <div className=''>{data?.trader_name}</div>
+        </div>
+        <div className='d-flex flex-row align-items-center mb-3 gap-4'>
+          <MobileThumbsUp className=''/>
+          <div>90% (1,419)</div>
+        </div>
+        </section>
+        <P2PFeedbackTab 
+        uid={temp_uid} 
+        myProfile={myProfile}
+        />
+      </section>
+    )
+  }
+
+  const ModalBlockedUserInfo = () => {
+    return (
+      <section>
+        <div className='grey-text d-flex flex-row'>
+          <div onClick={()=> setShowModalBlockedUserInfo(false)} className="cursor-pointer mr-2">
+            <ArrowLeft className={'back'} />
+          </div>
+          <div className='font-semibold text-md mx-auto'>Blocked Users</div>
+        </div>
+
+        <div>
+          zamn
+        </div>
+      </section>
+    )
+  }
+
   return (
     <div className="mobile-container no-header dark-bg-main">
       <ModalFullScreenMobile show={showModalUserFeedbackInfo} content={ModalUserFeedbackInfo()}/>
       <ModalFullScreenMobile show={showModalMoreUserInfo} content={ModalUserInfo()}/>
+      <ModalFullScreenMobile show={showModalBlockedUserInfo} content={ModalBlockedUserInfo()}/>
         <Link to={'/wallets'} className="cursor-pointer">
           <ArrowLeft className={'back'} />
         </Link>
@@ -200,7 +228,7 @@ const P2PProfileMobileScreen :React.FC = () => {
             <MobileMoreArrow className='mt-1 ml-1'/>
           </div>
 
-          <div className='d-flex flex-row justify-content-between my-1 cursor-pointer'>
+          <div onClick={()=> setShowModalBlockedUserInfo(true)} className='d-flex flex-row justify-content-between my-1 cursor-pointer'>
             <div className='d-flex flex-row'>
               <MobileUserIcon className='mt-1'/>
               <p className='ml-3'>Blocked Users</p>

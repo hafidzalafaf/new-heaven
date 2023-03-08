@@ -498,7 +498,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         <PrivateRoute
                         loading={userLoading}
                         isLogged={isLoggedIn}
-                        path="/p2p/profile"
+                        path="/p2p/profile/"
                         component={P2PProfileMobileScreen}
                         />
 
