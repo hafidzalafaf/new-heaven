@@ -70,6 +70,7 @@ import {
     P2PWalletMobileScreen,
     P2PCreateOfferMobileScreen,
     P2PProfileMobileScreen,
+    P2PMyOrderMobileScreen
 } from '../../mobile/screens';
 
 import {
@@ -548,6 +549,12 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={P2PWalletMobileScreen}
                         />
 
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/order"
+                            component={P2PMyOrderMobileScreen}
+                        />
                         <PublicRoute
                             loading={userLoading}
                             path="/p2p/order/:offer_number"
