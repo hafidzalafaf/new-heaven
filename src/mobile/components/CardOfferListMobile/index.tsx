@@ -64,7 +64,7 @@ export const CardOfferListMobile: React.FC<CardOfferListMobileProps> = (props) =
                             fiat: fiat,
                         })
                     }
-                    className={`${side == 'buy' ? 'btn-primary' : 'btn-danger'} text-ms font-normal`}>
+                    className={`${side == 'buy' ? 'btn-primary' : 'btn-danger'} text-ms font-normal cursor-pointer`}>
                     {capitalizeFirstLetter(side)}
                 </div>
             </div>

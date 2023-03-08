@@ -24,6 +24,8 @@ export interface P2PPaymentMethodProps {
     account_name: string;
     bank_name: string;
     payment_user_uid: string;
+    symbol: string;
+    logo: string;
 }
 
 export const P2PPaymentMethod: React.FC = () => {
