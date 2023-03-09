@@ -21,162 +21,16 @@ import {
     selectP2PCreateReportLoading,
     selectP2PCreateReportSuccess,
     orderReportCreate,
-    alertPush,
 } from 'src/modules';
 import { ModalMobile, ModalFullScreenMobile } from 'src/mobile/components';
 import moment from 'moment';
-import { copy } from 'src/helpers';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import { CloseMobileIcon } from 'src/mobile/assets/P2PMobileIcon';
-import { ActiveCheck, GreyCheck } from 'src/assets/images/P2PIcon';
+import { ActiveCheck, GreyCheck, LikeSuccessIcon, UnLikeDangerIcon } from 'src/assets/images/P2PIcon';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 import { ArrowRight } from 'src/mobile/assets/Arrow';
-import { P2PChatMobile, P2POrderStepMobile } from 'src/mobile/containers';
-
-//countdown timer
-export const Countdown = ({ days, hours, minutes, seconds, showChat, detail, timeLeft }) => {
-    var dayDigit = days.toString().split('');
-    var dayArray = dayDigit.map(Number);
-    var hourDigit = hours.toString().split('');
-    var hourArray = hourDigit.map(Number);
-    var minuteDigit = minutes.toString().split('');
-    var minuteArray = minuteDigit.map(Number);
-    var secondDigit = seconds.toString().split('');
-    var secondArray = secondDigit.map(Number);
-    return (
-        <>
-            {timeLeft > 0 ? (
-                <div className="d-flex flex-row">
-                    {detail?.order?.state === 'waiting' && (
-                        <>
-                            <div className="d-flex flex-row">
-                                <h2
-                                    className={`m-0 p-0 gradient-text ${
-                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                    }`}>
-                                    {days >= 10
-                                        ? dayArray[0]
-                                        : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
-                                        ? 0
-                                        : 0}
-                                </h2>
-                                <h2
-                                    className={`m-0 p-0 gradient-text ${
-                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                    }`}>
-                                    {days >= 10
-                                        ? dayArray[1]
-                                        : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
-                                        ? 0
-                                        : dayArray[0]}
-                                </h2>
-                            </div>
-
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                :
-                            </h2>
-
-                            <div className="d-flex flex-row">
-                                <h2
-                                    className={`m-0 p-0 gradient-text ${
-                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                    }`}>
-                                    {hours >= 10
-                                        ? hourArray[0]
-                                        : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
-                                        ? 0
-                                        : 0}
-                                </h2>
-                                <h2
-                                    className={`m-0 p-0 gradient-text ${
-                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                    }`}>
-                                    {hours >= 10
-                                        ? hourArray[1]
-                                        : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
-                                        ? 0
-                                        : hourArray[0]}
-                                </h2>
-                            </div>
-
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                :
-                            </h2>
-                        </>
-                    )}
-                    <div className="d-flex flex-row">
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            {minutes >= 10
-                                ? minuteArray[0]
-                                : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
-                                ? 0
-                                : 0}
-                        </h2>
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            {minutes >= 10
-                                ? minuteArray[1]
-                                : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
-                                ? 0
-                                : minuteArray[0]}
-                        </h2>
-                    </div>
-
-                    <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>:</h2>
-
-                    <div className="d-flex flex-row">
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            {seconds >= 10
-                                ? secondArray[0]
-                                : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
-                                ? 0
-                                : 0}
-                        </h2>
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            {seconds >= 10
-                                ? secondArray[1]
-                                : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
-                                ? 0
-                                : secondArray[0]}
-                        </h2>
-                    </div>
-                </div>
-            ) : (
-                <div className="d-flex flex-row">
-                    <div className="d-flex flex-row">
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            0
-                        </h2>
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            0
-                        </h2>
-                    </div>
-
-                    <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>:</h2>
-
-                    <div className="d-flex flex-row">
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            0
-                        </h2>
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            0
-                        </h2>
-                    </div>
-
-                    <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>:</h2>
-
-                    <div className="d-flex flex-row">
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            0
-                        </h2>
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            0
-                        </h2>
-                    </div>
-                </div>
-            )}
-        </>
-    );
-};
+import { P2PChatMobile, P2POrderStepMobile, P2PReportOrderMobile } from 'src/mobile/containers';
+import { InfoIcon } from 'src/assets/images/InfoIcon';
 
 export const P2PWalletOrderMobileScreen: React.FC = () => {
     useDocumentTitle('P2P Wallet Order');
@@ -213,7 +67,7 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     const [showModalBuyOrderCompleted, setShowModalBuyOrderCompleted] = React.useState(false);
     const [showModalCancel, setShowModalCancel] = React.useState(false);
     const [selectCancelReason, setSelectCancelReason] = React.useState('');
-    const [showTerms, setShowTerms] = React.useState(false);
+    const [showTerms, setShowTerms] = React.useState(true);
 
     /* ============== FEEDBACK STATE START =============== */
     const [comment, setComment] = React.useState('');
@@ -316,11 +170,6 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
         };
 
         dispatch(orderCancel(payload));
-    };
-
-    const doCopyNumber = () => {
-        copy('kid-code');
-        dispatch(alertPush({ message: ['Order Number copied'], type: 'success' }));
     };
 
     const handleChangePaymentMethod = (el) => {
@@ -527,25 +376,52 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                                 <ArrowLeft className={'cursor-pointer'} />
                             </span>
                         </div>
-                        <h1 className="m-0 p-0 mb-8 text-md font-extrabold white-text">Order Created</h1>
+                        <h1 className="m-0 p-0 mb-8 text-md font-extrabold white-text">
+                            {detail?.order?.state == 'prepare'
+                                ? 'Order Created'
+                                : detail?.order?.state == 'waiting'
+                                ? 'Release Crypto'
+                                : detail?.order?.state == 'rejected'
+                                ? 'Order Rejected'
+                                : detail?.order?.state == 'canceled'
+                                ? 'Order Canceled'
+                                : 'Order Completed'}
+                        </h1>
 
                         <div className="d-flex align-items-center gap-4">
                             <p className="m-0 p-0 text-sm grey-text">
-                                {side == 'buy' && detail?.order?.state == 'prepare'
-                                    ? 'Your order has been created'
-                                    : side == 'sell' && detail?.order?.state == 'prepare'
+                                {side == 'buy'
+                                    ? detail?.order?.state == 'prepare'
+                                        ? 'Pay the seller within'
+                                        : detail?.order?.state == 'waiting'
+                                        ? 'Waiting seller release the crypto'
+                                        : detail?.order?.state == 'rejected'
+                                        ? 'Seller was rejected this order'
+                                        : detail?.order?.state == 'canceled'
+                                        ? 'Order was canceled'
+                                        : 'Your order has  been completed'
+                                    : detail?.order?.state == 'prepare'
                                     ? 'Waiting buyer to make a payment'
-                                    : 'test'}
+                                    : detail?.order?.state == 'waiting'
+                                    ? 'Waiting seller release the crypto'
+                                    : detail?.order?.state == 'rejected'
+                                    ? 'You has been rejected this order'
+                                    : detail?.order?.state == 'canceled'
+                                    ? 'Order was canceled'
+                                    : 'Order completed'}
                             </p>
-                            <Countdown
-                                days={days}
-                                hours={hours}
-                                minutes={minutes}
-                                seconds={seconds}
-                                showChat={showChat}
-                                detail={detail}
-                                timeLeft={timeLeft}
-                            />
+                            {(detail?.order?.state == 'prepare' || detail?.order?.state == 'waiting') && (
+                                <Countdown
+                                    days={days}
+                                    hours={hours}
+                                    minutes={minutes}
+                                    seconds={seconds}
+                                    showChat={showChat}
+                                    detail={detail}
+                                    timeLeft={timeLeft}
+                                    textColor="gradient-text"
+                                />
+                            )}
                         </div>
                     </div>
 
@@ -581,20 +457,94 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                         handleExpandTerms={() => setShowTerms(!showTerms)}
                     />
 
-                    <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
-                        <button
-                            onClick={() => setShowModalCancel(!showModalCancel)}
-                            type="button"
-                            className="btn-secondary w-50 grey-text text-ms font-normal">
-                            Cancel
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setShowPayment(!showPayment)}
-                            className="btn-primary w-50 white-text text-ms font-normal">
-                            Make Payment
-                        </button>
-                    </div>
+                    {side == 'buy' && detail?.order?.state == 'prepare' && !paymentUser ? (
+                        <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
+                            <button
+                                onClick={() => setShowModalCancel(!showModalCancel)}
+                                type="button"
+                                className="btn-secondary w-50 grey-text text-ms font-normal">
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setShowPayment(!showPayment)}
+                                className="btn-primary w-50 white-text text-ms font-normal">
+                                Make Payment
+                            </button>
+                        </div>
+                    ) : side == 'buy' && (detail?.order?.state !== 'success' || detail?.order?.state == 'accepted') ? (
+                        <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                            <button
+                                type="button"
+                                onClick={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
+                                disabled={!paymentUser}
+                                className="btn-primary w-100 white-text text-ms font-normal">
+                                {side == 'buy' &&
+                                detail?.order?.state == 'prepare' &&
+                                (paymentUser || detail?.order?.payment !== null) ? (
+                                    'Transferred, notify seller'
+                                ) : (
+                                    <div className="d-flex align-items-center justify-content-center gap-4">
+                                        <p className="m-0 p-0">
+                                            {detail?.order?.state == 'waiting'
+                                                ? 'Transaction Issue; appeal after'
+                                                : detail?.order?.state == 'rejected'
+                                                ? 'Seller was rejected this order'
+                                                : detail?.order?.state == 'canceled'
+                                                ? 'Order canceled'
+                                                : 'Order completed'}
+                                        </p>
+                                        {detail?.order?.state == 'waiting' && (
+                                            <Countdown
+                                                days={days}
+                                                hours={hours}
+                                                minutes={minutes}
+                                                seconds={seconds}
+                                                showChat={showChat}
+                                                detail={detail}
+                                                timeLeft={timeLeft}
+                                                textColor="white-text"
+                                            />
+                                        )}
+                                    </div>
+                                )}
+                            </button>
+
+                            {(detail?.order?.state == 'prepare' ||
+                                detail?.order?.state == 'waiting' ||
+                                detail?.order?.state == 'rejected') && (
+                                <button
+                                    onClick={() => setShowModalCancel(!showModalCancel)}
+                                    type="button"
+                                    className="btn-secondary w-100 grey-text text-ms font-normal">
+                                    Cancel
+                                </button>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                            <div className="w-100 d-flex align-items-center gap-8">
+                                <button
+                                    disabled={side == 'sell' ? true : detail?.feedback?.assesment ? true : false}
+                                    type="button"
+                                    onClick={handleSendFeedbackPositive}
+                                    className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
+                                    Positive <LikeSuccessIcon />{' '}
+                                </button>
+                                <button
+                                    disabled={side == 'sell' ? true : detail?.feedback?.assesment ? true : false}
+                                    type="button"
+                                    onClick={handleSendFeedbackNegative}
+                                    className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
+                                    Negative <UnLikeDangerIcon />{' '}
+                                </button>
+                            </div>
+
+                            <button type="button" className="btn-primary w-100 white-text text-ms font-normal">
+                                Wallet P2P
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <ModalMobile
@@ -623,6 +573,8 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                         />
                     }
                 />
+
+                <ModalFullScreenMobile show={showModalReport} content={<P2PReportOrderMobile />} />
 
                 <div
                     id="off-canvas-payment"
@@ -671,7 +623,289 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                         </div>
                     </div>
                 </div>
+
+                <div
+                    id="off-canvas-payment"
+                    className={`position-fixed off-canvas-payment ${showModalPaymentConfirm ? 'show' : ''}`}>
+                    <div className="fixed-bottom off-canvas-content-container-payment overflow-auto">
+                        <div className="d-flex justify-content-center align-items-center w-100 position-relative mb-24">
+                            <h1 className="text-md grey-text-accent font-extrabold">Payment Confirmation</h1>
+
+                            <span
+                                onClick={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
+                                className="position-absolute close-canvas cursor-pointer">
+                                <CloseMobileIcon />
+                            </span>
+                        </div>
+
+                        <p className="m-0 p-0 mb-24 grey-text-accent text-sm">
+                            Please confirm that you have successfully transfered the money to the seller throught the
+                            following payment method before clicking on the “Transferred, notify seller” button
+                        </p>
+
+                        <div className="modal-bank-info-container mb-24">
+                            <div className="d-flex justify-content-between align-items-center w-100">
+                                <div className="d-flex align-items-center gap-4">
+                                    <div className="label-payment"></div>
+                                    <p className="m-0 p-0">Bank Transfer</p>
+                                </div>
+
+                                <div className="d-flex align-items-center gap-16">
+                                    <img src="/img/logo-bca.png" alt="logo" width={40} className="h-auto" />
+
+                                    <ArrowRight className={''} />
+                                </div>
+                            </div>
+
+                            <p className="m-0 p-0">
+                                {detail?.order?.payment !== null
+                                    ? detail.order?.payment?.account_name
+                                    : paymentUser?.account_name}
+                            </p>
+                            <p className="m-0 p-0 font-bold">
+                                {detail?.order?.payment !== null
+                                    ? detail.order?.payment?.account_number
+                                    : paymentUser?.account_number}
+                            </p>
+                            <p className="m-0 p-0 grey-text">
+                                {detail?.order?.payment !== null ? detail.order?.payment?.bank : paymentUser?.bank}
+                            </p>
+                        </div>
+
+                        <div className="d-flex align-items-center gap-4 mb-24">
+                            <InfoIcon />
+                            <p className="m-0 p-0 text-xxs grey-text-accent">
+                                Tip : I uderstand that I must use the selected payment platform to complete the transfer
+                                myself. Heaven will not automatically transfer the payment on my behalf.
+                            </p>
+                        </div>
+
+                        <div className="d-flex align-items-center gap-4 mb-24">
+                            {selectConfirmPayment ? (
+                                <span
+                                    className="cursor-pointer"
+                                    onClick={() => setSelectConfirmPayment(!selectConfirmPayment)}>
+                                    <ActiveCheck />
+                                </span>
+                            ) : (
+                                <span
+                                    className="cursor-pointer"
+                                    onClick={() => setSelectConfirmPayment(!selectConfirmPayment)}>
+                                    <GreyCheck />
+                                </span>
+                            )}
+                            <p className="m-0 p-0 text-xxs grey-text-accent">
+                                I have made payment from my real-name verified payment account consistent with my
+                                registered name on Heaven.
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={handleConfirmPaymentBuy}
+                            type="button"
+                            disabled={!selectConfirmPayment || paymentConfimLoading}
+                            className="btn-primary w-100">
+                            Confirm
+                        </button>
+                    </div>
+                </div>
+
+                <div
+                    id="off-canvas-payment"
+                    className={`position-fixed off-canvas-payment ${showModalSellConfirm ? 'show' : ''}`}>
+                    <div className="fixed-bottom off-canvas-content-container-payment overflow-auto">
+                        <div className="d-flex justify-content-center align-items-center w-100 position-relative mb-24">
+                            <h1 className="text-md grey-text-accent font-extrabold">Confirm release crypto</h1>
+
+                            <span
+                                onClick={() => setShowModalSellConfrim(!showModalSellConfirm)}
+                                className="position-absolute close-canvas cursor-pointer">
+                                <CloseMobileIcon />
+                            </span>
+                        </div>
+
+                        <div
+                            className="d-flex align-items-center mb-24 cursor-pointer"
+                            onClick={() => setSelectConfirmRelease('no-receive')}>
+                            <div className="icon-sm">
+                                {selectConfirmRelease == 'no-receive' ? <ActiveCheck /> : <GreyCheck />}
+                            </div>
+                            <p className="mb-0 text-sm grey-text-accent ml-3">
+                                I have not receive payment from the buyer
+                            </p>
+                        </div>
+                        <div
+                            className="d-flex align-items-center mb-24"
+                            onClick={() => setSelectConfirmRelease('receive')}>
+                            <div className="icon-sm">
+                                {selectConfirmRelease == 'receive' ? <ActiveCheck /> : <GreyCheck />}
+                            </div>
+                            <p className="mb-0 text-sm grey-text-accent cursor-pointer ml-3">
+                                I have received the correct amount. Payment sender matches the buyer’s verified name on
+                                Heaven Ecchange, and i agree to release mu crypto to the buyer
+                            </p>
+                        </div>
+                        <p className="mb-2 text-sm grey-text-accent">Tips</p>
+                        <ul className="ml-0 pl-3 mb-24">
+                            <li className="text-sm grey-text-accent">
+                                Do not only check th buyer’s payment proof. Make sure to long into your account and
+                                verify payment is received!
+                            </li>
+                            <li className="text-sm grey-text-accent">
+                                If the payment is still processing, wait until you have received payment in your account
+                                before releasing the crypto!
+                            </li>
+                            <li className="text-sm grey-text-accent">
+                                Do NOT accept payment from a third-party account. Refund the amount immediately if you
+                                receive such payment to avoid financial losses caused by bank chargerback after you have
+                                released crypto.
+                            </li>
+                        </ul>
+                        <button
+                            // className={`${
+                            //     selectConfirmRelease ? 'button-grey white-text ' : 'btn-primary'
+                            // } text-sm py-3 btn btn-block`}
+                            className="btn-primary w-100"
+                            disabled={!selectConfirmRelease}
+                            onClick={handleConfirmSell}>
+                            Confirm
+                        </button>
+                    </div>
+                </div>
             </div>
         </React.Fragment>
+    );
+};
+
+//countdown timer
+export const Countdown = ({ days, hours, minutes, seconds, showChat, detail, timeLeft, textColor }) => {
+    var dayDigit = days.toString().split('');
+    var dayArray = dayDigit.map(Number);
+    var hourDigit = hours.toString().split('');
+    var hourArray = hourDigit.map(Number);
+    var minuteDigit = minutes.toString().split('');
+    var minuteArray = minuteDigit.map(Number);
+    var secondDigit = seconds.toString().split('');
+    var secondArray = secondDigit.map(Number);
+    return (
+        <>
+            {timeLeft > 0 ? (
+                <div className="d-flex flex-row">
+                    {detail?.order?.state === 'waiting' && (
+                        <>
+                            <div className="d-flex flex-row">
+                                <h2
+                                    className={`m-0 p-0 ${textColor} ${
+                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
+                                    }`}>
+                                    {days >= 10
+                                        ? dayArray[0]
+                                        : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
+                                        ? 0
+                                        : 0}
+                                </h2>
+                                <h2
+                                    className={`m-0 p-0 ${textColor} ${
+                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
+                                    }`}>
+                                    {days >= 10
+                                        ? dayArray[1]
+                                        : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
+                                        ? 0
+                                        : dayArray[0]}
+                                </h2>
+                            </div>
+
+                            <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                                :
+                            </h2>
+
+                            <div className="d-flex flex-row">
+                                <h2
+                                    className={`m-0 p-0 ${textColor} ${
+                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
+                                    }`}>
+                                    {hours >= 10
+                                        ? hourArray[0]
+                                        : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
+                                        ? 0
+                                        : 0}
+                                </h2>
+                                <h2
+                                    className={`m-0 p-0 ${textColor} ${
+                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
+                                    }`}>
+                                    {hours >= 10
+                                        ? hourArray[1]
+                                        : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
+                                        ? 0
+                                        : hourArray[0]}
+                                </h2>
+                            </div>
+
+                            <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                                :
+                            </h2>
+                        </>
+                    )}
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            {minutes >= 10
+                                ? minuteArray[0]
+                                : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
+                                ? 0
+                                : 0}
+                        </h2>
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            {minutes >= 10
+                                ? minuteArray[1]
+                                : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
+                                ? 0
+                                : minuteArray[0]}
+                        </h2>
+                    </div>
+
+                    <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>:</h2>
+
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            {seconds >= 10
+                                ? secondArray[0]
+                                : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
+                                ? 0
+                                : 0}
+                        </h2>
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            {seconds >= 10
+                                ? secondArray[1]
+                                : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
+                                ? 0
+                                : secondArray[0]}
+                        </h2>
+                    </div>
+                </div>
+            ) : (
+                <div className="d-flex flex-row">
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>0</h2>
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>0</h2>
+                    </div>
+
+                    <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>:</h2>
+
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>0</h2>
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>0</h2>
+                    </div>
+
+                    <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>:</h2>
+
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>0</h2>
+                        <h2 className={`m-0 p-0 ${textColor} ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>0</h2>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };

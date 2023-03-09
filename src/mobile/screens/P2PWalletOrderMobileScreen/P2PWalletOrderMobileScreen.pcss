@@ -85,7 +85,7 @@
     }
 
     .order-step-container {
-        margin-bottom: 100px;
+        margin-bottom: 150px;
     }
 
     .order-info-container {
@@ -369,5 +369,49 @@
 
     .custom-modal {
         z-index: 99999999;
+    }
+
+    .line {
+        width: 2px;
+        background: var(--white-background-color);
+    }
+
+    .payment-form {
+        position: relative;
+        padding-left: 28px;
+        &::before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--white-background-color);
+        }
+        &.last {
+            position: relative;
+            z-index: 2;
+            padding-left: 30px;
+            margin-left: -2px;
+            &::before {
+                left: -8px;
+            }
+        }
+    }
+
+    .payment-user-selected {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px 12px;
+        gap: 8px;
+        background: #15191d;
+        border-radius: 8px;
+    }
+
+    .order-step-info-warning {
+        border: 1px solid var(--text-warning-color);
+        background: var(--notification-background-color);
     }
 }

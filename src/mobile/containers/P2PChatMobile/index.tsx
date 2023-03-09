@@ -193,6 +193,7 @@ export const P2PChatMobile: React.FunctionComponent<P2PChatMobileProps> = (props
                                 showChat={showChat}
                                 detail={detail}
                                 timeLeft={timeLeft}
+                                textColor="gradient-text"
                             />
                         </div>
 
@@ -204,7 +205,14 @@ export const P2PChatMobile: React.FunctionComponent<P2PChatMobileProps> = (props
                                 </p>
                             </div>
 
-                            <button className="btn-transparent danger-text text-sm w-20 text-right">Report</button>
+                            {side == 'sell' && (
+                                <button
+                                    type="button"
+                                    onClick={handleModalReport}
+                                    className="btn-transparent danger-text text-sm w-20 text-right">
+                                    Report
+                                </button>
+                            )}
                         </div>
 
                         <button
