@@ -73,3 +73,98 @@ export const AddMobileIcon = () => {
         </svg>
     );
 };
+
+export const DropUpMobileIcon = () => {
+    return (
+        <svg width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M2.24914 7.81006L5.80914 4.25006L9.36914 7.81006"
+                stroke="#6F6F6F"
+                strokeWidth="1.5"
+                strokeMiterlimit={10}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
+};
+
+export const DropdownMobileIcon = () => {
+    return (
+        <svg width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M9.74988 4.19141L6.18988 7.75141L2.62988 4.19141"
+                stroke="#6F6F6F"
+                strokeWidth="1.5"
+                strokeMiterlimit={10}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
+};
+
+export const ChatMobileIcon = () => {
+    return (
+        <svg width={17} height={16} viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                opacity="0.3"
+                d="M13.167 6.66699C13.3937 6.66699 13.6137 6.68699 13.8337 6.72033V2.66699H3.16699V10.667H8.55366C8.88033 8.40699 10.8137 6.66699 13.167 6.66699Z"
+                fill="url(#paint0_linear_653_17200)"
+            />
+            <path
+                d="M12.0597 13.333L9.69967 10.973L10.6397 10.033L12.053 11.4463L14.8797 8.61967L15.833 9.55967L12.0597 13.333ZM8.55301 10.6663H3.16634V2.66634H13.833V6.71967C14.3063 6.78634 14.753 6.92634 15.1663 7.11967V2.66634C15.1663 1.93301 14.5663 1.33301 13.833 1.33301H3.16634C2.43301 1.33301 1.83301 1.93301 1.83301 2.66634V14.6663L4.49967 11.9997H8.49967C8.49967 11.9063 8.51301 11.8197 8.51967 11.733C8.50634 11.5997 8.49967 11.4663 8.49967 11.333C8.49967 11.1063 8.51967 10.8863 8.55301 10.6663Z"
+                fill="url(#paint1_linear_653_17200)"
+            />
+            <defs>
+                <linearGradient
+                    id="paint0_linear_653_17200"
+                    x1="3.16699"
+                    y1="2.66699"
+                    x2="10.847"
+                    y2="12.907"
+                    gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#02C3BD" />
+                    <stop offset={1} stopColor="#4062BB" />
+                </linearGradient>
+                <linearGradient
+                    id="paint1_linear_653_17200"
+                    x1="1.83301"
+                    y1="1.33301"
+                    x2="15.1505"
+                    y2="15.3164"
+                    gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#02C3BD" />
+                    <stop offset={1} stopColor="#4062BB" />
+                </linearGradient>
+            </defs>
+        </svg>
+    );
+};
+
+export const AddArchiveMobileIcon = ({ fillColor }) => {
+    return (
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 19V13H5V11H11V5H13V11H19V13H13V19H11Z" fill={fillColor} />
+        </svg>
+    );
+};
+
+export const SendChatMobileIcon = ({ fillColor }) => {
+    return (
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M16 2H8C4.691 2 2 4.691 2 8V20C2 20.2652 2.10536 20.5196 2.29289 20.7071C2.48043 20.8946 2.73478 21 3 21H16C19.309 21 22 18.309 22 15V8C22 4.691 19.309 2 16 2ZM20 15C20 17.206 18.206 19 16 19H4V8C4 5.794 5.794 4 8 4H16C18.206 4 20 5.794 20 8V15Z"
+                fill={fillColor}
+            />
+            <path
+                d="M9.5 13C10.3284 13 11 12.3284 11 11.5C11 10.6716 10.3284 10 9.5 10C8.67157 10 8 10.6716 8 11.5C8 12.3284 8.67157 13 9.5 13Z"
+                fill={fillColor}
+            />
+            <path
+                d="M14.5 13C15.3284 13 16 12.3284 16 11.5C16 10.6716 15.3284 10 14.5 10C13.6716 10 13 10.6716 13 11.5C13 12.3284 13.6716 13 14.5 13Z"
+                fill={fillColor}
+            />
+        </svg>
+    );
+};
