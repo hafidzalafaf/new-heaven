@@ -22,6 +22,7 @@ interface UserOrdersHistoryFetchPayload {
     market?: string;
     time_from?: string;
     time_to?: string;
+    group?: string;
 }
 
 export interface UserOrdersHistoryDataPayload {
