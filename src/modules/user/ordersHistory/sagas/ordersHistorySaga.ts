@@ -10,7 +10,7 @@ const ordersOptions: RequestOptions = {
 
 export function* ordersHistorySaga(action: UserOrdersHistoryFetch) {
     try {
-        const { pageIndex, limit, type, time_from, time_to, state, market } = action.payload;
+        const { pageIndex, limit, type, time_from, time_to, state, market, group } = action.payload;
         let params: any = {
             page: pageIndex,
             limit,
@@ -18,6 +18,7 @@ export function* ordersHistorySaga(action: UserOrdersHistoryFetch) {
             time_to,
             state,
             market,
+            group,
             ...(type === 'open' && { state: ['wait', 'trigger_wait'] }),
         };
 
