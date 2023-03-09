@@ -412,9 +412,9 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={ApiListMobileScreen}
                         />
 
-                        <PublicRoute
+                        <PrivateRoute
                             loading={userLoading}
-                            // isLogged={isLoggedIn}
+                            isLogged={isLoggedIn}
                             path="/referral"
                             component={ReferralMobileScreen}
                         />
@@ -522,12 +522,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={HistoryTransactionMobileScreen}
                         />
 
-                        <Route
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/announcements"
-                            component={AnnouncementMobileScreen}
-                        />
+                        <PublicRoute loading={userLoading} path="/announcements" component={AnnouncementMobileScreen} />
 
                         <PrivateRoute
                             loading={userLoading}
@@ -777,12 +772,18 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         path="/p2p/wallet/order/:order_number"
                         component={P2PWalletOrderScreen}
                     />
-                    <PublicRoute
+                    <PrivateRoute
                         loading={userLoading}
+                        isLogged={isLoggedIn}
                         path="/p2p/offer/:offer_number"
                         component={P2PDetailOfferScreen}
                     />
-                    <PublicRoute loading={userLoading} path="/p2p/offer" component={P2PMyOfferScreen} />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/offer"
+                        component={P2PMyOfferScreen}
+                    />
                     <PublicRoute loading={userLoading} path="/p2p" component={P2PScreen} />
                     <Route exact={true} path="/" component={LandingScreen} />
                     <Route path="**">

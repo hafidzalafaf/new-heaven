@@ -10,7 +10,7 @@ import { HideIcon, GreyCheck, ActiveCheck, VerificationIcon, MobileMoreArrow } f
 import { Link, useHistory } from 'react-router-dom';
 import { orderFetch, selectP2POrder, selectP2POrderLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
 import { capitalizeFirstLetter } from 'src/helpers';
-import './OrderP2PTableMobile.pcss'
+import './OrderP2PTableMobile.pcss';
 
 export const OrderP2PTableMobile = () => {
     const history = useHistory();
@@ -289,64 +289,76 @@ export const OrderP2PTableMobile = () => {
         );
     };
 
-    const FilterredItem = ({data}) => {
-        console.log(data, 'data inside')
-       return (
-        <React.Fragment>
-        {
-        data?.map((item)=>
-            <div className='d-flex flex-column com-mobile-card-order-list gap-20 border-bottom border-white p-2 grey-text'>
-                <div className='d-flex align-items-center gap-8 my-2'>
-                    <div className='ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold'>{item.trades.username.slice(0, 1).toUpperCase()}</div>
-                    <span className='m-0 p-0 text-ms grey-text-accent'>{item.trades.username}</span>
-                    <span>
-                    <VerificationIcon />
-                    </span>
-                </div>
-                <div className='d-flex flex-row justify-content-between'>
-                    <div>
-                    <span className={item?.side === `buy` ? `contrast-text` : `danger-text`}>{capitalizeFirstLetter(item?.side)} </span>
-                    <span className='grey-text-accent font-bold'>{item?.currency?.name?.toUpperCase()}</span>
-                    </div>
+    const FilterredItem = ({ data }) => {
+        console.log(data, 'data inside');
+        return (
+            <React.Fragment>
+                {data?.map((item) => (
+                    <div className="d-flex flex-column com-mobile-card-order-list gap-20 border-bottom border-white p-2 grey-text">
+                        <div className="d-flex align-items-center gap-8 my-2">
+                            <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
+                                {item.trades.username.slice(0, 1).toUpperCase()}
+                            </div>
+                            <span className="m-0 p-0 text-ms grey-text-accent">{item.trades.username}</span>
+                            <span>
+                                <VerificationIcon />
+                            </span>
+                        </div>
+                        <Link
+                            to={`/p2p/wallet/order/${item?.order_number}`}
+                            className="d-flex flex-row justify-content-between">
+                            <div>
+                                <span className={item?.side === `buy` ? `contrast-text` : `danger-text`}>
+                                    {capitalizeFirstLetter(item?.side)}{' '}
+                                </span>
+                                <span className="grey-text-accent font-bold">
+                                    {item?.currency?.name?.toUpperCase()}
+                                </span>
+                            </div>
 
-                    <div>
-                    <span className={item?.state === 'success' ? `gradient-text` : item?.state.includes('cancel') ? `danger-text` : ``}>{capitalizeFirstLetter(item?.state)}</span>
-                    <MobileMoreArrow className={''}/>
+                            <div>
+                                <span
+                                    className={
+                                        item?.state === 'success'
+                                            ? `gradient-text`
+                                            : item?.state.includes('cancel')
+                                            ? `danger-text`
+                                            : ``
+                                    }>
+                                    {capitalizeFirstLetter(item?.state)}
+                                </span>
+                                <MobileMoreArrow className={''} />
+                            </div>
+                        </Link>
+                        <div className="d-flex flex-row justify-content-between">
+                            <span>Coin</span>
+                            <div className="d-flex flex-row align-items-center">
+                                <img height={24} width={24} src={item?.fiat.icon_url} alt={item?.fiat.name} />
+                                <span className="grey-text-accent font-bold ml-1">{item?.fiat.name}</span>
+                            </div>
+                        </div>
+                        <div className="d-flex flex-row justify-content-between">
+                            <span>Fiat Amount</span>
+                            <span>{item?.fiat_amount}</span>
+                        </div>
+                        <div className="d-flex flex-row justify-content-between">
+                            <span>Price</span>
+                            <span>{item?.price}</span>
+                        </div>
+                        <div className="d-flex flex-row justify-content-between">
+                            <span>Crypto Amount</span>
+                            <span>{item?.amount}</span>
+                        </div>
+                        <div className="d-flex flex-row justify-content-between">
+                            <span>Order ID</span>
+                            <span>{item?.order_number}</span>
+                        </div>
+                        <button className="btn-secondary radius-lg my-2">Cancel</button>
                     </div>
-                </div>
-                <div className='d-flex flex-row justify-content-between'>
-                    <span>Coin</span>
-                    <div className='d-flex flex-row align-items-center'>
-                        <img 
-                            height={24}
-                            width={24}
-                            src={item?.fiat.icon_url}
-                            alt={item?.fiat.name}
-                        />
-                        <span className='grey-text-accent font-bold ml-1'>{item?.fiat.name}</span>
-                    </div>
-                </div>
-                <div className='d-flex flex-row justify-content-between'>
-                    <span>Fiat Amount</span>
-                    <span>{item?.fiat_amount}</span>
-                </div>
-                <div className='d-flex flex-row justify-content-between'>
-                    <span>Price</span>
-                    <span>{item?.price}</span>
-                </div>
-                <div className='d-flex flex-row justify-content-between'>
-                    <span>Crypto Amount</span>
-                    <span>{item?.amount}</span>
-                </div>
-                <div className='d-flex flex-row justify-content-between'>
-                    <span>Order ID</span>
-                    <span>{item?.order_number}</span>
-                </div>
-                <button className='btn-secondary radius-lg my-2'>Cancel</button>
-            </div>
-    )}
-    </React.Fragment>
-)}
+                ))}
+            </React.Fragment>
+        );
+    };
 
     return (
         <React.Fragment>
@@ -364,28 +376,19 @@ export const OrderP2PTableMobile = () => {
                                 {/* <div className="w-100">{renderFilter()}</div> */}
                                 {orderLoading ? (
                                     <Loading />
-                                ) : 
+                                ) : (
                                     // <Table header={getTableHeaders()} data={getTableData(data)} />
-                                    
-                                        (<FilterredItem data={data}/>
-                                    
+
+                                    <FilterredItem data={data} />
                                 )}
                                 {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="processing" title="Processing">
-                                {orderLoading ? (
-                                    <Loading />
-                                ) : (
-                                    <FilterredItem data={data}/>
-                                )}
+                                {orderLoading ? <Loading /> : <FilterredItem data={data} />}
                                 {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="done" title="Done">
-                                {orderLoading ? (
-                                    <Loading />
-                                ) : (
-                                    <FilterredItem data={data}/>
-                                )}
+                                {orderLoading ? <Loading /> : <FilterredItem data={data} />}
                                 {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
                         </Tabs>

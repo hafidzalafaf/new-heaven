@@ -234,37 +234,37 @@ export const P2PMobileScreen: React.FC = () => {
         {
             icon: <SettingMobileIcon />,
             name: 'Payment Methods',
-            url: '',
+            url: '/p2p/profile',
         },
         {
             icon: <CircleAddMobileIcon />,
             name: 'Create an Offers',
-            url: '',
+            url: '/p2p/create-offer',
         },
         {
             icon: <DashboardMobileIcon />,
             name: 'My Offers',
-            url: '',
+            url: '/p2p/offer',
         },
         {
             icon: <DocumentMobileIcon />,
             name: 'Order History',
-            url: '',
+            url: '/p2p/order',
         },
         {
             icon: <CircleHelpMobileIcon />,
             name: 'P2P Help Center',
-            url: '',
+            url: '/p2p/faq',
         },
         {
             icon: <UserMobileIcon />,
             name: 'P2P User Center',
-            url: '',
+            url: '/p2p/profile',
         },
         {
             icon: <ReplayMobileIcon />,
             name: 'Replay Guide',
-            url: '',
+            url: '/p2p/faq',
         },
     ];
 
