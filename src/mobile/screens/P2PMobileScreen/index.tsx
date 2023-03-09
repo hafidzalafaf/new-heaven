@@ -24,11 +24,19 @@ import {
     HamburgerMobileIcon,
     FilterMobileIcon,
     DropdownFilterMobileIcon,
+    SettingMobileIcon,
+    CircleAddMobileIcon,
+    DashboardMobileIcon,
+    DocumentMobileIcon,
+    CircleHelpMobileIcon,
+    UserMobileIcon,
+    ReplayMobileIcon,
 } from 'src/mobile/assets/P2PMobileIcon';
 import { InfoIcon } from 'src/assets/images/InfoIcon';
 import { NoData, FilterInput } from 'src/desktop/components';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { Dropdown } from 'react-bootstrap';
 
 export const P2PMobileScreen: React.FC = () => {
     useDocumentTitle('P2P');
@@ -47,6 +55,7 @@ export const P2PMobileScreen: React.FC = () => {
     const [selectAnnouncement, setSelectAnnouncement] = React.useState(false);
     const [showModalSelectCurrency, setShowModalSelectCurrency] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
+    const [showMenu, setShowMenu] = React.useState(false);
 
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
@@ -221,6 +230,44 @@ export const P2PMobileScreen: React.FC = () => {
         }
     };
 
+    const menu = [
+        {
+            icon: <SettingMobileIcon />,
+            name: 'Payment Methods',
+            url: '',
+        },
+        {
+            icon: <CircleAddMobileIcon />,
+            name: 'Create an Offers',
+            url: '',
+        },
+        {
+            icon: <DashboardMobileIcon />,
+            name: 'My Offers',
+            url: '',
+        },
+        {
+            icon: <DocumentMobileIcon />,
+            name: 'Order History',
+            url: '',
+        },
+        {
+            icon: <CircleHelpMobileIcon />,
+            name: 'P2P Help Center',
+            url: '',
+        },
+        {
+            icon: <UserMobileIcon />,
+            name: 'P2P User Center',
+            url: '',
+        },
+        {
+            icon: <ReplayMobileIcon />,
+            name: 'Replay Guide',
+            url: '',
+        },
+    ];
+
     const renderModalAnnouncement = () => {
         return (
             <React.Fragment>
@@ -319,16 +366,39 @@ export const P2PMobileScreen: React.FC = () => {
     return (
         <React.Fragment>
             <div className="pg-mobile-screen-p2p mobile-container">
-                <div className="d-flex justify-content-between align-items-center mb-32">
+                <div className="d-flex justify-content-between align-items-center mb-32 position-relative">
                     <ArrowLeft className={'cursor-pointer'} />
                     <p className="m-0 p-0 grey-text-accent text-md font-extrabold">P2P</p>
                     <div className="d-flex gap-8 justify-content-start align-items-center">
                         <span className={'cursor-pointer'}>
                             <NotifMobileIcon />
                         </span>
-                        <span className={'cursor-pointer'}>
+                        {/* <span onClick={() => setShowMenu(!showMenu)} className={'cursor-pointer'}>
                             <HamburgerMobileIcon />
-                        </span>
+                        </span> */}
+
+                        <Dropdown>
+                            <Dropdown.Toggle
+                                variant=""
+                                id="dropdown-basic"
+                                className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm">
+                                <HamburgerMobileIcon />
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu className="dropdown-profile">
+                                <Dropdown.Item className="dark-bg-accent dropdown-profile cursor-pointer">
+                                    {menu?.map((item, i) => (
+                                        <Link
+                                            key={i}
+                                            to={item?.url}
+                                            className="dark-bg-accent p-3 dropdown-profile cursor-pointer d-flex gap-8 align-items-center">
+                                            {item?.icon}
+                                            <p className="m-0 p-0 grey-text-accent text-xxs">{item?.name}</p>
+                                        </Link>
+                                    ))}
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </div>
                 </div>
 

@@ -207,11 +207,6 @@
         }
     }
 
-    .chat-container {
-        margin-top: 316px;
-        margin-bottom: 100px;
-    }
-
     .chat-close {
         left: 0;
     }
@@ -236,6 +231,8 @@
     }
 
     .chat-wrap {
+        margin-top: 316px;
+        margin-bottom: 100px;
         width: 100%;
         .chat {
             height: 500px;
@@ -257,7 +254,7 @@
                     .buble-chat {
                         background: var(--border-color);
                         padding: 8px;
-                        border-radius: 4px 4px 0px 4px;
+                        border-radius: 16px 16px 0px 16px;
                         max-width: 100%;
                         min-width: 100px;
                         position: relative;
@@ -297,7 +294,7 @@
                         background: #4062bb;
                         padding: 8px;
                         padding-bottom: 24px;
-                        border-radius: 4px 4px 4px 0px;
+                        border-radius: 16px 16px 16px 0px;
                         max-width: 100%;
                         min-width: 100px;
                         position: relative;
@@ -364,5 +361,13 @@
             border-radius: 50%;
             background: var(--text-grey-color);
         }
+    }
+
+    .custom-modal-mobile {
+        z-index: 9999999;
+    }
+
+    .custom-modal {
+        z-index: 99999999;
     }
 }

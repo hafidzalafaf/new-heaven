@@ -76,7 +76,7 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     const p2pChatCreateSuccess = useSelector(selectP2PChatCreateSuccess);
 
     const [showPayment, setShowPayment] = React.useState(false);
-    const [showChat, setShowChat] = React.useState(true);
+    const [showChat, setShowChat] = React.useState(false);
     const [inputFile, setInputFile] = React.useState(null);
     const [fileName, setFileName] = React.useState('');
     const [paymentMethod, setPaymentMethod] = React.useState('');
@@ -747,8 +747,7 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                                                     ? 'my-chat'
                                                     : 'sender-chat'
                                             }>
-                                            <div
-                                                className={`d-flex justify-content-start align-items-end gap-16 bubble-chat-container`}>
+                                            <div className="d-flex align-items-center mb-8 gap-8">
                                                 {chat?.p2p_user?.member?.uid !== profile?.member?.uid && (
                                                     <div className="ava-container d-flex justify-content-center align-items-center">
                                                         <img
@@ -765,22 +764,37 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                                                     </div>
                                                 )}
 
+                                                <p className="sender-name text-xxs text-white">
+                                                    {chat?.p2p_user?.member?.uid === profile?.member?.uid
+                                                        ? 'You'
+                                                        : chat?.p2p_user?.member?.role == 'superadmin'
+                                                        ? 'Admin Support'
+                                                        : chat?.p2p_user?.username
+                                                        ? chat?.p2p_user?.username
+                                                        : chat?.p2p_user?.member?.email}
+                                                </p>
+
+                                                {chat?.p2p_user?.member?.uid == profile?.member?.uid && (
+                                                    <div className="ava-container d-flex justify-content-center align-items-center">
+                                                        <img
+                                                            src="/img/avatar.png"
+                                                            alt="ava"
+                                                            width={32}
+                                                            height={32}
+                                                            className=""
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div
+                                                className={`d-flex justify-content-start align-items-end gap-16 bubble-chat-container`}>
                                                 <div
                                                     className={`w-100 d-flex flex-column  ${
                                                         chat?.p2p_user?.member?.uid === profile?.member?.uid
                                                             ? 'align-items-end justify-content-end'
                                                             : 'align-items-start justify-content-start'
                                                     }`}>
-                                                    <p className="sender-name text-xxs text-white">
-                                                        {chat?.p2p_user?.member?.uid === profile?.member?.uid
-                                                            ? 'You'
-                                                            : chat?.p2p_user?.member?.role == 'superadmin'
-                                                            ? 'Admin Support'
-                                                            : chat?.p2p_user?.username
-                                                            ? chat?.p2p_user?.username
-                                                            : chat?.p2p_user?.member?.email}
-                                                    </p>
-
                                                     <div
                                                         className={`buble-chat ${
                                                             chat?.p2p_user?.member?.role == 'superadmin' && 'admin'
@@ -794,6 +808,7 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                                                                 }}
                                                                 alt="chat"
                                                                 width={200}
+                                                                className="cursor-pointer"
                                                             />
                                                         ) : (
                                                             <span className={`white-text text-xs content-chat`}>
@@ -806,18 +821,6 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                {chat?.p2p_user?.member?.uid == profile?.member?.uid && (
-                                                    <div className="ava-container d-flex justify-content-center align-items-center">
-                                                        <img
-                                                            src="/img/avatar.png"
-                                                            alt="ava"
-                                                            width={32}
-                                                            height={32}
-                                                            className=""
-                                                        />
-                                                    </div>
-                                                )}
                                             </div>
                                         </div>
                                     </React.Fragment>
@@ -1108,6 +1111,7 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                     className="custom-modal-content-cancel"
                 />
                 <ModalFullScreenMobile show={showChat} content={renderModalChat()} />
+                <ModalMobile show={showImage} content={renderModalImageViewer()} />
 
                 <div
                     id="off-canvas-payment"

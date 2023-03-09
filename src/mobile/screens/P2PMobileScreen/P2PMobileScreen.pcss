@@ -168,4 +168,84 @@
             border: 1px solid transparent;
         }
     }
+
+    .dropdown-toggle {
+        outline: 0;
+        box-shadow: 0 0 0 0;
+        border: 0;
+    }
+
+    .dropdown-toggle:focus {
+        outline: 0;
+        box-shadow: 0 0 0 0;
+        border: 0;
+    }
+
+    .dropdown-toggle::after {
+        display: none;
+    }
+
+    .dropdown-menu {
+        top: 10px;
+        left: unset;
+        right: 0;
+        border: none;
+        background: none;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+
+        &.show {
+            background: var(--main-background-color) !important;
+            &.dropdown-profile {
+                position: absolute;
+                inset: 0px auto auto 0px;
+                border-radius: 8px;
+                margin: 0px;
+                transform: translate3d(-200px, 56px, 0px);
+                overflow: hidden;
+                padding: 0;
+            }
+        }
+
+        .dropdown-item {
+            padding: 0;
+            min-width: 140px;
+
+            img {
+                width: 30px;
+                margin-right: 8px;
+            }
+
+            &:hover {
+                background: var(--main-background-color);
+                color: var(--text-primary-color) !important;
+                transition: 0.3s ease-in all;
+            }
+
+            .dots {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: var(--text-primary-color);
+                display: inline-block;
+                margin-right: 12px;
+            }
+        }
+
+        .active {
+            color: var(--text-primary-color) !important;
+            background: var(--main-background-color);
+            font-weight: 600;
+        }
+
+        .dropdown-wallets-item {
+            width: 256px;
+            padding-bottom: 12px;
+            margin-top: 16px;
+            border-bottom: 1px solid var(--border-grey-color);
+
+            img {
+                width: 20px;
+            }
+        }
+    }
 }
