@@ -70,7 +70,8 @@ import {
     P2PWalletMobileScreen,
     P2PCreateOfferMobileScreen,
     P2PProfileMobileScreen,
-    P2PMyOrderMobileScreen
+    P2PMyOrderMobileScreen,
+    P2PMyOfferMobileScreen
 } from '../../mobile/screens';
 
 import {
@@ -111,6 +112,7 @@ import {
     P2PEditPaymentScreen,
     P2PMyOfferScreen,
     P2PDetailOfferScreen,
+
 } from '../../desktop/screens';
 
 interface ReduxProps {
@@ -548,7 +550,12 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             path="/p2p/wallets"
                             component={P2PWalletMobileScreen}
                         />
-
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path='/p2p/offer'
+                            component={P2PMyOfferMobileScreen}
+                            />
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
@@ -560,6 +567,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             path="/p2p/order/:offer_number"
                             component={P2PDetailOrderMobileScreen}
                         />
+                        
 
                         <PublicRoute loading={userLoading} path="/p2p" component={P2PMobileScreen} />
 

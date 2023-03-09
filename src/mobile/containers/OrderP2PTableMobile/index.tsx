@@ -6,7 +6,7 @@ import Select from 'react-select';
 import moment from 'moment';
 import { CustomStylesSelect, NoData } from '../../../desktop/components';
 import { Loading, Table } from '../../../components';
-import { HideIcon, GreyCheck, ActiveCheck, VerificationIcon } from '../../../assets/images/P2PIcon';
+import { HideIcon, GreyCheck, ActiveCheck, VerificationIcon, MobileMoreArrow } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
 import { orderFetch, selectP2POrder, selectP2POrderLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
 import { capitalizeFirstLetter } from 'src/helpers';
@@ -295,15 +295,54 @@ export const OrderP2PTableMobile = () => {
         <React.Fragment>
         {
         data?.map((item)=>
-            <div className='d-flex flex-column radius-xl com-mobile-card-order-list'>
-                <div className='d-flex align-items-center gap-8'>
+            <div className='d-flex flex-column com-mobile-card-order-list gap-20 border-bottom border-white p-2 grey-text'>
+                <div className='d-flex align-items-center gap-8 my-2'>
                     <div className='ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold'>{item.trades.username.slice(0, 1).toUpperCase()}</div>
                     <span className='m-0 p-0 text-ms grey-text-accent'>{item.trades.username}</span>
                     <span>
                     <VerificationIcon />
                     </span>
                 </div>
-            <hr className=''/>
+                <div className='d-flex flex-row justify-content-between'>
+                    <div>
+                    <span className={item?.side === `buy` ? `contrast-text` : `danger-text`}>{capitalizeFirstLetter(item?.side)} </span>
+                    <span className='grey-text-accent font-bold'>{item?.currency?.name?.toUpperCase()}</span>
+                    </div>
+
+                    <div>
+                    <span className={item?.state === 'success' ? `gradient-text` : item?.state.includes('cancel') ? `danger-text` : ``}>{capitalizeFirstLetter(item?.state)}</span>
+                    <MobileMoreArrow className={''}/>
+                    </div>
+                </div>
+                <div className='d-flex flex-row justify-content-between'>
+                    <span>Coin</span>
+                    <div className='d-flex flex-row align-items-center'>
+                        <img 
+                            height={24}
+                            width={24}
+                            src={item?.fiat.icon_url}
+                            alt={item?.fiat.name}
+                        />
+                        <span className='grey-text-accent font-bold ml-1'>{item?.fiat.name}</span>
+                    </div>
+                </div>
+                <div className='d-flex flex-row justify-content-between'>
+                    <span>Fiat Amount</span>
+                    <span>{item?.fiat_amount}</span>
+                </div>
+                <div className='d-flex flex-row justify-content-between'>
+                    <span>Price</span>
+                    <span>{item?.price}</span>
+                </div>
+                <div className='d-flex flex-row justify-content-between'>
+                    <span>Crypto Amount</span>
+                    <span>{item?.amount}</span>
+                </div>
+                <div className='d-flex flex-row justify-content-between'>
+                    <span>Order ID</span>
+                    <span>{item?.order_number}</span>
+                </div>
+                <button className='btn-secondary radius-lg my-2'>Cancel</button>
             </div>
     )}
     </React.Fragment>
@@ -334,20 +373,18 @@ export const OrderP2PTableMobile = () => {
                                 {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="processing" title="Processing">
-                                {/* <div className="w-100">{renderFilter()}</div> */}
                                 {orderLoading ? (
                                     <Loading />
                                 ) : (
-                                    <Table header={getTableHeaders()} data={getTableData(data)} />
+                                    <FilterredItem data={data}/>
                                 )}
                                 {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
                             <Tab eventKey="done" title="Done">
-                                {/* <div className="w-100">{renderFilter()}</div> */}
                                 {orderLoading ? (
                                     <Loading />
                                 ) : (
-                                    <Table header={getTableHeaders()} data={getTableData(data)} />
+                                    <FilterredItem data={data}/>
                                 )}
                                 {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
