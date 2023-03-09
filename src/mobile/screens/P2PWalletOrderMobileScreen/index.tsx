@@ -22,32 +22,161 @@ import {
     selectP2PCreateReportSuccess,
     orderReportCreate,
     alertPush,
-    selectP2PProfile,
-    selectP2PChatLoading,
-    selectP2PChatSuccess,
-    selectP2PChatCreateLoading,
-    selectP2PChatCreateSuccess,
-    orderChatCreate,
-    p2pProfileFetch,
 } from 'src/modules';
 import { ModalMobile, ModalFullScreenMobile } from 'src/mobile/components';
 import moment from 'moment';
-import { capitalizeFirstLetter, copy } from 'src/helpers';
+import { copy } from 'src/helpers';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
-import {
-    DropUpMobileIcon,
-    ChatMobileIcon,
-    DropdownMobileIcon,
-    CloseMobileIcon,
-    AddArchiveMobileIcon,
-    SendChatMobileIcon,
-} from 'src/mobile/assets/P2PMobileIcon';
-import { VerificationIcon, ActiveCheck, GreyCheck, ZoomIcon } from 'src/assets/images/P2PIcon';
-import { DownloadSecondaryIcon } from 'src/assets/images/DownloadIcon';
+import { CloseMobileIcon } from 'src/mobile/assets/P2PMobileIcon';
+import { ActiveCheck, GreyCheck } from 'src/assets/images/P2PIcon';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 import { ArrowRight } from 'src/mobile/assets/Arrow';
-import { Link } from 'react-router-dom';
-import { Loading } from 'src/components';
+import { P2PChatMobile, P2POrderStepMobile } from 'src/mobile/containers';
+
+//countdown timer
+export const Countdown = ({ days, hours, minutes, seconds, showChat, detail, timeLeft }) => {
+    var dayDigit = days.toString().split('');
+    var dayArray = dayDigit.map(Number);
+    var hourDigit = hours.toString().split('');
+    var hourArray = hourDigit.map(Number);
+    var minuteDigit = minutes.toString().split('');
+    var minuteArray = minuteDigit.map(Number);
+    var secondDigit = seconds.toString().split('');
+    var secondArray = secondDigit.map(Number);
+    return (
+        <>
+            {timeLeft > 0 ? (
+                <div className="d-flex flex-row">
+                    {detail?.order?.state === 'waiting' && (
+                        <>
+                            <div className="d-flex flex-row">
+                                <h2
+                                    className={`m-0 p-0 gradient-text ${
+                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
+                                    }`}>
+                                    {days >= 10
+                                        ? dayArray[0]
+                                        : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
+                                        ? 0
+                                        : 0}
+                                </h2>
+                                <h2
+                                    className={`m-0 p-0 gradient-text ${
+                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
+                                    }`}>
+                                    {days >= 10
+                                        ? dayArray[1]
+                                        : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
+                                        ? 0
+                                        : dayArray[0]}
+                                </h2>
+                            </div>
+
+                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                                :
+                            </h2>
+
+                            <div className="d-flex flex-row">
+                                <h2
+                                    className={`m-0 p-0 gradient-text ${
+                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
+                                    }`}>
+                                    {hours >= 10
+                                        ? hourArray[0]
+                                        : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
+                                        ? 0
+                                        : 0}
+                                </h2>
+                                <h2
+                                    className={`m-0 p-0 gradient-text ${
+                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
+                                    }`}>
+                                    {hours >= 10
+                                        ? hourArray[1]
+                                        : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
+                                        ? 0
+                                        : hourArray[0]}
+                                </h2>
+                            </div>
+
+                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                                :
+                            </h2>
+                        </>
+                    )}
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            {minutes >= 10
+                                ? minuteArray[0]
+                                : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
+                                ? 0
+                                : 0}
+                        </h2>
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            {minutes >= 10
+                                ? minuteArray[1]
+                                : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
+                                ? 0
+                                : minuteArray[0]}
+                        </h2>
+                    </div>
+
+                    <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>:</h2>
+
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            {seconds >= 10
+                                ? secondArray[0]
+                                : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
+                                ? 0
+                                : 0}
+                        </h2>
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            {seconds >= 10
+                                ? secondArray[1]
+                                : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
+                                ? 0
+                                : secondArray[0]}
+                        </h2>
+                    </div>
+                </div>
+            ) : (
+                <div className="d-flex flex-row">
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            0
+                        </h2>
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            0
+                        </h2>
+                    </div>
+
+                    <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>:</h2>
+
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            0
+                        </h2>
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            0
+                        </h2>
+                    </div>
+
+                    <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>:</h2>
+
+                    <div className="d-flex flex-row">
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            0
+                        </h2>
+                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
+                            0
+                        </h2>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+};
 
 export const P2PWalletOrderMobileScreen: React.FC = () => {
     useDocumentTitle('P2P Wallet Order');
@@ -69,12 +198,6 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     const createReportSuccess = useSelector(selectP2PCreateReportSuccess);
     const createReportLoading = useSelector(selectP2PCreateReportLoading);
 
-    const profile = useSelector(selectP2PProfile);
-    const p2pChatLoading = useSelector(selectP2PChatLoading);
-    const p2pChatSuccess = useSelector(selectP2PChatSuccess);
-    const p2pChatCreateLoading = useSelector(selectP2PChatCreateLoading);
-    const p2pChatCreateSuccess = useSelector(selectP2PChatCreateSuccess);
-
     const [showPayment, setShowPayment] = React.useState(false);
     const [showChat, setShowChat] = React.useState(false);
     const [inputFile, setInputFile] = React.useState(null);
@@ -91,16 +214,6 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     const [showModalCancel, setShowModalCancel] = React.useState(false);
     const [selectCancelReason, setSelectCancelReason] = React.useState('');
     const [showTerms, setShowTerms] = React.useState(false);
-
-    /* ============== CHAT STATE START =============== */
-    const [message, setMessage] = React.useState('');
-    const [image, setImage] = React.useState<File[]>();
-    const [chats, setChats] = React.useState([]);
-    const [showImage, setShowImage] = React.useState(false);
-    const [imageView, setImageView] = React.useState('');
-    const [imageBlob, setImageBlob] = React.useState('');
-    const [chatLoading, setChatLoading] = React.useState(false);
-    /* ============== CHAT STATE END =============== */
 
     /* ============== FEEDBACK STATE START =============== */
     const [comment, setComment] = React.useState('');
@@ -166,163 +279,6 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
             clearInterval(fetchInterval);
         };
     }, [dispatch, order_number, paymentConfirmSuccess, cancelSuccess, confirmSellSuccess]);
-
-    //countdown timer
-    const Countdown = ({ days, hours, minutes, seconds }) => {
-        var dayDigit = days.toString().split('');
-        var dayArray = dayDigit.map(Number);
-        var hourDigit = hours.toString().split('');
-        var hourArray = hourDigit.map(Number);
-        var minuteDigit = minutes.toString().split('');
-        var minuteArray = minuteDigit.map(Number);
-        var secondDigit = seconds.toString().split('');
-        var secondArray = secondDigit.map(Number);
-        return (
-            <>
-                {timeLeft > 0 ? (
-                    <div className="d-flex flex-row">
-                        {detail?.order?.state === 'waiting' && (
-                            <>
-                                <div className="d-flex flex-row">
-                                    <h2
-                                        className={`m-0 p-0 gradient-text ${
-                                            showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                        }`}>
-                                        {days >= 10
-                                            ? dayArray[0]
-                                            : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
-                                            ? 0
-                                            : 0}
-                                    </h2>
-                                    <h2
-                                        className={`m-0 p-0 gradient-text ${
-                                            showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                        }`}>
-                                        {days >= 10
-                                            ? dayArray[1]
-                                            : Number.isNaN(dayArray[0]) || Number.isNaN(dayArray[1])
-                                            ? 0
-                                            : dayArray[0]}
-                                    </h2>
-                                </div>
-
-                                <h2
-                                    className={`m-0 p-0 gradient-text ${
-                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                    }`}>
-                                    :
-                                </h2>
-
-                                <div className="d-flex flex-row">
-                                    <h2
-                                        className={`m-0 p-0 gradient-text ${
-                                            showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                        }`}>
-                                        {hours >= 10
-                                            ? hourArray[0]
-                                            : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
-                                            ? 0
-                                            : 0}
-                                    </h2>
-                                    <h2
-                                        className={`m-0 p-0 gradient-text ${
-                                            showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                        }`}>
-                                        {hours >= 10
-                                            ? hourArray[1]
-                                            : Number.isNaN(hourArray[0]) || Number.isNaN(hourArray[1])
-                                            ? 0
-                                            : hourArray[0]}
-                                    </h2>
-                                </div>
-
-                                <h2
-                                    className={`m-0 p-0 gradient-text ${
-                                        showChat ? 'text-ms font-extrabold' : 'text-sm'
-                                    }`}>
-                                    :
-                                </h2>
-                            </>
-                        )}
-                        <div className="d-flex flex-row">
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                {minutes >= 10
-                                    ? minuteArray[0]
-                                    : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
-                                    ? 0
-                                    : 0}
-                            </h2>
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                {minutes >= 10
-                                    ? minuteArray[1]
-                                    : Number.isNaN(minuteArray[0]) || Number.isNaN(minuteArray[1])
-                                    ? 0
-                                    : minuteArray[0]}
-                            </h2>
-                        </div>
-
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            :
-                        </h2>
-
-                        <div className="d-flex flex-row">
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                {seconds >= 10
-                                    ? secondArray[0]
-                                    : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
-                                    ? 0
-                                    : 0}
-                            </h2>
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                {seconds >= 10
-                                    ? secondArray[1]
-                                    : Number.isNaN(secondArray[0]) || Number.isNaN(secondArray[1])
-                                    ? 0
-                                    : secondArray[0]}
-                            </h2>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="d-flex flex-row">
-                        <div className="d-flex flex-row">
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                0
-                            </h2>
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                0
-                            </h2>
-                        </div>
-
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            :
-                        </h2>
-
-                        <div className="d-flex flex-row">
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                0
-                            </h2>
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                0
-                            </h2>
-                        </div>
-
-                        <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                            :
-                        </h2>
-
-                        <div className="d-flex flex-row">
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                0
-                            </h2>
-                            <h2 className={`m-0 p-0 gradient-text ${showChat ? 'text-ms font-extrabold' : 'text-sm'}`}>
-                                0
-                            </h2>
-                        </div>
-                    </div>
-                )}
-            </>
-        );
-    };
 
     React.useEffect(() => {
         setComment('');
@@ -435,78 +391,6 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     console.log(detail);
 
     /* ============== REPORT FUNCTION END =============== */
-
-    /* ============== CHAT FUNCTION START =============== */
-    React.useEffect(() => {
-        setChatLoading(true);
-        setTimeout(() => {
-            setChatLoading(false);
-        }, 3000);
-    }, []);
-
-    React.useEffect(() => {
-        dispatch(p2pProfileFetch());
-    }, [dispatch]);
-
-    React.useEffect(() => {
-        setChats(p2pChat?.room?.reverse());
-    }, [p2pChat]);
-
-    React.useEffect(() => {
-        dispatch(orderChat({ offer_number: order_number }));
-        if (p2pChatCreateSuccess) {
-            setMessage('');
-            setImageBlob('');
-        }
-
-        const fetchInterval = setInterval(() => {
-            dispatch(orderChat({ offer_number: order_number }));
-        }, 5000);
-
-        return () => {
-            clearInterval(fetchInterval);
-        };
-    }, [dispatch, p2pChatCreateSuccess]);
-
-    const handleSubmitChat = (e) => {
-        if (message) {
-            if (e.keyCode == 13 && e.shiftKey == false) {
-                e.preventDefault();
-                const formData = new FormData();
-                formData.append('message', imageBlob ? image[0] : message);
-                dispatch(orderChatCreate({ message: formData, offer_number: order_number }));
-            }
-        }
-    };
-
-    const handleSendChat = (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('message', imageBlob ? image[0] : message);
-        dispatch(orderChatCreate({ message: formData, offer_number: order_number }));
-    };
-
-    const onImageChange = (e) => {
-        if (e.target.files && e.target.files[0]) {
-            let img = e.target.files[0];
-            setImageBlob(URL.createObjectURL(img));
-            setImage(e.target.files);
-        }
-    };
-
-    const download = (url, filename) => {
-        fetch(url)
-            .then((response) => response.blob())
-            .then((blob) => {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-            })
-            .catch(console.error);
-    };
-
-    /* ============== CHAT FUNCTION END =============== */
 
     const renderModalCancel = () => {
         return (
@@ -633,312 +517,6 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
         );
     };
 
-    const renderModalImageViewer = () => {
-        return (
-            <React.Fragment>
-                <div className="d-flex justify-content-end gap-8 mb-16 w-100">
-                    <span
-                        onClick={() => download(imageView, `heaven-p2p-transaction-${order_number}.png`)}
-                        className="cursor-pointer">
-                        <DownloadSecondaryIcon />
-                    </span>
-                    <span onClick={() => setShowImage(false)} className="cursor-pointer">
-                        <CloseIconFilter />
-                    </span>
-                </div>
-                <div className="d-flex justify-content-center align-items-center position-relative px-24">
-                    <img src={imageView} alt="chat" width={720} />
-                </div>
-            </React.Fragment>
-        );
-    };
-
-    const renderModalChat = () => {
-        return (
-            <React.Fragment>
-                <div className="w-100">
-                    <div className="position-fixed nav-chat-info-top dark-bg-main">
-                        <div className="d-flex justify-content-center align-items-center position-relative mb-24 w-100">
-                            <div className="d-flex align-items-center gap-8">
-                                <div className="ava-container d-flex justify-content-center align-items-center white-text text-xxs font-bold">
-                                    {detail?.order?.trades?.username
-                                        ? detail?.order?.trades?.username?.toUpperCase()?.slice(0, 1)
-                                        : detail?.order?.trades?.email?.toUpperCase()?.slice(0, 1)}
-                                </div>
-                                <p className="m-0 p-0 text-ms grey-text-accent">
-                                    {detail?.order?.trades?.username
-                                        ? detail?.order?.trades?.username
-                                        : detail?.order?.trades?.email}
-                                </p>
-
-                                <span>
-                                    <VerificationIcon />
-                                </span>
-                            </div>
-                            <span
-                                onClick={() => setShowChat(!showChat)}
-                                className="chat-close position-absolute cursor-pointer">
-                                <CloseIconFilter />
-                            </span>
-                        </div>
-                        <div className="order-info-container d-flex flex-column gap-16 p-16 w-100">
-                            <div className="d-flex align-items-center gap-4">
-                                <p className="m-0 p-0 text-ms white-text font-semibold">Order will be cancelled in</p>
-                                <Countdown days={days} hours={hours} minutes={minutes} seconds={seconds} />
-                            </div>
-
-                            <div className="d-flex justify-content-between align-items-center">
-                                <div className="w-80">
-                                    <p className="m-0 p-0 white-text text-sm">
-                                        <span className="grey-text">Amount : </span>
-                                        {detail?.order?.amount}
-                                    </p>
-                                </div>
-
-                                <button className="btn-transparent danger-text text-sm w-20 text-right">Report</button>
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setShowPayment(!showPayment);
-                                    setShowChat(!showChat);
-                                }}
-                                className="btn-primary white-text text-ms font-normal">
-                                Make Payment
-                            </button>
-
-                            <div className="d-flex flex-column align-items-center justify-content-center gap-8">
-                                <span className="dark-bg-main radius-sm p-8 grey-text-accent text-xxs m-0 text-center">
-                                    {side === 'buy' && detail?.order?.state == 'prepare'
-                                        ? 'Successfully placed an order, please pay within the time limit.'
-                                        : side === 'buy' && detail?.order?.state == 'waiting'
-                                        ? 'You have made a payment, please wait for the seller to confirm your payment.'
-                                        : side === 'sell' && detail?.order?.state == 'prepare'
-                                        ? 'You have a new order, please wait for the buyer to make payment.'
-                                        : side === 'sell' && detail?.order?.state == 'waiting'
-                                        ? `Buyer has made payment, please check your ${detail?.order?.payment?.symbol} account to confirm`
-                                        : detail?.order?.state === 'canceled'
-                                        ? 'Order was canceled'
-                                        : detail?.order?.state === 'rejected' &&
-                                          !chats?.find((chat) => chat?.p2p_user?.member?.role == 'superadmin')
-                                        ? 'Waiting for support to join...'
-                                        : detail?.order?.state === 'rejected' &&
-                                          chats?.find((chat) => chat?.p2p_user?.member?.role == 'superadmin')
-                                        ? 'Support has joined.'
-                                        : 'Order was completed'}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="chat-wrap">
-                        {chatLoading ? (
-                            <div className="chat-loading">
-                                <Loading />
-                            </div>
-                        ) : (
-                            <div className="chat">
-                                {chats?.map((chat, i) => (
-                                    <React.Fragment key={i}>
-                                        <div
-                                            className={
-                                                chat?.p2p_user?.member?.uid === profile?.member?.uid
-                                                    ? 'my-chat'
-                                                    : 'sender-chat'
-                                            }>
-                                            <div className="d-flex align-items-center mb-8 gap-8">
-                                                {chat?.p2p_user?.member?.uid !== profile?.member?.uid && (
-                                                    <div className="ava-container d-flex justify-content-center align-items-center">
-                                                        <img
-                                                            src={
-                                                                chat?.p2p_user?.member?.role == 'superadmin'
-                                                                    ? '/img/ava-admin.png'
-                                                                    : '/img/ava-sender.png'
-                                                            }
-                                                            alt="ava"
-                                                            width={32}
-                                                            height={32}
-                                                            className=""
-                                                        />
-                                                    </div>
-                                                )}
-
-                                                <p className="sender-name text-xxs text-white">
-                                                    {chat?.p2p_user?.member?.uid === profile?.member?.uid
-                                                        ? 'You'
-                                                        : chat?.p2p_user?.member?.role == 'superadmin'
-                                                        ? 'Admin Support'
-                                                        : chat?.p2p_user?.username
-                                                        ? chat?.p2p_user?.username
-                                                        : chat?.p2p_user?.member?.email}
-                                                </p>
-
-                                                {chat?.p2p_user?.member?.uid == profile?.member?.uid && (
-                                                    <div className="ava-container d-flex justify-content-center align-items-center">
-                                                        <img
-                                                            src="/img/avatar.png"
-                                                            alt="ava"
-                                                            width={32}
-                                                            height={32}
-                                                            className=""
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            <div
-                                                className={`d-flex justify-content-start align-items-end gap-16 bubble-chat-container`}>
-                                                <div
-                                                    className={`w-100 d-flex flex-column  ${
-                                                        chat?.p2p_user?.member?.uid === profile?.member?.uid
-                                                            ? 'align-items-end justify-content-end'
-                                                            : 'align-items-start justify-content-start'
-                                                    }`}>
-                                                    <div
-                                                        className={`buble-chat ${
-                                                            chat?.p2p_user?.member?.role == 'superadmin' && 'admin'
-                                                        }`}>
-                                                        {chat?.chat == null ? (
-                                                            <img
-                                                                src={chat?.upload?.image?.url}
-                                                                onClick={() => {
-                                                                    setShowImage(true);
-                                                                    setImageView(chat?.upload?.image?.url);
-                                                                }}
-                                                                alt="chat"
-                                                                width={200}
-                                                                className="cursor-pointer"
-                                                            />
-                                                        ) : (
-                                                            <span className={`white-text text-xs content-chat`}>
-                                                                {chat?.chat}
-                                                            </span>
-                                                        )}
-
-                                                        <div className={`time grey-text-accent text-xxs`}>
-                                                            {moment(chat?.updated_at).format('HH:mm')}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </React.Fragment>
-                                ))}
-
-                                <div className="date my-2">
-                                    <p className="mb-0 text-xs grey-text text-center">
-                                        {moment(detail?.order?.created_at).format('DD-MM-YYYY')}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="position-fixed nav-send-chat-bottom dark-bg-main p-24">
-                        {imageBlob?.includes('blob') && (
-                            <div style={{ width: '200px' }} className="position-relative">
-                                <img src={imageBlob} alt="chat" width={200}></img>
-                                <span
-                                    onClick={() => {
-                                        setMessage(null);
-                                        setImageBlob('');
-                                    }}
-                                    className="position-absolute top-0 btn-close cursor-pointer">
-                                    <CloseIconFilter />
-                                </span>
-
-                                <span
-                                    onClick={() => {
-                                        setShowImage(true);
-                                        setImageView(imageBlob);
-                                    }}
-                                    className="position-absolute btn-zoom cursor-pointer">
-                                    <ZoomIcon />
-                                </span>
-                            </div>
-                        )}
-                        <form className="chat-writing gap-16 w-100">
-                            <div>
-                                <label
-                                    htmlFor="attachment-file"
-                                    className={`mb-0 ${
-                                        (detail?.order?.state == 'prepare' ||
-                                            detail?.order?.state == 'waiting' ||
-                                            detail?.order?.state == 'rejected') &&
-                                        'cursor-pointer'
-                                    }`}>
-                                    <AddArchiveMobileIcon
-                                        fillColor={
-                                            detail?.order?.state == 'prepare' ||
-                                            detail?.order?.state == 'waiting' ||
-                                            detail?.order?.state == 'rejected'
-                                                ? '#B5B3BC'
-                                                : '#6F6F6F'
-                                        }
-                                    />
-                                </label>
-                                <input
-                                    disabled={
-                                        detail?.order?.state == 'canceled' ||
-                                        detail?.order?.state == 'accepted' ||
-                                        detail?.order?.state == 'success'
-                                    }
-                                    onChange={onImageChange}
-                                    type={'file'}
-                                    id="attachment-file"
-                                    className="d-none"
-                                />
-                            </div>
-                            <textarea
-                                disabled={
-                                    detail?.order?.state == 'canceled' ||
-                                    detail?.order?.state == 'accepted' ||
-                                    detail?.order?.state == 'success' ||
-                                    (imageBlob && true)
-                                }
-                                onKeyDown={handleSubmitChat}
-                                placeholder={
-                                    imageBlob
-                                        ? 'Send image..'
-                                        : detail?.order?.state == 'prepare' ||
-                                          detail?.order?.state == 'waiting' ||
-                                          detail?.order?.state == 'rejected'
-                                        ? 'Text Message'
-                                        : 'Trasaction end.'
-                                }
-                                value={imageBlob ? '' : message}
-                                onChange={(e) => {
-                                    setMessage(e.target.value);
-                                }}
-                                className="form-transparent dark-bg-accent white-text p-16 w-100"></textarea>
-
-                            <button
-                                disabled={
-                                    detail?.order?.state == 'canceled' ||
-                                    detail?.order?.state == 'accepted' ||
-                                    detail?.order?.state == 'success'
-                                }
-                                onClick={handleSendChat}
-                                type="button"
-                                className="btn-transparent p-0 w-auto">
-                                <SendChatMobileIcon
-                                    fillColor={
-                                        detail?.order?.state == 'prepare' ||
-                                        detail?.order?.state == 'waiting' ||
-                                        detail?.order?.state == 'rejected'
-                                            ? '#B5B3BC'
-                                            : '#6F6F6F'
-                                    }
-                                />
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </React.Fragment>
-        );
-    };
-
     return (
         <React.Fragment>
             <div className="pg-mobile-screen-p2p-order-step mobile-container px-0 dark-bg-main">
@@ -952,142 +530,56 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                         <h1 className="m-0 p-0 mb-8 text-md font-extrabold white-text">Order Created</h1>
 
                         <div className="d-flex align-items-center gap-4">
-                            <p className="m-0 p-0 text-sm grey-text">Your order has been created</p>
-                            <Countdown days={days} hours={hours} minutes={minutes} seconds={seconds} />
-                        </div>
-                    </div>
-                    <div className="order-step-container">
-                        <div className="d-flex align-items-center justify-content-between px-12 mt-24 mb-16">
-                            <div className={`arrow arrow-right active`}>Transfers Payment To Seller</div>
-                            <div className={`arrow arrow-right ${detail?.order?.state !== 'prepare' && 'active'}`}>
-                                Pay Seller to Release Cryptos
-                            </div>
-                            <div
-                                className={`arrow arrow-right ${
-                                    detail?.order?.state !== 'waiting' &&
-                                    detail?.order?.state !== 'rejected' &&
-                                    detail?.order?.state !== 'prepare' &&
-                                    'active'
-                                }`}>
-                                Release Crypto and Complete
-                            </div>
-                        </div>
-
-                        <div className="d-flex flex-column align-items-center justify-content-center gap-8 w-100 mb-24">
-                            <p className="m-0 p-0 grey-text text-xxs">
-                                Click “Make Payment” button below to go to next step.
+                            <p className="m-0 p-0 text-sm grey-text">
+                                {side == 'buy' && detail?.order?.state == 'prepare'
+                                    ? 'Your order has been created'
+                                    : side == 'sell' && detail?.order?.state == 'prepare'
+                                    ? 'Waiting buyer to make a payment'
+                                    : 'test'}
                             </p>
-                            <span>
-                                <DropUpMobileIcon />
-                            </span>
-                        </div>
-
-                        <div className="mx-24 order-info-container">
-                            <div className="d-flex align-items-center justify-content-between w-100 mb-16">
-                                <div className="w-80">
-                                    <Link
-                                        to={`/p2p/profile/${detail?.order?.trades?.uid}`}
-                                        className="d-flex align-items-center gap-8">
-                                        <div className="ava-container d-flex justify-content-center align-items-center white-text text-xxs font-bold">
-                                            {detail?.order?.trades?.username
-                                                ? detail?.order?.trades?.username?.toUpperCase()?.slice(0, 1)
-                                                : detail?.order?.trades?.email?.toUpperCase()?.slice(0, 1)}
-                                        </div>
-                                        <p className="m-0 p-0 text-ms grey-text-accent">
-                                            {detail?.order?.trades?.username
-                                                ? detail?.order?.trades?.username
-                                                : detail?.order?.trades?.email}
-                                        </p>
-
-                                        <span>
-                                            <VerificationIcon />
-                                        </span>
-
-                                        <ArrowRight className={''} />
-                                    </Link>
-                                </div>
-
-                                <div className="w-20">
-                                    <div
-                                        onClick={() => setShowChat(!showChat)}
-                                        className="btn-chat d-flex align-items-center justify-content-center cursor-pointer">
-                                        <ChatMobileIcon />
-                                        <p className="m-0 p-0 gradient-text text-xxs">Chat</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="d-flex flex-column gap-8 mb-16">
-                                <p className="m-0 p-0 text-xxs grey-text">
-                                    HeavenExchange is holding the seller’s crypto in the escrow account
-                                </p>
-                                <p className="m-0 p-0 text-xxs grey-text">HeavenExchange 24/7 customer support</p>
-                            </div>
-
-                            <div className="d-flex flex-column gap-16">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">
-                                        <span className={`${side == 'buy' ? 'contrast-text' : 'danger-text'}`}>
-                                            {capitalizeFirstLetter(side)}
-                                        </span>{' '}
-                                        {detail?.offer?.fiat}
-                                    </p>
-
-                                    <p className="m-0 p-0 text-sm grey-text">Icon</p>
-                                </div>
-
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">Fiat Amount</p>
-
-                                    <p className="m-0 p-0 text-md white-text font-extrabold">{detail?.order?.amount}</p>
-                                </div>
-
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">Price</p>
-                                    <p className="m-0 p-0 text-sm grey-text">{detail?.offer?.price}</p>
-                                </div>
-
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">Crypto Amount</p>
-                                    <p className="m-0 p-0 text-sm grey-text">
-                                        {detail?.order?.quantity} {detail?.offer?.fiat}
-                                    </p>
-                                </div>
-
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">Order Number</p>
-                                    <p className="m-0 p-0 text-sm grey-text">{detail?.order?.order_number}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mx-24 order-info-container gap-8">
-                            <p className="m-0 p-0 white-text text-ms">Payment Method</p>
-
-                            <div className="d-flex align-items-center flex-wrap w-100 gap-8">
-                                {detail?.payment_user?.map((bank, i) => (
-                                    <div key={i} className="payment d-flex align-items-center gap-4">
-                                        <div className="payment-label"></div>
-                                        <p className="m-0 p-0 text-xxs grey-text">{bank?.bank}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="mx-24 order-info-container gap-8">
-                            <div className="d-flex align-items-center justify-content-between">
-                                <p className="m-0 p-0 white-text text-ms">Terms</p>
-
-                                <span className="cursor-pointer" onClick={() => setShowTerms(!showTerms)}>
-                                    {showTerms ? <DropUpMobileIcon /> : <DropdownMobileIcon />}
-                                </span>
-                            </div>
-
-                            {showTerms && (
-                                <p className="m-0 p-0 text-sm grey-text">{detail?.offer?.term_of_condition}</p>
-                            )}
+                            <Countdown
+                                days={days}
+                                hours={hours}
+                                minutes={minutes}
+                                seconds={seconds}
+                                showChat={showChat}
+                                detail={detail}
+                                timeLeft={timeLeft}
+                            />
                         </div>
                     </div>
+
+                    <P2POrderStepMobile
+                        paymentMethod={paymentMethod}
+                        paymentUser={paymentUser}
+                        showPayment={showPayment}
+                        comment={comment}
+                        side={side}
+                        detail={detail}
+                        order_number={order_number}
+                        showTerms={showTerms}
+                        showModalCancel={showModalCancel}
+                        timeLeft={timeLeft}
+                        days={days}
+                        hours={hours}
+                        minutes={minutes}
+                        seconds={seconds}
+                        handleChangePaymentMethod={handleChangePaymentMethod}
+                        handleChangeComment={handleChangeComment}
+                        handleConfirmPaymentBuy={handleConfirmPaymentBuy}
+                        handleShowPayment={() => setShowPayment(!showPayment)}
+                        handleShowModalBuyOrderCompleted={() =>
+                            setShowModalBuyOrderCompleted(!showModalBuyOrderCompleted)
+                        }
+                        handleShowModalPaymentConfirm={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
+                        handleShowModalSellConfirm={() => setShowModalSellConfrim(!showModalSellConfirm)}
+                        handleShowModalCancel={() => setShowModalCancel(!showModalCancel)}
+                        handleShowModalReport={() => setShowModalReport(!showModalReport)}
+                        handleSendFeedbackPositive={handleSendFeedbackPositive}
+                        handleSendFeedbackNegative={handleSendFeedbackNegative}
+                        handleExpandChat={() => setShowChat(!showChat)}
+                        handleExpandTerms={() => setShowTerms(!showTerms)}
+                    />
 
                     <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
                         <button
@@ -1110,8 +602,27 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                     content={renderModalCancel()}
                     className="custom-modal-content-cancel"
                 />
-                <ModalFullScreenMobile show={showChat} content={renderModalChat()} />
-                <ModalMobile show={showImage} content={renderModalImageViewer()} />
+                <ModalFullScreenMobile
+                    show={showChat}
+                    content={
+                        <P2PChatMobile
+                            detail={detail}
+                            order_number={order_number}
+                            showChat={showChat}
+                            handleExpandChat={() => setShowChat(!showChat)}
+                            handleModalReport={() => setShowModalReport(true)}
+                            handleMakePayment={() => {
+                                setShowPayment(!showPayment);
+                                setShowChat(!showChat);
+                            }}
+                            timeLeft={timeLeft}
+                            days={days}
+                            hours={hours}
+                            minutes={minutes}
+                            seconds={seconds}
+                        />
+                    }
+                />
 
                 <div
                     id="off-canvas-payment"
@@ -1129,7 +640,10 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
 
                         <div className="d-flex flex-column gap-16 mb-64">
                             {detail?.payment_user?.map((bank, i) => (
-                                <div key={i} className="modal-bank-info-container cursor-pointer">
+                                <div
+                                    onClick={() => handleChangePaymentMethod(bank)}
+                                    key={i}
+                                    className="modal-bank-info-container cursor-pointer">
                                     <div className="d-flex justify-content-between align-items-center w-100">
                                         <div className="d-flex align-items-center gap-4">
                                             <div className="label-payment"></div>

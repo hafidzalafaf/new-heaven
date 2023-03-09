@@ -304,9 +304,11 @@ export const OrderP2PTableMobile = () => {
                                 <VerificationIcon />
                             </span>
                         </div>
-                        <Link
-                            to={`/p2p/wallet/order/${item?.order_number}`}
-                            className="d-flex flex-row justify-content-between">
+                        <div
+                            onClick={() =>
+                                history.push(`/p2p/wallet/order/${item?.order_number}`, { side: item?.side })
+                            }
+                            className="d-flex flex-row justify-content-between cursor-pointer">
                             <div>
                                 <span className={item?.side === `buy` ? `contrast-text` : `danger-text`}>
                                     {capitalizeFirstLetter(item?.side)}{' '}
@@ -329,7 +331,7 @@ export const OrderP2PTableMobile = () => {
                                 </span>
                                 <MobileMoreArrow className={''} />
                             </div>
-                        </Link>
+                        </div>
                         <div className="d-flex flex-row justify-content-between">
                             <span>Coin</span>
                             <div className="d-flex flex-row align-items-center">
