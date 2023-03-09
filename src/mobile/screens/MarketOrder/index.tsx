@@ -3,7 +3,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { Table, Decimal } from '../../../components';
 import { CustomStylesSelect } from '../../../mobile/components';
-
+import { Loading } from '../../../components';
 import { EditIcon, CloseIcon } from '../../assets/Market';
 import { FilterIcon } from 'src/assets/images/FilterIcon';
 import { BtcIcon } from '../../../assets/images/CoinIcon';
@@ -22,6 +22,10 @@ import {
     selectOrdersNextPageExists,
     selectShouldFetchCancelAll,
     selectShouldFetchCancelSingle,
+    Market,
+    userOpenOrdersFetch,
+    userOrdersHistoryFetch,
+    selectOrdersHistoryLoading,
 } from '../../../modules';
 import Select from 'react-select';
 import { PaginationMobile } from 'src/mobile/components';
@@ -54,6 +58,7 @@ interface MarketOrderMobileScreenProps {
     };
 }
 
+const DEFAULT_LIMIT = 10;
 const MarketOrderMobileScreen: React.FC = () => {
     const dispatch = useDispatch();
     const intl = useIntl();
@@ -65,6 +70,8 @@ const MarketOrderMobileScreen: React.FC = () => {
     const [endDate, setEndDate] = React.useState('');
     const [data, setData] = React.useState([]);
     const [status, setStatus] = React.useState('');
+    const [market, setMarket] = React.useState('');
+    // const [loading, setLoading] = React.useState(false);
     const [asset, setAsset] = React.useState('');
     const [detailData, setDetailData] = React.useState<MarketOrderMobileScreenProps>(
         {} as MarketOrderMobileScreenProps
@@ -78,6 +85,7 @@ const MarketOrderMobileScreen: React.FC = () => {
     const firstElementIndex = useSelector((state: RootState) => selectOrdersFirstElemIndex(state, 5));
     const lastElementIndex = useSelector((state: RootState) => selectOrdersLastElemIndex(state, 5));
     const nextPageExists = useSelector((state: RootState) => selectOrdersNextPageExists(state));
+
     const page = useSelector(selectCurrentPageIndex);
     const orders = useSelector(selectOrdersHistory);
     const shouldFetchCancelAll = useSelector(selectShouldFetchCancelAll);
@@ -87,24 +95,112 @@ const MarketOrderMobileScreen: React.FC = () => {
     const ordersNextPageExists = useSelector(selectOrdersNextPageExists);
     const markets = useSelector(selectMarkets);
     const currencies: Currency[] = useSelector(selectCurrencies);
+    const loading = useSelector(selectOrdersHistoryLoading);
 
-    useUserOrdersHistoryFetch({ pageIndex: currentPageIndex, type: tab, limit: 5 });
+    // useUserOrdersHistoryFetch({ pageIndex: currentPageIndex, type: tab, limit: 5 });
     useDocumentTitle('Market Order');
     useWalletsFetch();
     useMarketsFetch();
 
+    const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
+    const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
+
     React.useEffect(() => {
-        if (orders) {
-            if (tab === 'open') {
-                const filter = orders.filter((o) => ['wait', 'pending'].includes(o.state));
-                setData(filter);
-            } else if (tab === 'close') {
-                const filter = orders.filter((o) => ['done', 'cancel', 'completed', 'error'].includes(o.state));
-                setData(filter);
-            } else {
-                setData(orders);
-            }
-        }
+        const defaultPayload = {
+            type: tab,
+            group: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+        };
+
+        const marketPayload = {
+            type: tab,
+            group: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            market: market,
+        };
+
+        const statePayload = {
+            type: tab,
+            group: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            state: status,
+        };
+
+        const datePayload = {
+            type: tab,
+            group: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+        };
+
+        const dateMarketPayload = {
+            type: tab,
+            group: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            market: market,
+        };
+
+        const dateStatePayload = {
+            type: tab,
+            group: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            state: status,
+        };
+
+        const marketStatePayload = {
+            type: tab,
+            group: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            market: market,
+            state: status,
+        };
+
+        const allParamPayload = {
+            type: tab,
+            group: tab,
+            pageIndex: currentPageIndex,
+            limit: DEFAULT_LIMIT,
+            market,
+            state: status,
+            time_from: time_from,
+            time_to: time_to,
+        };
+
+        dispatch(
+            userOrdersHistoryFetch(
+                startDate && endDate && market && status
+                    ? allParamPayload
+                    : market && status
+                    ? marketStatePayload
+                    : startDate && endDate && status
+                    ? dateStatePayload
+                    : startDate && endDate && market
+                    ? dateMarketPayload
+                    : startDate && endDate
+                    ? datePayload
+                    : status
+                    ? statePayload
+                    : market
+                    ? marketPayload
+                    : defaultPayload
+            )
+        );
+    }, [startDate, endDate, market, currentPageIndex, status, tab]);
+
+    React.useEffect(() => {
+        setData(orders);
     }, [orders, tab]);
 
     const dataListWithIcon = data.map((item) => ({
@@ -133,29 +229,6 @@ const MarketOrderMobileScreen: React.FC = () => {
         }
     };
 
-    React.useEffect(() => {
-        if (startDate != '' && endDate != '') {
-            const filterredList = orders.filter(
-                (item) =>
-                    moment(item.created_at).format() >= moment(startDate).format() &&
-                    moment(item.created_at).format() <= moment(endDate).format()
-            );
-            setData(filterredList);
-        }
-    }, [startDate, endDate]);
-
-    const filterredStatus = (status) => {
-        let filterredList;
-        let temp;
-        temp = orders;
-        filterredList = temp.filter((item) => item.state === status);
-        setData(
-            status === ''
-                ? orders.filter((o) => ['done', 'cancel', 'completed', 'error'].includes(o.state))
-                : filterredList
-        );
-    };
-
     let currentBidUnitMarkets = markets;
     const formattedMarkets = currentBidUnitMarkets.length
         ? currentBidUnitMarkets.map((market) => ({
@@ -163,19 +236,6 @@ const MarketOrderMobileScreen: React.FC = () => {
               currency: currencies.find((cur) => cur.id == market.base_unit),
           }))
         : [];
-
-    const filterredAsset = (id) => {
-        let filterredList;
-        let open;
-        open = orders.filter((o) => ['wait', 'pending'].includes(o.state));
-
-        let close;
-        close = orders.filter((o) => ['done', 'cancel', 'completed', 'error'].includes(o.state));
-
-        filterredList =
-            tab === 'open' ? open.filter((item) => item.market === id) : close.filter((item) => item.market === id);
-        setData(id === '' ? data : filterredList);
-    };
 
     const onClickPrevPage = () => {
         setPageIndex(currentPageIndex - 1);
@@ -297,65 +357,65 @@ const MarketOrderMobileScreen: React.FC = () => {
         </React.Fragment>
     );
 
-    const renderFilter = () => {
-        return (
-            <div className="d-flex align-items-center">
-                <div className="w-20 mr-24">
-                    <label className="m-0 white-text text-sm mb-8">Start Date</label>
-                    <input
-                        type="date"
-                        className="form-control mb-24"
-                        onChange={(e) => {
-                            setStartDate(e.target.value);
-                        }}
-                    />
-                </div>
+    // const renderFilter = () => {
+    //     return (
+    //         <div className="d-flex align-items-center">
+    //             <div className="w-20 mr-24">
+    //                 <label className="m-0 white-text text-sm mb-8">Start Date</label>
+    //                 <input
+    //                     type="date"
+    //                     className="form-control mb-24"
+    //                     onChange={(e) => {
+    //                         setStartDate(e.target.value);
+    //                     }}
+    //                 />
+    //             </div>
 
-                <div className="w-20 mr-24">
-                    <label className="m-0 white-text text-sm mb-8">End Date</label>
-                    <input
-                        type="date"
-                        className="form-control mb-24"
-                        onChange={(e) => {
-                            setEndDate(e.target.value);
-                        }}
-                    />
-                </div>
+    //             <div className="w-20 mr-24">
+    //                 <label className="m-0 white-text text-sm mb-8">End Date</label>
+    //                 <input
+    //                     type="date"
+    //                     className="form-control mb-24"
+    //                     onChange={(e) => {
+    //                         setEndDate(e.target.value);
+    //                     }}
+    //                 />
+    //             </div>
 
-                <div className="w-20 mr-24">
-                    <p className="m-0 white-text text-sm mb-8">Assets</p>
-                    <Select
-                        value={optionAssets.filter(function (option) {
-                            return option.value === asset;
-                        })}
-                        onChange={(e) => {
-                            setAsset(e.value);
-                            filterredAsset(e.value);
-                        }}
-                        styles={CustomStylesSelect}
-                        options={optionAssets}
-                    />
-                </div>
+    //             <div className="w-20 mr-24">
+    //                 <p className="m-0 white-text text-sm mb-8">Assets</p>
+    //                 <Select
+    //                     value={optionAssets.filter(function (option) {
+    //                         return option.value === asset;
+    //                     })}
+    //                     onChange={(e) => {
+    //                         setAsset(e.value);
+    //                         filterredAsset(e.value);
+    //                     }}
+    //                     styles={CustomStylesSelect}
+    //                     options={optionAssets}
+    //                 />
+    //             </div>
 
-                {tab === 'close' && (
-                    <div className="w-20 mr-24">
-                        <p className="m-0 white-text text-sm mb-8">Status</p>
-                        <Select
-                            value={optionStatus.filter(function (option) {
-                                return option.value === status;
-                            })}
-                            onChange={(e) => {
-                                setStatus(e.value);
-                                filterredStatus(e.value);
-                            }}
-                            styles={CustomStylesSelect}
-                            options={optionStatus}
-                        />
-                    </div>
-                )}
-            </div>
-        );
-    };
+    //             {tab === 'close' && (
+    //                 <div className="w-20 mr-24">
+    //                     <p className="m-0 white-text text-sm mb-8">Status</p>
+    //                     <Select
+    //                         value={optionStatus.filter(function (option) {
+    //                             return option.value === status;
+    //                         })}
+    //                         onChange={(e) => {
+    //                             setStatus(e.value);
+    //                             filterredStatus(e.value);
+    //                         }}
+    //                         styles={CustomStylesSelect}
+    //                         options={optionStatus}
+    //                     />
+    //                 </div>
+    //             )}
+    //         </div>
+    //     );
+    // };
 
     return (
         <React.Fragment>
@@ -387,7 +447,13 @@ const MarketOrderMobileScreen: React.FC = () => {
                         className="position-relative">
                         <Tab eventKey="open" title="Open Order">
                             <div className="table-mobile-wrapper mb-3">
-                                <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
+                                {loading ? (
+                                    <Loading />
+                                ) : dataListWithIcon.length < 1 ? (
+                                    <NoData text="No Data Yet" />
+                                ) : (
+                                    <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
+                                )}
                             </div>
                             {dataListWithIcon[0] && (
                                 <PaginationMobile
@@ -403,7 +469,13 @@ const MarketOrderMobileScreen: React.FC = () => {
                         </Tab>
                         <Tab eventKey="close" title="Close Order">
                             <div className="table-mobile-wrapper mb-3">
-                                <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
+                                {loading ? (
+                                    <Loading />
+                                ) : dataListWithIcon.length < 1 ? (
+                                    <NoData text="No Data Yet" />
+                                ) : (
+                                    <Table data={renderDataTable(dataListWithIcon)} header={renderTableHeader} />
+                                )}
                             </div>
                             {dataListWithIcon[0] && (
                                 <PaginationMobile
