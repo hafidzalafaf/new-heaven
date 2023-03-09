@@ -70,7 +70,7 @@ import {
     P2PWalletMobileScreen,
     P2PCreateOfferMobileScreen,
     P2PProfileMobileScreen,
-    P2PMyOrderMobileScreen
+    P2PMyOrderMobileScreen,
 } from '../../mobile/screens';
 
 import {
@@ -502,10 +502,10 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         />
 
                         <PrivateRoute
-                        loading={userLoading}
-                        isLogged={isLoggedIn}
-                        path="/p2p/profile/"
-                        component={P2PProfileMobileScreen}
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/profile/"
+                            component={P2PProfileMobileScreen}
                         />
 
                         <PrivateRoute
@@ -549,16 +549,17 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={P2PWalletMobileScreen}
                         />
 
+                        <PublicRoute
+                            loading={userLoading}
+                            path="/p2p/order/:offer_number"
+                            component={P2PDetailOrderMobileScreen}
+                        />
+
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
                             path="/p2p/order"
                             component={P2PMyOrderMobileScreen}
-                        />
-                        <PublicRoute
-                            loading={userLoading}
-                            path="/p2p/order/:offer_number"
-                            component={P2PDetailOrderMobileScreen}
                         />
 
                         <PublicRoute loading={userLoading} path="/p2p" component={P2PMobileScreen} />

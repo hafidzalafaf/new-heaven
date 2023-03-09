@@ -51,8 +51,8 @@ export const MarketOpen: FC = (): ReactElement => {
     const orders = useSelector(selectOrdersHistory);
     const shouldFetchCancelAll = useSelector(selectShouldFetchCancelAll);
     const shouldFetchCancelSingle = useSelector(selectShouldFetchCancelSingle);
-    const firstElemIndex = useSelector((state: RootState) => selectOrdersFirstElemIndex(state, 25));
-    const lastElemIndex = useSelector((state: RootState) => selectOrdersLastElemIndex(state, 25));
+    const firstElemIndex = useSelector((state: RootState) => selectOrdersFirstElemIndex(state, 20));
+    const lastElemIndex = useSelector((state: RootState) => selectOrdersLastElemIndex(state, 20));
     const ordersNextPageExists = useSelector(selectOrdersNextPageExists);
     const markets = useSelector(selectMarkets);
     const currencies: Currency[] = useSelector(selectCurrencies);
@@ -70,12 +70,14 @@ export const MarketOpen: FC = (): ReactElement => {
     React.useEffect(() => {
         const defaultPayload = {
             type: tab,
+            group: tab,
             pageIndex: currentPageIndex,
             limit: DEFAULT_LIMIT,
         };
 
         const marketPayload = {
             type: tab,
+            group: tab,
             pageIndex: currentPageIndex,
             limit: DEFAULT_LIMIT,
             market: market,
@@ -83,6 +85,7 @@ export const MarketOpen: FC = (): ReactElement => {
 
         const statePayload = {
             type: tab,
+            group: tab,
             pageIndex: currentPageIndex,
             limit: DEFAULT_LIMIT,
             state: status,
@@ -90,6 +93,7 @@ export const MarketOpen: FC = (): ReactElement => {
 
         const datePayload = {
             type: tab,
+            group: tab,
             pageIndex: currentPageIndex,
             limit: DEFAULT_LIMIT,
             time_from: time_from,
@@ -98,6 +102,7 @@ export const MarketOpen: FC = (): ReactElement => {
 
         const dateMarketPayload = {
             type: tab,
+            group: tab,
             pageIndex: currentPageIndex,
             limit: DEFAULT_LIMIT,
             time_from: time_from,
@@ -107,6 +112,7 @@ export const MarketOpen: FC = (): ReactElement => {
 
         const dateStatePayload = {
             type: tab,
+            group: tab,
             pageIndex: currentPageIndex,
             limit: DEFAULT_LIMIT,
             time_from: time_from,
@@ -116,6 +122,7 @@ export const MarketOpen: FC = (): ReactElement => {
 
         const marketStatePayload = {
             type: tab,
+            group: tab,
             pageIndex: currentPageIndex,
             limit: DEFAULT_LIMIT,
             market: market,
@@ -124,6 +131,7 @@ export const MarketOpen: FC = (): ReactElement => {
 
         const allParamPayload = {
             type: tab,
+            group: tab,
             pageIndex: currentPageIndex,
             limit: DEFAULT_LIMIT,
             market,
@@ -154,17 +162,7 @@ export const MarketOpen: FC = (): ReactElement => {
     }, [startDate, endDate, market, currentPageIndex, status, tab]);
 
     React.useEffect(() => {
-        if (orders) {
-            if (tab === 'open') {
-                const filter = orders.filter((o) => ['wait', 'pending'].includes(o.state));
-                setData(filter);
-            } else if (tab === 'close') {
-                const filter = orders.filter((o) => ['done', 'cancel', 'completed', 'error'].includes(o.state));
-                setData(filter);
-            } else {
-                setData(orders);
-            }
-        }
+        setData(orders);
     }, [orders, tab]);
 
     React.useEffect(() => {
@@ -409,9 +407,13 @@ export const MarketOpen: FC = (): ReactElement => {
                         className="mb-3">
                         <Tab eventKey="open" title="Open Order" className="mb-24">
                             <div className="mt-24">
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {data.length < 1 && !loading && <NoData text="No Data Yet" />}
-                                {loading && <Loading />}
+                                {loading ? (
+                                    <Loading />
+                                ) : data?.length < 1 ? (
+                                    <NoData text="No Data Yet" />
+                                ) : (
+                                    <Table data={getTableData(data)} header={getTableHeaders()} />
+                                )}
                             </div>
 
                             {data && data[0] && (
@@ -427,9 +429,13 @@ export const MarketOpen: FC = (): ReactElement => {
                         </Tab>
                         <Tab eventKey="close" title="Close Order" className="mb-24">
                             <div className="mt-24">
-                                <Table header={getTableHeaders()} data={getTableData(data)} />
-                                {data.length < 1 && !loading && <NoData text="No Data Yet" />}
-                                {loading && <Loading />}
+                                {loading ? (
+                                    <Loading />
+                                ) : data?.length < 1 ? (
+                                    <NoData text="No Data Yet" />
+                                ) : (
+                                    <Table data={getTableData(data)} header={getTableHeaders()} />
+                                )}
                             </div>
 
                             {data && data[0] && (

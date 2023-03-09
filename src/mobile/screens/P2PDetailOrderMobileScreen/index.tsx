@@ -425,22 +425,6 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
                 </div>
 
                 <ModalFullScreenMobile show={showPayment} content={renderModalPayment()} />
-
-                {/* <div
-                    id="off-canvas-payment"
-                    className={`position-fixed off-canvas-payment ${showPayment ? 'show' : ''}`}>
-                    <div className="fixed-bottom off-canvas-content-container-payment overflow-auto">
-                        <div className="d-flex justify-content-center align-items-center w-100 position-relative mb-24">
-                            <h1 className="text-md grey-text-accent font-extrabold">Select payment method</h1>
-
-                            <span
-                                onClick={() => setShowPayment(!showPayment)}
-                                className="position-absolute close-canvas cursor-pointer">
-                                <CloseMobileIcon />
-                            </span>
-                        </div>
-                    </div>
-                </div> */}
             </div>
         </React.Fragment>
     );
