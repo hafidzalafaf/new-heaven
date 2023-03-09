@@ -1,12 +1,25 @@
 import * as React from 'react';
 import { useIntl } from 'react-intl';
 import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { HomeIcon, MarketIcon, OrderIcon, TradingIcon, WalletIcon } from '../../assets/SnakeBar';
+import { selectCurrentMarket } from 'src/modules';
+import { useMarketsFetch, useMarketsTickersFetch } from 'src/hooks';
 
 const FooterComponent: React.FC = () => {
+    useMarketsFetch();
+    useMarketsTickersFetch();
     const { pathname } = useLocation();
     const intl = useIntl();
+    const currentMarket = useSelector(selectCurrentMarket);
     const [menuActive, setMenuActive] = React.useState('');
+    const [id, setId] = React.useState('');
+
+    React.useEffect(() => {
+        if (currentMarket) {
+            setId(currentMarket?.id);
+        }
+    }, [currentMarket]);
 
     const menu = [
         {
@@ -40,7 +53,7 @@ const FooterComponent: React.FC = () => {
             ),
             url: '/trading',
             name: 'trading',
-            path: '/trading/ethusdt',
+            path: `/trading/${id}`,
         },
         {
             icon: (
