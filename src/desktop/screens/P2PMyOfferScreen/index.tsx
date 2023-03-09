@@ -13,7 +13,7 @@ export const P2PMyOfferScreen: React.FC = () => {
     const dispatch = useDispatch();
     const fiats = useSelector(selectP2PFiatsData);
     const offer = useSelector(selectP2PUserAccountOffer);
-    const cancelPaymentSuccess = useSelector(selectP2PUserAccountOfferCancelSuccess)
+    const cancelPaymentSuccess = useSelector(selectP2PUserAccountOfferCancelSuccess);
 
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
