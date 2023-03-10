@@ -465,7 +465,6 @@ const MarketOrderMobileScreen: React.FC = () => {
                                     onClickNextPage={onClickNextPage}
                                 />
                             )}
-                            {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
                         </Tab>
                         <Tab eventKey="close" title="Close Order">
                             <div className="table-mobile-wrapper mb-3">
@@ -487,7 +486,6 @@ const MarketOrderMobileScreen: React.FC = () => {
                                     onClickNextPage={onClickNextPage}
                                 />
                             )}
-                            {dataListWithIcon.length < 1 && <NoData text="No Data Yet" />}
                         </Tab>
                     </Tabs>
 
