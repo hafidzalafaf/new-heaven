@@ -373,31 +373,55 @@
 
     .line {
         width: 2px;
-        background: var(--white-background-color);
+        background: var(--main-background-color);
+        height: 100%;
+        position: absolute;
+        left: 39px;
     }
 
     .payment-form {
         position: relative;
         padding-left: 28px;
-        &::before {
-            content: "";
+
+        .number {
             position: absolute;
             left: -10px;
             top: 0;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--white-background-color);
+            background: var(--body-background-color);
+            padding: 12px 0;
+
+            .step {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 12px;
+                font-weight: 800;
+                color: var(--text-primary-color);
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background: var(--gradient-background-color);
+            }
         }
         &.last {
             position: relative;
             z-index: 2;
             padding-left: 30px;
-            margin-left: -2px;
-            &::before {
-                left: -8px;
+            .number {
+                background: var(--body-background-color);
+                /* padding-bottom: 100%; */
             }
         }
+        /* &:nth-child(2) {
+            &::before {
+                content: "2";
+            }
+        }
+        &:nth-child(3) {
+            &::before {
+                content: "3";
+            }
+        } */
     }
 
     .payment-user-selected {

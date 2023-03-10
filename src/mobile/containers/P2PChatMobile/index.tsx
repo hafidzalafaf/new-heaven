@@ -12,12 +12,12 @@ import {
     p2pProfileFetch,
 } from 'src/modules';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowDownMd, CheckFillIcon, AttachmentIcon, SendIcon, ZoomIcon } from 'src/assets/images/P2PIcon';
+import { ZoomIcon } from 'src/assets/images/P2PIcon';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 import { DownloadSecondaryIcon } from 'src/assets/images/DownloadIcon';
 import moment from 'moment';
 import { Loading } from 'src/components';
-import { ModalFullScreenMobile, ModalMobile } from 'src/mobile/components';
+import { ModalMobile } from 'src/mobile/components';
 import { Countdown } from 'src/mobile/screens';
 import { VerificationIcon } from 'src/assets/images/P2PIcon';
 import { AddArchiveMobileIcon, SendChatMobileIcon } from 'src/mobile/assets/P2PMobileIcon';
