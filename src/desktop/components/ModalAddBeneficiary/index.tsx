@@ -143,7 +143,9 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
 
     const isDisabled = !coinAddress || !coinBeneficiaryName || !coinAddressValid || !coinBlockchainName.blockchainKey;
 
-    const optionNetworks = currencyItem?.networks?.map((item) => {
+    const enableWithdraw = currencyItem?.networks?.filter((item) => item.withdrawal_enabled == true);
+
+    const optionNetworks = enableWithdraw?.map((item) => {
         const customLabel = (
             <div onClick={() => setProtocol(item?.protocol)} className="d-flex align-items-center">
                 <p className="m-0 grey-text-accent text-sm">{item?.protocol}</p>
