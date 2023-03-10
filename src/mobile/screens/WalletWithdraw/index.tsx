@@ -195,7 +195,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
             return true;
         } else if (otp.length < 6) {
             return true;
-        } else if (!amount) {
+        } else if (!amount || amount < minWithdraw) {
             return true;
         } else if (!beneficiaryId) {
             return true;
@@ -211,7 +211,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
     };
 
     const amountValidation = (e) => {
-        if (Number(e) > Number(balance)) {
+        if (Number(e) > Number(balance) || Number(e) < Number(minWithdraw)) {
             setMessageAmount('Your balance is insufficient');
             return true;
         } else if (Number(e) > Number(remainingWithdrawDaily)) {
