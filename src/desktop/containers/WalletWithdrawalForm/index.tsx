@@ -80,10 +80,10 @@ export const WalletWithdrawalForm: React.FC = () => {
     const withdrawSum = useSelector(selectWithdrawSum);
     const memberGroup = useSelector(selectGroupMember);
     const memberLevel = useSelector(selectMemberLevels);
-    const beneficiariesList = beneficiaries.filter((item) => item.currency === currency);
-    const currencyItem: Currency = currencies.find((item) => item.id === currency);
-    const wallet = wallets.length && wallets.find((item) => item.currency.toLowerCase() === currency.toLowerCase());
-    const balance = wallet && wallet.balance ? wallet.balance.toString() : '0';
+    const beneficiariesList = beneficiaries?.filter((item) => item.currency === currency);
+    const currencyItem: Currency = currencies?.find((item) => item.id === currency);
+    const wallet = wallets.length && wallets?.find((item) => item.currency.toLowerCase() === currency.toLowerCase());
+    const balance = wallet && wallet?.balance ? wallet.balance.toString() : '0';
 
     const [seconds, setSeconds] = React.useState(30000);
     const [timerActive, setTimerActive] = React.useState(false);
@@ -122,9 +122,9 @@ export const WalletWithdrawalForm: React.FC = () => {
         if (beneficiaryPermited || withdrawPermited || user?.level < memberLevel?.withdraw?.minimum_level) {
             setShowModalLocked(true);
         }
-    });
+    }, [user, beneficiaryPermited, withdrawPermited, memberLevel]);
 
-    const myWithdrawLimit = withdrawLimits.find((group) => group?.group == memberGroup?.group);
+    const myWithdrawLimit = withdrawLimits?.find((group) => group?.group == memberGroup?.group);
     const remainingWithdrawDaily = myWithdrawLimit
         ? (Number(myWithdrawLimit?.limit_24_hour) - Number(withdrawSum?.last_24_hours)) / Number(currencyItem?.price)
         : 0;
@@ -132,10 +132,9 @@ export const WalletWithdrawalForm: React.FC = () => {
         ? (Number(myWithdrawLimit?.limit_1_month) - Number(withdrawSum?.last_1_month)) / Number(currencyItem?.price)
         : 0;
 
-    const blockchainKeyValue =
-        currencyItem && currencyItem.networks.find((item) => item.blockchain_key === blockchainKey);
-    const fee = blockchainKeyValue && blockchainKeyValue.withdraw_fee;
-    const minWithdraw = blockchainKeyValue && blockchainKeyValue.min_withdraw_amount;
+    const blockchainKeyValue = currencyItem?.networks?.find((item) => item?.blockchain_key === blockchainKey);
+    const fee = blockchainKeyValue?.withdraw_fee;
+    const minWithdraw = blockchainKeyValue?.min_withdraw_amount;
     const withdrawRecive = Number(amount) - Number(fee);
 
     const handleChangeBeneficiaryId = (id: number, address: string, blockchainKey: string, currency_id: string) => {
@@ -416,7 +415,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     const disabledButton = () => {
         if (currency == '') {
             return true;
-        } else if (!amount) {
+        } else if (!amount || amount < minWithdraw) {
             return true;
         } else if (!beneficiaryId) {
             return true;
@@ -432,7 +431,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     };
 
     const amountValidation = (e) => {
-        if (Number(e) > Number(balance)) {
+        if (Number(e) > Number(balance) || Number(e) < Number(minWithdraw)) {
             setMessageAmount('Your balance is insufficient');
             return true;
         } else if (Number(e) > Number(remainingWithdrawDaily)) {
@@ -466,12 +465,14 @@ export const WalletWithdrawalForm: React.FC = () => {
                     <p className="text-ms font-extrabold white-text">Select Address</p>
                     <div className="w-70 position-relative input-add-address">
                         <div
+                            className="dark-bg-accent cursor-pointer d-flex align-items-center add-beneficiary-button"
                             onClick={() => {
                                 beneficiariesList && beneficiariesList.length >= 1
                                     ? setShowModalBeneficiaryList(true)
                                     : setShowModalModalAddBeneficiary(true);
                             }}>
-                            <CustomInput
+                            {address ? address : 'Select'}
+                            {/* <CustomInput
                                 type="text"
                                 isDisabled={true}
                                 label={intl.formatMessage({
@@ -484,11 +485,11 @@ export const WalletWithdrawalForm: React.FC = () => {
                                 classNameInput={`cursor-pointer dark-bg-accent`}
                                 autoFocus={false}
                                 labelVisible={false}
-                            />
+                            /> */}
                         </div>
                         <span
                             onClick={() => setShowModalModalAddBeneficiary(true)}
-                            className="position-absolute cursor-pointer">
+                            className="position-absolute cursor-pointer circle-plus-icon">
                             <CirclePlusIcon />
                         </span>
                     </div>
@@ -505,9 +506,9 @@ export const WalletWithdrawalForm: React.FC = () => {
                             inputValue={amount}
                             classNameGroup="m-0"
                             classNameLabel="d-none"
-                            classNameInput={`dark-bg-accent mb-0 ${!blockchainKey && 'input-disable'} ${
-                                messageAmount && 'error'
-                            }`}
+                            classNameInput={`dark-bg-accent input-amount beneficiary mb-0 ${
+                                !blockchainKey && 'input-disable'
+                            } ${messageAmount && 'error'}`}
                             autoFocus={false}
                             labelVisible={false}
                             isDisabled={!blockchainKey}
