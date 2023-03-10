@@ -195,7 +195,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
             return true;
         } else if (otp.length < 6) {
             return true;
-        } else if (!amount) {
+        } else if (!amount || amount < minWithdraw) {
             return true;
         } else if (!beneficiaryId) {
             return true;
@@ -211,7 +211,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
     };
 
     const amountValidation = (e) => {
-        if (Number(e) > Number(balance)) {
+        if (Number(e) > Number(balance) || Number(e) < Number(minWithdraw)) {
             setMessageAmount('Your balance is insufficient');
             return true;
         } else if (Number(e) > Number(remainingWithdrawDaily)) {
@@ -278,12 +278,14 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                 </label>
                                 <div className="position-relative input-add-address">
                                     <div
+                                        className="dark-bg-accent cursor-pointer d-flex align-items-center add-beneficiary-button"
                                         onClick={() => {
                                             beneficiariesList && beneficiariesList.length >= 1
                                                 ? setShowModalBeneficiaryList(true)
                                                 : setShowModalModalAddBeneficiary(true);
                                         }}>
-                                        <CustomInput
+                                        {address ? address : 'Select'}
+                                        {/* <CustomInput
                                             type="text"
                                             isDisabled={true}
                                             label={intl.formatMessage({
@@ -302,7 +304,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                             classNameInput={`cursor-pointer dark-bg-accent`}
                                             autoFocus={false}
                                             labelVisible={false}
-                                        />
+                                        /> */}
                                     </div>
                                     <span
                                         onClick={() => setShowModalModalAddBeneficiary(!showModalAddBeneficiary)}
@@ -313,7 +315,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                             </div>
 
                             <div className="align-items-start">
-                                <label className="text-sm white-text">
+                                <label className="text-sm white-text mt-3">
                                     {formatMessage({
                                         id: 'page.mobile.withdraw.amountLabel',
                                     })}
