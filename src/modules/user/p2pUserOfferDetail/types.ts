@@ -14,6 +14,7 @@ export interface P2PUserOfferDetail {
         term_of_condition: string;
         trader: any;
         payment: Payment[];
+        side: string;
     }
     order: [];
 }
