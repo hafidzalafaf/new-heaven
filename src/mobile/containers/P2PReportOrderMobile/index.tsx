@@ -4,6 +4,8 @@ import { Link, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import { Loading } from 'src/components';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
+import { InfoWarningIcon } from 'src/assets/images/P2PIcon';
+import Select from 'react-select';
 
 export interface P2PReportOrderMobileProps {
     // detail?: any;
@@ -50,6 +52,17 @@ export const P2PReportOrderMobile: React.FunctionComponent<P2PReportOrderMobileP
                         <CloseIconFilter />
                     </span>
                 </div>
+
+                <div className="order-step-info-warning d-flex align-items-center justify-content-between p-16 gap-8 radius-sm mb-24">
+                    <p className="m-0 p-0 grey-text-accent text-xxs ">
+                        Malicious activity reports will freeze the account.
+                    </p>
+                    <InfoWarningIcon />
+                </div>
+
+                <form className="d-flex flex-column gap-16 w-100">
+                    <div className="d-flex flex-column gap-8"></div>
+                </form>
             </div>
         </div>
     );
