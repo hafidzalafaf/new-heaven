@@ -30,7 +30,6 @@ export interface P2POrderStepMobileProps {
     handleShowModalBuyOrderCompleted: () => void;
     handleShowModalSellConfirm: () => void;
     handleShowModalCancel: () => void;
-    handleShowModalReport: () => void;
     handleSendFeedbackPositive: () => void;
     handleSendFeedbackNegative: () => void;
     handleExpandChat: () => void;
@@ -61,7 +60,6 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
         handleShowModalBuyOrderCompleted,
         handleShowModalSellConfirm,
         handleShowModalCancel,
-        handleShowModalReport,
         handleSendFeedbackPositive,
         handleSendFeedbackNegative,
         handleExpandChat,
@@ -502,7 +500,7 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                                 <div className="step">3</div>
                             </div>
                             <p className="mb-2 text-sm grey-text m-0 p-0">
-                                After confirming the payment, click the “Payment received” button.
+                                After confirming the payment, click the “Release Crypto” button.
                             </p>
                         </div>
                     </div>

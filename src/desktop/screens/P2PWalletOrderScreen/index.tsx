@@ -498,7 +498,7 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         onClick={handleReport}
                         disabled={(!reason && !reason[0]) || !text_message || createReportLoading}
                         className="btn-primary w-100">
-                        Submit The Sidepute
+                        Submit
                     </button>
                 </div>
             </div>

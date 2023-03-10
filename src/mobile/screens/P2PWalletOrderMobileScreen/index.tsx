@@ -18,9 +18,7 @@ import {
     selectP2PCreateFeedbackSuccess,
     selectP2PChat,
     orderChat,
-    selectP2PCreateReportLoading,
     selectP2PCreateReportSuccess,
-    orderReportCreate,
 } from 'src/modules';
 import { ModalMobile, ModalFullScreenMobile } from 'src/mobile/components';
 import moment from 'moment';
@@ -31,6 +29,7 @@ import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 import { ArrowRight } from 'src/mobile/assets/Arrow';
 import { P2PChatMobile, P2POrderStepMobile, P2PReportOrderMobile } from 'src/mobile/containers';
 import { InfoIcon } from 'src/assets/images/InfoIcon';
+import { CustomInput } from 'src/desktop/components';
 
 export const P2PWalletOrderMobileScreen: React.FC = () => {
     useDocumentTitle('P2P Wallet Order');
@@ -50,15 +49,11 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     const createFeedbackSuccess = useSelector(selectP2PCreateFeedbackSuccess);
     const p2pChat = useSelector(selectP2PChat);
     const createReportSuccess = useSelector(selectP2PCreateReportSuccess);
-    const createReportLoading = useSelector(selectP2PCreateReportLoading);
 
     const [showPayment, setShowPayment] = React.useState(false);
     const [showChat, setShowChat] = React.useState(false);
-    const [inputFile, setInputFile] = React.useState(null);
-    const [fileName, setFileName] = React.useState('');
     const [paymentMethod, setPaymentMethod] = React.useState('');
     const [paymentUser, setPaymentUser] = React.useState<any>();
-    const [orderNumber, setOrderNumber] = React.useState(order_number);
     const [showModalPaymentConfirm, setShowModalPaymentConfirm] = React.useState(false);
     const [selectConfirmRelease, setSelectConfirmRelease] = React.useState('');
     const [selectConfirmPayment, setSelectConfirmPayment] = React.useState(false);
@@ -74,11 +69,10 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     /* ============== FEEDBACK STATE END =============== */
 
     /* ============== REPORT STATE START =============== */
-    const [showModalReport, setShowModalReport] = React.useState(true);
-    const [reason, setReason] = React.useState([]);
-    const [text_message, setTextMessage] = React.useState('');
-    const [upload_payment, setUplodPayment] = React.useState(null);
-
+    const [showModalReport, setShowModalReport] = React.useState(false);
+    React.useEffect(() => {
+        setShowModalReport(false);
+    }, [createReportSuccess]);
     /* ============== REPORT STATE END =============== */
 
     const dateInFuture = moment(
@@ -201,48 +195,6 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     const handleChangeComment = (e: string) => {
         setComment(e);
     };
-
-    /* ============== REPORT FUNCTION START =============== */
-    React.useEffect(() => {
-        setShowModalReport(false);
-        setReason([]);
-        setTextMessage('');
-        setUplodPayment(null);
-    }, [createReportSuccess]);
-
-    const handleChecked = (e) => {
-        setReason([
-            ...reason,
-            {
-                key: e.target.name,
-                message: e.target.name !== 'payment' ? e.target.value : e.target.files[0].name,
-            },
-        ]);
-        if (!e.target.checked) {
-            setReason(reason.filter((item) => item.message !== e.target.id));
-        }
-    };
-
-    const handleReport = () => {
-        const formData = new FormData();
-        formData.append('reason', JSON.stringify(reason));
-        formData.append('text_message', text_message);
-        formData.append('upload_payment', upload_payment);
-
-        dispatch(
-            orderReportCreate({
-                FormData: formData,
-                order_number: order_number,
-            })
-        );
-    };
-
-    console.log(detail);
-    console.log(detail?.order?.state === 'prepare' && detail?.order?.payment === null);
-    console.log((detail?.order?.state == 'prepare' && paymentUser) === undefined);
-    console.log(paymentUser, 'payment')
-
-    /* ============== REPORT FUNCTION END =============== */
 
     const renderModalCancel = () => {
         return (
@@ -453,7 +405,6 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                         handleShowModalPaymentConfirm={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
                         handleShowModalSellConfirm={() => setShowModalSellConfrim(!showModalSellConfirm)}
                         handleShowModalCancel={() => setShowModalCancel(!showModalCancel)}
-                        handleShowModalReport={() => setShowModalReport(!showModalReport)}
                         handleSendFeedbackPositive={handleSendFeedbackPositive}
                         handleSendFeedbackNegative={handleSendFeedbackNegative}
                         handleExpandChat={() => setShowChat(!showChat)}
@@ -461,39 +412,40 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                     />
 
                     {side == 'buy' ? (
-                        detail?.order?.state == 'prepare' ?  
-                        paymentUser === undefined && detail?.order?.payment === null ? 
-                            <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
-                                <button
-                                    onClick={() => setShowModalCancel(!showModalCancel)}
-                                    type="button"
-                                    className="btn-secondary w-50 grey-text text-ms font-normal">
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPayment(!showPayment)}
-                                    className="btn-primary w-50 white-text text-ms font-normal">
-                                    Make Payment
-                                </button>
-                            </div>
-                            : 
-                            <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
-                                    className="btn-primary w-100 white-text text-ms font-normal">
-                                    Transferred, notify seller
-                                </button>
+                        detail?.order?.state == 'prepare' ? (
+                            paymentUser === undefined && detail?.order?.payment === null ? (
+                                <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
+                                    <button
+                                        onClick={() => setShowModalCancel(!showModalCancel)}
+                                        type="button"
+                                        className="btn-secondary w-50 grey-text text-ms font-normal">
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPayment(!showPayment)}
+                                        className="btn-primary w-50 white-text text-ms font-normal">
+                                        Make Payment
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
+                                        className="btn-primary w-100 white-text text-ms font-normal">
+                                        Transferred, notify seller
+                                    </button>
 
-                                <button
-                                    onClick={() => setShowModalCancel(!showModalCancel)}
-                                    type="button"
-                                    className="btn-secondary w-100 grey-text text-ms font-normal">
-                                    Cancel
-                                </button>
-                            </div>
-                         : detail?.order?.state == 'waiting' ? (
+                                    <button
+                                        onClick={() => setShowModalCancel(!showModalCancel)}
+                                        type="button"
+                                        className="btn-secondary w-100 grey-text text-ms font-normal">
+                                        Cancel
+                                    </button>
+                                </div>
+                            )
+                        ) : detail?.order?.state == 'waiting' ? (
                             <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
                                 <button
                                     type="button"
@@ -548,6 +500,26 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                             </div>
                         ) : (
                             <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                                <CustomInput
+                                    isDisabled={detail?.feedback?.assesment ? true : false}
+                                    inputValue={comment}
+                                    type="text"
+                                    label={side == 'buy' && detail?.feedback?.assesment ? 'Your comment' : 'Comment'}
+                                    defaultLabel={
+                                        side == 'buy' && detail?.feedback?.assesment ? 'Your comment' : 'Comment'
+                                    }
+                                    placeholder={
+                                        side == 'buy' && detail?.feedback?.assesment && detail?.feedback?.comment
+                                            ? detail?.feedback?.comment
+                                            : side == 'buy' && detail?.feedback?.assesment && !detail?.feedback?.comment
+                                            ? detail?.feedback?.assesment
+                                            : 'Send a comment'
+                                    }
+                                    labelVisible
+                                    classNameLabel="grey-text-accent text-sm font-semibold"
+                                    classNameGroup="w-100"
+                                    handleChangeInput={(e) => handleChangeComment(e)}
+                                />
                                 <div className="w-100 d-flex align-items-center gap-8">
                                     <button
                                         disabled={detail?.feedback?.assesment ? true : false}
@@ -649,6 +621,34 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                         </div>
                     ) : (
                         <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                            <CustomInput
+                                isDisabled={true}
+                                inputValue={comment}
+                                type="text"
+                                label={
+                                    side == 'sell' && !detail?.feedback?.assesment
+                                        ? 'Waiting feedback'
+                                        : 'Buyer feedback'
+                                }
+                                defaultLabel={
+                                    side == 'sell' && !detail?.feedback?.assesment
+                                        ? 'Waiting feedback'
+                                        : 'Buyer feedback'
+                                }
+                                placeholder={
+                                    side == 'sell' && !detail?.feedback?.assesment
+                                        ? '-'
+                                        : side == 'sell' && detail?.feedback?.assesment && detail?.feedback?.comment
+                                        ? detail?.feedback?.comment
+                                        : side == 'sell' && detail?.feedback?.assesment && !detail?.feedback?.comment
+                                        ? detail?.feedback?.assesment
+                                        : ''
+                                }
+                                labelVisible
+                                classNameLabel="grey-text-accent text-sm font-semibold"
+                                handleChangeInput={(e) => handleChangeComment(e)}
+                                classNameGroup="w-100"
+                            />
                             <div className="w-100 d-flex align-items-center gap-8">
                                 <button
                                     disabled={true}
@@ -694,7 +694,18 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                     }
                 />
 
-                <ModalFullScreenMobile show={showModalReport} content={<P2PReportOrderMobile />} />
+                <ModalFullScreenMobile
+                    show={showModalReport}
+                    content={
+                        <P2PReportOrderMobile
+                            detail={detail}
+                            order_number={order_number}
+                            showReport={showModalReport}
+                            handleShowReport={() => setShowModalReport(true)}
+                            handleCloseReport={() => setShowModalReport(false)}
+                        />
+                    }
+                />
 
                 <div
                     id="off-canvas-payment"

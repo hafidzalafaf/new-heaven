@@ -517,6 +517,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             path="/order"
                             component={MarketOrderMobileScreen}
                         />
+
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
@@ -525,13 +526,6 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         />
 
                         <PublicRoute loading={userLoading} path="/announcements" component={AnnouncementMobileScreen} />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/wallet/order/:order_number"
-                            component={P2PWalletOrderMobileScreen}
-                        />
 
                         <PrivateRoute
                             loading={userLoading}
@@ -566,6 +560,13 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={P2PMyOfferMobileScreen}
                         />
 
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/wallet/order/:order_number"
+                            component={P2PWalletOrderMobileScreen}
+                        />
+
                         <PublicRoute
                             loading={userLoading}
                             path="/p2p/order/:offer_number"
@@ -582,6 +583,13 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         <PublicRoute loading={userLoading} path="/p2p" component={P2PMobileScreen} />
 
                         {/* <PublicRoute loading={userLoading} path="/trading" component={TradingMobileScreen} />    */}
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/wallets"
+                            component={P2PWalletMobileScreen}
+                        />
 
                         <PublicRoute loading={userLoading} path="/" component={HomeMobileScreen} />
 
