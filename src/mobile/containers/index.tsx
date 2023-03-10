@@ -6,3 +6,4 @@ export * from './OrderForm';
 export * from './P2POrderStepMobile';
 export * from './P2PChatMobile';
 export * from './P2PReportOrderMobile';
+export * from './P2PNotificationMobile';

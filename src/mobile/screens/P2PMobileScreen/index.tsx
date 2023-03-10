@@ -37,6 +37,7 @@ import { NoData, FilterInput } from 'src/desktop/components';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
+import { P2PNotificationMobile } from 'src/mobile/containers';
 
 export const P2PMobileScreen: React.FC = () => {
     useDocumentTitle('P2P');
@@ -82,6 +83,7 @@ export const P2PMobileScreen: React.FC = () => {
     const [paymentListUser, setPaymentListUser] = React.useState([]);
     const [currencyOffer, setCurrencyOffer] = React.useState(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
     const [priceOffer, setPriceOffer] = React.useState('');
+    const [showNotif, setShowNotif] = React.useState(false);
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
@@ -370,7 +372,7 @@ export const P2PMobileScreen: React.FC = () => {
                     <ArrowLeft className={'cursor-pointer'} />
                     <p className="m-0 p-0 grey-text-accent text-md font-extrabold">P2P</p>
                     <div className="d-flex gap-8 justify-content-start align-items-center">
-                        <span className={'cursor-pointer'}>
+                        <span onClick={() => setShowNotif(!showNotif)} className={'cursor-pointer'}>
                             <NotifMobileIcon />
                         </span>
                         {/* <span onClick={() => setShowMenu(!showMenu)} className={'cursor-pointer'}>
@@ -497,6 +499,11 @@ export const P2PMobileScreen: React.FC = () => {
                 {isLoggedIn && <ModalMobile show={showModalAnnouncement} content={renderModalAnnouncement()} />}
 
                 <ModalFullScreenMobile show={showModalSelectCurrency} content={renderModalSelectCurrency()} />
+
+                <ModalFullScreenMobile
+                    show={showNotif}
+                    content={<P2PNotificationMobile handleShowNotif={() => setShowNotif(!showNotif)} />}
+                />
 
                 <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${showFilter ? 'show' : ''}`}>
                     <div className="fixed-bottom off-canvas-content-container-filter overflow-auto">
