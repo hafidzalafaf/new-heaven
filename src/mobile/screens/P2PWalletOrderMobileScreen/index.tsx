@@ -74,7 +74,7 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     /* ============== FEEDBACK STATE END =============== */
 
     /* ============== REPORT STATE START =============== */
-    const [showModalReport, setShowModalReport] = React.useState(false);
+    const [showModalReport, setShowModalReport] = React.useState(true);
     const [reason, setReason] = React.useState([]);
     const [text_message, setTextMessage] = React.useState('');
     const [upload_payment, setUplodPayment] = React.useState(null);
@@ -238,6 +238,9 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     };
 
     console.log(detail);
+    console.log(detail?.order?.state === 'prepare' && detail?.order?.payment === null);
+    console.log((detail?.order?.state == 'prepare' && paymentUser) === undefined);
+    console.log(paymentUser, 'payment')
 
     /* ============== REPORT FUNCTION END =============== */
 
@@ -457,92 +460,209 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                         handleExpandTerms={() => setShowTerms(!showTerms)}
                     />
 
-                    {side == 'buy' && detail?.order?.state == 'prepare' && !paymentUser ? (
-                        <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
-                            <button
-                                onClick={() => setShowModalCancel(!showModalCancel)}
-                                type="button"
-                                className="btn-secondary w-50 grey-text text-ms font-normal">
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setShowPayment(!showPayment)}
-                                className="btn-primary w-50 white-text text-ms font-normal">
-                                Make Payment
-                            </button>
-                        </div>
-                    ) : side == 'buy' && (detail?.order?.state !== 'success' || detail?.order?.state == 'accepted') ? (
-                        <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
-                            <button
-                                type="button"
-                                onClick={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
-                                disabled={!paymentUser}
-                                className="btn-primary w-100 white-text text-ms font-normal">
-                                {side == 'buy' &&
-                                detail?.order?.state == 'prepare' &&
-                                (paymentUser || detail?.order?.payment !== null) ? (
-                                    'Transferred, notify seller'
-                                ) : (
-                                    <div className="d-flex align-items-center justify-content-center gap-4">
-                                        <p className="m-0 p-0">
-                                            {detail?.order?.state == 'waiting'
-                                                ? 'Transaction Issue; appeal after'
-                                                : detail?.order?.state == 'rejected'
-                                                ? 'Seller was rejected this order'
-                                                : detail?.order?.state == 'canceled'
-                                                ? 'Order canceled'
-                                                : 'Order completed'}
-                                        </p>
-                                        {detail?.order?.state == 'waiting' && (
-                                            <Countdown
-                                                days={days}
-                                                hours={hours}
-                                                minutes={minutes}
-                                                seconds={seconds}
-                                                showChat={showChat}
-                                                detail={detail}
-                                                timeLeft={timeLeft}
-                                                textColor="white-text"
-                                            />
-                                        )}
-                                    </div>
-                                )}
-                            </button>
+                    {side == 'buy' ? (
+                        detail?.order?.state == 'prepare' ?  
+                        paymentUser === undefined && detail?.order?.payment === null ? 
+                            <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
+                                <button
+                                    onClick={() => setShowModalCancel(!showModalCancel)}
+                                    type="button"
+                                    className="btn-secondary w-50 grey-text text-ms font-normal">
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPayment(!showPayment)}
+                                    className="btn-primary w-50 white-text text-ms font-normal">
+                                    Make Payment
+                                </button>
+                            </div>
+                            : 
+                            <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModalPaymentConfirm(!showModalPaymentConfirm)}
+                                    className="btn-primary w-100 white-text text-ms font-normal">
+                                    Transferred, notify seller
+                                </button>
 
-                            {(detail?.order?.state == 'prepare' ||
-                                detail?.order?.state == 'waiting' ||
-                                detail?.order?.state == 'rejected') && (
                                 <button
                                     onClick={() => setShowModalCancel(!showModalCancel)}
                                     type="button"
                                     className="btn-secondary w-100 grey-text text-ms font-normal">
                                     Cancel
                                 </button>
-                            )}
+                            </div>
+                         : detail?.order?.state == 'waiting' ? (
+                            <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                                <button
+                                    type="button"
+                                    disabled={true}
+                                    className="btn-primary w-100 white-text text-ms font-normal">
+                                    <div className="d-flex align-items-center justify-content-center gap-4">
+                                        <p className="m-0 p-0">Transaction Issue; appeal after</p>
+                                        <Countdown
+                                            days={days}
+                                            hours={hours}
+                                            minutes={minutes}
+                                            seconds={seconds}
+                                            showChat={showChat}
+                                            detail={detail}
+                                            timeLeft={timeLeft}
+                                            textColor="white-text"
+                                        />
+                                    </div>
+                                </button>
+
+                                <button
+                                    onClick={() => setShowModalCancel(!showModalCancel)}
+                                    type="button"
+                                    className="btn-secondary w-100 grey-text text-ms font-normal">
+                                    Cancel
+                                </button>
+                            </div>
+                        ) : detail?.order?.state == 'rejected' ? (
+                            <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                                <button
+                                    type="button"
+                                    disabled={true}
+                                    className="btn-primary w-100 white-text text-ms font-normal">
+                                    Seller was rejected this order
+                                </button>
+
+                                <button
+                                    onClick={() => setShowModalCancel(!showModalCancel)}
+                                    type="button"
+                                    className="btn-secondary w-100 grey-text text-ms font-normal">
+                                    Cancel
+                                </button>
+                            </div>
+                        ) : detail?.order?.state == 'canceled' ? (
+                            <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                                <button
+                                    type="button"
+                                    disabled={true}
+                                    className="btn-secondary w-100 white-text text-ms font-normal">
+                                    Order canceled
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                                <div className="w-100 d-flex align-items-center gap-8">
+                                    <button
+                                        disabled={detail?.feedback?.assesment ? true : false}
+                                        type="button"
+                                        onClick={handleSendFeedbackPositive}
+                                        className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
+                                        Positive <LikeSuccessIcon />{' '}
+                                    </button>
+                                    <button
+                                        disabled={detail?.feedback?.assesment ? true : false}
+                                        type="button"
+                                        onClick={handleSendFeedbackNegative}
+                                        className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
+                                        Negative <UnLikeDangerIcon />{' '}
+                                    </button>
+                                </div>
+
+                                <button type="button" className="btn-primary w-100 white-text text-ms font-normal">
+                                    Wallet P2P
+                                </button>
+                            </div>
+                        )
+                    ) : detail?.order?.state == 'prepare' ? (
+                        <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                            <button
+                                type="button"
+                                disabled={true}
+                                className="btn-primary w-100 white-text text-ms font-normal">
+                                <div className="d-flex align-items-center justify-content-center gap-4">
+                                    <p className="m-0 p-0">Waiting buyer payment </p>
+                                    (
+                                    <Countdown
+                                        days={days}
+                                        hours={hours}
+                                        minutes={minutes}
+                                        seconds={seconds}
+                                        showChat={showChat}
+                                        detail={detail}
+                                        timeLeft={timeLeft}
+                                        textColor="white-text"
+                                    />
+                                    )
+                                </div>
+                            </button>
+                        </div>
+                    ) : detail?.order?.state == 'waiting' ? (
+                        <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
+                            <button
+                                onClick={() => setShowModalSellConfrim(!showModalSellConfirm)}
+                                type="button"
+                                className="btn-primary w-100 white-text text-ms font-normal">
+                                <div className="d-flex align-items-center justify-content-center gap-4">
+                                    <p className="m-0 p-0">Release Crypto : </p>
+
+                                    <Countdown
+                                        days={days}
+                                        hours={hours}
+                                        minutes={minutes}
+                                        seconds={seconds}
+                                        showChat={showChat}
+                                        detail={detail}
+                                        timeLeft={timeLeft}
+                                        textColor="warning-text"
+                                    />
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => setShowModalReport(!showModalReport)}
+                                type="button"
+                                className="btn-secondary w-50 grey-text text-ms font-normal">
+                                Report
+                            </button>
+                        </div>
+                    ) : detail?.order?.state == 'rejected' ? (
+                        <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
+                            <button
+                                onClick={() => setShowModalSellConfrim(!showModalSellConfirm)}
+                                type="button"
+                                className="btn-primary w-100 white-text text-ms font-normal">
+                                Release Crypto
+                            </button>
+
+                            <button
+                                disabled={true}
+                                type="button"
+                                className="btn-secondary w-50 danger-text text-ms font-normal">
+                                Order rejected
+                            </button>
+                        </div>
+                    ) : detail?.order?.state == 'canceled' ? (
+                        <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                            <button
+                                type="button"
+                                disabled={true}
+                                className="btn-secondary w-100 white-text text-ms font-normal">
+                                Order canceled
+                            </button>
                         </div>
                     ) : (
                         <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
                             <div className="w-100 d-flex align-items-center gap-8">
                                 <button
-                                    disabled={side == 'sell' ? true : detail?.feedback?.assesment ? true : false}
+                                    disabled={true}
                                     type="button"
-                                    onClick={handleSendFeedbackPositive}
                                     className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
                                     Positive <LikeSuccessIcon />{' '}
                                 </button>
                                 <button
-                                    disabled={side == 'sell' ? true : detail?.feedback?.assesment ? true : false}
+                                    disabled={true}
                                     type="button"
-                                    onClick={handleSendFeedbackNegative}
                                     className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
                                     Negative <UnLikeDangerIcon />{' '}
                                 </button>
                             </div>
-
-                            <button type="button" className="btn-primary w-100 white-text text-ms font-normal">
-                                Wallet P2P
-                            </button>
                         </div>
                     )}
                 </div>

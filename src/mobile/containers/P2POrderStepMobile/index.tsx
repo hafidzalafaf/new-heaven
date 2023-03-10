@@ -196,52 +196,56 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                         </div>
                     )}
 
-                    {side == 'buy' && detail?.order?.state == 'prepare' && !paymentUser && (
-                        <>
-                            <div className="d-flex flex-column gap-8 mb-16">
-                                <p className="m-0 p-0 text-xxs grey-text">
-                                    HeavenExchange is holding the seller’s crypto in the escrow account
-                                </p>
-                                <p className="m-0 p-0 text-xxs grey-text">HeavenExchange 24/7 customer support</p>
-                            </div>
-
-                            <div className="d-flex flex-column gap-16">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">
-                                        <span className={`${side == 'buy' ? 'contrast-text' : 'danger-text'}`}>
-                                            {capitalizeFirstLetter(side)}
-                                        </span>{' '}
-                                        {detail?.offer?.fiat}
+                    {side == 'buy' &&
+                        detail?.order?.state == 'prepare' &&
+                        (!paymentUser || detail?.order?.payment == null) && (
+                            <>
+                                <div className="d-flex flex-column gap-8 mb-16">
+                                    <p className="m-0 p-0 text-xxs grey-text">
+                                        HeavenExchange is holding the seller’s crypto in the escrow account
                                     </p>
-
-                                    <p className="m-0 p-0 text-sm grey-text">Icon</p>
+                                    <p className="m-0 p-0 text-xxs grey-text">HeavenExchange 24/7 customer support</p>
                                 </div>
 
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">Fiat Amount</p>
+                                <div className="d-flex flex-column gap-16">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <p className="m-0 p-0 text-sm grey-text">
+                                            <span className={`${side == 'buy' ? 'contrast-text' : 'danger-text'}`}>
+                                                {capitalizeFirstLetter(side)}
+                                            </span>{' '}
+                                            {detail?.offer?.fiat}
+                                        </p>
 
-                                    <p className="m-0 p-0 text-md white-text font-extrabold">{detail?.order?.amount}</p>
-                                </div>
+                                        <p className="m-0 p-0 text-sm grey-text">Icon</p>
+                                    </div>
 
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">Price</p>
-                                    <p className="m-0 p-0 text-sm grey-text">{detail?.offer?.price}</p>
-                                </div>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <p className="m-0 p-0 text-sm grey-text">Fiat Amount</p>
 
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">Crypto Amount</p>
-                                    <p className="m-0 p-0 text-sm grey-text">
-                                        {detail?.order?.quantity} {detail?.offer?.fiat}
-                                    </p>
-                                </div>
+                                        <p className="m-0 p-0 text-md white-text font-extrabold">
+                                            {detail?.order?.amount}
+                                        </p>
+                                    </div>
 
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <p className="m-0 p-0 text-sm grey-text">Order Number</p>
-                                    <p className="m-0 p-0 text-sm grey-text">{detail?.order?.order_number}</p>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <p className="m-0 p-0 text-sm grey-text">Price</p>
+                                        <p className="m-0 p-0 text-sm grey-text">{detail?.offer?.price}</p>
+                                    </div>
+
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <p className="m-0 p-0 text-sm grey-text">Crypto Amount</p>
+                                        <p className="m-0 p-0 text-sm grey-text">
+                                            {detail?.order?.quantity} {detail?.offer?.fiat}
+                                        </p>
+                                    </div>
+
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <p className="m-0 p-0 text-sm grey-text">Order Number</p>
+                                        <p className="m-0 p-0 text-sm grey-text">{detail?.order?.order_number}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </>
-                    )}
+                            </>
+                        )}
 
                     {side == 'buy' && detail?.order?.state !== 'prepare' && (
                         <>
@@ -296,11 +300,14 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                 </div>
             )}
 
-            {paymentUser && (
+            {side == 'buy' && detail?.order?.state == 'prepare' && (paymentUser || detail?.order?.payment !== null) && (
                 <div className="order-form mx-24 order-info-container">
                     <div className="line"></div>
                     <div>
                         <div className="mb-36 payment-form">
+                            <div className="number">
+                                <div className="step">1</div>
+                            </div>
                             <p className="mb-2 text-sm grey-text">
                                 Leave the Heaven Exchange app, open your selected banking or payment platform that
                                 matches the funds the seller’s account provide below.
@@ -321,20 +328,33 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
 
                                 <div className="d-flex justify-content-between align-items-center text-sm w-100">
                                     <p className="m-0 p-0 grey-text">Name</p>
-                                    <p className="m-0 p-0 grey-text">{paymentUser?.account_name}</p>
+                                    <p className="m-0 p-0 grey-text">
+                                        {detail?.order?.payment
+                                            ? detail?.order?.payment?.account_name
+                                            : paymentUser?.account_name}
+                                    </p>
                                 </div>
                                 <div className="d-flex justify-content-between align-items-center text-sm w-100">
                                     <p className="m-0 p-0 grey-text">Bank account number</p>
-                                    <p className="m-0 p-0 grey-text">{paymentUser?.account_number}</p>
+                                    <p className="m-0 p-0 grey-text">
+                                        {detail?.order?.payment
+                                            ? detail?.order?.payment?.account_number
+                                            : paymentUser?.account_number}
+                                    </p>
                                 </div>
                                 <div className="d-flex justify-content-between align-items-center text-sm w-100">
                                     <p className="m-0 p-0 grey-text">Bank name</p>
-                                    <p className="m-0 p-0 grey-text">{paymentUser?.bank}</p>
+                                    <p className="m-0 p-0 grey-text">
+                                        {detail?.order?.payment ? detail?.order?.payment?.bank_name : paymentUser?.bank}
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="payment-form last">
+                            <div className="number">
+                                <div className="step">2</div>
+                            </div>
                             <p className="mb-2 text-sm grey-text">
                                 After transferring the funds, click on the "Transferred, notify seller" button bellow.
                             </p>
@@ -350,7 +370,7 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                 </div>
             )}
 
-            {side == 'buy' && detail?.order?.state == 'prepare' && !paymentUser && (
+            {side == 'buy' && detail?.order?.state == 'prepare' && (!paymentUser || detail?.order?.state == null) && (
                 <div className="mx-24 order-info-container gap-8">
                     <p className="m-0 p-0 white-text text-ms">Payment Method</p>
 
@@ -384,6 +404,9 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                     <div className="line"></div>
                     <div>
                         <div className="mb-36 payment-form">
+                            <div className="number">
+                                <div className="step">1</div>
+                            </div>
                             <div className="d-flex align-items-start justify-content-between gap-8 mb-16">
                                 <p className="m-0 p-0 text-sm grey-text">Confirm Order Info</p>
                                 <div
@@ -432,6 +455,9 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                         </div>
 
                         <div className="mb-36 payment-form">
+                            <div className="number">
+                                <div className="step">2</div>
+                            </div>
                             <div className="d-flex align-items-start justify-content-between gap-8 mb-16">
                                 <p className="m-0 p-0 text-sm grey-text">
                                     Confirm that the payment is made using the buyer’s real time name (Nusatech
@@ -443,25 +469,38 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                             <div className="payment-user-selected">
                                 <div className="payment d-flex align-items-center gap-4">
                                     <div className="payment-label"></div>
-                                    <p className="m-0 p-0 text-sm grey-text-accent">Bank Transfer</p>
+                                    <p className="m-0 p-0 text-sm grey-text-accent">
+                                        {detail?.order?.payment !== null
+                                            ? 'Bank Transfer'
+                                            : 'Waiting buyer choose payment method'}
+                                    </p>
                                 </div>
 
-                                <div className="d-flex justify-content-between align-items-center text-sm w-100">
-                                    <p className="m-0 p-0 grey-text">Name</p>
-                                    <p className="m-0 p-0 grey-text">{detail?.order?.payment?.account_name}</p>
-                                </div>
-                                <div className="d-flex justify-content-between align-items-center text-sm w-100">
-                                    <p className="m-0 p-0 grey-text">Bank account number</p>
-                                    <p className="m-0 p-0 grey-text">{detail?.order?.payment?.account_number}</p>
-                                </div>
-                                <div className="d-flex justify-content-between align-items-center text-sm w-100">
-                                    <p className="m-0 p-0 grey-text">Bank name</p>
-                                    <p className="m-0 p-0 grey-text">{detail?.order?.payment?.bank_name}</p>
-                                </div>
+                                {detail?.order?.payment !== null && (
+                                    <>
+                                        <div className="d-flex justify-content-between align-items-center text-sm w-100">
+                                            <p className="m-0 p-0 grey-text">Name</p>
+                                            <p className="m-0 p-0 grey-text">{detail?.order?.payment?.account_name}</p>
+                                        </div>
+                                        <div className="d-flex justify-content-between align-items-center text-sm w-100">
+                                            <p className="m-0 p-0 grey-text">Bank account number</p>
+                                            <p className="m-0 p-0 grey-text">
+                                                {detail?.order?.payment?.account_number}
+                                            </p>
+                                        </div>
+                                        <div className="d-flex justify-content-between align-items-center text-sm w-100">
+                                            <p className="m-0 p-0 grey-text">Bank name</p>
+                                            <p className="m-0 p-0 grey-text">{detail?.order?.payment?.bank_name}</p>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
 
                         <div className="payment-form last">
+                            <div className="number">
+                                <div className="step">3</div>
+                            </div>
                             <p className="mb-2 text-sm grey-text m-0 p-0">
                                 After confirming the payment, click the “Payment received” button.
                             </p>
