@@ -712,7 +712,7 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                     className={`position-fixed off-canvas-payment ${showPayment ? 'show' : ''}`}>
                     <div className="fixed-bottom off-canvas-content-container-payment overflow-auto">
                         <div className="d-flex justify-content-center align-items-center w-100 position-relative mb-24">
-                            <h1 className="text-md grey-text-accent font-extrabold">Select payment method</h1>
+                            <h1 className="text-md grey-text-accent font-extrabold">Select payment methods</h1>
 
                             <span
                                 onClick={() => setShowPayment(!showPayment)}

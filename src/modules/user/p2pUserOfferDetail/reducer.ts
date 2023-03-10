@@ -57,7 +57,8 @@ export const initialP2PUserOfferDetailState: P2PUserOfferDetailState = {
                 persentage: 0,
                 term_of_condition: '',
                 trader: {},
-                payment: []
+                payment: [],
+                side: ''
             },
             order: []
         },

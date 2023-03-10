@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router';
+import moment from 'moment';
+
+
 import {
     p2pProfileFetch,
     P2PProfileFetchInterface,
@@ -17,7 +20,9 @@ import {
     selectP2PProfileBlockMerchantSuccess,
     selectUserInfo,
 } from 'src/modules';
+
 import { FormControl, Modal } from 'react-bootstrap';
+
 import { CardP2PUserInfo, Modal as ModalComponent } from '../../../desktop/components';
 import {
     VerificationIcon,
@@ -27,7 +32,8 @@ import {
     UnLikeIcon,
     RenameIcon,
 } from '../../../assets/images/P2PIcon';
-import moment from 'moment';
+
+
 import { InfoWarningIcon } from 'src/assets/images/InfoIcon';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 
