@@ -1,0 +1,37 @@
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory, useParams } from 'react-router'
+import { MobileFilterIcon } from 'src/assets/images/P2PIcon';
+import { ArrowLeft } from 'src/mobile/assets/Arrow';
+import { P2PUserOfferDetail, p2pUserOfferDetailFetch, selectP2PUserAccountOfferDetail } from 'src/modules'
+
+interface offer_number {
+  uid: string;
+}
+
+export const P2PMyOfferDetailMobileScreen = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const offer_number : offer_number = useParams();
+  const offerDetail: P2PUserOfferDetail = useSelector(selectP2PUserAccountOfferDetail);
+
+  console.log(offer_number);
+  console.log(offerDetail);
+  React.useEffect(()=>{
+    dispatch(
+      p2pUserOfferDetailFetch({
+          offer_number: offer_number.uid,
+      })
+  );
+  }, [dispatch])
+
+  return (
+      <section className='pg-mobile-screen-p2p mobile-container'>
+                  <div onClick={()=> history.goBack()} className="d-flex justify-content-between align-items-center mb-32">
+            <ArrowLeft className={'cursor-pointer'} />
+            <p className="m-0 p-0 grey-text-accent text-md font-extrabold">Offer Detail</p>
+            <MobileFilterIcon className={''}/>
+        </div>
+      </section>
+  )
+}

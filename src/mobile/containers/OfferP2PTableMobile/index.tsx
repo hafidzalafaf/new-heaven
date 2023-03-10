@@ -189,25 +189,19 @@ export const OfferP2PTableMobile = () => {
         {
         data?.map((item)=>
             <div className='d-flex flex-column com-mobile-card-order-list gap-20 border-bottom border-white p-2 grey-text'>
-                {/* <div className='d-flex align-items-center gap-8 my-2'>
-                    <div className='ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold'>{item.trades.username.slice(0, 1).toUpperCase()}</div>
-                    <span className='m-0 p-0 text-ms grey-text-accent'>{item.trades.username}</span>
-                    <span>
-                    <VerificationIcon />
-                    </span>
-                </div> */}
-                <div className='d-flex flex-row justify-content-between'>
+
+                <div className='d-flex flex-row justify-content-between my-1'>
                     <div>
                     <span className={item?.side === `buy` ? `contrast-text` : `danger-text`}>{capitalizeFirstLetter(item?.side)} </span>
                     <span className='grey-text-accent font-bold'>{item?.currency?.name?.toUpperCase()}</span>
                     </div>
 
-                    <div>
-                    <span className={item?.state === 'success' ? `gradient-text` : item?.state.includes('cancel') ? `danger-text` : ``}>{capitalizeFirstLetter(item?.state)}</span>
-                    <MobileMoreArrow className={''}/>
-                    </div>
+                    <Link to={`/p2p/offer/${item?.offer_number}`}>
+                        <span className={item?.state === 'success' ? `gradient-text` : item?.state.includes('cancel') ? `danger-text` : ``}>{capitalizeFirstLetter(item?.state)}</span>
+                        <MobileMoreArrow className={''}/>
+                    </Link>
                 </div>
-                <div className='d-flex flex-row justify-content-between'>
+                <div className='d-flex flex-row justify-content-between my-1'>
                     <span>Coin</span>
                     <div className='d-flex flex-row align-items-center'>
                         <img 
@@ -219,19 +213,19 @@ export const OfferP2PTableMobile = () => {
                         <span className='grey-text-accent font-bold ml-1'>{item?.fiat.name}</span>
                     </div>
                 </div>
-                <div className='d-flex flex-row justify-content-between'>
+                <div className='d-flex flex-row justify-content-between my-1'>
                     <span>Date</span>
                     <span>{moment(item?.created_at).format('DD/MM/YYYY')}</span>
                 </div>
-                <div className='d-flex flex-row justify-content-between'>
+                <div className='d-flex flex-row justify-content-between my-1'>
                     <span>Amount</span>
                     <span>{item?.price}</span>
                 </div>
-                <div className='d-flex flex-row justify-content-between'>
+                <div className='d-flex flex-row justify-content-between my-1'>
                     <span>Crypto Amount</span>
                     <span>{item?.amount}</span>
                 </div>
-                <div className='d-flex flex-row justify-content-between'>
+                <div className='d-flex flex-row justify-content-between my-1'>
                     <span>Order ID</span>
                     <span>{item?.order_number}</span>
                 </div>
