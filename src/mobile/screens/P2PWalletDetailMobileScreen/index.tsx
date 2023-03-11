@@ -31,19 +31,16 @@ import {
 } from '../../../hooks';
 import Select from 'react-select';
 import moment from 'moment';
-import { PaginationMobile } from 'src/mobile/components';
+import { PaginationMobile, ModalFullScreenMobile } from 'src/mobile/components';
 import { Decimal } from '../../../components';
 import { CustomStylesSelect } from '../../../desktop/components';
-import { Modal } from 'react-bootstrap';
 import { Modal as ModalComponent } from '../../../desktop/components';
 import { ArrowLeft } from '../../assets/Arrow';
-import { WithdrawlIcon, DepositIcon, TransferIcon, FilterIcon, DocIcon } from '../../assets/Wallet';
+import { FilterIcon, DocIcon } from '../../assets/Wallet';
 import { Table } from '../../../components';
-import { CircleCloseModalNetworkIcon } from '../../../assets/images/CircleCloseIcon';
-import { InfoModalNetworkIcon } from '../../../assets/images/InfoIcon';
-import { GearIcon } from 'src/mobile/assets/Gear';
 import { CircleCloseDangerLargeIcon } from 'src/assets/images/CircleCloseIcon';
 import { capitalizeFirstLetter } from 'src/helpers';
+import { P2PTransferAssetMobile } from 'src/mobile/containers';
 
 interface Props {
     isP2PEnabled?: boolean;
@@ -57,10 +54,12 @@ interface ExtendedWalletMobile extends Wallet {
     network?: any;
     last: any;
     marketId: string;
+    p2p_balance?: string;
+    p2p_locked?: string;
     currencyItem: any;
 }
 
-const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
+const P2PWalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     useWalletsFetch();
     useMarketsTickersFetch();
     useMarketsFetch();
@@ -87,8 +86,6 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const memberLevel = useSelector(selectMemberLevels);
 
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
-    const enableDesposit = currencyItem?.networks?.filter((item) => item.deposit_enabled == true);
-    const enableWithdraw = currencyItem?.networks?.filter((item) => item.withdrawal_enabled == true);
 
     const [filteredWallets, setFilteredWallets] = React.useState([]);
     const wallets = useSelector(selectWallets);
@@ -102,10 +99,9 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const [status, setStatus] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
     const [endDate, setEndDate] = React.useState('');
-    const [showNetwork, setShowNetwork] = React.useState(false);
+    const [showTransfer, setShowTransfer] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
     const [estimatedValue, setEstimatedValue] = React.useState<string | number>();
-    const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
     const [showModal2FA, setShowModal2FA] = React.useState<boolean>(false);
 
     const [typeModal, setTypeModal] = React.useState('');
@@ -148,20 +144,6 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
 
     useHistoryFetch({ type: type, limit: DEFAULT_LIMIT, currency: currency, page: currentPage });
 
-    const handleSelectNetwork = (blockchain_key, protocol) => {
-        history.push(`/wallets/${currency}/deposit`, { blockchain_key: blockchain_key, protocol: protocol });
-    };
-
-    const handleClickWithdraw = React.useCallback(() => {
-        if (!user?.otp) {
-            setShowModal2FA(true);
-        } else if (user.level < memberLevel?.withdraw?.minimum_level) {
-            setShowModalLocked(true);
-        } else {
-            history.push(`/wallets/${currency}/withdraw`);
-        }
-    }, []);
-
     const handleChangeType = (e) => {
         setType(e);
     };
@@ -191,6 +173,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     }, [startDate, endDate]);
 
     let filteredList = filteredWallets.filter((i) => i.currency === currencyItem.id);
+    let walletCurrency = filteredWallets.find((i) => i.currency === currencyItem.id);
 
     const filterredStatus = (status) => {
         let filterredList;
@@ -267,13 +250,12 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
     ];
 
-    const totalBalance =
-        Number(filteredList.map((item) => item.spotBalance)) + Number(filteredList.map((item) => item.spotLocked));
+    const totalBalance = Number(walletCurrency?.p2p_balance) + Number(walletCurrency?.p2p_locked);
 
-    const fixed = Number(filteredList.map((item) => item.fixed));
+    const fixed = Number(walletCurrency?.fixed);
 
     React.useEffect(() => {
-        setEstimatedValue(+filteredList.map((item) => item?.currencyItem?.price * totalBalance));
+        setEstimatedValue(+walletCurrency?.currencyItem?.price * totalBalance);
     }, [totalBalance, currency, filteredList]);
 
     const renderHeaderModalLocked = () => {
@@ -322,8 +304,8 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                                 {formatMessage({ id: 'page.mobile.wallets.banner.available' })}
                             </h3>
                             <h2 className="text-sm grey-text font-extrabold">
-                                <Decimal fixed={Number(filteredList.map((item) => item.fixed))}>
-                                    {Number(filteredList.map((item) => item.spotBalance))}
+                                <Decimal fixed={Number(walletCurrency?.fixed)}>
+                                    {Number(walletCurrency?.p2p_balance)}
                                 </Decimal>
                             </h2>
                         </div>
@@ -332,7 +314,9 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                                 {formatMessage({ id: 'page.mobile.wallets.banner.locked' })}
                             </h3>
                             <h2 className="text-sm grey-text font-extrabold">
-                                {Number(filteredList.map((item) => item.spotLocked))}
+                                <Decimal fixed={Number(walletCurrency?.fixed)}>
+                                    {Number(walletCurrency?.p2p_locked)}
+                                </Decimal>
                             </h2>
                         </div>
 
@@ -348,33 +332,14 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     ;
                 </div>
 
-                <div className="btn-action-container d-flex justify-content-center flex-wrap pb-4">
-                    <button
-                        id="network-canvas"
-                        type="button"
-                        disabled={enableDesposit?.length <= 0}
-                        onClick={() => setShowNetwork(true)}
-                        className="btn btn-primary btn-sm font-normal m-1">
-                        <DepositIcon className={''} />
-                        {formatMessage({ id: 'page.mobile.wallets.deposit' })}
-                    </button>
+                <div className="d-flex justify-content-center align-items-center pb-4 w-100 gap-16">
                     <button
                         type="button"
-                        disabled={enableWithdraw?.length <= 0}
-                        onClick={() => {
-                            setTypeModal('withdraw');
-                            if (!user?.otp) {
-                                setShowModal2FA(true);
-                            } else if (user.level < memberLevel?.withdraw?.minimum_level) {
-                                setShowModalLocked(true);
-                            } else {
-                                history.push(`/wallets/${currency}/withdraw`);
-                            }
-                        }}
-                        className="btn btn-primary btn-sm font-normal m-1">
-                        <WithdrawlIcon className={''} />
-                        {formatMessage({ id: 'page.mobile.wallets.withdraw' })}
+                        onClick={() => history.push(`/p2p`)}
+                        className="btn-primary btn-sm font-normal w-50">
+                        P2P Trade
                     </button>
+
                     <button
                         type="button"
                         onClick={() => {
@@ -382,12 +347,11 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                             if (!user?.otp) {
                                 setShowModal2FA(true);
                             } else {
-                                history.push(`/wallets/${currency}/transfer`);
+                                setShowTransfer(!showTransfer);
                             }
                         }}
-                        className="btn btn-primary btn-sm font-normal m-1">
-                        <TransferIcon className={''} />
-                        {formatMessage({ id: 'page.mobile.wallets.transfer' })}
+                        className="btn-primary btn-sm font-normal w-50">
+                        Transfer
                     </button>
                 </div>
 
@@ -446,7 +410,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                             )}
                         </div>
                     </Tab>
-                    <Tab eventKey="transfers" title="Internal Transfer">
+                    <Tab eventKey="transfers" title="Transfer">
                         {renderFilter()}
                         {!historys[0] || historys === null ? (
                             <div className="empty-data d-flex flex-column align-items-center mb-5 w-100">
@@ -471,53 +435,17 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     </Tab>
                 </Tabs>
 
-                {/* ================== Modal Add Deposit ============================= */}
+                {/* ================== Modal Transfer ============================= */}
+                <ModalFullScreenMobile
+                    show={showTransfer}
+                    content={<P2PTransferAssetMobile handleShowTransfer={() => setShowTransfer(!showTransfer)} />}
+                />
 
-                <div id="off-canvas" className={`position-fixed off-canvas ${showNetwork ? 'show' : ''}`}>
-                    <div className="fixed-bottom off-canvas-content-container overflow-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-12">
-                            <h3 className="p-0 m-0 text-ms grey-text-accent">Select Network</h3>
-                            <span onClick={() => setShowNetwork(false)} className="cursor-pointer">
-                                <CircleCloseModalNetworkIcon />
-                            </span>
-                        </div>
-
-                        <div className="d-flex justify-content-start align-items-start mb-24">
-                            <span className="mr-8 curspr-pointer">
-                                <InfoModalNetworkIcon />
-                            </span>
-                            <p className="m-0 p-0 grey-text text-xxs">
-                                Ensure that the selected network is consistent with your method of withdrawal, Otherwise
-                                you are at risk losing your assets,
-                            </p>
-                        </div>
-
-                        {!enableDesposit || !enableDesposit[0] ? (
-                            <div className="d-flex align-items-center">
-                                <p className="m-0 p-0 grey-text text-xxs italic">No network enabled</p>
-                            </div>
-                        ) : (
-                            enableDesposit?.map((item, i) => (
-                                <div
-                                    onClick={() =>
-                                        handleSelectNetwork(item && item.blockchain_key, item && item.protocol)
-                                    }
-                                    key={i}
-                                    className="cursor-pointer mb-8">
-                                    <h3 className="p-0 m-0 text-ms grey-text-accent">{item && item.protocol}</h3>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </div>
-
-                {showModal2FA && (
-                    <ModalComponent
-                        show={showModal2FA}
-                        header={renderHeaderModalLocked()}
-                        content={renderContentModalLocked()}
-                    />
-                )}
+                <ModalComponent
+                    show={showModal2FA}
+                    header={renderHeaderModalLocked()}
+                    content={renderContentModalLocked()}
+                />
 
                 {/* =================================== Modal filter Date ========================= */}
 
@@ -579,39 +507,10 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
 
                 {/* ========= Show Modal Locked 2FA =========== */}
 
-                {showModalLocked && (
-                    <Modal show={showModalLocked}>
-                        <section className="container p-3 dark-bg-main">
-                            <div className="d-flex justify-content-center my-2">
-                                <GearIcon />
-                            </div>
-                            <div className="text-center">
-                                <p className="gradient-text mb-3">
-                                    {user?.level == 1
-                                        ? 'For withdraw you must verified your phone number and document first'
-                                        : 'For withdraw you must verified your document first'}
-                                </p>
-                            </div>
-                            <div className="mb-0">
-                                <Link to={`${user?.level == 1 ? '/profile' : '/profile/kyc'}`}>
-                                    <button type="button" className="btn btn-primary btn-block">
-                                        {user?.level == 1 ? 'Verify Phone Number' : 'Verify Document'}
-                                    </button>
-                                </Link>
-                                <div className="mt-3" onClick={() => setShowModalLocked(!showModalLocked)}>
-                                    <button type="button" className="btn btn-outline-primary btn-block">
-                                        {formatMessage({ id: 'page.mobile.wallets.modal.body.2FA.cancel' })}
-                                    </button>
-                                </div>
-                            </div>
-                        </section>
-                    </Modal>
-                )}
-
                 {/* ========== End Modal ===========*/}
             </div>
         </>
     );
 };
 
-export { WalletDetailMobileScreen };
+export { P2PWalletDetailMobileScreen };

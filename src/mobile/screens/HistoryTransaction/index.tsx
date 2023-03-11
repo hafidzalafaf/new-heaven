@@ -25,7 +25,7 @@ import { copy, CopyableTextField, Table } from '../../../components';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import { NoData } from 'src/desktop/components';
 import { PaginationMobile } from 'src/mobile/components';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { CopyButton } from 'src/assets/images/CopyButton';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -63,6 +63,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const [historys, setHistorys] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(0);
@@ -521,9 +522,9 @@ const HistoryTransactionMobileScreen: React.FC = () => {
         <section className="mobile-container pg-history-transaction no-header dark-bg-main">
             {/* ===== Header History Transaction ===== */}
             <div className="head-container position-relative">
-                <Link to={'/profile'} className="cursor-pointer position-absolute">
+                <div onClick={() => history.goBack()} className="cursor-pointer position-absolute">
                     <ArrowLeft className={'back'} />
-                </Link>
+                </div>
                 <h1 className="text-center text-md grey-text-accent font-bold">
                     {formatMessage({ id: 'page.mobile.historyTransaction.internalTransfer.header' })}
                 </h1>

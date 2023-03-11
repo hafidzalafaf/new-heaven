@@ -35,7 +35,7 @@ import {
 import { InfoIcon } from 'src/assets/images/InfoIcon';
 import { NoData, FilterInput } from 'src/desktop/components';
 import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import { P2PNotificationMobile } from 'src/mobile/containers';
 
@@ -43,6 +43,7 @@ export const P2PMobileScreen: React.FC = () => {
     useDocumentTitle('P2P');
     const dispatch = useDispatch();
     const location = useLocation<{ side?: string; currency?: string; fiat?: string }>();
+    const history = useHistory();
 
     const isLoggedIn = useSelector(selectUserLoggedIn);
     const publicOffer = useSelector(selectP2POffers);
@@ -369,7 +370,9 @@ export const P2PMobileScreen: React.FC = () => {
         <React.Fragment>
             <div className="pg-mobile-screen-p2p mobile-container">
                 <div className="d-flex justify-content-between align-items-center mb-32 position-relative">
-                    <ArrowLeft className={'cursor-pointer'} />
+                    <span onClick={() => history.goBack()}>
+                        <ArrowLeft className={'cursor-pointer'} />
+                    </span>
                     <p className="m-0 p-0 grey-text-accent text-md font-extrabold">P2P</p>
                     <div className="d-flex gap-8 justify-content-start align-items-center">
                         <span onClick={() => setShowNotif(!showNotif)} className={'cursor-pointer'}>
