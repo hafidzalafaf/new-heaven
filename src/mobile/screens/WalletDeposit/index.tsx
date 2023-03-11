@@ -288,10 +288,8 @@ const WalletDepositMobileScreen: React.FC = () => {
         <React.Fragment>
             <section className="wallet-deposit-mobile-screen pb-5 dark-bg-main">
                 <div className="container-fluid w-100 h-100">
-                    <div className="pt-5 pb-3">
-                        <Link to="/wallets">
-                            <ArrowLeft className="grey-text-accent" />
-                        </Link>
+                    <div onClick={() => history.goBack()} className="pt-5 pb-3">
+                        <ArrowLeft className="grey-text-accent" />
                     </div>
                     <div className="d-flex justify-content-between align-items-center w-100 mb-24">
                         <h1 className="navbar-brand p-0 m-0 grey-text-accent">

@@ -68,6 +68,7 @@ import {
     P2PDetailOrderMobileScreen,
     P2PWalletOrderMobileScreen,
     P2PWalletMobileScreen,
+    P2PWalletDetailMobileScreen,
     P2PCreateOfferMobileScreen,
     P2PProfileMobileScreen,
     P2PMyOrderMobileScreen,
@@ -589,9 +590,12 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={P2PMyOrderMobileScreen}
                         />
 
-                        <PublicRoute loading={userLoading} path="/p2p" component={P2PMobileScreen} />
-
-                        {/* <PublicRoute loading={userLoading} path="/trading" component={TradingMobileScreen} />    */}
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/wallets/:currency/detail"
+                            component={P2PWalletDetailMobileScreen}
+                        />
 
                         <PrivateRoute
                             loading={userLoading}
@@ -599,6 +603,10 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             path="/p2p/wallets"
                             component={P2PWalletMobileScreen}
                         />
+
+                        <PublicRoute loading={userLoading} path="/p2p" component={P2PMobileScreen} />
+
+                        {/* <PublicRoute loading={userLoading} path="/trading" component={TradingMobileScreen} />    */}
 
                         <PublicRoute loading={userLoading} path="/" component={HomeMobileScreen} />
 
