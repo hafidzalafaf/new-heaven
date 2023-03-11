@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import { MobileFilterIcon } from 'src/assets/images/P2PIcon'
 import { P2PPaymentMethodProps } from 'src/desktop/components'
@@ -9,9 +9,10 @@ import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow'
 import { ModalFullScreenMobile } from 'src/mobile/components'
 import { p2pCurrenciesFetch, p2pPaymentUserFetch, p2pProfileFetch, selectLoadingAbilities, selectP2PCurrenciesData, selectP2PPaymentUser, selectP2PPaymentUserDeleteSuccess } from 'src/modules'
 
-import './P2PPaymentMethodMobileScreen.pcss'
+import './P2PAddPaymentMethodMobileScreen.pcss'
 
-export const P2PPaymentMethodMobileScreen = () => {
+export const P2PAddPaymentMethodMobileScreen = () => {
+  const bank = useParams()
     const history = useHistory();
     const dispatch = useDispatch();
     const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
@@ -21,7 +22,7 @@ export const P2PPaymentMethodMobileScreen = () => {
     const [loading, setLoading] = React.useState(true);
     const [showChooseBankType, setShowChooseBankType] = React.useState(false);
     const [fiat, setFiat] = React.useState('IDR');
-
+    console.log(bank)
     React.useEffect(() => {
       dispatch(p2pPaymentUserFetch());
       dispatch(p2pProfileFetch());
@@ -47,7 +48,7 @@ export const P2PPaymentMethodMobileScreen = () => {
         <div className='d-flex flex-column gap-16'>
           {
             currenciesData.payment.map((bank)=>
-            <Link to={`/p2p/payment-method/create/${bank.symbol}`} className='bg-soft p-3 radius-lg d-flex flex-row justify-content-between align-items-center grey-text-accent'>
+            <Link to={`/p2p/payment-method/create/${bank.symbol}`} className='bg-soft p-3 radius-lg d-flex flex-row justify-content-between align-items-center'>
               <div className='d-flex flex-row gap-16 align-items-center'>
                 <img
                   src={bank.logo}
@@ -102,15 +103,7 @@ export const P2PPaymentMethodMobileScreen = () => {
 
   return (
     <section className='pg-mobile-screen-p2p mobile-container position-relative'>
-      <ModalFullScreenMobile show={showChooseBankType} content={<AvailableBankForPaymentMethod/>}/>
-        <div className="d-flex justify-content-start align-items-center mb-32">
-            <div  onClick={history.goBack}>
-            <ArrowLeft className={'cursor-pointer'} />
-            </div>
-            <p className="m-0 p-0 grey-text-accent text-md font-extrabold mx-auto">Payment Methods</p>
-        </div>
-        <PaymentMethodList data={paymentMethods}/>
-        { !loading && <button onClick={()=> setShowChooseBankType(true)} className='bottom-fixed-button btn-primary position-sticky'>Add New Payment Method</button>}
-    </section>
+     zamn
+     </section>
   )
 }
