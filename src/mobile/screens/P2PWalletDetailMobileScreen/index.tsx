@@ -99,11 +99,10 @@ const P2PWalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const [status, setStatus] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
     const [endDate, setEndDate] = React.useState('');
-    const [showTransfer, setShowTransfer] = React.useState(false);
+    const [showTransfer, setShowTransfer] = React.useState(true);
     const [showFilter, setShowFilter] = React.useState(false);
     const [estimatedValue, setEstimatedValue] = React.useState<string | number>();
     const [showModal2FA, setShowModal2FA] = React.useState<boolean>(false);
-
     const [typeModal, setTypeModal] = React.useState('');
 
     // Handle get item pagination
@@ -438,7 +437,12 @@ const P2PWalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                 {/* ================== Modal Transfer ============================= */}
                 <ModalFullScreenMobile
                     show={showTransfer}
-                    content={<P2PTransferAssetMobile handleShowTransfer={() => setShowTransfer(!showTransfer)} />}
+                    content={
+                        <P2PTransferAssetMobile
+                            handleShowTransfer={() => setShowTransfer(!showTransfer)}
+                            wallet={walletCurrency}
+                        />
+                    }
                 />
 
                 <ModalComponent
