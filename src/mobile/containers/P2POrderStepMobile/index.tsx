@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { LikeSuccessIcon, UnLikeDangerIcon, ArrowDown, Wallet } from 'src/assets/images/P2PIcon';
 import { CustomInput } from 'src/desktop/components';
 import { useDispatch } from 'react-redux';
 import { alertPush } from 'src/modules';
@@ -196,7 +195,8 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
 
                     {side == 'buy' &&
                         detail?.order?.state == 'prepare' &&
-                        (!paymentUser || detail?.order?.payment == null) && (
+                        paymentUser === undefined &&
+                        detail?.order?.payment === null && (
                             <>
                                 <div className="d-flex flex-column gap-8 mb-16">
                                     <p className="m-0 p-0 text-xxs grey-text">
@@ -368,20 +368,23 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                 </div>
             )}
 
-            {side == 'buy' && detail?.order?.state == 'prepare' && (!paymentUser || detail?.order?.state == null) && (
-                <div className="mx-24 order-info-container gap-8">
-                    <p className="m-0 p-0 white-text text-ms">Payment Method</p>
+            {side == 'buy' &&
+                detail?.order?.state == 'prepare' &&
+                paymentUser !== undefined &&
+                detail?.order?.payment !== null && (
+                    <div className="mx-24 order-info-container gap-8">
+                        <p className="m-0 p-0 white-text text-ms">Payment Method</p>
 
-                    <div className="d-flex align-items-center flex-wrap w-100 gap-8">
-                        {detail?.payment_user?.map((bank, i) => (
-                            <div key={i} className="payment d-flex align-items-center gap-4">
-                                <div className="payment-label"></div>
-                                <p className="m-0 p-0 text-xxs grey-text">{bank?.bank}</p>
-                            </div>
-                        ))}
+                        <div className="d-flex align-items-center flex-wrap w-100 gap-8">
+                            {detail?.payment_user?.map((bank, i) => (
+                                <div key={i} className="payment d-flex align-items-center gap-4">
+                                    <div className="payment-label"></div>
+                                    <p className="m-0 p-0 text-xxs grey-text">{bank?.bank}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
             {side == 'buy' && detail?.order?.state == 'prepare' && (
                 <div className="mx-24 order-info-container gap-8">

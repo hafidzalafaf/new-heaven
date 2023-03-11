@@ -99,7 +99,7 @@ const P2PWalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const [status, setStatus] = React.useState('');
     const [startDate, setStartDate] = React.useState('');
     const [endDate, setEndDate] = React.useState('');
-    const [showTransfer, setShowTransfer] = React.useState(true);
+    const [showTransfer, setShowTransfer] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
     const [estimatedValue, setEstimatedValue] = React.useState<string | number>();
     const [showModal2FA, setShowModal2FA] = React.useState<boolean>(false);
@@ -270,10 +270,8 @@ const P2PWalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const renderContentModalLocked = () => {
         return (
             <React.Fragment>
-                <h1 className="white-text text-lg mb-24 text-center ">{capitalizeFirstLetter(typeModal)} Locked</h1>
-                <p className="grey-text text-ms font-extrabold mb-24 text-center">
-                    To {typeModal} you have to enable 2FA
-                </p>
+                <h1 className="white-text text-lg mb-24 text-center ">Transfer Assets Locked</h1>
+                <p className="grey-text text-ms font-extrabold mb-24 text-center">To transfer you have to enable 2FA</p>
                 <div className="d-flex justify-content-center align-items-center w-100 mb-0">
                     <Link to={`/two-fa-activation`}>
                         <button type="button" className="btn btn-primary sm px-5 mr-3">

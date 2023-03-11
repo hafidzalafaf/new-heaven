@@ -23,12 +23,16 @@
 }
 
 .modal-p2p-transfer {
-    max-width: 660px !important;
-    border-radius: 60px !important;
+    .custom-modal-dialog {
+        min-width: 660px !important;
+        .custom-modal-content {
+            min-width: 660px !important;
+            border-radius: 8px !important;
+        }
+    }
 }
 
 .modal-body-transfer-p2p {
-    padding: 0 15px;
     .form-control {
         padding: 6px 14px;
         background: var(--body-background-color);

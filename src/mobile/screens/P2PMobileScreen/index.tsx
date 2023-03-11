@@ -375,12 +375,11 @@ export const P2PMobileScreen: React.FC = () => {
                     </span>
                     <p className="m-0 p-0 grey-text-accent text-md font-extrabold">P2P</p>
                     <div className="d-flex gap-8 justify-content-start align-items-center">
-                        <span onClick={() => setShowNotif(!showNotif)} className={'cursor-pointer'}>
-                            <NotifMobileIcon />
-                        </span>
-                        {/* <span onClick={() => setShowMenu(!showMenu)} className={'cursor-pointer'}>
-                            <HamburgerMobileIcon />
-                        </span> */}
+                        {isLoggedIn && (
+                            <span onClick={() => setShowNotif(!showNotif)} className={'cursor-pointer'}>
+                                <NotifMobileIcon />
+                            </span>
+                        )}
 
                         <Dropdown>
                             <Dropdown.Toggle

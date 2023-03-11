@@ -9,11 +9,10 @@ export interface PercentageTransferP2PProps {
     label50: string;
     label75: string;
     label100: string;
-    amount: string;
 }
 
 export const PercentageTransferP2P: React.FunctionComponent<PercentageTransferP2PProps> = (props) => {
-    const { orderPercentage, handleSelectPercentage, label0, label25, label50, label75, label100, amount } = props;
+    const { orderPercentage, handleSelectPercentage, label0, label25, label50, label75, label100 } = props;
 
     return (
         <React.Fragment>

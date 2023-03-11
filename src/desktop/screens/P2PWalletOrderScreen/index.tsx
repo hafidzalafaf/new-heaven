@@ -742,7 +742,12 @@ export const P2PWalletOrderScreen: React.FC = () => {
                         </div>
 
                         <div className="d-flex align-items-center gap-16">
-                            <img src="/img/logo-bca.png" alt="logo" width={40} className="h-auto" />
+                            <img
+                                src={detail?.order?.payment !== null ? detail.order?.payment?.logo : paymentUser?.logo}
+                                alt="logo"
+                                width={40}
+                                className="h-auto"
+                            />
 
                             <ArrowRight className={''} />
                         </div>
