@@ -173,7 +173,7 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                         {item?.payment && item?.payment[0]
                                                             ? item?.payment?.map((bank, i) => (
                                                                   <div key={i} className="label-bank">
-                                                                      <img src={bank?.logo} alt={bank?.bank_name} />
+                                                                      <img src={bank?.logo_url} alt={bank?.bank_name} />
                                                                   </div>
                                                               ))
                                                             : '-'}
@@ -267,17 +267,31 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                             Cancel
                                                         </button>
                                                         <button
+                                                            // disabled={
+                                                            //     side == 'sell'
+                                                            //         ? !payment_order ||
+                                                            //           !price ||
+                                                            //           !amount ||
+                                                            //           +item?.min_order > +amount ||
+                                                            //           +item?.max_order < +amount
+                                                            //         : !price ||
+                                                            //           !amount ||
+                                                            //           item?.min_order > +amount ||
+                                                            //           item?.max_order < +amount
+                                                            // }
                                                             disabled={
                                                                 side == 'sell'
-                                                                    ? !payment_order ||
-                                                                      !price ||
-                                                                      !amount ||
-                                                                      Number(item?.min_order) > Number(amount) ||
-                                                                      Number(item?.max_order) < Number(amount)
+                                                                    ? !price ||
+                                                                      !payment_order ||
+                                                                      +amount < +item?.min_order ||
+                                                                      +amount > +item?.max_order
+                                                                        ? true
+                                                                        : false
                                                                     : !price ||
-                                                                      !amount ||
-                                                                      Number(item?.min_order) > Number(amount) ||
-                                                                      Number(item?.max_order) < Number(amount)
+                                                                      +amount < +item?.min_order ||
+                                                                      +amount > +item?.max_order
+                                                                    ? true
+                                                                    : false
                                                             }
                                                             type="button"
                                                             onClick={handleCreacteOrder}
