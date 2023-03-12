@@ -7,9 +7,9 @@ import { P2PPaymentMethodProps } from 'src/desktop/components'
 import { capitalizeFirstLetter } from 'src/helpers'
 import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow'
 import { ModalFullScreenMobile } from 'src/mobile/components'
-import { p2pCurrenciesFetch, p2pPaymentUserCreate, p2pPaymentUserFetch, p2pProfileFetch, selectLoadingAbilities, selectP2PCurrenciesData, selectP2PPaymentUser, selectP2PPaymentUserDeleteSuccess, selectUserInfo } from 'src/modules'
+import { p2pCurrenciesFetch, p2pPaymentUserCreate, p2pPaymentUserFetch, P2PPaymentUserFetchSingle, p2pProfileFetch, selectLoadingAbilities, selectP2PCurrenciesData, selectP2PPaymentUser, selectP2PPaymentUserDeleteSuccess, selectUserInfo } from 'src/modules'
 
-import './P2PAddPaymentMethodMobileScreen.pcss'
+import './P2PEditPaymentMethodMobileScreen.pcss'
 
 interface Bank {
   bank: string
@@ -36,6 +36,10 @@ export const P2PAddPaymentMethodMobileScreen = () => {
     const [otp_code, setOtpCode] = React.useState('');
     const profiles = user.profiles.slice(-1);
 
+
+  //   React.useEffect(()=>{
+  //     dispatch(P2PPaymentUserFetchSingle(payment_user_uid))
+  // }, [dispatch])
 
     console.log(bank)
     React.useEffect(() => {
