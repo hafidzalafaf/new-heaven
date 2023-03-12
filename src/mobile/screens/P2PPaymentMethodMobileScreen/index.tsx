@@ -83,7 +83,7 @@ export const P2PPaymentMethodMobileScreen = () => {
                   <p className="m-0 p-0 grey-text-accent text-ms">{capitalizeFirstLetter(item?.tipe)}</p>
               </div>
 
-              <Link to={``} className="d-flex align-items-center gap-16">
+              <Link to={`/p2p/payment-method/edit/${item.payment_user_uid}`} className="d-flex align-items-center gap-16">
                   <img src={item?.logo} alt="logo" width={40} className="h-auto" />
                   <ArrowRight className={''} />
               </Link>
