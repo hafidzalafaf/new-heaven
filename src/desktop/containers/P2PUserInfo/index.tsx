@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router';
 import moment from 'moment';
 
-
 import {
     p2pProfileFetch,
     P2PProfileFetchInterface,
@@ -32,7 +31,6 @@ import {
     UnLikeIcon,
     RenameIcon,
 } from '../../../assets/images/P2PIcon';
-
 
 import { InfoWarningIcon } from 'src/assets/images/InfoIcon';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
@@ -106,10 +104,10 @@ export const P2PUserInfo: React.FC = () => {
         { name: 'Other' },
     ];
 
-    // const convertDurationtoMilliseconds = (duration?: string) => {
-    //     const [hours, minutes, seconds] = duration?.split(':');
-    //     return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
-    // };
+    const convertDurationtoMilliseconds = (duration?: string) => {
+        const [hours, minutes, seconds] = duration?.split(':');
+        return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
+    };
 
     const ModalChangeName = () => {
         return (
@@ -301,25 +299,23 @@ export const P2PUserInfo: React.FC = () => {
                     <CardP2PUserInfo
                         title="Positive Feedback"
                         type="feedback"
-                        percent="1"
-                        amount="2"
-                        // percent={
-                        //     uid === myProfile?.uid
-                        //         ? `${
-                        //               data?.feedback?.positive !== 0
-                        //                   ? Math.floor((data?.feedback?.positive / data?.feedback?.total) * 100)
-                        //                   : '0'
-                        //           }%`
-                        //         : `${
-                        //               data?.merchant?.feedback?.positive !== 0
-                        //                   ? Math.floor(
-                        //                         (data?.merchant?.feedback?.positive / data?.merchant?.feedback?.total) *
-                        //                             100
-                        //                     )
-                        //                   : '0'
-                        //           }%`
-                        // }
-                        // amount={`${uid === myProfile?.uid ? data?.feedback?.total : data?.merchant?.feedback?.total}`}
+                        percent={
+                            uid === myProfile?.uid
+                                ? `${
+                                      data?.feedback?.positive !== 0
+                                          ? Math.floor((data?.feedback?.positive / data?.feedback?.total) * 100)
+                                          : '0'
+                                  }%`
+                                : `${
+                                      data?.merchant?.feedback?.positive !== 0
+                                          ? Math.floor(
+                                                (data?.merchant?.feedback?.positive / data?.merchant?.feedback?.total) *
+                                                    100
+                                            )
+                                          : '0'
+                                  }%`
+                        }
+                        amount={`${uid === myProfile?.uid ? data?.feedback?.total : data?.merchant?.feedback?.total}`}
                     />
 
                     <div className="d-flex flex-column justify-content-center gap-8">
@@ -412,7 +408,13 @@ export const P2PUserInfo: React.FC = () => {
                     <CardP2PUserInfo
                         title="Avg. Release Time"
                         type="release"
-                        minutes="1"
+                        minutes={
+                            uid === myProfile?.uid
+                                ? `${data?.trade?.release_time ? data?.trade?.release_time : '0'} Minute(s)`
+                                : `${
+                                      data?.merchant?.trade?.release_time ? data?.merchant?.trade?.release_time : '0'
+                                  } Minute(s)`
+                        }
 
                         // minutes={
                         //     uid === myProfile?.uid
@@ -435,7 +437,12 @@ export const P2PUserInfo: React.FC = () => {
                     <CardP2PUserInfo
                         title="30d Pay Time"
                         type="pay"
-                        minutes="1"
+                        minutes={
+                            uid === myProfile?.uid
+                                ? `${data?.trade?.pay_time ? data?.trade?.pay_time : '0'} Minute(s)`
+                                : `${data?.merchant?.trade?.pay_time ? data?.merchant?.trade?.pay_time : '0'} Minute(s)`
+                        }
+                        // minutes="1"
                         // minutes={
                         //     uid === myProfile?.uid
                         //         ? `${

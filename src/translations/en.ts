@@ -1466,6 +1466,7 @@ export const en = {
 
     //p2p error messages
     'p2p_user.user.insuffient_balance': 'You have insufficient balance',
+    'account.users.username_limit_change': 'You have reached the limit for changing your username',
 
     ...nationalitiesNames,
     ...customTranslations,

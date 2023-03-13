@@ -21,6 +21,7 @@ import {
     selectMemberLevels,
     memberLevelsFetch,
     selectP2PWallets,
+    selectP2PTransfersCreateSuccess,
 } from '../../../modules';
 import {
     useHistoryFetch,
@@ -84,6 +85,7 @@ const P2PWalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const tickers = useSelector(selectMarketTickers);
     const p2pWallets = useSelector(selectP2PWallets);
     const memberLevel = useSelector(selectMemberLevels);
+    const transferSuccess = useSelector(selectP2PTransfersCreateSuccess);
 
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
 
@@ -158,6 +160,12 @@ const P2PWalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     React.useEffect(() => {
         setHistorys(list);
     }, [list]);
+
+    React.useEffect(() => {
+        if (transferSuccess) {
+            setShowTransfer(!showTransfer);
+        }
+    }, [transferSuccess]);
 
     // ====== Filter history by date ================
     React.useEffect(() => {

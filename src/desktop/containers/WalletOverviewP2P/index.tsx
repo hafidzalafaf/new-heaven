@@ -299,7 +299,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
             target_wallet,
             currency: selectedCurrency?.currency,
             amount: +amount,
-            otp,
+            otp_code: otp,
         };
 
         dispatch(createP2PTransfersFetch(payload));
