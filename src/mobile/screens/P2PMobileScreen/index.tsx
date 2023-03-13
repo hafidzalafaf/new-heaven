@@ -88,7 +88,7 @@ export const P2PMobileScreen: React.FC = () => {
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
-        dispatch(p2pPaymentUserFetch());
+        dispatch(p2pPaymentUserFetch({}));
     }, [dispatch]);
 
     React.useEffect(() => {

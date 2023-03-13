@@ -56,7 +56,7 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
     const createOrderLoading = useSelector(selectP2POrderCreateLoading);
     const wallets = useSelector(selectWallets);
     const fiats: P2PFiat[] = useSelector(selectP2PFiatsData);
-    const myPayment: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
+    const myPayment: any = useSelector(selectP2PPaymentUser);
 
     const [detail, setDetail] = React.useState<any>();
     const [loading, setLoading] = React.useState(false);
@@ -70,7 +70,7 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
     const fiatData = fiats?.find((item) => item?.name == fiat);
 
     React.useEffect(() => {
-        dispatch(p2pPaymentUserFetch());
+        dispatch(p2pPaymentUserFetch({}));
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -118,7 +118,7 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
         }
     }, [createOrderSuccess, createData]);
 
-    const availablePayment = myPayment?.filter(({ bank_name }) =>
+    const availablePayment = myPayment?.list?.filter(({ bank_name }) =>
         detail?.payment?.some(({ name }) => bank_name === name)
     );
     const supported = detail?.payment?.filter(({ name }) =>

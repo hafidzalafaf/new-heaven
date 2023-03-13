@@ -40,7 +40,7 @@ export const P2PAddPaymentMethodMobileScreen = () => {
 
     console.log(bank)
     React.useEffect(() => {
-      dispatch(p2pPaymentUserFetch());
+      dispatch(p2pPaymentUserFetch({}));
       dispatch(p2pProfileFetch());
       setLoading(false)
   }, [dispatch, deleteSuccess]);

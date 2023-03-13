@@ -14,18 +14,24 @@ import {
     p2pProfileFetch,
 } from 'src/modules';
 import { useDispatch, useSelector } from 'react-redux';
-import { ModalUserLevel } from '../../../desktop/components';
+import { ModalUserLevel, Pagination } from '../../../desktop/components';
 import { Modal } from 'react-bootstrap';
 
 export interface P2PPaymentMethodProps {
-    name: string;
-    id: number;
-    account_number: string;
-    account_name: string;
-    bank_name: string;
-    payment_user_uid: string;
-    symbol: string;
-    logo: string;
+    list: [
+        {
+        name: string;
+        id: number;
+        account_number: string;
+        account_name: string;
+        bank_name: string;
+        payment_user_uid: string;
+        symbol: string;
+        logo: string;
+    }
+    ];
+    nextPageExists: boolean;
+    pageIndex: number;
 }
 
 export const P2PPaymentMethod: React.FC = () => {
@@ -37,7 +43,7 @@ export const P2PPaymentMethod: React.FC = () => {
     const userP2P = useSelector(selectP2PProfile);
     const currenciesData = useSelector(selectP2PCurrenciesData);
     const deleteSuccess = useSelector(selectP2PPaymentUserDeleteSuccess);
-    const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
+    const paymentMethods: any = useSelector(selectP2PPaymentUser);
 
     const [expandPayment, setExpandPayment] = React.useState(false);
     const [fiat, setFiat] = React.useState('IDR');
@@ -45,15 +51,21 @@ export const P2PPaymentMethod: React.FC = () => {
     const [showModalUserLevel, setShowModalUserLevel] = React.useState(false);
     const [showModalDeletePayment, setModalDeletePayment] = React.useState(false);
     const [deletePayment, setDeletePayment] = React.useState<any>({});
+    const [limit, setLimit] = React.useState(5);
+    const [currentPage, setCurrentPage] = React.useState(0)
 
     React.useEffect(() => {
-        dispatch(p2pPaymentUserFetch());
-        dispatch(p2pProfileFetch());
-    }, [dispatch, deleteSuccess]);
+        dispatch(p2pPaymentUserFetch({limit: limit, pageIndex: currentPage }));
+    }, [dispatch, deleteSuccess, currentPage]);
 
     React.useEffect(() => {
         dispatch(p2pCurrenciesFetch({ fiat }));
     }, [dispatch, fiat]);
+
+
+    React.useEffect(()=>{
+        dispatch(p2pProfileFetch());
+    }, [dispatch])
 
     React.useEffect(() => {
         setBankData(currenciesData?.payment);
@@ -154,14 +166,14 @@ export const P2PPaymentMethod: React.FC = () => {
                     </div>
                 </div>
 
-                {!paymentMethods[0] ? (
+                {!paymentMethods?.list[0] ? (
                     <div className="d-flex flex-column justify-content-center align-items-center gap-24 no-data-container">
                         <NoDataIcon />
                         <p className="m-0 p-0 grey-text text-sm font-bold">No payment method yet</p>
                     </div>
                 ) : (
                     <div className="data-container d-flex flex-column align-items-center justify-content-center gap-16">
-                        {paymentMethods?.map((bank, i) => (
+                        {paymentMethods?.list?.map((bank, i) => (
                             <div key={i} className="p-16 radius-sm data-row w-100">
                                 <div className="d-flex justify-content-between align-items- mb-16">
                                     <div className="d-flex align-items-center gap-16">
@@ -204,6 +216,15 @@ export const P2PPaymentMethod: React.FC = () => {
                                 </div>
                             </div>
                         ))}
+                        <Pagination
+                            nextPageExists={paymentMethods.nextPageExists}
+                            page={currentPage}
+                            onClickNextPage={()=> setCurrentPage(currentPage + 1)}
+                            onClickPrevPage={()=> setCurrentPage(currentPage - 1)}
+                            firstElemIndex={currentPage * limit}
+                            lastElemIndex= {currentPage * limit}
+                            />
+
                     </div>
                 )}
             </div>

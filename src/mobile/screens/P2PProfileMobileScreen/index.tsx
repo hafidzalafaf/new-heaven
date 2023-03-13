@@ -85,7 +85,7 @@ const P2PProfileMobileScreen: React.FC = () => {
 
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
-        dispatch(p2pPaymentUserFetch());
+        dispatch(p2pPaymentUserFetch({}));
         dispatch(p2pMerchantDetailFetch({ uid }));
         dispatch(p2pProfileListBlockMerchant());
 
