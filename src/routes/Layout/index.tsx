@@ -76,6 +76,7 @@ import {
     P2PMyOfferDetailMobileScreen,
     P2PPaymentMethodMobileScreen,
     P2PAddPaymentMethodMobileScreen,
+    P2PEditPaymentMethodMobileScreen,
 } from '../../mobile/screens';
 
 import {
@@ -534,6 +535,20 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             isLogged={isLoggedIn}
                             path="/p2p/create-offer"
                             component={P2PCreateOfferMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/wallets"
+                            component={P2PWalletMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/payment-method/edit/:payment_uid"
+                            component={P2PEditPaymentMethodMobileScreen}
                         />
 
                         <PrivateRoute

@@ -849,3 +849,11 @@ export const MobileFilterIcon = ({ className }) => {
         </svg>
     );
 };
+
+export const TrashBinMobileIcon = ({ className }) => {
+    return (
+        <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+            <path d="M0 4H14M5.545 6V12M8.545 6V12M2.5 4H11.5V14H2.5V4ZM4.364 1H9.364V4H4.364V1Z" stroke="#6F6F6F" stroke-width="2"/>
+        </svg>
+
+    )}

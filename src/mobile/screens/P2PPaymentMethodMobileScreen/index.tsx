@@ -83,11 +83,10 @@ export const P2PPaymentMethodMobileScreen = () => {
                   <p className="m-0 p-0 grey-text-accent text-ms">{capitalizeFirstLetter(item?.tipe)}</p>
               </div>
 
-              <div className="d-flex align-items-center gap-16">
+              <Link to={`/p2p/payment-method/edit/${item.payment_user_uid}`} className="d-flex align-items-center gap-16">
                   <img src={item?.logo} alt="logo" width={40} className="h-auto" />
-
                   <ArrowRight className={''} />
-              </div>
+              </Link>
           </div>
 
           <p className="m-0 p-0 grey-text-accent text-ms">{item?.account_name}</p>
@@ -104,7 +103,7 @@ export const P2PPaymentMethodMobileScreen = () => {
     <section className='pg-mobile-screen-p2p mobile-container position-relative'>
       <ModalFullScreenMobile show={showChooseBankType} content={<AvailableBankForPaymentMethod/>}/>
         <div className="d-flex justify-content-start align-items-center mb-32">
-            <div  onClick={history.goBack}>
+            <div  onClick={() => history.goBack()}>
             <ArrowLeft className={'cursor-pointer'} />
             </div>
             <p className="m-0 p-0 grey-text-accent text-md font-extrabold mx-auto">Payment Methods</p>
