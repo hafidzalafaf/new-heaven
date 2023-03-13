@@ -31,7 +31,7 @@ export const OfferP2PTableMobile = ({type, data, loading, side=''}) => {
         <React.Fragment>
         { data[0]?
         data?.map((item)=>
-            <div className='d-flex flex-column com-mobile-card-order-list gap-20 border-bottom border-white p-2 grey-text'>
+            <div className='d-flex flex-column com-mobile-card-order-list gap-20 border-b-1 p-2 grey-text'>
 
                 <div className='d-flex flex-row justify-content-between my-1'>
                     <div>

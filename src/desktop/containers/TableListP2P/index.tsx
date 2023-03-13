@@ -57,7 +57,7 @@ export const TableListP2P = () => {
     const createOfferLoading = useSelector(selectP2PCreateOfferLoading);
     const createOfferSuccess = useSelector(selectP2PCreateOfferSuccess);
     const loadingOffers = useSelector(selectP2POffersFetchLoading);
-    const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
+    const paymentMethods: any = useSelector(selectP2PPaymentUser);
 
     const [currencies, setCurrencies] = React.useState([]);
     const [payments, setPayments] = React.useState([]);
@@ -215,7 +215,7 @@ export const TableListP2P = () => {
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
-        dispatch(p2pPaymentUserFetch());
+        dispatch(p2pPaymentUserFetch({}));
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -339,7 +339,7 @@ export const TableListP2P = () => {
     };
 
     /* ============== FUNCTION CREATE ORDER START ============== */
-    const filteredPayments = paymentMethods?.filter(({ bank_name }) =>
+    const filteredPayments = paymentMethods?.list?.filter(({ bank_name }) =>
         payment_option?.some(({ name }) => bank_name === name)
     );
 

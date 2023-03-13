@@ -22,6 +22,8 @@ export interface P2PPaymentUserState {
         fetching: boolean;
         success: boolean;
         error?: CommonError;
+        page: number
+        limit: number
     };
 
     create: {
@@ -48,6 +50,8 @@ export const initialP2PPaymentUserState: P2PPaymentUserState = {
         data: [],
         fetching: false,
         success: false,
+        page: 1,
+        limit: 5
     },
 
     create: {

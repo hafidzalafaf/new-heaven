@@ -88,7 +88,7 @@ export const P2PMobileScreen: React.FC = () => {
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
-        dispatch(p2pPaymentUserFetch());
+        dispatch(p2pPaymentUserFetch({}));
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -237,7 +237,7 @@ export const P2PMobileScreen: React.FC = () => {
         {
             icon: <SettingMobileIcon />,
             name: 'Payment Methods',
-            url: '/p2p/profile',
+            url: '/p2p/payment-method',
         },
         {
             icon: <CircleAddMobileIcon />,

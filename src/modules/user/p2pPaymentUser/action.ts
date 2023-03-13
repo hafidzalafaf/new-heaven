@@ -18,6 +18,13 @@ import { IPaymentUser } from './types';
 
 export interface P2PPaymentUserFetch {
     type: typeof P2P_PAYMENT_USER_FETCH;
+    payload: {
+     pageIndex?: number;
+     limit?: number;
+     type?: string;
+     time_from?: number;
+     time_to?: number;   
+    }
 }
 
 export interface P2PPaymentUserFetchSingle {
@@ -29,7 +36,11 @@ export interface P2PPaymentUserFetchSingle {
 
 export interface P2PPaymentUserData {
     type: typeof P2P_PAYMENT_USER_DATA;
-    payload: [];
+    payload: {
+        list : [],
+        nextPageExists: boolean,
+        pageIndex: number;
+    }
 }
 
 export interface P2PPaymentUserError {
@@ -96,8 +107,9 @@ export type P2PPaymentUserActions =
     | P2PPaymentUserDeleteData
     | P2PPaymentUserDeleteError;
 
-export const p2pPaymentUserFetch = (): P2PPaymentUserFetch => ({
+export const p2pPaymentUserFetch = (payload: P2PPaymentUserFetch['payload']): P2PPaymentUserFetch => ({
     type: P2P_PAYMENT_USER_FETCH,
+    payload
 });
 
 export const P2PPaymentUserFetchSingle = (payload: P2PPaymentUserFetchSingle['payload']): P2PPaymentUserFetchSingle =>({
