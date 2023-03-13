@@ -33,6 +33,7 @@ export const P2PTransferAssetMobile: React.FunctionComponent<P2PTransferAssetMob
             setCurrency('');
             setBaseWallet('p2p');
             setTargetWallet('spot');
+            setOtp('');
         }
     }, [transferSuccess]);
 
@@ -54,7 +55,7 @@ export const P2PTransferAssetMobile: React.FunctionComponent<P2PTransferAssetMob
             target_wallet,
             currency: wallet?.currency,
             amount: +amount,
-            otp,
+            otp_code: otp,
         };
 
         dispatch(createP2PTransfersFetch(payload));
