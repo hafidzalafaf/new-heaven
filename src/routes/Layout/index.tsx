@@ -76,11 +76,7 @@ import {
     P2PMyOfferDetailMobileScreen,
     P2PPaymentMethodMobileScreen,
     P2PAddPaymentMethodMobileScreen,
-<<<<<<< HEAD
     P2PEditPaymentMethodMobileScreen
-=======
-    P2PEditPaymentMethodMobileScreen,
->>>>>>> e45ed5a63582050867fbeb86587bb06e99ff2846
 } from '../../mobile/screens';
 
 import {
@@ -543,19 +539,13 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
-<<<<<<< HEAD
-                            path="/p2p/wallets"
-                            component={P2PWalletMobileScreen}
-=======
                             path="/p2p/payment-method/edit/:payment_uid"
                             component={P2PEditPaymentMethodMobileScreen}
->>>>>>> e45ed5a63582050867fbeb86587bb06e99ff2846
                         />
 
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
-<<<<<<< HEAD
                             path="/p2p/payment-method/edit/:payment_uid"
                             component={P2PEditPaymentMethodMobileScreen}
                             />
@@ -563,8 +553,6 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
-=======
->>>>>>> e45ed5a63582050867fbeb86587bb06e99ff2846
                             path="/p2p/payment-method/create/:bank"
                             component={P2PAddPaymentMethodMobileScreen}
                         />
