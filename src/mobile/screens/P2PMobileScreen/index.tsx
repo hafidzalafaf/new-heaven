@@ -262,7 +262,7 @@ export const P2PMobileScreen: React.FC = () => {
         {
             icon: <UserMobileIcon />,
             name: 'P2P User Center',
-            url: '/p2p/profile',
+            url: `/p2p/profile/${user?.uid}`,
         },
         {
             icon: <ReplayMobileIcon />,

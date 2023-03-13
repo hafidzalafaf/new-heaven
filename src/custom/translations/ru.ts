@@ -1483,6 +1483,7 @@ export const ru: LangType = {
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
 
     'p2p_user.user.insuffient_balance': 'У вас недостаточно средств на балансе',
+    'account.users.username_limit_change': 'Вы достигли лимита на смену имени пользователя',
 
     ...nationalitiesNames,
     ...mobileTranslationsRu,
