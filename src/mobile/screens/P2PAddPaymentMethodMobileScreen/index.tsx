@@ -37,8 +37,6 @@ export const P2PAddPaymentMethodMobileScreen = () => {
     const [otp_code, setOtpCode] = React.useState('');
     const profiles = user.profiles.slice(-1);
 
-
-    console.log(bank)
     React.useEffect(() => {
       dispatch(p2pPaymentUserFetch({}));
       dispatch(p2pProfileFetch());
@@ -83,8 +81,6 @@ const handleCreatePayment = () => {
   formData.append('qrcode', image);
   dispatch(p2pPaymentUserCreate(formData));
 };
-console.log(bankData)
-console.log(profiles)
 
   function renderPaymentForm (){
     switch (bankData?.type) {

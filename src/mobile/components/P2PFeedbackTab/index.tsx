@@ -18,7 +18,6 @@ const P2PFeedbackTab = ({ myProfile }) => {
     const [feedback, setFeedback] = React.useState<any>();
     const [merchant, setMerchant] = React.useState<any>();
 
-    console.log(feedback);
     const handleSelect = (k) => {
         setTab(k);
     };

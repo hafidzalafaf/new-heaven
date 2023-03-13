@@ -39,10 +39,7 @@ export const P2PPaymentMethodMobileScreen = () => {
 React.useEffect(()=>{
   setData(paymentMethods?.list);
 
-}, [paymentMethods])
-    console.log(paymentMethods);
-    console.log(currenciesData, 'currData');
-    console.log(paymentMethods.list)
+}, [paymentMethods]);
 
   const AvailableBankForPaymentMethod = () =>{
     return (
@@ -77,7 +74,6 @@ React.useEffect(()=>{
 
 
   const PaymentMethodList = ({data}) => {
-    console.log(data, 'data');
     // const paymentList = data.list
     return (
       <div className='d-flex flex-column gap-16 payment-method-list'>

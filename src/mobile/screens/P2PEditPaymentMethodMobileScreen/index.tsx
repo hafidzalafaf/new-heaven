@@ -54,7 +54,6 @@ export const P2PEditPaymentMethodMobileScreen = () => {
       }
   }, [editPaymentSuccess])
 
-    console.log(currentPaymentData)
     React.useEffect(() => {
       dispatch(p2pPaymentUserFetch({}));
       dispatch(p2pProfileFetch());
@@ -72,7 +71,12 @@ React.useEffect(() => {
   }
 }, [createPaymentSuccess]);
 
-  console.log(editPaymentItem?.account_number, 'editPaymentItem');
+React.useEffect(()=>{
+  if (deleteSuccess){
+    history.push('/p2p/payment-method');
+  }
+}, [deleteSuccess])
+
 const handleChangeAccountNumber = (e) => {
   const value = e.replace(/[^0-9\.]/g, '');
   setAccountNumber(value);
@@ -104,7 +108,6 @@ const handleEditPayment = () => {
   formData.append('otp_code', otp_code);
   formData.append('qrcode', image);
   const payment_id = formData.get('payment_id').toString();
-  console.log(payment_id);
   dispatch(p2pPaymentUserUpdate(formData, payment_id));
 };
 
@@ -238,12 +241,12 @@ const handleEditPayment = () => {
       const ModalDeleteConfirmation = ({show}) => {
         return (
           <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${show ? 'show' : ''}`}>
-            <div className="fixed-bottom off-canvas-content-container-filter overflow-auto d-flex flex-column">
-            <BlueWarningIcon className={''}/>
-            <span className='gradient-text'>Delete Payment Method</span>
-            <span className='grey-text-accent'>Are you sure you want to delete this payment method?</span>
-            <button className='btn-primary'>Delete</button>
-            <button className=''>Cancel</button>
+            <div className="fixed-bottom off-canvas-content-container-filter overflow-auto d-flex flex-column gap-16 items-align-center">
+            <BlueWarningIcon className='mx-auto'/>
+            <span className='gradient-text text-center'>Delete Payment Method</span>
+            <span className='grey-text-accent text-center'>Are you sure you want to delete this payment method?</span>
+            <button onClick={()=>handleDeletePayment(payment.payment_uid)} className='btn-primary'>Delete</button>
+            <button onClick={()=> setShowDeleteModal(false)} className='btn btn-reset grey-text-accent dark-bg-accent'>Cancel</button>
             </div>
           </div>
         )}

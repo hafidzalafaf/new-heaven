@@ -52,7 +52,6 @@ const P2PMyOfferMobileScreen = () => {
           })
       );
       if (cancelPaymentSuccess){
-          console.log(cancelPaymentSuccess)
           // setShowModalCancelOffer(false)
       }
   }, [dispatch, side, cancelPaymentSuccess, state, fiat]);

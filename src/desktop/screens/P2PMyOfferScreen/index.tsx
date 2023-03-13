@@ -52,7 +52,6 @@ export const P2PMyOfferScreen: React.FC = () => {
             })
         );
         if (cancelPaymentSuccess){
-            console.log(cancelPaymentSuccess)
             setShowModalCancelOffer(false)
         }
     }, [dispatch, side, cancelPaymentSuccess, state, fiat]);

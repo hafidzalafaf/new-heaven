@@ -290,7 +290,6 @@ export const OrderP2PTableMobile = () => {
     };
 
     const FilterredItem = ({ data }) => {
-        console.log(data, 'data inside');
         return (
             <React.Fragment>
                 {data?.map((item) => (
