@@ -2,9 +2,8 @@ import React, { useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { OrderCommon, OrderSide } from '../../../modules/types';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { TradingViewEmbed, widgetType } from 'react-tradingview-embed';
-import { useMarketsFetch, useMarketsTickersFetch, useOpenOrdersFetch, useDocumentTitle } from '../../../hooks';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { useMarketsFetch, useOpenOrdersFetch, useDocumentTitle } from '../../../hooks';
 import {
     ordersCancelAllFetch,
     userOpenOrdersFetch,

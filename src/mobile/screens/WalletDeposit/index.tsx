@@ -45,6 +45,14 @@ const WalletDepositMobileScreen: React.FC = () => {
     const location = (useLocation() as unknown) as LocationProps;
 
     const wallets = useSelector(selectWallets) || [];
+    const wallet: Wallet = wallets?.find((item) => item.currency === currency) || DEFAULT_WALLET;
+    const memberLevel = useSelector(selectMemberLevels);
+    const user = useSelector(selectUserInfo);
+    const currencies: Currency[] = useSelector(selectCurrencies);
+    const currencyItem: Currency | any = (currencies && currencies.find((item) => item.id === wallet.currency)) || {
+        min_confirmations: 6,
+        deposit_enabled: false,
+    };
     const blockchain_key = location.state?.blockchain_key;
     const protocol = location.state?.protocol;
     const [address, setAddress] = React.useState('');
@@ -52,14 +60,9 @@ const WalletDepositMobileScreen: React.FC = () => {
     const [showFAQDetail, setShowFAQDetail] = React.useState(false);
     const [showNetworkModal, setShowNetworkModal] = React.useState(false);
     const [showModalLocked, setShowModalLocked] = React.useState(false);
-    const memberLevel = useSelector(selectMemberLevels);
-    const user = useSelector(selectUserInfo);
-    const wallet: Wallet = wallets.find((item) => item.currency === currency) || DEFAULT_WALLET;
-    const currencies: Currency[] = useSelector(selectCurrencies);
-    const currencyItem: Currency | any = (currencies && currencies.find((item) => item.id === wallet.currency)) || {
-        min_confirmations: 6,
-        deposit_enabled: false,
-    };
+
+    const enableDesposit = currencyItem?.networks?.filter((item) => item.deposit_enabled == true);
+    const [active, setActive] = React.useState(enableDesposit ? enableDesposit[0]?.protocol : '');
 
     React.useEffect(() => {
         dispatch(memberLevelsFetch());
@@ -75,10 +78,7 @@ const WalletDepositMobileScreen: React.FC = () => {
         history.push(`/wallets/${currencyItem.id}/deposit`, { blockchain_key: blockchain_key, protocol: protocol });
     };
 
-    const blockchain = (protocol &&
-        currencyItem &&
-        currencyItem.networks &&
-        currencyItem.networks.find((n) => n.protocol === protocol)) || {
+    const blockchain = (active && currencyItem?.networks.find((n) => n.protocol === active)) || {
         blockchain_key: null,
     };
 
@@ -96,9 +96,9 @@ const WalletDepositMobileScreen: React.FC = () => {
         e.preventDefault();
         if (
             depositAddress === null &&
-            wallets.length &&
+            wallets?.length &&
             wallet !== null &&
-            wallet.type !== 'fiat' &&
+            wallet?.type !== 'fiat' &&
             currencyItem?.networks &&
             blockchain?.status !== ' disabled'
         ) {
@@ -116,6 +116,18 @@ const WalletDepositMobileScreen: React.FC = () => {
             setAddress(depositAddress && depositAddress.address);
         }
     }, [depositAddress]);
+
+    React.useEffect(() => {
+        setActive(enableDesposit ? enableDesposit[0]?.blockchain_key?.toUpperCase() : '');
+        // setCurrentTabIndex(0);
+    }, [wallet.currency]);
+
+    React.useEffect(() => {
+        if (currencyItem?.networks && currencyItem.networks[0] && currencyItem?.type !== 'fiat') {
+            setActive(enableDesposit && enableDesposit[0]?.protocol);
+            // setTab(enableDesposit && enableDesposit[0]?.blockchain_key);
+        }
+    }, [currencyItem]);
 
     const renderHeaderFAQMobile = () => {
         return (
@@ -294,9 +306,7 @@ const WalletDepositMobileScreen: React.FC = () => {
                         </Link>
                     </div>
                     <div className="d-flex justify-content-between align-items-center w-100 mb-24">
-                        <h1 className="navbar-brand p-0 m-0 grey-text-accent">
-                            Deposit {currencyItem && currencyItem.name}
-                        </h1>
+                        <h1 className="navbar-brand p-0 m-0 grey-text-accent">Deposit {currencyItem?.name}</h1>
                         <div onClick={() => setShowFAQ(!showFAQ)} className="cursor-pointer">
                             <HelpIcon className={'mr-1'} />
                             <span className="grey-text-accent text-sm">FAQ</span>
@@ -304,11 +314,11 @@ const WalletDepositMobileScreen: React.FC = () => {
                     </div>
 
                     {/* ========= Render if address has been generated =========== */}
-                    {depositAddress && depositAddress.address !== null && (
+                    {depositAddress && depositAddress?.address !== null && (
                         <React.Fragment>
                             <div className="d-flex relative justify-content-center align-items-center radius-lg dark-bg-accent w-100 qr-container mb-16">
                                 <div className="card p-1">
-                                    <QRCode size={200} value={depositAddress && depositAddress.address} />
+                                    <QRCode size={200} value={depositAddress && depositAddress?.address} />
                                 </div>
                                 <div className="logo-coin d-flex justify-content-center align-items-center">
                                     <img
@@ -329,55 +339,68 @@ const WalletDepositMobileScreen: React.FC = () => {
                             <div className="d-flex justify-content-between align-items-center mb-16">
                                 <div className="d-flex">
                                     <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mr-8">
-                                        {currencyItem && currencyItem.id && currencyItem.id.toUpperCase()}
+                                        {currencyItem?.id?.toUpperCase()}
                                     </h2>
                                     <h3 className="p-0 m-0 text-xxs grey-text">
-                                        {currencyItem && currencyItem.name}{' '}
-                                        {currencyItem && currencyItem.id && currencyItem.id.toUpperCase()}
+                                        {currencyItem?.name} {currencyItem?.id?.toUpperCase()}
                                     </h3>
                                 </div>
                                 <div className="cursor-pointer" onClick={() => setShowNetworkModal(!showNetworkModal)}>
                                     <ArrowRight className={''} />
                                 </div>
                             </div>
-                            <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mb-8">Address</h2>
-                            <div className="d-flex justify-content-between align-items-center mb-24">
-                                <input
-                                    id="address"
-                                    className="p-0 m-0 text-sm grey-text-accent font-bold address w-90"
-                                    defaultValue={address}
-                                />
-                                <button
-                                    className="btn-transparent w-10"
-                                    type="button"
-                                    disabled={
-                                        depositAddress && depositAddress.address && depositAddress.address === null
-                                    }
-                                    onClick={() => doCopy('address')}>
-                                    <CopyButton />
-                                </button>
+                            <div>
+                                <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mb-8">Address</h2>
+                                <div className="d-flex justify-content-between align-items-center mb-24">
+                                    <input
+                                        id="address"
+                                        className="p-0 m-0 text-sm grey-text-accent font-bold address w-90"
+                                        defaultValue={address}
+                                    />
+                                    <button
+                                        className="btn-transparent w-10"
+                                        type="button"
+                                        disabled={depositAddress?.address === null}
+                                        onClick={() => doCopy('address')}>
+                                        <CopyButton />
+                                    </button>
+                                </div>
                             </div>
+
+                            {currency == 'bge' && (
+                                <div>
+                                    <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mb-8">
+                                        Destination Tag <span className="danger-text">*</span>
+                                    </h2>
+                                    <div className="d-flex justify-content-between align-items-center mb-24">
+                                        <input
+                                            id="address"
+                                            className="p-0 m-0 text-sm grey-text-accent font-bold address w-90"
+                                            defaultValue={address}
+                                        />
+                                    </div>
+                                </div>
+                            )}
                             {depositAddress === null ? (
                                 <button
                                     onClick={(e) => handleGenerateAddress(e)}
                                     className="w-100 btn-primary cursor-pointer"
-                                    disabled={depositAddress && depositAddress.state === 'pending' ? true : false}
+                                    disabled={depositAddress?.state === 'pending' ? true : false}
                                     type="button">
                                     {'Generate Address'}
                                 </button>
                             ) : (
-                                depositAddress &&
-                                depositAddress.address === null && (
+                                depositAddress?.address === null && (
                                     <button
                                         className="w-100 btn-primary cursor-pointer"
-                                        disabled={depositAddress && depositAddress.state === 'pending' ? true : false}
+                                        disabled={depositAddress?.state === 'pending' ? true : false}
                                         type="button">
                                         {'Creating ...'}
                                     </button>
                                 )
                             )}
                             <button
-                                disabled={depositAddress && depositAddress.address && depositAddress.address === null}
+                                disabled={depositAddress?.address === null}
                                 onClick={() => doCopy('address')}
                                 className="btn-primary w-100 mb-24">
                                 Copy Address
@@ -386,8 +409,7 @@ const WalletDepositMobileScreen: React.FC = () => {
                     )}
 
                     {/* ======= Render if address has not been generated ======= */}
-
-                    {depositAddress === null || (depositAddress && depositAddress.address === null) ? (
+                    {depositAddress === null || depositAddress?.address === null ? (
                         <React.Fragment>
                             <div className="d-flex justify-content-between align-items-center dark-bg-accent radius-sm p-16 mb-16">
                                 <div className="d-flex align-items-center">
@@ -404,10 +426,10 @@ const WalletDepositMobileScreen: React.FC = () => {
                                     />
                                     <div className="d-flex flex-column justify-content-start align-items-start">
                                         <p className="p-0 m-0 grey-text-accent text-ms font-bold">
-                                            {currencyItem && currencyItem.name}
+                                            {currencyItem?.name}
                                         </p>
                                         <p className="p-0 m-0 grey-text text-ms font-bold">
-                                            {currencyItem.id && currencyItem.id.toUpperCase()}
+                                            {currencyItem?.id?.toUpperCase()}
                                         </p>
                                     </div>
                                 </div>
@@ -436,18 +458,15 @@ const WalletDepositMobileScreen: React.FC = () => {
                                     <button
                                         onClick={(e) => handleGenerateAddress(e)}
                                         className="w-100 btn-primary cursor-pointer"
-                                        disabled={depositAddress && depositAddress.state === 'pending' ? true : false}
+                                        disabled={depositAddress?.state === 'pending' ? true : false}
                                         type="button">
                                         {'Generate Address'}
                                     </button>
                                 ) : (
-                                    depositAddress &&
-                                    depositAddress.address === null && (
+                                    depositAddress?.address === null && (
                                         <button
                                             className="w-100 btn-primary cursor-pointer"
-                                            disabled={
-                                                depositAddress && depositAddress.state === 'pending' ? true : false
-                                            }
+                                            disabled={depositAddress?.state === 'pending' ? true : false}
                                             type="button">
                                             {'Creating ...'}
                                         </button>
@@ -460,13 +479,25 @@ const WalletDepositMobileScreen: React.FC = () => {
                     )}
 
                     <ul className="grey-text text-sm">
+                        {currency == 'bge' && (
+                            <li className="white-text text-sm mb-8">
+                                <span className="danger-text">
+                                    {' '}
+                                    It is mandatory to enter the <span className="font-extrabold">
+                                        Destination Tag
+                                    </span>{' '}
+                                    when making a transfer. If you don't include it, the deposit will fail (this is the
+                                    Ripple address).
+                                </span>
+                            </li>
+                        )}
                         <li>
-                            {currency && currency.toUpperCase()} deposit will be into the account after the{' '}
-                            {minDepositConfirm} confirmation.
+                            {currency?.toUpperCase()} deposit will be into the account after the {minDepositConfirm}{' '}
+                            confirmation.
                         </li>
                         <li>
-                            Minimum deposit are {minDepositAmount} {currency && currency.toUpperCase()}, and deposit
-                            will be not into the account if they are less the minimum.
+                            Minimum deposit are {minDepositAmount} {currency?.toUpperCase()}, and deposit will be not
+                            into the account if they are less the minimum.
                         </li>
                     </ul>
                 </div>
