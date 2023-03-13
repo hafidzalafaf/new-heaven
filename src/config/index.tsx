@@ -1,5 +1,5 @@
 // use this file to set the API URL and SOCKET URL on prod
-// const USE_SSL = window.location.protocol === 'https:'
+// const USE_SSL = window.location.protocol === 'https:';
 // const BASE_URL = 'api.heavenexchange.io';
 
 // use this file to set the API URL and SOCKET URL on dev

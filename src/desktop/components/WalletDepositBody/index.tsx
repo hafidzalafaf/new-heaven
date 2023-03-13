@@ -177,6 +177,17 @@ const WalletDepositBody = () => {
                                 </div>
                             </div>
                             <ul className="pl-2">
+                                {currency == 'xrp' && (
+                                    <li className="white-text text-sm mb-8">
+                                        <span className="danger-text">
+                                            {' '}
+                                            It is mandatory to enter the{' '}
+                                            <span className="font-extrabold">Destination Tag</span> when making a
+                                            transfer. If you don't include it, the deposit will fail (this is the Ripple
+                                            address).
+                                        </span>
+                                    </li>
+                                )}
                                 <li className="white-text text-sm mb-8">
                                     Send only {currency.toUpperCase()} to this deposit address.
                                 </li>
@@ -230,13 +241,29 @@ const WalletDepositBody = () => {
                             )}
 
                             {depositAddress !== null && depositAddress?.address !== null && (
-                                <React.Fragment>
-                                    <h3 className="white-text text-sm font-bold">Address</h3>
-                                    <input
-                                        id="address"
-                                        className="text-ms blue-text font-extrabold mb-24 address"
-                                        defaultValue={address}
-                                    />
+                                <div className="d-flex flex-column gap-24">
+                                    <div>
+                                        <h3 className="white-text text-sm font-bold">Address :</h3>
+                                        <input
+                                            id="address"
+                                            className="text-ms blue-text font-extrabold address"
+                                            defaultValue={address}
+                                        />
+                                    </div>
+
+                                    {currency === 'xrp' && (
+                                        <div>
+                                            <h3 className="white-text text-sm font-bold">
+                                                Destination Tag <span className="danger-text">*</span> :
+                                            </h3>
+                                            <input
+                                                id="address"
+                                                className="text-ms blue-text font-extrabold address"
+                                                defaultValue={address}
+                                            />
+                                        </div>
+                                    )}
+
                                     <div className="d-flex">
                                         <button
                                             className="btn-primary mr-12"
@@ -253,7 +280,7 @@ const WalletDepositBody = () => {
                                             Show QRCode
                                         </button>
                                     </div>
-                                </React.Fragment>
+                                </div>
                             )}
                         </div>
                     </div>
