@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Currency } from 'src/modules';
-import { TradingViewEmbed, widgetType } from 'react-tradingview-embed';
 import { InfoIcon } from 'src/assets/images/InfoIcon';
 import './MarketDetailInfo.pcss';
-import { numberFormat } from '../../../helpers';
 import { TradingChart } from '../../containers';
 import { Decimal } from 'src/components';
 
