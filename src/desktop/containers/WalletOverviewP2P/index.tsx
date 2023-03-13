@@ -5,7 +5,7 @@ import { useHistory, Link } from 'react-router-dom';
 import Select from 'react-select';
 import { CustomStylesSelect } from '../../../desktop/components';
 import { PercentageTransferP2P } from '../../components';
-import { Decimal, formatWithSeparators, Loading, Table } from 'src/components';
+import { Decimal, Loading, Table } from 'src/components';
 import { Modal as ModalTransfer } from 'react-bootstrap';
 import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch, useP2PWalletsFetch } from 'src/hooks';
 import {
@@ -18,18 +18,16 @@ import {
     Wallet,
     User,
     selectUserInfo,
-    Currency,
     selectWalletsLoading,
     createP2PTransfersFetch,
     selectP2PTransfersCreateSuccess,
     selectP2PTransfersCreateLoading,
 } from 'src/modules';
-import { estimateUnitValue } from 'src/helpers/estimateValue';
-import { VALUATION_PRIMARY_CURRENCY } from 'src/constants';
 import { WalletsHeader, Modal, NoData } from '../../components';
 import { CircleCloseDangerLargeIcon } from '../../../assets/images/CircleCloseIcon';
 import { SpotWalletIcon } from 'src/assets/images/SpotWalletIcon';
 import { P2PWalletIcon } from 'src/assets/images/P2PWalletIcon';
+import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 
 interface Props {
     isP2PEnabled?: boolean;
@@ -69,6 +67,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
     const [target_wallet, setTargetWallet] = React.useState('spot');
     const [percentageValue, setPercentage] = React.useState(0);
     const [isSwitch, setIsSwitch] = React.useState(false);
+    const [otp, setOtp] = React.useState('');
 
     const { formatMessage } = useIntl();
     const { isP2PEnabled } = props;
@@ -212,7 +211,13 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                               P2P Trade
                           </Link>
                           <button
-                              onClick={() => handleTransferP2P(filteredList[index])}
+                              onClick={() => {
+                                  if (!user?.otp) {
+                                      setShowModalLocked(!showModalLocked);
+                                  } else {
+                                      handleTransferP2P(filteredList[index]);
+                                  }
+                              }}
                               className={`bg-transparent border-none warning-text`}>
                               Transfer
                           </button>
@@ -234,8 +239,8 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
     const renderContentModalLocked = () => {
         return (
             <React.Fragment>
-                <h1 className="white-text text-lg mb-24 text-center ">Withdraw Locked</h1>
-                <p className="grey-text text-ms font-extrabold mb-24 text-center">To withdraw you have to enable 2FA</p>
+                <h1 className="white-text text-lg mb-24 text-center ">Transfer Assets Locked</h1>
+                <p className="grey-text text-ms font-extrabold mb-24 text-center">To transfer you have to enable 2FA</p>
                 <div className="d-flex justify-content-center align-items-center w-100 mb-0">
                     <Link to={`/two-fa-activation`}>
                         <button type="button" className="btn btn-primary sm px-5 mr-3">
@@ -294,6 +299,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
             target_wallet,
             currency: selectedCurrency?.currency,
             amount: +amount,
+            otp,
         };
 
         dispatch(createP2PTransfersFetch(payload));
@@ -308,21 +314,173 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
     }, [percentageValue, switchAddress]);
 
     const disabledButton = () => {
-        if (!base_wallet || !target_wallet || !currency || !amount || transferLoading) {
+        if (transferLoading || otp?.length < 6) {
             return true;
         }
 
         if (base_wallet == 'p2p') {
-            if (+amount < selectedCurrency?.p2p_balance || +amount > selectedCurrency?.p2p_balance) {
+            if (+amount < 0 || +amount > +selectedCurrency?.p2p_balance) {
                 return true;
             }
         }
 
         if (base_wallet == 'spot') {
-            if (+amount < selectedCurrency?.spotBalance || +amount > selectedCurrency?.spotBalance) {
+            if (+amount < 0 || +amount > +selectedCurrency?.balance) {
                 return true;
             }
         }
+
+        if (base_wallet === target_wallet) {
+            return true;
+        }
+    };
+
+    const renderModalTransfer = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-end mb-8">
+                    <span
+                        onClick={() => {
+                            setShowModalP2PTransfer(!showModalP2PTransfer);
+                            setAmount('');
+                            setOtp('');
+                        }}
+                        className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
+                <h5 className="white-text mb-16">Transfer Assets</h5>
+
+                <div className="modal-body-transfer-p2p">
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div className="form-group w-100 mr-3">
+                            <label className="white-text">From</label>
+                            <Select
+                                isSearchable={false}
+                                styles={CustomStylesSelect}
+                                value={optionsAssets.filter(function (option) {
+                                    return option.value === base_wallet;
+                                })}
+                                onChange={(e) => setBaseWallet(e.value)}
+                                options={optionsAssets}
+                            />
+                        </div>
+                        <div className="mr-3 cursor-pointer" onClick={switchAddress}>
+                            <svg
+                                width={20}
+                                height={20}
+                                viewBox="0 0 24 23"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                {...props}>
+                                <path
+                                    d="M.619 16.67c-.888-.886-.32-2.378.882-2.496l.154-.008h21.012a1.333 1.333 0 01.156 2.658l-.156.01H4.552l3.057 3.056a1.333 1.333 0 01-1.76 1.997l-.125-.111-5.107-5.107.002.002zM0 7.5a1.333 1.333 0 011.177-1.324l.156-.01h18.115L16.391 3.11a1.333 1.333 0 011.76-1.996l.125.11 5.107 5.107c.886.886.318 2.378-.884 2.495l-.154.008H1.333A1.333 1.333 0 010 7.5z"
+                                    fill="#F2F0FF"
+                                />
+                            </svg>
+                        </div>
+                        <div className="form-group w-100">
+                            <label className="white-text">To</label>
+                            <Select
+                                isSearchable={false}
+                                styles={CustomStylesSelect}
+                                value={optionsAssets.filter(function (option) {
+                                    return option.value === target_wallet;
+                                })}
+                                onChange={(e) => setTargetWallet(e.value)}
+                                options={optionsAssets}
+                            />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <div className="w-full d-flex align-items-center coin-selected">
+                            <img src={selectedCurrency?.iconUrl} alt="icon" className="mr-12 small-coin-icon" />
+                            <div>
+                                <p className="m-0 text-sm grey-text-accent">
+                                    {selectedCurrency?.currency.toUpperCase()}
+                                </p>
+                                <p className="m-0 text-xs grey-text-accent">{selectedCurrency?.name}</p>
+                            </div>
+                            {/* <h4 className="white-text">{selectedCurrency}</h4> */}
+                        </div>
+                    </div>
+                    <div>
+                        <div className="form-group">
+                            <label className="white-text">Amount</label>
+                            <input
+                                value={amount}
+                                onChange={(e) => handleChangeAmount(e.target.value)}
+                                type="number"
+                                className="form-control"
+                                id="exampleFormControlInput1"
+                                placeholder="Input Amount"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <PercentageTransferP2P
+                            orderPercentage={percentageValue}
+                            handleSelectPercentage={(e) => {
+                                setPercentage(e);
+                                if (e == 0) {
+                                    setAmount('0');
+                                }
+                            }}
+                            label0="0"
+                            label25="25"
+                            label50="50"
+                            label75="75"
+                            label100="100"
+                        />
+                    </div>
+                    <div className="mt-5 mb-24">
+                        <div className="d-flex justify-content-between mb-2">
+                            <div>
+                                <h6 className="text-light">Available Amount :</h6>
+                            </div>
+                            <div>
+                                <h6 className="green-text">
+                                    {base_wallet == 'p2p'
+                                        ? selectedCurrency?.p2p_balance
+                                        : selectedCurrency?.spotBalance}{' '}
+                                    {selectedCurrency?.currency?.toUpperCase()}
+                                </h6>
+                            </div>
+                        </div>
+                        <div className="d-flex justify-content-between">
+                            <div>
+                                <h6 className="text-light">Total Transfer : </h6>
+                            </div>
+                            <div>
+                                <h6 className="green-text">
+                                    {amount ? amount : '0'} {selectedCurrency?.currency?.toUpperCase()}
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label className="white-text">2FA Code</label>
+                        <input
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                            type="number"
+                            className="form-control"
+                            id="exampleFormControlInput1"
+                            placeholder="Input 2FA"
+                        />
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    disabled={disabledButton()}
+                    onClick={handleTransferAsset}
+                    className="btn btn-block btn-primary">
+                    Transfer Assets
+                </button>
+            </React.Fragment>
+        );
     };
 
     return (
@@ -343,131 +501,7 @@ const WalletOverviewP2P: FC<Props> = (props: Props): ReactElement => {
                 <Modal show={showModalLocked} header={renderHeaderModalLocked()} content={renderContentModalLocked()} />
             )}
 
-            {showModalP2PTransfer && (
-                <ModalTransfer
-                    dialogClassName="modal-p2p-transfer"
-                    onHide={() => setShowModalP2PTransfer(!showModalP2PTransfer)}
-                    show={showModalP2PTransfer}>
-                    <ModalTransfer.Header className="border-0 m-0">
-                        <h5 className="text-white">Transfer Assets</h5>
-                    </ModalTransfer.Header>
-                    <ModalTransfer.Body>
-                        <div className="modal-body-transfer-p2p">
-                            <div className="d-flex justify-content-between align-items-center">
-                                <div className="form-group w-100 mr-3">
-                                    <label className="text-white">From</label>
-                                    <Select
-                                        isSearchable={false}
-                                        styles={CustomStylesSelect}
-                                        value={optionsAssets.filter(function (option) {
-                                            return option.value === base_wallet;
-                                        })}
-                                        onChange={(e) => setBaseWallet(e.value)}
-                                        options={optionsAssets}
-                                    />
-                                </div>
-                                <div className="mr-3 cursor-pointer" onClick={switchAddress}>
-                                    <svg
-                                        width={20}
-                                        height={20}
-                                        viewBox="0 0 24 23"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        {...props}>
-                                        <path
-                                            d="M.619 16.67c-.888-.886-.32-2.378.882-2.496l.154-.008h21.012a1.333 1.333 0 01.156 2.658l-.156.01H4.552l3.057 3.056a1.333 1.333 0 01-1.76 1.997l-.125-.111-5.107-5.107.002.002zM0 7.5a1.333 1.333 0 011.177-1.324l.156-.01h18.115L16.391 3.11a1.333 1.333 0 011.76-1.996l.125.11 5.107 5.107c.886.886.318 2.378-.884 2.495l-.154.008H1.333A1.333 1.333 0 010 7.5z"
-                                            fill="#F2F0FF"
-                                        />
-                                    </svg>
-                                </div>
-                                <div className="form-group w-100">
-                                    <label className="text-white">To</label>
-                                    <Select
-                                        isSearchable={false}
-                                        styles={CustomStylesSelect}
-                                        value={optionsAssets.filter(function (option) {
-                                            return option.value === target_wallet;
-                                        })}
-                                        onChange={(e) => setTargetWallet(e.value)}
-                                        options={optionsAssets}
-                                    />
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <div className="w-full d-flex align-items-center coin-selected">
-                                    <img src={selectedCurrency.iconUrl} alt="icon" className="mr-12 small-coin-icon" />
-                                    <div>
-                                        <p className="m-0 text-sm grey-text-accent">
-                                            {selectedCurrency.currency.toUpperCase()}
-                                        </p>
-                                        <p className="m-0 text-xs grey-text-accent">{selectedCurrency.name}</p>
-                                    </div>
-                                    {/* <h4 className="text-white">{selectedCurrency}</h4> */}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="form-group">
-                                    <label className="text-white">Amount</label>
-                                    <input
-                                        value={amount}
-                                        onChange={(e) => handleChangeAmount(e.target.value)}
-                                        type="number"
-                                        className="form-control"
-                                        id="exampleFormControlInput1"
-                                        placeholder="Input Amount"
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <PercentageTransferP2P
-                                    orderPercentage={percentageValue}
-                                    handleSelectPercentage={(e) => setPercentage(e)}
-                                    label0="0"
-                                    label25="25"
-                                    label50="50"
-                                    label75="75"
-                                    label100="100"
-                                    amount={amount}
-                                />
-                            </div>
-                            <div className="mt-5">
-                                <div className="d-flex justify-content-between mb-2">
-                                    <div>
-                                        <h6 className="text-light">Available Amount :</h6>
-                                    </div>
-                                    <div>
-                                        <h6 className="green-text">
-                                            {base_wallet == 'p2p'
-                                                ? selectedCurrency?.p2p_balance
-                                                : selectedCurrency?.spotBalance}{' '}
-                                            {selectedCurrency?.currency?.toUpperCase()}
-                                        </h6>
-                                    </div>
-                                </div>
-                                <div className="d-flex justify-content-between">
-                                    <div>
-                                        <h6 className="text-light">Total Transfer : </h6>
-                                    </div>
-                                    <div>
-                                        <h6 className="green-text">
-                                            {amount ? amount : '0'} {selectedCurrency?.currency?.toUpperCase()}
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </ModalTransfer.Body>
-                    <ModalTransfer.Footer className="border-0">
-                        <button
-                            type="button"
-                            // disabled={disabledButton()}
-                            onClick={handleTransferAsset}
-                            className="btn btn-block btn-primary">
-                            Transfer Assets
-                        </button>
-                    </ModalTransfer.Footer>
-                </ModalTransfer>
-            )}
+            <Modal show={showModalP2PTransfer} content={renderModalTransfer()} className="modal-p2p-transfer" />
         </React.Fragment>
     );
 };

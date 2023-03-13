@@ -21,125 +21,128 @@ export const P2PNotificationMobile: React.FunctionComponent<P2PNotificationMobil
                         </span>
                     </div>
                 </div>
+                <div className="p2p-notif-tabs-container">
+                    <Tabs defaultActiveKey="order" id="fill-tab-example" className="mb-3" fill>
+                        <Tab eventKey="order" title="Order">
+                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
+                                <div className="d-flex align-items-start justify-content-start gap-8">
+                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
+                                    <div>
+                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
+                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    </div>
+                                </div>
 
-                <Tabs defaultActiveKey="order" id="fill-tab-example" className="mb-3" fill>
-                    <Tab eventKey="order" title="Order">
-                        <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                            <div className="d-flex align-items-start justify-content-start gap-8">
-                                <img src="/img/notif.svg" alt="notif" width={16} height={16} />
                                 <div>
-                                    <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
-                                    <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
+                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
                                 </div>
                             </div>
+                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
+                                <div className="d-flex align-items-start justify-content-start gap-8">
+                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
+                                    <div>
+                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
+                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    </div>
+                                </div>
 
-                            <div>
-                                <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                            </div>
-                        </div>
-                        <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                            <div className="d-flex align-items-start justify-content-start gap-8">
-                                <img src="/img/notif.svg" alt="notif" width={16} height={16} />
                                 <div>
-                                    <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
-                                    <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
+                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
                                 </div>
                             </div>
+                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
+                                <div className="d-flex align-items-start justify-content-start gap-8">
+                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
+                                    <div>
+                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
+                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    </div>
+                                </div>
 
-                            <div>
-                                <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                            </div>
-                        </div>
-                        <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                            <div className="d-flex align-items-start justify-content-start gap-8">
-                                <img src="/img/notif.svg" alt="notif" width={16} height={16} />
                                 <div>
-                                    <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
-                                    <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
+                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
                                 </div>
                             </div>
+                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
+                                <div className="d-flex align-items-start justify-content-start gap-8">
+                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
+                                    <div>
+                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
+                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    </div>
+                                </div>
 
-                            <div>
-                                <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                            </div>
-                        </div>
-                        <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                            <div className="d-flex align-items-start justify-content-start gap-8">
-                                <img src="/img/notif.svg" alt="notif" width={16} height={16} />
                                 <div>
-                                    <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
-                                    <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
+                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
                                 </div>
                             </div>
+                        </Tab>
+                        <Tab eventKey="offer" title="Offer">
+                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
+                                <div className="d-flex align-items-start justify-content-start gap-8">
+                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
+                                    <div>
+                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
+                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    </div>
+                                </div>
 
-                            <div>
-                                <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                            </div>
-                        </div>
-                    </Tab>
-                    <Tab eventKey="offer" title="Offer">
-                        <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                            <div className="d-flex align-items-start justify-content-start gap-8">
-                                <img src="/img/notif.svg" alt="notif" width={16} height={16} />
                                 <div>
-                                    <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
-                                    <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
+                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
                                 </div>
                             </div>
+                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
+                                <div className="d-flex align-items-start justify-content-start gap-8">
+                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
+                                    <div>
+                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
+                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    </div>
+                                </div>
 
-                            <div>
-                                <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                            </div>
-                        </div>
-                        <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                            <div className="d-flex align-items-start justify-content-start gap-8">
-                                <img src="/img/notif.svg" alt="notif" width={16} height={16} />
                                 <div>
-                                    <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
-                                    <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
+                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
                                 </div>
                             </div>
+                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
+                                <div className="d-flex align-items-start justify-content-start gap-8">
+                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
+                                    <div>
+                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
+                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    </div>
+                                </div>
 
-                            <div>
-                                <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                            </div>
-                        </div>
-                        <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                            <div className="d-flex align-items-start justify-content-start gap-8">
-                                <img src="/img/notif.svg" alt="notif" width={16} height={16} />
                                 <div>
-                                    <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
-                                    <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
+                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
                                 </div>
                             </div>
+                            <div className="p-16 d-flex justify-content-between align-items-center notif-item">
+                                <div className="d-flex align-items-start justify-content-start gap-8">
+                                    <img src="/img/notif.svg" alt="notif" width={16} height={16} />
+                                    <div>
+                                        <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
+                                        <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    </div>
+                                </div>
 
-                            <div>
-                                <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                            </div>
-                        </div>
-                        <div className="p-16 d-flex justify-content-between align-items-center notif-item">
-                            <div className="d-flex align-items-start justify-content-start gap-8">
-                                <img src="/img/notif.svg" alt="notif" width={16} height={16} />
                                 <div>
-                                    <p className="m-0 p-0 mb-4 grey-text text-sm font-semibold">Buy USDT</p>
-                                    <p className="m-0 p-0 grey-text-accent text-sm">Time</p>
+                                    <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
+                                    <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
                                 </div>
                             </div>
+                        </Tab>
+                    </Tabs>
 
-                            <div>
-                                <p className="m-0 p-0 mb-4 grey-text text-sm">Completed</p>
-                                <p className="m-0 p-0 grey-text text-sm">2022-12-16 08:54:57</p>
-                            </div>
-                        </div>
-                    </Tab>
-                </Tabs>
+                    <p className="m-0 p-0 text-center grey-text text-sm">No more data</p>
+                </div>
             </div>
         </div>
     );

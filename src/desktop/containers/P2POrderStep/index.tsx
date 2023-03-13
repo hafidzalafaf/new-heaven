@@ -188,10 +188,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                 <>
                                                     <img
                                                         src={
-                                                            paymentUser?.logo ||
-                                                            detail?.order?.payment?.logo === 'dummy'
-                                                                ? '/img/logo-bca.png'
-                                                                : detail?.order?.payment !== null
+                                                            detail?.order?.payment !== null
                                                                 ? detail?.order?.payment?.logo
                                                                 : paymentUser?.logo
                                                         }

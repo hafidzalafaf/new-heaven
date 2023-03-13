@@ -339,7 +339,7 @@ export const TableListP2P = () => {
     };
 
     /* ============== FUNCTION CREATE ORDER START ============== */
-    const filteredPayments = payments?.filter(({ bank_name }) =>
+    const filteredPayments = paymentMethods?.filter(({ bank_name }) =>
         payment_option?.some(({ name }) => bank_name === name)
     );
 

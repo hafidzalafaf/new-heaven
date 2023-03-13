@@ -6,6 +6,7 @@ export interface CreateP2PTranfersPayload {
     currency: string;
     base_wallet: string;
     target_wallet: string;
+    otp?: string;
 }
 
 export interface CreateP2PTransfersFetch {

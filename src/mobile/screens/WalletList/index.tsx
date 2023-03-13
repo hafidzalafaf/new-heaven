@@ -21,6 +21,7 @@ import { Table, Decimal, formatWithSeparators } from '../../../components';
 import { FilterInput } from '../../../desktop/components';
 import { estimateUnitValue, estimateValue } from '../../../helpers/estimateValue';
 import { VALUATION_PRIMARY_CURRENCY, VALUATION_SECONDARY_CURRENCY } from '../../../constants';
+import { Form, Row, Col } from 'react-bootstrap';
 import { WithdrawlIcon, DepositIcon, TransferIcon } from '../../assets/Wallet';
 import { Modal } from 'react-bootstrap';
 import { Modal as ModalComponent } from '../../../desktop/components';
@@ -368,33 +369,19 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                 </div>
                 <div className="d-flex justify-content-between align-items-center w-100 mt-3 mb-16">
                     <div onClick={handleToggleCheckbox} className="form-group form-check mb-0">
-                        {nonZeroSelected === true ? (
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="form-check-input"
-                                fill="#00a7ff"
-                                width="16px"
-                                height="16px"
-                                viewBox="0 0 24 24">
-                                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg>
-                        ) : (
-                            <svg
-                                width="16px"
-                                height="16px"
-                                fill="#ffffff"
-                                className="form-check-input rounded-lg"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g>
-                                    <path fill="none" d="M0 0h24v24H0z" />
-                                    <path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
-                                </g>
-                            </svg>
-                        )}
-                        <label className="form-check-label text-sm font-semibold white-text" htmlFor="nonZeroSelected">
-                            {formatMessage({ id: 'page.mobile.wallets.hideSmallBalance' })}
-                        </label>
+                        <Form as={Row} controlid="formHorizontalCheck" onClick={handleToggleCheckbox}>
+                            <Col sm={{ span: 20, offset: 0 }}>
+                                <Form.Check
+                                    type="checkbox"
+                                    custom
+                                    id="nonZeroSelected"
+                                    checked={nonZeroSelected}
+                                    readOnly={true}
+                                    label={formatMessage({ id: 'page.mobile.wallets.hideSmallBalance' })}
+                                    className="text-sm font-semibold grey-text m-0 d-flex justify-content-center align-items-center"
+                                />
+                            </Col>
+                        </Form>
                     </div>
                     {/* <SearchIcon /> */}
 
