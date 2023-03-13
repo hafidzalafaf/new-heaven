@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -7,7 +7,7 @@ import { P2PPaymentMethodProps } from 'src/desktop/components'
 import { capitalizeFirstLetter } from 'src/helpers'
 import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow'
 import { ModalFullScreenMobile } from 'src/mobile/components'
-import { p2pCurrenciesFetch, p2pPaymentUserCreate, p2pPaymentUserFetch, p2pProfileFetch, selectLoadingAbilities, selectP2PCurrenciesData, selectP2PPaymentUser, selectP2PPaymentUserDeleteSuccess, selectUserInfo } from 'src/modules'
+import { p2pCurrenciesFetch, p2pPaymentUserCreate, p2pPaymentUserFetch, p2pProfileFetch, selectLoadingAbilities, selectP2PCurrenciesData, selectP2PPaymentUser, selectP2PPaymentUserCreateSuccess, selectP2PPaymentUserDeleteSuccess, selectP2PPaymentUserSuccess, selectUserInfo } from 'src/modules'
 
 import './P2PAddPaymentMethodMobileScreen.pcss'
 
@@ -22,6 +22,7 @@ export const P2PAddPaymentMethodMobileScreen = () => {
     const user = useSelector(selectUserInfo);
     const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
     const deleteSuccess = useSelector(selectP2PPaymentUserDeleteSuccess);
+    const createSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
     const currenciesData = useSelector(selectP2PCurrenciesData);
 
     const [loading, setLoading] = React.useState(true);
@@ -51,6 +52,12 @@ export const P2PAddPaymentMethodMobileScreen = () => {
 React.useEffect(() => {
   setBankData(currenciesData?.payment?.find((item) => item.symbol == bank.bank));
 }, [currenciesData]);
+
+React.useEffect(()=>{
+  if (createSuccess){
+  history.push('/p2p/payment-method')
+  }
+}, [createSuccess])
 
 const handleChangeAccountNumber = (e) => {
   const value = e.replace(/[^0-9\.]/g, '');

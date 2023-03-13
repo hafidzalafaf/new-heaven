@@ -294,7 +294,7 @@ export const OrderP2PTableMobile = () => {
         return (
             <React.Fragment>
                 {data?.map((item) => (
-                    <div className="d-flex flex-column com-mobile-card-order-list gap-20 border-bottom border-white p-2 grey-text">
+                    <div className="d-flex flex-column com-mobile-card-order-list gap-20 border-b-1 p-2 grey-text">
                         <div className="d-flex align-items-center gap-8 my-2">
                             <div className="ava-container d-flex justify-content-center align-items-center white-text text-ms font-extrabold">
                                 {item.trades.username.slice(0, 1).toUpperCase()}

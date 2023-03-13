@@ -2,12 +2,12 @@ import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
-import { InfoWarningIcon, MobileFilterIcon, QRIcon, TrashBinMobileIcon } from 'src/assets/images/P2PIcon'
+import { BlueWarningIcon, InfoWarningIcon, MobileFilterIcon, QRIcon, TrashBinMobileIcon } from 'src/assets/images/P2PIcon'
 import { P2PPaymentMethodProps } from 'src/desktop/components'
 import { capitalizeFirstLetter } from 'src/helpers'
 import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow'
 import { ModalFullScreenMobile } from 'src/mobile/components'
-import { p2pCurrenciesFetch, p2pPaymentUserCreate, p2pPaymentUserFetch, P2PPaymentUserFetchSingle, p2pPaymentUserUpdate, p2pProfileFetch, selectLoadingAbilities, selectP2PCurrenciesData, selectP2PPaymentUser, selectP2PPaymentUserCreateSuccess, selectP2PPaymentUserDeleteSuccess, selectUserInfo } from 'src/modules'
+import { p2pCurrenciesFetch, p2pPaymentUserCreate, p2pPaymentUserDelete, p2pPaymentUserFetch, P2PPaymentUserFetchSingle, p2pPaymentUserUpdate, p2pProfileFetch, selectLoadingAbilities, selectP2PCurrenciesData, selectP2PPaymentUser, selectP2PPaymentUserCreateSuccess, selectP2PPaymentUserDeleteSuccess, selectP2PPaymentUserUpdateSuccess, selectUserInfo } from 'src/modules'
 
 import './P2PEditPaymentMethodMobileScreen.pcss'
 
@@ -22,8 +22,9 @@ export const P2PEditPaymentMethodMobileScreen = () => {
     const user = useSelector(selectUserInfo);
     const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
     const deleteSuccess = useSelector(selectP2PPaymentUserDeleteSuccess);
-    const currentPaymentData = useSelector(selectP2PPaymentUser);
+    const currentPaymentData : any = useSelector(selectP2PPaymentUser);
     const createPaymentSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
+    const editPaymentSuccess = useSelector(selectP2PPaymentUserUpdateSuccess);
 
 
 
@@ -43,16 +44,19 @@ export const P2PEditPaymentMethodMobileScreen = () => {
 
 
     React.useEffect(() => {
-      setEditPaymentItem(currentPaymentData?.find((item:any) => item.payment_user_uid === payment.payment_uid));
+      setEditPaymentItem(currentPaymentData?.list?.find((item:any) => item.payment_user_uid === payment.payment_uid));
       setAccountNumber(editPaymentItem?.account_number);
     }, [currentPaymentData]);
 
-  //   React.useEffect(()=>{
-  //     dispatch(P2PPaymentUserFetchSingle(payment_user_uid))
-  // }, [dispatch])
+    React.useEffect(()=>{
+      if (editPaymentSuccess){
+        history.push('/p2p/payment-method');
+      }
+  }, [editPaymentSuccess])
 
+    console.log(currentPaymentData)
     React.useEffect(() => {
-      dispatch(p2pPaymentUserFetch());
+      dispatch(p2pPaymentUserFetch({}));
       dispatch(p2pProfileFetch());
       setLoading(false)
   }, [dispatch, deleteSuccess]);
@@ -82,6 +86,13 @@ const handleChangeOTP = (e) => {
   setInputAccountNumberAutoFocus(false);
 };
 
+const handleDeletePayment = (e) => {
+  dispatch(
+      p2pPaymentUserDelete({
+          payment_id: e,
+      })
+  );
+};
 
 const handleEditPayment = () => {
   const formData = new FormData();
@@ -227,8 +238,12 @@ const handleEditPayment = () => {
       const ModalDeleteConfirmation = ({show}) => {
         return (
           <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${show ? 'show' : ''}`}>
-            <div className="fixed-bottom off-canvas-content-container-filter overflow-auto">
-            hello
+            <div className="fixed-bottom off-canvas-content-container-filter overflow-auto d-flex flex-column">
+            <BlueWarningIcon className={''}/>
+            <span className='gradient-text'>Delete Payment Method</span>
+            <span className='grey-text-accent'>Are you sure you want to delete this payment method?</span>
+            <button className='btn-primary'>Delete</button>
+            <button className=''>Cancel</button>
             </div>
           </div>
         )}
