@@ -171,12 +171,12 @@ const HeaderComponent: React.FC = () => {
                                 ))}
 
                             {userLoggedIn && (
-                                <div className="px-24 mt-5 pb-3">
+                                <div className="px-24 mt-5 btn-logout">
                                     <button
                                         onClick={handleLogout}
                                         type="button"
                                         className="btn btn-primary btn-mobile btn-block btn-outline">
-                                        Logout
+                                        <span className="gradient-text">Logout</span>
                                     </button>
                                 </div>
                             )}

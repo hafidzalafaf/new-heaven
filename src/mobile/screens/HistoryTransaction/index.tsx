@@ -17,11 +17,12 @@ import {
     RootState,
     alertPush,
     fetchHistory,
+    selectHistoryLoading,
 } from '../../../modules';
 import { FilterIcon } from 'src/mobile/assets/Wallet';
 import Tabs from 'react-bootstrap/Tabs';
 import { useDocumentTitle } from 'src/hooks';
-import { copy, CopyableTextField, Table } from '../../../components';
+import { copy, CopyableTextField, Table, Loading } from '../../../components';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import { NoData } from 'src/desktop/components';
 import { PaginationMobile } from 'src/mobile/components';
@@ -58,12 +59,13 @@ interface TransactionHistoryMobileScreenProps {
 const DEFAULT_LIMIT = 5;
 const HistoryTransactionMobileScreen: React.FC = () => {
     const intl = useIntl();
+    const dispatch = useDispatch();
     const { formatMessage } = useIntl();
     const currencies = useSelector(selectCurrencies);
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
-    const dispatch = useDispatch();
     const history = useHistory();
+    const historyLoading = useSelector(selectHistoryLoading);
 
     const [historys, setHistorys] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(0);
@@ -77,7 +79,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
     const [showFilter, setShowFilter] = React.useState(false);
-
+    const [loading, setLoading] = React.useState(false);
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
 
@@ -195,6 +197,13 @@ const HistoryTransactionMobileScreen: React.FC = () => {
         );
     }, [startDate, endDate, currency, currentPage, status, type]);
 
+    React.useEffect(() => {
+        setLoading(true);
+        if (!historyLoading) {
+            setLoading(false);
+        }
+    }, [historyLoading]);
+
     // ====== Handle type navigation
     const handleChangeType = (e) => {
         setType(e);
@@ -255,16 +264,16 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     // Handle status class history transaction
     const getStatusClassTransaction = (statusCode: string) => {
         switch (statusCode) {
-            case 'pending':
-                return 'warning-text';
-            case 'processing':
-                return 'warning-text';
-            case 'fee_processing':
-                return 'warning-text';
-            case 'prepared':
-                return 'warning-text';
-            case 'under_review':
-                return 'warning-text';
+            case 'accepted':
+                return 'green-text';
+            case 'collected':
+                return 'green-text';
+            case 'succeed':
+                return 'green-text';
+            case 'confirming':
+                return 'green-text';
+            case 'completed':
+                return 'green-text';
             case 'canceled':
                 return 'danger-text';
             case 'skipped':
@@ -277,7 +286,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                 return 'danger-text';
 
             default:
-                return 'green-text';
+                return 'warning-text';
         }
     };
 
@@ -354,7 +363,11 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             </div>,
             ,
             <p className={`m-0 text-sm ${getStatusClassTransaction(item.status)}`}>
-                {getStatusTransaction(item.status)}
+                {item?.status == 'under_review'
+                    ? 'Under Review'
+                    : item?.status == 'fee_processing'
+                    ? 'Fee Processing'
+                    : capitalizeFirstLetter(item?.status)}
             </p>,
             <div className="cursor-pointer" onClick={() => handleItemDetail(data[index])}>
                 <p className={`m-0 text-xs font-bold text-nowrap`}>Detail</p>
@@ -405,7 +418,11 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                 </p>
             </div>,
             <p className={`m-0 text-sm ${getStatusClassTransaction(item.state)}`}>
-                {capitalizeFirstLetter(item?.state)}
+                {item?.state == 'under_review'
+                    ? 'Under Review'
+                    : item?.state == 'fee_processing'
+                    ? 'Fee Processing'
+                    : capitalizeFirstLetter(item?.state)}
             </p>,
             <div className="cursor-pointer" onClick={() => handleItemDetail(data[index])}>
                 <p className={`m-0 text-xs font-bold text-nowrap`}>Detail</p>
@@ -465,7 +482,11 @@ const HistoryTransactionMobileScreen: React.FC = () => {
             //     </div>
             // </div>,
             <p className={`m-0 text-sm ${getStatusClassTransaction(item.state)}`}>
-                {capitalizeFirstLetter(item?.state)}
+                {item?.state == 'under_review'
+                    ? 'Under Review'
+                    : item?.state == 'fee_processing'
+                    ? 'Fee Processing'
+                    : capitalizeFirstLetter(item?.state)}
             </p>,
             <div className="cursor-pointer" onClick={() => handleItemDetail(data[index])}>
                 <p className={`m-0 text-xs font-bold text-nowrap`}>Detail</p>
@@ -549,17 +570,30 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                     <div className="table-mobile-wrapper mb-24">
                         <Table data={getTableDataDeposit(transFerlistDataHistory)} header={getTableHeadersDeposit()} />
                     </div>
-                    {historys[0] && (
-                        <PaginationMobile
-                            firstElementIndex={firstElementIndex}
-                            lastElementIndex={lastElementIndex}
-                            page={page}
-                            nextPageExists={nextPageExists}
-                            onClickPrevPage={onClickPrevPage}
-                            onClickNextPage={onClickNextPage}
-                        />
+
+                    {loading ? (
+                        <Loading />
+                    ) : historys.length < 1 ? (
+                        <NoData text="No Data Yet" />
+                    ) : (
+                        <>
+                            <div className="table-mobile-wrapper mb-24">
+                                <Table
+                                    data={getTableDataDeposit(transFerlistDataHistory)}
+                                    header={getTableHeadersDeposit()}
+                                />
+                            </div>
+
+                            <PaginationMobile
+                                firstElementIndex={firstElementIndex}
+                                lastElementIndex={lastElementIndex}
+                                page={page}
+                                nextPageExists={nextPageExists}
+                                onClickPrevPage={onClickPrevPage}
+                                onClickNextPage={onClickNextPage}
+                            />
+                        </>
                     )}
-                    {historys.length < 1 && <NoData text="No Data Yet" />}
                 </Tab>
                 {/* =================== Tab navigation history transaction WITHDRAWAL =========== */}
                 <Tab
@@ -573,17 +607,30 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                             header={getTableHeadersWithdrawal()}
                         />
                     </div>
-                    {historys[0] && (
-                        <PaginationMobile
-                            firstElementIndex={firstElementIndex}
-                            lastElementIndex={lastElementIndex}
-                            page={page}
-                            nextPageExists={nextPageExists}
-                            onClickPrevPage={onClickPrevPage}
-                            onClickNextPage={onClickNextPage}
-                        />
+
+                    {loading ? (
+                        <Loading />
+                    ) : historys.length < 1 ? (
+                        <NoData text="No Data Yet" />
+                    ) : (
+                        <>
+                            <div className="table-mobile-wrapper mb-24">
+                                <Table
+                                    data={getTableDataWithdrawal(transFerlistDataHistory)}
+                                    header={getTableHeadersWithdrawal()}
+                                />
+                            </div>
+
+                            <PaginationMobile
+                                firstElementIndex={firstElementIndex}
+                                lastElementIndex={lastElementIndex}
+                                page={page}
+                                nextPageExists={nextPageExists}
+                                onClickPrevPage={onClickPrevPage}
+                                onClickNextPage={onClickNextPage}
+                            />
+                        </>
                     )}
-                    {historys.length < 1 && <NoData text="No Data Yet" />}
                 </Tab>
                 {/* =================== Tab navigation history transaction TRANSFERS =========== */}
                 <Tab
@@ -591,24 +638,30 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                     title={`${formatMessage({
                         id: 'page.mobile.historyTransaction.internalTransfer.type.transfers',
                     })}`}>
-                    <div className="table-responsive">
-                        <Table
-                            className="table table-borderless"
-                            header={getTableHeadersInternalTransaction()}
-                            data={getTableDataInternalTransaction(transFerlistDataHistory)}
-                        />
-                    </div>
-                    {historys[0] && (
-                        <PaginationMobile
-                            firstElementIndex={firstElementIndex}
-                            lastElementIndex={lastElementIndex}
-                            page={page}
-                            nextPageExists={nextPageExists}
-                            onClickPrevPage={onClickPrevPage}
-                            onClickNextPage={onClickNextPage}
-                        />
+                    {loading ? (
+                        <Loading />
+                    ) : historys.length < 1 ? (
+                        <NoData text="No Data Yet" />
+                    ) : (
+                        <>
+                            <div className="table-mobile-wrapper mb-24">
+                                <Table
+                                    className="table table-borderless"
+                                    header={getTableHeadersInternalTransaction()}
+                                    data={getTableDataInternalTransaction(transFerlistDataHistory)}
+                                />
+                            </div>
+
+                            <PaginationMobile
+                                firstElementIndex={firstElementIndex}
+                                lastElementIndex={lastElementIndex}
+                                page={page}
+                                nextPageExists={nextPageExists}
+                                onClickPrevPage={onClickPrevPage}
+                                onClickNextPage={onClickNextPage}
+                            />
+                        </>
                     )}
-                    {historys.length < 1 && <NoData text="No Data Yet" />}
                 </Tab>
             </Tabs>
             {/* =================== End Tab navigation history transaction =========== */}
