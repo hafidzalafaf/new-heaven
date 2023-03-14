@@ -490,9 +490,9 @@ const WalletDepositMobileScreen: React.FC = () => {
                         ''
                     )}
 
-                    <ul className="grey-text text-sm">
+                    <ul className="grey-text text-sm p-0 ml-2">
                         {currency == 'xrp' && (
-                            <li className="white-text text-sm mb-8">
+                            <li>
                                 <span className="danger-text">
                                     {' '}
                                     It is mandatory to enter the <span className="font-extrabold">
