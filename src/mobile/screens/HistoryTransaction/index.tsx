@@ -66,7 +66,6 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     const currencies = useSelector(selectCurrencies);
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
-    const history = useHistory();
     const historyLoading = useSelector(selectHistoryLoading);
 
     const [historys, setHistorys] = React.useState([]);
