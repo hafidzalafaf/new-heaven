@@ -32,7 +32,7 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
     const user = useSelector(selectUserInfo);
     const fiats = useSelector(selectP2PFiatsData);
     const currenciesData = useSelector(selectP2PCurrenciesData);
-    const paymentMethods: P2PPaymentMethodProps[] = useSelector(selectP2PPaymentUser);
+    const paymentMethods: any = useSelector(selectP2PPaymentUser);
     const createOfferLoading = useSelector(selectP2PCreateOfferLoading);
     const createOfferSuccess = useSelector(selectP2PCreateOfferSuccess);
 
@@ -72,8 +72,10 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
     React.useEffect(() => {
         setCurrencies(currenciesData?.currency);
         setPayments(currenciesData?.payment);
-        setPaymentListUser(paymentMethods);
+        setPaymentListUser(paymentMethods.list);
     }, [currenciesData, paymentMethods]);
+
+    console.log(paymentMethods, 'payment')
 
     const handleConfirmOffer = () => {
         const payload = {
@@ -134,7 +136,7 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
 
     const dataFiat = fiats?.find((item) => item?.name == fiat);
     const filteredPayment = paymentListUser?.filter((item) => paymentOffer?.includes(item?.payment_user_uid));
-
+    console.log(paymentListUser)
     const isDisabled = () => {
         if (
             !currency ||
