@@ -26,7 +26,7 @@ import { copy, CopyableTextField, Table, Loading } from '../../../components';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import { NoData } from 'src/desktop/components';
 import { PaginationMobile } from 'src/mobile/components';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { CopyButton } from 'src/assets/images/CopyButton';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -60,7 +60,9 @@ const DEFAULT_LIMIT = 5;
 const HistoryTransactionMobileScreen: React.FC = () => {
     const intl = useIntl();
     const dispatch = useDispatch();
+    const history = useHistory();
     const { formatMessage } = useIntl();
+
     const currencies = useSelector(selectCurrencies);
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
@@ -396,7 +398,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     // Render data table for DEPOSIT history
     const getTableDataDeposit = (data) => {
         return data.map((item, index) => [
-            <div className="d-flex justify-content-center align-items-stretch">
+            <div className="d-flex justify-content-center align-items-center">
                 <img
                     className="icon-history mr-3 rounded-full"
                     src={item?.logo_url ? item?.logo_url : '/img/dummycoin.png'}
@@ -452,7 +454,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     // Render data table for WITHDRAWAL history
     const getTableDataWithdrawal = (data) => {
         return data.map((item, index) => [
-            <div className="d-flex justify-content-center align-items-stretch">
+            <div className="d-flex justify-content-center align-items-center">
                 <img
                     className="icon-history mr-3 rounded-full"
                     src={item?.logo_url ? item?.logo_url : '/img/dummycoin.png'}
@@ -542,9 +544,9 @@ const HistoryTransactionMobileScreen: React.FC = () => {
         <section className="mobile-container pg-history-transaction no-header dark-bg-main">
             {/* ===== Header History Transaction ===== */}
             <div className="head-container position-relative">
-                <Link to={'/profile'} className="cursor-pointer position-absolute">
+                <div onClick={() => history.goBack()} className="cursor-pointer position-absolute">
                     <ArrowLeft className={'back'} />
-                </Link>
+                </div>
                 <h1 className="text-center text-md grey-text-accent font-bold">
                     {formatMessage({ id: 'page.mobile.historyTransaction.internalTransfer.header' })}
                 </h1>
@@ -566,10 +568,6 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                 <Tab
                     eventKey="deposits"
                     title={`${formatMessage({ id: 'page.mobile.historyTransaction.internalTransfer.type.deposits' })}`}>
-                    <div className="table-mobile-wrapper mb-24">
-                        <Table data={getTableDataDeposit(transFerlistDataHistory)} header={getTableHeadersDeposit()} />
-                    </div>
-
                     {loading ? (
                         <Loading />
                     ) : historys.length < 1 ? (
@@ -600,13 +598,6 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                     title={`${formatMessage({
                         id: 'page.mobile.historyTransaction.internalTransfer.type.withdrawal',
                     })}`}>
-                    <div className="table-mobile-wrapper mb-24">
-                        <Table
-                            data={getTableDataWithdrawal(transFerlistDataHistory)}
-                            header={getTableHeadersWithdrawal()}
-                        />
-                    </div>
-
                     {loading ? (
                         <Loading />
                     ) : historys.length < 1 ? (
