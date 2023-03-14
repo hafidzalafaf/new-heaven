@@ -60,7 +60,9 @@ const DEFAULT_LIMIT = 5;
 const HistoryTransactionMobileScreen: React.FC = () => {
     const intl = useIntl();
     const dispatch = useDispatch();
+    const history = useHistory();
     const { formatMessage } = useIntl();
+
     const currencies = useSelector(selectCurrencies);
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
@@ -397,7 +399,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     // Render data table for DEPOSIT history
     const getTableDataDeposit = (data) => {
         return data.map((item, index) => [
-            <div className="d-flex justify-content-center align-items-stretch">
+            <div className="d-flex justify-content-center align-items-center">
                 <img
                     className="icon-history mr-3 rounded-full"
                     src={item?.logo_url ? item?.logo_url : '/img/dummycoin.png'}
@@ -453,7 +455,7 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     // Render data table for WITHDRAWAL history
     const getTableDataWithdrawal = (data) => {
         return data.map((item, index) => [
-            <div className="d-flex justify-content-center align-items-stretch">
+            <div className="d-flex justify-content-center align-items-center">
                 <img
                     className="icon-history mr-3 rounded-full"
                     src={item?.logo_url ? item?.logo_url : '/img/dummycoin.png'}
@@ -567,10 +569,6 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                 <Tab
                     eventKey="deposits"
                     title={`${formatMessage({ id: 'page.mobile.historyTransaction.internalTransfer.type.deposits' })}`}>
-                    <div className="table-mobile-wrapper mb-24">
-                        <Table data={getTableDataDeposit(transFerlistDataHistory)} header={getTableHeadersDeposit()} />
-                    </div>
-
                     {loading ? (
                         <Loading />
                     ) : historys.length < 1 ? (
@@ -601,13 +599,6 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                     title={`${formatMessage({
                         id: 'page.mobile.historyTransaction.internalTransfer.type.withdrawal',
                     })}`}>
-                    <div className="table-mobile-wrapper mb-24">
-                        <Table
-                            data={getTableDataWithdrawal(transFerlistDataHistory)}
-                            header={getTableHeadersWithdrawal()}
-                        />
-                    </div>
-
                     {loading ? (
                         <Loading />
                     ) : historys.length < 1 ? (
