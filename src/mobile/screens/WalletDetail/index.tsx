@@ -21,6 +21,8 @@ import {
     selectMemberLevels,
     memberLevelsFetch,
     selectP2PWallets,
+    fetchHistory,
+    selectHistoryLoading,
 } from '../../../modules';
 import {
     useHistoryFetch,
@@ -32,8 +34,8 @@ import {
 import Select from 'react-select';
 import moment from 'moment';
 import { PaginationMobile } from 'src/mobile/components';
-import { Decimal } from '../../../components';
-import { CustomStylesSelect } from '../../../desktop/components';
+import { Decimal, Loading } from '../../../components';
+import { CustomStylesSelect, NoData } from '../../../desktop/components';
 import { Modal } from 'react-bootstrap';
 import { Modal as ModalComponent } from '../../../desktop/components';
 import { ArrowLeft } from '../../assets/Arrow';
@@ -95,6 +97,7 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
 
     const page = useSelector(selectCurrentPage);
     const list = useSelector(selectHistory);
+    const historyLoading = useSelector(selectHistoryLoading);
 
     const [historys, setHistorys] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(0);
@@ -107,8 +110,11 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     const [estimatedValue, setEstimatedValue] = React.useState<string | number>();
     const [showModalLocked, setShowModalLocked] = React.useState<boolean>(false);
     const [showModal2FA, setShowModal2FA] = React.useState<boolean>(false);
-
+    const [loading, setLoading] = React.useState(false);
     const [typeModal, setTypeModal] = React.useState('');
+
+    const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
+    const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
 
     // Handle get item pagination
     const firstElementIndex = useSelector((state: RootState) => selectFirstElemIndex(state, 5));
@@ -175,29 +181,174 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
     };
 
     React.useEffect(() => {
+        const defaultPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+        };
+
+        const marketPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            currency: currency,
+        };
+
+        const statePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            state: status,
+        };
+
+        const marketStatePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            state: status,
+            currency: currency,
+        };
+        // JANGAN DIHAPUS
+        // var datePayload;
+        // if (type == 'transfers') {
+        //     datePayload = {
+        //         type: type,
+        //         page: currentPage,
+        //         limit: DEFAULT_LIMIT,
+        //         from: time_from,
+        //         to: time_to,
+        //     };
+        // } else {
+        //     datePayload = {
+        //         type: type,
+        //         page: currentPage,
+        //         limit: DEFAULT_LIMIT,
+        //         time_from: time_from,
+        //         time_to: time_to,
+        //     };
+        // }
+
+        const datePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+        };
+
+        const dateStatePayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            state: status,
+        };
+
+        const dateAssetPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            time_from: time_from,
+            time_to: time_to,
+            currency: currency,
+        };
+
+        const marketDateStatusPayload = {
+            type: type,
+            page: currentPage,
+            limit: DEFAULT_LIMIT,
+            currency: currency,
+            time_from: time_from,
+            time_to: time_to,
+            state: status,
+        };
+
+        dispatch(
+            fetchHistory(
+                startDate && endDate && status && currency
+                    ? marketDateStatusPayload
+                    : startDate && endDate && status
+                    ? dateStatePayload
+                    : startDate && endDate && currency
+                    ? dateAssetPayload
+                    : currency && status
+                    ? marketStatePayload
+                    : startDate && endDate
+                    ? datePayload
+                    : currency
+                    ? marketPayload
+                    : status
+                    ? statePayload
+                    : defaultPayload
+            )
+        );
+    }, [startDate, endDate, currency, currentPage, status, type]);
+
+    React.useEffect(() => {
+        setLoading(true);
+        if (!historyLoading) {
+            setLoading(false);
+        }
+    }, [historyLoading]);
+
+    React.useEffect(() => {
         setHistorys(list);
     }, [list]);
 
-    // ====== Filter history by date ================
-    React.useEffect(() => {
-        if (startDate != '' && endDate != '') {
-            const filterredList = list.filter(
-                (item) =>
-                    moment(item.created_at).format() >= moment(startDate).format() &&
-                    moment(item.created_at).format() <= moment(endDate).format()
-            );
-            setHistorys(filterredList);
-        }
-    }, [startDate, endDate]);
-
     let filteredList = filteredWallets.filter((i) => i.currency === currencyItem.id);
 
-    const filterredStatus = (status) => {
-        let filterredList;
-        let temp;
-        temp = list;
-        filterredList = temp.filter((item) => item.status === status);
-        setHistorys(filterredList);
+    const optionStatusDeposit = [
+        { label: <p className="m-0 text-sm grey-text-accent">Submitted</p>, value: 'submitted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
+        { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Collected</p>, value: 'collected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
+        { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
+        { label: <p className="m-0 text-sm grey-text-accent">Fee Processing</p>, value: 'fee_processing' },
+    ];
+
+    const optionStatusWithdraw = [
+        { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepared' },
+        { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
+        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
+        { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
+        { label: <p className="m-0 text-sm grey-text-accent">Succeed</p>, value: 'succeed' },
+        { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
+        { label: <p className="m-0 text-sm grey-text-accent">Failed</p>, value: 'failed' },
+        { label: <p className="m-0 text-sm grey-text-accent">Errored</p>, value: 'errored' },
+        { label: <p className="m-0 text-sm grey-text-accent">Confirming</p>, value: 'confirming' },
+        { label: <p className="m-0 text-sm grey-text-accent">Under Review</p>, value: 'under_review' },
+    ];
+
+    const getStatusClassTransaction = (statusCode: string) => {
+        switch (statusCode) {
+            case 'accepted':
+                return 'green-text';
+            case 'collected':
+                return 'green-text';
+            case 'succeed':
+                return 'green-text';
+            case 'confirming':
+                return 'green-text';
+            case 'completed':
+                return 'green-text';
+            case 'canceled':
+                return 'danger-text';
+            case 'skipped':
+                return 'danger-text';
+            case 'errored':
+                return 'danger-text';
+            case 'failed':
+                return 'danger-text';
+            case 'rejected':
+                return 'danger-text';
+
+            default:
+                return 'warning-text';
+        }
     };
 
     // =========== Render Data history into table ===============
@@ -226,8 +377,24 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                 </div>,
                 <div className="td-id-status-type d-flex flex-column justify-content-start align-items-start">
                     <h3 className="p-0 m-0 grey-text-accent text-sm font-bold">Status</h3>
-                    <h4 className="p-0 m-0 grey-text text-sm font-bold">
-                        {item.status === 'completed' ? 'Completed' : item.status === 'pending' ? 'Pending' : 'Canceled'}
+                    <h4
+                        className={`p-0 m-0 text-sm font-bold ${
+                            type == 'transfers'
+                                ? getStatusClassTransaction(item?.status)
+                                : getStatusClassTransaction(item?.state)
+                        }`}>
+                        {/* {type == 'transfers' ? capitalizeFirstLetter(item?.status) : capitalizeFirstLetter(item?.state)} */}
+                        {type == 'transfers'
+                            ? item?.status == 'under_review'
+                                ? 'Under Review'
+                                : item?.status == 'fee_processing'
+                                ? 'Fee Processing'
+                                : capitalizeFirstLetter(item?.status)
+                            : item?.state == 'under_review'
+                            ? 'Under Review'
+                            : item?.state == 'fee_processing'
+                            ? 'Fee Processing'
+                            : capitalizeFirstLetter(item?.state)}
                     </h4>
                 </div>,
                 <div className="td-id-status-type d-flex flex-column justify-content-end align-items-end">
@@ -260,12 +427,6 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
         setShowFilter(false);
         setHistorys(list);
     };
-
-    const optionStatus = [
-        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: 'pending' },
-        { label: <p className="m-0 text-sm grey-text-accent">Completed</p>, value: 'completed' },
-        { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
-    ];
 
     const totalBalance =
         Number(filteredList.map((item) => item.spotBalance)) + Number(filteredList.map((item) => item.spotLocked));
@@ -400,17 +561,41 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                     <Tab eventKey="deposits" title="Deposit">
                         <div className="table-mobile-wrapper">
                             {renderFilter()}
-                            {!historys[0] || historys === null ? (
-                                <div className="empty-data d-flex flex-column align-items-center mb-5 w-100">
-                                    <DocIcon className={''} />
-                                    <h1>{formatMessage({ id: 'page.mobile.wallet.detail.empty' })}</h1>
-                                </div>
-                            ) : (
-                                <Table data={getTableData(historys)} />
-                            )}
 
-                            <div className="mt-3">
-                                {historys[0] && (
+                            {loading ? (
+                                <Loading />
+                            ) : historys.length < 1 ? (
+                                <NoData text="No Data Yet" />
+                            ) : (
+                                <>
+                                    <Table data={getTableData(historys)} />
+
+                                    <div className="mt-3">
+                                        <PaginationMobile
+                                            firstElementIndex={firstElementIndex}
+                                            lastElementIndex={lastElementIndex}
+                                            page={page}
+                                            nextPageExists={nextPageExists}
+                                            onClickPrevPage={onClickPrevPage}
+                                            onClickNextPage={onClickNextPage}
+                                        />
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </Tab>
+                    <Tab eventKey="withdraws" title="Withdraw">
+                        {renderFilter()}
+
+                        {loading ? (
+                            <Loading />
+                        ) : historys.length < 1 ? (
+                            <NoData text="No Data Yet" />
+                        ) : (
+                            <>
+                                <Table data={getTableData(historys)} />
+
+                                <div className="mt-3">
                                     <PaginationMobile
                                         firstElementIndex={firstElementIndex}
                                         lastElementIndex={lastElementIndex}
@@ -419,55 +604,33 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                                         onClickPrevPage={onClickPrevPage}
                                         onClickNextPage={onClickNextPage}
                                     />
-                                )}
-                            </div>
-                        </div>
-                    </Tab>
-                    <Tab eventKey="withdraws" title="Withdraw">
-                        {renderFilter()}
-                        {!historys[0] || historys === null ? (
-                            <div className="empty-data d-flex flex-column align-items-center mb-5 w-100">
-                                <DocIcon className={''} />
-                                <h1>{formatMessage({ id: 'page.mobile.wallet.detail.empty' })}</h1>
-                            </div>
-                        ) : (
-                            <Table data={getTableData(historys)} />
+                                </div>
+                            </>
                         )}
-                        <div className="mt-3">
-                            {historys[0] && (
-                                <PaginationMobile
-                                    firstElementIndex={firstElementIndex}
-                                    lastElementIndex={lastElementIndex}
-                                    page={page}
-                                    nextPageExists={nextPageExists}
-                                    onClickPrevPage={onClickPrevPage}
-                                    onClickNextPage={onClickNextPage}
-                                />
-                            )}
-                        </div>
                     </Tab>
                     <Tab eventKey="transfers" title="Internal Transfer">
                         {renderFilter()}
-                        {!historys[0] || historys === null ? (
-                            <div className="empty-data d-flex flex-column align-items-center mb-5 w-100">
-                                <DocIcon className={''} />
-                                <h1>{formatMessage({ id: 'page.mobile.wallet.detail.empty' })}</h1>
-                            </div>
+
+                        {loading ? (
+                            <Loading />
+                        ) : historys.length < 1 ? (
+                            <NoData text="No Data Yet" />
                         ) : (
-                            <Table data={getTableData(historys)} />
+                            <>
+                                <Table data={getTableData(historys)} />
+
+                                <div className="mt-3">
+                                    <PaginationMobile
+                                        firstElementIndex={firstElementIndex}
+                                        lastElementIndex={lastElementIndex}
+                                        page={page}
+                                        nextPageExists={nextPageExists}
+                                        onClickPrevPage={onClickPrevPage}
+                                        onClickNextPage={onClickNextPage}
+                                    />
+                                </div>
+                            </>
                         )}
-                        <div className="mt-3">
-                            {historys[0] && (
-                                <PaginationMobile
-                                    firstElementIndex={firstElementIndex}
-                                    lastElementIndex={lastElementIndex}
-                                    page={page}
-                                    nextPageExists={nextPageExists}
-                                    onClickPrevPage={onClickPrevPage}
-                                    onClickNextPage={onClickNextPage}
-                                />
-                            )}
-                        </div>
                     </Tab>
                 </Tabs>
 
@@ -531,6 +694,8 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                                 onChange={(e) => {
                                     setStartDate(e.target.value);
                                 }}
+                                value={startDate}
+                                defaultValue={new Date().toISOString().slice(0, 10)}
                             />
                         </div>
 
@@ -542,23 +707,32 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
                                 onChange={(e) => {
                                     setEndDate(e.target.value);
                                 }}
+                                value={endDate}
+                                defaultValue={new Date().toISOString().slice(0, 10)}
                             />
                         </div>
 
-                        <div className="mb-24">
-                            <p className="m-0 white-text text-sm mb-8">Status</p>
-                            <Select
-                                value={optionStatus.filter(function (option) {
-                                    return option.value === status;
-                                })}
-                                styles={CustomStylesSelect}
-                                options={optionStatus}
-                                onChange={(e) => {
-                                    setStatus(e.value);
-                                    filterredStatus(e.value);
-                                }}
-                            />
-                        </div>
+                        {type !== 'transfers' && (
+                            <div className="mb-24">
+                                <p className="m-0 white-text text-sm mb-8">Status</p>
+                                <Select
+                                    value={
+                                        type == 'withdraws'
+                                            ? optionStatusWithdraw.filter(function (option) {
+                                                  return option.value === status;
+                                              })
+                                            : optionStatusDeposit.filter(function (option) {
+                                                  return option.value === status;
+                                              })
+                                    }
+                                    styles={CustomStylesSelect}
+                                    options={type == 'withdraws' ? optionStatusWithdraw : optionStatusDeposit}
+                                    onChange={(e) => {
+                                        setStatus(e.value);
+                                    }}
+                                />
+                            </div>
+                        )}
 
                         <div className="d-flex justify-content-center align-items-center">
                             <button
