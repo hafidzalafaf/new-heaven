@@ -55,7 +55,7 @@ const WalletDepositBody = () => {
 
     const doCopy = (text: string) => {
         copy(text);
-        dispatch(alertPush({ message: ['Link has been copied'], type: 'success' }));
+        dispatch(alertPush({ message: ['Address has been copied'], type: 'success' }));
     };
 
     const blockchain = (active && currencyItem?.networks.find((n) => n.protocol === active)) || {
@@ -247,7 +247,9 @@ const WalletDepositBody = () => {
                                         <input
                                             id="address"
                                             className="text-ms blue-text font-extrabold address"
-                                            defaultValue={address}
+                                            defaultValue={
+                                                currency == 'xrp' ? address?.slice(0, address?.indexOf('?')) : address
+                                            }
                                         />
                                     </div>
 
@@ -259,7 +261,11 @@ const WalletDepositBody = () => {
                                             <input
                                                 id="address"
                                                 className="text-ms blue-text font-extrabold address"
-                                                defaultValue={address}
+                                                defaultValue={
+                                                    currency == 'xrp'
+                                                        ? address?.slice(address?.indexOf('=') + 1)
+                                                        : address
+                                                }
                                             />
                                         </div>
                                     )}
@@ -303,14 +309,25 @@ const WalletDepositBody = () => {
                     <Modal show={show} onHide={handleClose} centered>
                         <Modal.Body>
                             <div className="text-center">
-                                <QRCode dimensions={255} data={depositAddress?.address} />
+                                <QRCode
+                                    dimensions={255}
+                                    data={
+                                        currency == 'xrp'
+                                            ? depositAddress?.address?.slice(0, depositAddress?.address?.indexOf('?'))
+                                            : depositAddress?.address
+                                    }
+                                />
                             </div>
                         </Modal.Body>
                         <Modal.Footer className="border-none d-flex flex-column justify-content-center align-items-center">
                             <input
                                 id="address-modal"
                                 className="text-ms blue-text text-center font-extrabold mb-24 address"
-                                defaultValue={depositAddress?.address}
+                                defaultValue={
+                                    currency == 'xrp'
+                                        ? depositAddress?.address?.slice(0, depositAddress?.address?.indexOf('?'))
+                                        : depositAddress?.address
+                                }
                             />
                             <button className="btn-primary mr-12" type="button" onClick={() => doCopy('address-modal')}>
                                 Copy Address

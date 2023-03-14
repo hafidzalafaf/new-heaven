@@ -108,7 +108,7 @@ const WalletDepositMobileScreen: React.FC = () => {
 
     const doCopy = (text: string) => {
         copy(text);
-        dispatch(alertPush({ message: ['Link has been copied'], type: 'success' }));
+        dispatch(alertPush({ message: ['Address has been copied'], type: 'success' }));
     };
 
     React.useEffect(() => {
@@ -316,7 +316,17 @@ const WalletDepositMobileScreen: React.FC = () => {
                         <React.Fragment>
                             <div className="d-flex relative justify-content-center align-items-center radius-lg dark-bg-accent w-100 qr-container mb-16">
                                 <div className="card p-1">
-                                    <QRCode size={200} value={depositAddress && depositAddress?.address} />
+                                    <QRCode
+                                        size={200}
+                                        value={
+                                            currency == 'xrp'
+                                                ? depositAddress?.address?.slice(
+                                                      0,
+                                                      depositAddress?.address?.indexOf('?')
+                                                  )
+                                                : depositAddress?.address
+                                        }
+                                    />
                                 </div>
                                 <div className="logo-coin d-flex justify-content-center align-items-center">
                                     <img
@@ -353,7 +363,9 @@ const WalletDepositMobileScreen: React.FC = () => {
                                     <input
                                         id="address"
                                         className="p-0 m-0 text-sm grey-text-accent font-bold address w-90"
-                                        defaultValue={address}
+                                        defaultValue={
+                                            currency == 'xrp' ? address?.slice(0, address?.indexOf('?')) : address
+                                        }
                                     />
                                     <button
                                         className="btn-transparent w-10"
@@ -365,7 +377,7 @@ const WalletDepositMobileScreen: React.FC = () => {
                                 </div>
                             </div>
 
-                            {currency == 'bge' && (
+                            {currency == 'xrp' && (
                                 <div>
                                     <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mb-8">
                                         Destination Tag <span className="danger-text">*</span>
@@ -374,7 +386,9 @@ const WalletDepositMobileScreen: React.FC = () => {
                                         <input
                                             id="address"
                                             className="p-0 m-0 text-sm grey-text-accent font-bold address w-90"
-                                            defaultValue={address}
+                                            defaultValue={
+                                                currency == 'xrp' ? address?.slice(address?.indexOf('=') + 1) : address
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -477,7 +491,7 @@ const WalletDepositMobileScreen: React.FC = () => {
                     )}
 
                     <ul className="grey-text text-sm">
-                        {currency == 'bge' && (
+                        {currency == 'xrp' && (
                             <li className="white-text text-sm mb-8">
                                 <span className="danger-text">
                                     {' '}
