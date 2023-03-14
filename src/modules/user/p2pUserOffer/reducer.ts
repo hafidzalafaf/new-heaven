@@ -18,7 +18,7 @@ import { P2PUserOffer } from './types';
 
 export interface P2PUserOfferState {
     create: {
-        // data: P2PUserOffer;
+        data: P2PUserOffer;
         fetching: boolean;
         success: boolean;
         error?: CommonError;
@@ -26,7 +26,7 @@ export interface P2PUserOfferState {
     fetch: {
         page: number;
         total: number;
-        list: P2PUserOffer[];
+        list: P2PUserOffer;
         side: string;
         base: string;
         quote: string;
@@ -53,7 +53,21 @@ export const initialP2PUserOfferState: P2PUserOfferState = {
     fetch: {
         page: 0,
         total: 0,
-        list: [],
+        list: {
+            
+            available_amount: '',
+            price: '',
+            currency: '',
+            min_order: '',
+            max_order: '',
+            payment_time: '',
+            sum_order: '',
+            persentage: '',
+            term_of_condition: '',
+            trader: '',
+            payment: [],
+            state: ''
+        },
         side: '',
         base: '',
         quote: '',

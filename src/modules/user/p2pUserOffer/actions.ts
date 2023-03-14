@@ -61,6 +61,7 @@ export interface P2PUserOfferData {
         quote: string;
         payment_method?: number;
         state?: string;
+        nextPageExists: boolean;
     }
 }
 

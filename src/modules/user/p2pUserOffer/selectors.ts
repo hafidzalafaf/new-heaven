@@ -3,7 +3,7 @@ import { CommonError } from '../../types';
 import { P2PUserOffer } from './types';
 
 /* P2P Offers fetch */
-export const selectP2PUserAccountOffer = (state: RootState): P2PUserOffer[] => state.user.p2pUserOffer.fetch.list;
+export const selectP2PUserAccountOffer = (state: RootState): P2PUserOffer => state.user.p2pUserOffer.fetch.list;
 
 export const selectP2PUserOffersAccountLoading = (state: RootState): boolean => state.user.p2pUserOffer.fetch.fetching;
 

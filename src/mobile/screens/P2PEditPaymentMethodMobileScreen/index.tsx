@@ -240,7 +240,7 @@ const handleEditPayment = () => {
 
       const ModalDeleteConfirmation = ({show}) => {
         return (
-          <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${show ? 'show' : ''}`}>
+          <div id="off-canvas-filter" className={`off-canvas-filter-payment-method ${show ? 'show' : ''}`}>
             <div className="fixed-bottom off-canvas-content-container-filter overflow-auto d-flex flex-column gap-16 items-align-center">
             <BlueWarningIcon className='mx-auto'/>
             <span className='gradient-text text-center'>Delete Payment Method</span>

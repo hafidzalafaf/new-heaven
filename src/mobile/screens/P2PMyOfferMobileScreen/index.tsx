@@ -4,6 +4,7 @@ import { useHistory } from 'react-router'
 import { MobileFilterIcon } from 'src/assets/images/P2PIcon'
 import { OfferP2PTable } from 'src/desktop/containers'
 import { ArrowLeft } from 'src/mobile/assets/Arrow'
+import { PaginationMobile } from 'src/mobile/components'
 import { OfferP2PTableMobile } from 'src/mobile/containers/OfferP2PTableMobile'
 import { selectP2POrder, selectP2PUserAccountOffer, selectP2PFiatsData, selectP2PUserAccountOfferCancelSuccess, p2pFiatFetch, p2pUserOfferFetch, orderFetch } from 'src/modules'
 
@@ -48,13 +49,17 @@ const P2PMyOfferMobileScreen = () => {
               min_price: '',
               max_price: '',
               side: side,
-              state: state
+              state: state,
+              page: 1,
+              limit: 5
           })
       );
       if (cancelPaymentSuccess){
           // setShowModalCancelOffer(false)
       }
   }, [dispatch, side, cancelPaymentSuccess, state, fiat]);
+
+  console.log(offer, 'offer');
 
   React.useEffect(() => {
       setOrderLoading(true);
@@ -191,6 +196,9 @@ const P2PMyOfferMobileScreen = () => {
         data={offer} 
         loading={orderLoading}
       />
+      {/* <PaginationMobile
+
+      /> */}
     </section>
   )
 }

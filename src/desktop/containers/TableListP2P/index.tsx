@@ -225,7 +225,7 @@ export const TableListP2P = () => {
     React.useEffect(() => {
         setCurrencies(currenciesData?.currency);
         setPayments(currenciesData?.payment);
-        setPaymentListUser(paymentMethods);
+        setPaymentListUser(paymentMethods.list);
     }, [currenciesData, paymentMethods]);
 
     React.useEffect(() => {
