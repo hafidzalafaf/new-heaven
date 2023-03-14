@@ -50,7 +50,7 @@ const P2PMyOfferMobileScreen = () => {
               max_price: '',
               side: side,
               state: state,
-              page: 1,
+              page: 0,
               limit: 5
           })
       );

@@ -17,24 +17,17 @@ import { P2PUserOffer } from './types';
 
 
 export interface P2PUserOfferState {
-    create: {
-        data: P2PUserOffer;
+    fetch: {
+        list: [];
         fetching: boolean;
         success: boolean;
+        page: number;
+        limit: number;
         error?: CommonError;
     };
-    fetch: {
-        page: number;
-        total: number;
-        list: P2PUserOffer;
-        side: string;
-        base: string;
-        quote: string;
-        state: string;
-        payment_method?: number;
+    create: {
         fetching: boolean;
         success: boolean;
-        timestamp?: number;
         error?: CommonError;
     };
     cancel: {
@@ -51,29 +44,11 @@ export const initialP2PUserOfferState: P2PUserOfferState = {
         success: false,
     },
     fetch: {
-        page: 0,
-        total: 0,
-        list: {
-            
-            available_amount: '',
-            price: '',
-            currency: '',
-            min_order: '',
-            max_order: '',
-            payment_time: '',
-            sum_order: '',
-            persentage: '',
-            term_of_condition: '',
-            trader: '',
-            payment: [],
-            state: ''
-        },
-        side: '',
-        base: '',
-        quote: '',
-        state: '',
+        list: [],
         fetching: false,
         success: false,
+        page: 1,
+        limit: 5
     },
     cancel:{
         success: false,
@@ -103,6 +78,7 @@ export const p2pUserOfferFetchReducer = (state: P2PUserOfferState['fetch'], acti
                 fetching: false,
                 success: true,
                 error: undefined,
+                nextPageExists: action.payload.nextPageExists
             };
         case P2P_USER_OFFER_ERROR:
             return {
