@@ -51,7 +51,7 @@ export const P2PMobileScreen: React.FC = () => {
     const fiats: P2PFiat[] = useSelector(selectP2PFiatsData);
     const currenciesData = useSelector(selectP2PCurrenciesData);
     const user = useSelector(selectUserInfo);
-    const paymentMethods = useSelector(selectP2PPaymentUser);
+    const paymentMethods: any = useSelector(selectP2PPaymentUser);
 
     const [showModalAnnouncement, setShowModalAnnouncement] = React.useState(false);
     const [selectAnnouncement, setSelectAnnouncement] = React.useState(false);
@@ -102,7 +102,7 @@ export const P2PMobileScreen: React.FC = () => {
     React.useEffect(() => {
         setCurrencies(currenciesData?.currency);
         setPayments(currenciesData?.payment);
-        setPaymentListUser(paymentMethods);
+        setPaymentListUser(paymentMethods?.list);
     }, [currenciesData, paymentMethods]);
 
     React.useEffect(() => {
