@@ -429,58 +429,72 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                             <Tab eventKey="withdraws" title="Withdrawal" className="mb-24">
                                 <div className="mt-24">
                                     {renderFilter()}
-                                    <Table header={getTableHeaders(historys)} data={getTableData(historys)} />
-                                    {historys[0] && (
-                                        <Pagination
-                                            firstElemIndex={firstElemIndex}
-                                            lastElemIndex={lastElemIndex}
-                                            page={page}
-                                            nextPageExists={nextPageExists}
-                                            onClickPrevPage={onClickPrevPage}
-                                            onClickNextPage={onClickNextPage}
-                                        />
+
+                                    {loading ? (
+                                        <Loading />
+                                    ) : historys.length < 1 ? (
+                                        <NoData text="No Data Yet" />
+                                    ) : (
+                                        <>
+                                            <Table header={getTableHeaders(historys)} data={getTableData(historys)} />
+
+                                            <Pagination
+                                                firstElemIndex={firstElemIndex}
+                                                lastElemIndex={lastElemIndex}
+                                                page={page}
+                                                nextPageExists={nextPageExists}
+                                                onClickPrevPage={onClickPrevPage}
+                                                onClickNextPage={onClickNextPage}
+                                            />
+                                        </>
                                     )}
-                                    {loading && <Loading />}
-                                    {historys.length < 1 && !loading && <NoData text="No Data Yet" />}
                                 </div>
                             </Tab>
                             <Tab eventKey="deposits" title="Deposit" className="mb-24">
                                 <div className="mt-24">
                                     {renderFilter()}
-                                    <Table
-                                        header={getTableHeadersDeposit(historys)}
-                                        data={getTableDataDeposit(historys)}
-                                    />
-                                    {historys[0] && (
-                                        <Pagination
-                                            firstElemIndex={firstElemIndex}
-                                            lastElemIndex={lastElemIndex}
-                                            page={page}
-                                            nextPageExists={nextPageExists}
-                                            onClickPrevPage={onClickPrevPage}
-                                            onClickNextPage={onClickNextPage}
-                                        />
+
+                                    {loading ? (
+                                        <Loading />
+                                    ) : historys.length < 1 ? (
+                                        <NoData text="No Data Yet" />
+                                    ) : (
+                                        <>
+                                            <Table header={getTableHeaders(historys)} data={getTableData(historys)} />
+
+                                            <Pagination
+                                                firstElemIndex={firstElemIndex}
+                                                lastElemIndex={lastElemIndex}
+                                                page={page}
+                                                nextPageExists={nextPageExists}
+                                                onClickPrevPage={onClickPrevPage}
+                                                onClickNextPage={onClickNextPage}
+                                            />
+                                        </>
                                     )}
-                                    {loading && <Loading />}
-                                    {historys.length < 1 && !loading && <NoData text="No Data Yet" />}
                                 </div>
                             </Tab>
                             <Tab eventKey="transfers" title="Internal Transfer" className="mb-24">
                                 <div className="mt-24">
                                     {renderFilter()}
-                                    <Table header={getTableHeaders(historys)} data={getTableData(historys)} />
-                                    {historys[0] && (
-                                        <Pagination
-                                            firstElemIndex={firstElemIndex}
-                                            lastElemIndex={lastElemIndex}
-                                            page={page}
-                                            nextPageExists={nextPageExists}
-                                            onClickPrevPage={onClickPrevPage}
-                                            onClickNextPage={onClickNextPage}
-                                        />
+                                    {loading ? (
+                                        <Loading />
+                                    ) : historys.length < 1 ? (
+                                        <NoData text="No Data Yet" />
+                                    ) : (
+                                        <>
+                                            <Table header={getTableHeaders(historys)} data={getTableData(historys)} />
+
+                                            <Pagination
+                                                firstElemIndex={firstElemIndex}
+                                                lastElemIndex={lastElemIndex}
+                                                page={page}
+                                                nextPageExists={nextPageExists}
+                                                onClickPrevPage={onClickPrevPage}
+                                                onClickNextPage={onClickNextPage}
+                                            />
+                                        </>
                                     )}
-                                    {loading && <Loading />}
-                                    {historys.length < 1 && !loading && <NoData text="No Data Yet" />}
                                 </div>
                             </Tab>
                         </Tabs>
