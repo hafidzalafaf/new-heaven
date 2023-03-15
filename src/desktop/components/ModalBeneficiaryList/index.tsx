@@ -153,7 +153,15 @@ export const ModalBeneficiaryList: React.FunctionComponent<ModalBeneficiaryListP
                                                 }
                                             }}
                                             className="text-sm grey-text-accent pr-2 cursor-pointer">
-                                            {el && el.data && el.data.address}
+                                            {(currency == 'xrp' || currency == 'xlm') &&
+                                            el?.data?.address?.includes('=')
+                                                ? `${el?.data?.address?.slice(
+                                                      0,
+                                                      el?.data?.address?.indexOf('?')
+                                                  )} (dt : ${el?.data?.address?.slice(
+                                                      el?.data?.address?.indexOf('=') + 1
+                                                  )})`
+                                                : el?.data?.address}
                                         </td>
                                         <td className="text-sm grey-text-accent pr-2">{el && el.name}</td>
                                         <td
