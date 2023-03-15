@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { memberLevelsFetch, selectMemberLevels, selectUserInfo } from 'src/modules';
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useWalletsFetch } from '../../../hooks';
 import { WalletDepositBody, ModalInternalTransfer } from '../../components';
 import { Modal } from '../../components';
@@ -14,10 +14,12 @@ import { CircleCloseDangerLargeIcon } from 'src/assets/images/CircleCloseIcon';
 const WalletDeposit: React.FC = () => {
     const { currency = '' } = useParams<{ currency?: string }>();
     const dispatch = useDispatch();
+    const history = useHistory();
     useWalletsFetch();
 
     const [showModalTransfer, setShowModalTransfer] = React.useState(false);
     const [showModalLocked, setShowModalLocked] = React.useState(false);
+    const [showWithdrawLocked, setShowWithdrawLocked] = React.useState(false);
     const memberLevel = useSelector(selectMemberLevels);
     const user = useSelector(selectUserInfo);
 
@@ -61,6 +63,25 @@ const WalletDeposit: React.FC = () => {
         );
     };
 
+    const renderContentWithdrawModalLocked = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-center align-items-center w-100">
+                    <CircleCloseDangerLargeIcon />
+                </div>
+                <h1 className="white-text text-lg mb-24 text-center ">Withdraw Locked</h1>
+                <p className="grey-text text-ms font-extrabold mb-24 text-center">To withdraw you have to enable 2FA</p>
+                <div className="d-flex justify-content-center align-items-center w-100 mb-0">
+                    <Link to={`/two-fa-activation`}>
+                        <button type="button" className="btn btn-primary sm px-5 mr-3">
+                            Enable 2FA
+                        </button>
+                    </Link>
+                </div>
+            </React.Fragment>
+        );
+    };
+
     return (
         <React.Fragment>
             <div className="pg-wallet-deposit-screen dark-bg-main">
@@ -73,9 +94,18 @@ const WalletDeposit: React.FC = () => {
                     </div>
 
                     <div className="ml-2">
-                        <Link to={`/wallets/${currency}/withdraw`}>
-                            <button className="btn btn-secondary radius-sm m-1 text-sm font-bold">Withdraw</button>
-                        </Link>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (!user?.otp) {
+                                    setShowWithdrawLocked(!showWithdrawLocked);
+                                } else {
+                                    history.push(`/wallets/${currency}/withdraw`);
+                                }
+                            }}
+                            className="btn btn-secondary radius-sm m-1 text-sm font-bold">
+                            Withdraw
+                        </button>
 
                         <button
                             onClick={() => setShowModalTransfer(!showModalTransfer)}
@@ -100,6 +130,7 @@ const WalletDeposit: React.FC = () => {
             )}
 
             <Modal show={showModalLocked} header={renderHeaderModalLocked()} content={renderContentModalLocked()} />
+            <Modal show={showWithdrawLocked} content={renderContentWithdrawModalLocked()} />
         </React.Fragment>
     );
 };

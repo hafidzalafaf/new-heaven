@@ -56,7 +56,7 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
     const errorCreate = useSelector(selectBeneficiariesCreateError);
     const createLoading = useSelector(selectBeneficiariesCreateLoading);
     const currencyItem = currencies.find((item) => item.id === currency);
-    const isRipple = React.useMemo(() => currency === 'xrp', [currency]);
+    const isRipple = React.useMemo(() => currency === 'xrp' || currency === 'xlm', [currency]);
 
     const [showModalAddBeneficiary, setShowModalAddBeneficiary] = React.useState(props.showModalAddBeneficiary);
     const [showModalBeneficiaryList, setShowModalBeneficiaryList] = React.useState(props.showModalBeneficiaryList);
@@ -111,6 +111,10 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
 
     const handleChangeCoinDescription = (value: string) => {
         setCoinDescription(value);
+    };
+
+    const handleChangeCoinDestinationTag = (value: string) => {
+        setCoinDestinationTag(value);
     };
 
     const handleSubmitAddAddressCoinModal = React.useCallback(async () => {
@@ -224,12 +228,30 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
                             </div>
                             {protocol && (
                                 <p className="mb-16 text-xs grey-text ">
-                                    Do not send {currency?.toUpperCase()} unless you are certain the destination
-                                    supports {protocol?.toUpperCase()} transactions. If it does not, you could
-                                    permanently lose access to your coins.
+                                    Do not send <strong className="gradient-text">{currency?.toUpperCase()}</strong>{' '}
+                                    unless you are certain the destination supports{' '}
+                                    <strong className="gradient-text">{protocol?.toUpperCase()}</strong> transactions.
+                                    If it does not, you could permanently lose access to your coins.
                                 </p>
                             )}
                         </div>
+
+                        {isRipple && (
+                            <div>
+                                <CustomInput
+                                    type="text"
+                                    label={currency == 'xrp' ? 'Destination Tag' : 'Memo'}
+                                    placeholder={`Input ${currency == 'xrp' ? 'Destination Tag' : 'Memo'} `}
+                                    defaultLabel={currency == 'xrp' ? 'Destination Tag' : 'Memo'}
+                                    handleChangeInput={handleChangeCoinDestinationTag}
+                                    inputValue={coinDestinationTag}
+                                    classNameLabel="text-ms white-text mb-8"
+                                    classNameInput={``}
+                                    autoFocus={false}
+                                    labelVisible
+                                />
+                            </div>
+                        )}
 
                         <div>
                             <CustomInput
@@ -277,6 +299,7 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
         <React.Fragment>
             {showModalAddBeneficiary && (
                 <Modal
+                    className="com-modal-add-beneficiary"
                     show={showModalAddBeneficiary}
                     header={renderHeaderModalAddBeneficiary()}
                     content={renderContentModalAddBeneficiary()}

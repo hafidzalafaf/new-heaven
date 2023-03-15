@@ -132,9 +132,16 @@ export const WalletWithdrawalForm: React.FC = () => {
         ? (Number(myWithdrawLimit?.limit_1_month) - Number(withdrawSum?.last_1_month)) / Number(currencyItem?.price)
         : 0;
 
-    const blockchainKeyValue = currencyItem?.networks?.find((item) => item?.blockchain_key === blockchainKey);
-    const fee = blockchainKeyValue?.withdraw_fee;
-    const minWithdraw = blockchainKeyValue?.min_withdraw_amount;
+    // const blockchainKeyValue =
+    //     currencyItem && currencyItem?.networks?.find((item) => item?.blockchain_key === blockchainKey);
+    // const fee = blockchainKeyValue?.withdraw_fee;
+    // const minWithdraw = blockchainKeyValue && blockchainKeyValue.min_withdraw_amount;
+    // const withdrawRecive = Number(amount) - Number(fee);
+
+    const blockchainKeyValue =
+        currencyItem && currencyItem?.networks.find((item) => item.blockchain_key === blockchainKey);
+    const fee = blockchainKeyValue && blockchainKeyValue?.withdraw_fee;
+    const minWithdraw = blockchainKeyValue && blockchainKeyValue.min_withdraw_amount;
     const withdrawRecive = Number(amount) - Number(fee);
 
     const handleChangeBeneficiaryId = (id: number, address: string, blockchainKey: string, currency_id: string) => {
@@ -465,7 +472,7 @@ export const WalletWithdrawalForm: React.FC = () => {
                     <p className="text-ms font-extrabold white-text">Select Address</p>
                     <div className="w-70 position-relative input-add-address">
                         <div
-                            className="dark-bg-accent cursor-pointer d-flex align-items-center add-beneficiary-button"
+                            className="dark-bg-accent cursor-pointer d-flex align-items-center add-beneficiary-button pr-5"
                             onClick={() => {
                                 beneficiariesList && beneficiariesList.length >= 1
                                     ? setShowModalBeneficiaryList(true)

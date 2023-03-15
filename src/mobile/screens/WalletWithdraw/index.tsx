@@ -32,6 +32,7 @@ import { selectWallets } from '../../../modules';
 import { useHistory } from 'react-router-dom';
 import { CircleCloseIcon } from 'src/assets/images/CircleCloseIcon';
 import { Decimal } from 'src/components';
+import { WalletWithdrawalInfo } from 'src/desktop/containers';
 
 export const WalletWithdrawMobileScreen: React.FC = () => {
     useBeneficiariesFetch();
@@ -278,7 +279,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                 </label>
                                 <div className="position-relative input-add-address">
                                     <div
-                                        className="dark-bg-accent cursor-pointer d-flex align-items-center add-beneficiary-button"
+                                        className="dark-bg-accent cursor-pointer d-flex align-items-center add-beneficiary-button pr-5"
                                         onClick={() => {
                                             beneficiariesList && beneficiariesList.length >= 1
                                                 ? setShowModalBeneficiaryList(true)
@@ -445,6 +446,8 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+
+                        <WalletWithdrawalInfo textColor="grey-text-accent" />
 
                         <button
                             onClick={() => setShowModalConfirmation(!showModalConfirmation)}

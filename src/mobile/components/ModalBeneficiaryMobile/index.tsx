@@ -47,7 +47,7 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
     const errorCreate = useSelector(selectBeneficiariesCreateError);
     const createLoading = useSelector(selectBeneficiariesCreateLoading);
     const currencyItem = currencies.find((item) => item.id === currency);
-    const isRipple = React.useMemo(() => currency === 'xrp', [currency]);
+    const isRipple = React.useMemo(() => currency === 'xrp' || currency === 'xlm', [currency]);
 
     const [showModalAddBeneficiary, setShowModalAddBeneficiary] = React.useState(props.showModalAddBeneficiary);
 
@@ -103,6 +103,10 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
 
     const handleChangeCoinDescription = (value: string) => {
         setCoinDescription(value);
+    };
+
+    const handleChangeCoinDestinationTag = (value: string) => {
+        setCoinDestinationTag(value);
     };
 
     const handleSubmitAddAddressCoinModal = React.useCallback(async () => {
@@ -169,19 +173,18 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
             <>
                 <form>
                     <div className="align-items-start">
-                        <div className="align-items-start">
-                            <p className="text-sm white-text mb-8">Select Networks</p>
-                            <Select
-                                styles={CustomStylesSelect}
-                                options={optionNetworks}
-                                value={optionNetworks.filter(function (option) {
-                                    return option.value === coinBlockchainName.blockchainKey;
-                                })}
-                                onChange={(e) =>
-                                    setCoinBlockchainName({ ...coinBlockchainName, blockchainKey: e.value })
-                                }
-                            />
-                        </div>
+                        <p className="text-sm white-text mb-8">Select Networks</p>
+                        <Select
+                            styles={CustomStylesSelect}
+                            options={optionNetworks}
+                            value={optionNetworks.filter(function (option) {
+                                return option.value === coinBlockchainName.blockchainKey;
+                            })}
+                            onChange={(e) => setCoinBlockchainName({ ...coinBlockchainName, blockchainKey: e.value })}
+                        />
+                    </div>
+
+                    <div className="align-items-start">
                         <label className="text-sm white-text">Blockchain Address</label>
                         <div className="input-amount">
                             <div>
@@ -204,14 +207,40 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
                                 </div>
                                 {protocol && (
                                     <p className="text-xs grey-text ">
-                                        Do not send {currency?.toUpperCase()} unless you are certain the destination
-                                        supports {protocol?.toUpperCase()} transactions. If it does not, you could
-                                        permanently lose access to your coins.
+                                        Do not send <strong className="gradient-text">{currency?.toUpperCase()}</strong>{' '}
+                                        unless you are certain the destination supports{' '}
+                                        <strong className="gradient-text">{protocol?.toUpperCase()}</strong>{' '}
+                                        transactions. If it does not, you could permanently lose access to your coins.
                                     </p>
                                 )}
                             </div>
                         </div>
                     </div>
+
+                    {isRipple && (
+                        <div className="align-items-start">
+                            <label className="text-sm white-text">
+                                {currency == 'xrp' ? 'Destination Tag' : 'Memo'}
+                            </label>
+                            <div className="input-amount">
+                                <div>
+                                    <CustomInput
+                                        type="text"
+                                        label=""
+                                        placeholder={`Input ${currency == 'xrp' ? 'Destination Tag' : 'Memo'} `}
+                                        defaultLabel=""
+                                        handleChangeInput={handleChangeCoinDestinationTag}
+                                        inputValue={coinDestinationTag}
+                                        classNameLabel="d-none"
+                                        classNameInput={`dark-bg-accent`}
+                                        autoFocus={false}
+                                        labelVisible={false}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="align-items-start">
                         <label className="text-sm white-text">Beneficiary Name</label>
                         <div className="input-amount">
