@@ -173,7 +173,9 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
             <>
                 <form>
                     <div className="align-items-start">
-                        <p className="text-sm white-text mb-8">Select Networks</p>
+                        <p className="text-sm white-text mb-8">
+                            Select Networks <span className="danger-text">*</span>
+                        </p>
                         <Select
                             styles={CustomStylesSelect}
                             options={optionNetworks}
@@ -185,7 +187,9 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
                     </div>
 
                     <div className="align-items-start">
-                        <label className="text-sm white-text">Blockchain Address</label>
+                        <label className="text-sm white-text">
+                            Blockchain Address <span className="danger-text">*</span>
+                        </label>
                         <div className="input-amount">
                             <div>
                                 <CustomInput
@@ -242,7 +246,9 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
                     )}
 
                     <div className="align-items-start">
-                        <label className="text-sm white-text">Beneficiary Name</label>
+                        <label className="text-sm white-text">
+                            Beneficiary Name <span className="danger-text">*</span>
+                        </label>
                         <div className="input-amount">
                             <div>
                                 <CustomInput

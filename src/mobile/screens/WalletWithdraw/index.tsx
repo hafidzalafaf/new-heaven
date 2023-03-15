@@ -285,27 +285,13 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
                                                 ? setShowModalBeneficiaryList(true)
                                                 : setShowModalModalAddBeneficiary(true);
                                         }}>
-                                        {address ? address : 'Select'}
-                                        {/* <CustomInput
-                                            type="text"
-                                            isDisabled={true}
-                                            label={intl.formatMessage({
-                                                id: 'page.body.profile.header.account.content.password.new',
-                                            })}
-                                            placeholder={
-                                                address
-                                                    ? address
-                                                    : `${formatMessage({
-                                                          id: 'page.mobile.withdraw.addressPlaceholder',
-                                                      })}`
-                                            }
-                                            defaultLabel="Select Address"
-                                            inputValue={''}
-                                            classNameLabel="d-none"
-                                            classNameInput={`cursor-pointer dark-bg-accent`}
-                                            autoFocus={false}
-                                            labelVisible={false}
-                                        /> */}
+                                        {address
+                                            ? (currency == 'xrp' || currency == 'xlm') && address?.includes('=')
+                                                ? `${address?.slice(0, address?.indexOf('?'))} (dt : ${address?.slice(
+                                                      address?.indexOf('=') + 1
+                                                  )})`
+                                                : address
+                                            : 'Select Withdrawal Address'}
                                     </div>
                                     <span
                                         onClick={() => setShowModalModalAddBeneficiary(!showModalAddBeneficiary)}

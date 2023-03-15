@@ -478,21 +478,15 @@ export const WalletWithdrawalForm: React.FC = () => {
                                     ? setShowModalBeneficiaryList(true)
                                     : setShowModalModalAddBeneficiary(true);
                             }}>
-                            {address ? address : 'Select'}
-                            {/* <CustomInput
-                                type="text"
-                                isDisabled={true}
-                                label={intl.formatMessage({
-                                    id: 'page.body.profile.header.account.content.password.new',
-                                })}
-                                placeholder={address ? address : 'Select'}
-                                defaultLabel="New password"
-                                inputValue={''}
-                                classNameLabel="d-none"
-                                classNameInput={`cursor-pointer dark-bg-accent`}
-                                autoFocus={false}
-                                labelVisible={false}
-                            /> */}
+                            <span className="overflow-auto text-nowrap w-100 p-0 m-0">
+                                {address
+                                    ? (currency == 'xrp' || currency == 'xlm') && address?.includes('=')
+                                        ? `${address?.slice(0, address?.indexOf('?'))} (dt : ${address?.slice(
+                                              address?.indexOf('=') + 1
+                                          )})`
+                                        : address
+                                    : 'Select Withdrawal Address'}
+                            </span>
                         </div>
                         <span
                             onClick={() => setShowModalModalAddBeneficiary(true)}

@@ -195,7 +195,9 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
 
                     <form>
                         <div>
-                            <p className="text-ms white-text mb-8">Select Networks</p>
+                            <p className="text-ms white-text mb-8">
+                                Select Networks <span className="danger-text">*</span>
+                            </p>
                             <Select
                                 styles={CustomStylesSelect}
                                 options={optionNetworks}
@@ -208,14 +210,17 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
                             />
                         </div>
                         <div>
+                            <label className="text-sm white-text">
+                                Blockchain Address <span className="danger-text">*</span>
+                            </label>
                             <CustomInput
                                 type="text"
-                                label={'Blockchain Address'}
+                                label={''}
                                 placeholder={'Input Address'}
-                                defaultLabel={'Blockchain Address'}
+                                defaultLabel={''}
                                 handleChangeInput={handleChangeCoinAddress}
                                 inputValue={coinAddress}
-                                classNameLabel="text-ms white-text mb-8"
+                                classNameLabel="d-none"
                                 classNameInput={``}
                                 autoFocus={false}
                                 classNameGroup={'mb-1'}
@@ -254,14 +259,17 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
                         )}
 
                         <div>
+                            <label className="text-sm white-text">
+                                Beneficiary Name <span className="danger-text">*</span>
+                            </label>
                             <CustomInput
                                 type="text"
-                                label={'Beneficiary Name'}
+                                label={''}
                                 placeholder={'Input Name'}
-                                defaultLabel={'Beneficiary Name'}
+                                defaultLabel={''}
+                                classNameLabel="d-none"
                                 handleChangeInput={handleChangeBeneficiaryName}
                                 inputValue={coinBeneficiaryName}
-                                classNameLabel="text-ms white-text mb-8"
                                 classNameInput={``}
                                 autoFocus={false}
                                 labelVisible
