@@ -58,6 +58,16 @@ const WalletDepositBody = () => {
         dispatch(alertPush({ message: ['Address has been copied'], type: 'success' }));
     };
 
+    const doCopyDt = (text: string) => {
+        copy(text);
+        dispatch(
+            alertPush({
+                message: [`${currency == 'xrp' ? 'Destination Tag' : 'Memo'} has been copied`],
+                type: 'success',
+            })
+        );
+    };
+
     const blockchain = (active && currencyItem?.networks.find((n) => n.protocol === active)) || {
         blockchain_key: null,
     };
@@ -176,15 +186,19 @@ const WalletDepositBody = () => {
                                     </p>
                                 </div>
                             </div>
+
                             <ul className="pl-2">
-                                {currency == 'xrp' && (
+                                {(currency == 'xrp' || currency === 'xlm') && (
                                     <li className="white-text text-sm mb-8">
                                         <span className="danger-text">
                                             {' '}
                                             It is mandatory to enter the{' '}
-                                            <span className="font-extrabold">Destination Tag</span> when making a
-                                            transfer. If you don't include it, the deposit will fail (this is the Ripple
-                                            address).
+                                            <span className="font-extrabold">
+                                                {currency == 'xrp' && 'Destination Tag'}
+                                                {currency == 'xlm' && 'Memo'}
+                                            </span>{' '}
+                                            when making a transfer. If you don't include it, the deposit will fail (this
+                                            is the {currencyItem?.name} address).
                                         </span>
                                     </li>
                                 )}
@@ -248,21 +262,25 @@ const WalletDepositBody = () => {
                                             id="address"
                                             className="text-ms blue-text font-extrabold address"
                                             defaultValue={
-                                                currency == 'xrp' ? address?.slice(0, address?.indexOf('?')) : address
+                                                currency == 'xrp' || currency === 'xlm'
+                                                    ? address?.slice(0, address?.indexOf('?'))
+                                                    : address
                                             }
                                         />
                                     </div>
 
-                                    {currency === 'xrp' && (
+                                    {(currency == 'xrp' || currency === 'xlm') && (
                                         <div>
                                             <h3 className="white-text text-sm font-bold">
-                                                Destination Tag <span className="danger-text">*</span> :
+                                                {currency == 'xrp' && 'Destination Tag'}
+                                                {currency == 'xlm' &&
+                                                    'Memo'} <span className="danger-text">*</span> :
                                             </h3>
                                             <input
-                                                id="address"
+                                                id="dt"
                                                 className="text-ms blue-text font-extrabold address"
                                                 defaultValue={
-                                                    currency == 'xrp'
+                                                    currency == 'xrp' || currency === 'xlm'
                                                         ? address?.slice(address?.indexOf('=') + 1)
                                                         : address
                                                 }
@@ -278,6 +296,17 @@ const WalletDepositBody = () => {
                                             onClick={() => doCopy('address')}>
                                             Copy Address
                                         </button>
+                                        {(currency == 'xrp' || currency === 'xlm') && (
+                                            <button
+                                                className="btn-primary mr-12"
+                                                type="button"
+                                                disabled={depositAddress?.address === null}
+                                                onClick={() => doCopyDt('dt')}>
+                                                Copy {currency == 'xrp' && 'Destination Tag'}
+                                                {currency == 'xlm' && 'Memo'}
+                                            </button>
+                                        )}
+
                                         <button
                                             type="button"
                                             disabled={depositAddress?.address === null}
@@ -312,7 +341,7 @@ const WalletDepositBody = () => {
                                 <QRCode
                                     dimensions={255}
                                     data={
-                                        currency == 'xrp'
+                                        currency == 'xrp' || currency == 'xlm'
                                             ? depositAddress?.address?.slice(0, depositAddress?.address?.indexOf('?'))
                                             : depositAddress?.address
                                     }
@@ -324,7 +353,7 @@ const WalletDepositBody = () => {
                                 id="address-modal"
                                 className="text-ms blue-text text-center font-extrabold mb-24 address"
                                 defaultValue={
-                                    currency == 'xrp'
+                                    currency == 'xrp' || currency == 'xlm'
                                         ? depositAddress?.address?.slice(0, depositAddress?.address?.indexOf('?'))
                                         : depositAddress?.address
                                 }
