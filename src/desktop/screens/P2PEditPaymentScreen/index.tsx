@@ -29,7 +29,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
     const history = useHistory();
     const user = useSelector(selectUserInfo);
     const currenciesData = useSelector(selectP2PCurrenciesData);
-    const currentPaymentData = useSelector(selectP2PPaymentUser);
+    const currentPaymentData: any = useSelector(selectP2PPaymentUser);
     const createPaymentSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
     const payment_user_uid: any = useParams();
 
@@ -84,7 +84,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
     };
     React.useEffect(() => {
         setEditPaymentItem(
-            currentPaymentData?.find((item: any) => item.payment_user_uid === payment_user_uid.payment_user_uid)
+            currentPaymentData?.list?.find((item: any) => item.payment_user_uid === payment_user_uid.payment_user_uid)
         );
     }, [currentPaymentData]);
 
