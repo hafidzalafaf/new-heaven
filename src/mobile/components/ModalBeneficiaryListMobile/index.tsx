@@ -100,8 +100,15 @@ export const ModalBeneficiaryListMobile: React.FC<ModalBeneficiaryListMobileProp
                                     <span className="text-secondary text-sm font-light">
                                         Address<span className="ml-2">:</span>
                                     </span>
-                                    <span className="white-text text-sm ml-2">
-                                        {item && item.data && item.data.address.slice(0, 35)}...
+                                    <span className="white-text text-sm ml-2 overflow-auto text-nowrap">
+                                        {(currency == 'xrp' || currency == 'xlm') && item?.data?.address?.includes('=')
+                                            ? `${item?.data?.address?.slice(
+                                                  0,
+                                                  item?.data?.address?.indexOf('?')
+                                              )} (dt : ${item?.data?.address?.slice(
+                                                  item?.data?.address?.indexOf('=') + 1
+                                              )})`
+                                            : item?.data?.address}
                                     </span>
                                 </div>
                                 <div className="d-flex ml-2">

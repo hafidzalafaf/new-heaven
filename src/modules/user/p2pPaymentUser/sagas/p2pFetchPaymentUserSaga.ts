@@ -24,7 +24,6 @@ export function* p2pFetchPaymentUserSaga(action: P2PPaymentUserFetch) {
         if (feedback.length === limit){
             params = {...params, page: (pageIndex + 1) * limit, limit : 1};
             const checkData = yield call(API.get(config), `account/payment?${buildQueryString(params)}`);
-
             if (checkData.length === 1){
                 nextPageExists = true
             }
