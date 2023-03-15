@@ -1,5 +1,6 @@
 import { defaultStorageLimit } from 'src/api';
 import { sliceArray } from 'src/helpers';
+import { Payment } from 'src/modules/public/p2p';
 import { CommonError } from '../../types';
 import { P2PUserOfferActions } from './actions';
 import {
@@ -17,24 +18,18 @@ import { P2PUserOffer } from './types';
 
 
 export interface P2PUserOfferState {
-    create: {
-        // data: P2PUserOffer;
-        fetching: boolean;
-        success: boolean;
-        error?: CommonError;
-    };
     fetch: {
-        page: number;
-        total: number;
-        list: P2PUserOffer[];
-        side: string;
-        base: string;
-        quote: string;
-        state: string;
-        payment_method?: number;
+        list: [];
         fetching: boolean;
         success: boolean;
-        timestamp?: number;
+        page: number;
+        limit: number;
+        error?: CommonError;
+        nextPageExists?: boolean;
+    };
+    create: {
+        fetching: boolean;
+        success: boolean;
         error?: CommonError;
     };
     cancel: {
@@ -51,15 +46,11 @@ export const initialP2PUserOfferState: P2PUserOfferState = {
         success: false,
     },
     fetch: {
-        page: 0,
-        total: 0,
         list: [],
-        side: '',
-        base: '',
-        quote: '',
-        state: '',
         fetching: false,
         success: false,
+        page: 1,
+        limit: 5
     },
     cancel:{
         success: false,
@@ -80,7 +71,7 @@ export const p2pUserOfferFetchReducer = (state: P2PUserOfferState['fetch'], acti
             return {
                 ...state,
                 list: sliceArray(action.payload.list, defaultStorageLimit()),
-                page: action.payload.page,
+                page: action.payload.pageIndex,
                 total: action.payload.total,
                 side: action.payload.side,
                 base: action.payload.base,
@@ -89,6 +80,7 @@ export const p2pUserOfferFetchReducer = (state: P2PUserOfferState['fetch'], acti
                 fetching: false,
                 success: true,
                 error: undefined,
+                nextPageExists: action.payload.nextPageExists
             };
         case P2P_USER_OFFER_ERROR:
             return {

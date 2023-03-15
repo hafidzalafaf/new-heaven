@@ -30,7 +30,7 @@ export function* p2pFetchUserOfferSaga(action: P2PUserOfferFetch) {
             max_price,
             min_price,
             limit,
-            page,
+            pageIndex,
             state
         } = action.payload;
         let params: any = {
@@ -45,22 +45,33 @@ export function* p2pFetchUserOfferSaga(action: P2PUserOfferFetch) {
             max_price,
             min_price,
             limit,
-            page,
+            page: pageIndex,
             state
         };
         
         const {data, headers} = yield call(API.get(config), `/account/offer?${buildQueryString(params)}`);
+        let nextPageExists = false;
+
+        if (data.length === limit){
+            params = {...params, page: (pageIndex + 1) * limit, limit: 1};
+            const checkData = yield call(API.get(config), `/account/offer?${buildQueryString(params)}`);
+
+            if (checkData.data.length === 1){
+                nextPageExists = true;
+            }
+        }
 
         yield put(p2pUserOfferData({
             list: data,
             total: headers.total,
-            page: action.payload.page,
+            pageIndex,
             side,
             sort,
             base,
             quote,
             payment_method,
-            state
+            state,
+            nextPageExists
         }));
     } catch (error) {
         yield put(
