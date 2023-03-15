@@ -32,7 +32,7 @@ export interface P2PUserOfferCancelError {
 export interface P2PUserOfferFetch {
     type: typeof P2P_USER_OFFER_FETCH;
     payload: {
-        page?: number;
+        pageIndex?: number;
         limit?: number;
         side?: string;
         fiat?: string;
@@ -53,7 +53,7 @@ export interface P2PUserOfferData {
     type: typeof P2P_USER_OFFER_DATA;
     payload: {
         list: [];
-        page: number;
+        pageIndex: number;
         total: number;
         side: string;
         sort?: string;

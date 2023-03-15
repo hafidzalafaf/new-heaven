@@ -6,7 +6,7 @@ import { OfferP2PTable } from 'src/desktop/containers'
 import { ArrowLeft } from 'src/mobile/assets/Arrow'
 import { PaginationMobile } from 'src/mobile/components'
 import { OfferP2PTableMobile } from 'src/mobile/containers/OfferP2PTableMobile'
-import { selectP2POrder, selectP2PUserAccountOffer, selectP2PFiatsData, selectP2PUserAccountOfferCancelSuccess, p2pFiatFetch, p2pUserOfferFetch, orderFetch } from 'src/modules'
+import { selectP2POrder, selectP2PUserAccountOffer, selectP2PFiatsData, selectP2PUserAccountOfferCancelSuccess, p2pFiatFetch, p2pUserOfferFetch, orderFetch, selectP2PUserAccountOfferNextPageExists } from 'src/modules'
 
 const P2PMyOfferMobileScreen = () => {
   const history = useHistory()
@@ -17,6 +17,7 @@ const P2PMyOfferMobileScreen = () => {
   const offer = useSelector(selectP2PUserAccountOffer);
   const fiats = useSelector(selectP2PFiatsData);
   const cancelPaymentSuccess = useSelector(selectP2PUserAccountOfferCancelSuccess);
+  const nextPageExists = useSelector(selectP2PUserAccountOfferNextPageExists);
 
 
   const [startDate, setStartDate] = React.useState<string | number>();
@@ -28,6 +29,8 @@ const P2PMyOfferMobileScreen = () => {
   const [data, setData] = React.useState([]);
   const [orderLoading, setOrderLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [currentPage, setCurrentPage] = React.useState(0);
+  const [limit, setLimit] = React.useState(5);
 
   const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
   const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
@@ -50,16 +53,14 @@ const P2PMyOfferMobileScreen = () => {
               max_price: '',
               side: side,
               state: state,
-              page: 0,
+              pageIndex: currentPage,
               limit: 5
           })
       );
       if (cancelPaymentSuccess){
           // setShowModalCancelOffer(false)
       }
-  }, [dispatch, side, cancelPaymentSuccess, state, fiat]);
-
-  console.log(offer, 'offer');
+  }, [dispatch, side, cancelPaymentSuccess, state, fiat, currentPage]);
 
   React.useEffect(() => {
       setOrderLoading(true);
@@ -196,9 +197,14 @@ const P2PMyOfferMobileScreen = () => {
         data={offer} 
         loading={orderLoading}
       />
-      {/* <PaginationMobile
-
-      /> */}
+      <PaginationMobile
+        firstElementIndex={currentPage * limit}
+        lastElementIndex={currentPage * limit}
+        page={currentPage}
+        onClickPrevPage={()=> setCurrentPage(currentPage - 1)}
+        onClickNextPage={()=> setCurrentPage(currentPage + 1)}
+        nextPageExists={nextPageExists}
+      />
     </section>
   )
 }

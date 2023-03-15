@@ -1,5 +1,6 @@
 import { defaultStorageLimit } from 'src/api';
 import { sliceArray } from 'src/helpers';
+import { Payment } from 'src/modules/public/p2p';
 import { CommonError } from '../../types';
 import { P2PUserOfferActions } from './actions';
 import {
@@ -24,6 +25,7 @@ export interface P2PUserOfferState {
         page: number;
         limit: number;
         error?: CommonError;
+        nextPageExists?: boolean;
     };
     create: {
         fetching: boolean;
@@ -69,7 +71,7 @@ export const p2pUserOfferFetchReducer = (state: P2PUserOfferState['fetch'], acti
             return {
                 ...state,
                 list: sliceArray(action.payload.list, defaultStorageLimit()),
-                page: action.payload.page,
+                page: action.payload.pageIndex,
                 total: action.payload.total,
                 side: action.payload.side,
                 base: action.payload.base,
