@@ -93,15 +93,6 @@ export const P2PAddPaymentMethodMobileScreen = () => {
         dispatch(p2pPaymentUserCreate(formData));
     };
 
-    function renderPaymentForm() {
-        switch (bankData?.type) {
-            case 'bank':
-                return <BankForm />;
-            case 'ewallet':
-                return <EwalletForm />;
-        }
-    }
-
     const EwalletForm = () => {
         return (
             <form className="gap-8">
@@ -224,15 +215,24 @@ export const P2PAddPaymentMethodMobileScreen = () => {
         );
     };
 
-    return (
-        <section className="pg-mobile-screen-p2p mobile-container position-relative">
-            <div className="d-flex justify-content-start align-items-center mb-32">
-                <div onClick={() => history.goBack()}>
-                    <ArrowLeft className={'cursor-pointer'} />
+    function renderPaymentForm() {
+        switch (bankData?.type) {
+            case 'bank':
+                return <BankForm />;
+            case 'ewallet':
+                return <EwalletForm />;
+        }
+
+        return (
+            <section className="pg-mobile-screen-p2p mobile-container position-relative">
+                <div className="d-flex justify-content-start align-items-center mb-32">
+                    <div onClick={() => history.goBack()}>
+                        <ArrowLeft className={'cursor-pointer'} />
+                    </div>
+                    <p className="m-0 p-0 grey-text-accent text-md font-extrabold mx-auto">Add {bank.bank}</p>
                 </div>
-                <p className="m-0 p-0 grey-text-accent text-md font-extrabold mx-auto">Add {bank.bank}</p>
-            </div>
-            {renderPaymentForm()}
-        </section>
-    );
+                {renderPaymentForm()}
+            </section>
+        );
+    }
 };

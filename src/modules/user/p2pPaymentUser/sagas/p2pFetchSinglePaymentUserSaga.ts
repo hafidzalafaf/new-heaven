@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 import { sendError } from '../../..';
 import { API, RequestOptions } from '../../../../api';
-import { p2pPaymentUserData, p2pPaymentUserError, P2PPaymentUserFetchSingle } from '../action';
+import { p2pPaymentUserData, P2PPaymentUserFetchSingleError, P2PPaymentUserFetchSingle, P2PPaymentUserFetchSingleData, p2pPaymentUserFetchSingleData } from '../action';
 
 const config: RequestOptions = {
     apiVersion: 'p2p',
@@ -9,15 +9,15 @@ const config: RequestOptions = {
 
 export function* p2pFetchSinglePaymentUserSaga(action: P2PPaymentUserFetchSingle) {
     try {
-        const feedback = yield call(API.get(config), `/account/payment?payment_user_uid=${action.payload.payment_user_uid}`);
-        yield put(p2pPaymentUserData(feedback));
+        const data = yield call(API.get(config), `/account/payment/${action.payload.payment_user_uid}`);
+        yield put(p2pPaymentUserFetchSingleData(data));
     } catch (error) {
         yield put(
             sendError({
                 error,
                 processingType: 'alert',
                 extraOptions: {
-                    actionError: p2pPaymentUserError,
+                    actionError: P2PPaymentUserFetchSingleError,
                 },
             })
         );

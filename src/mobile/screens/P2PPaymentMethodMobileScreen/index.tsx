@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { MobileFilterIcon } from 'src/assets/images/P2PIcon'
-import { P2PPaymentMethodProps } from 'src/desktop/components'
+import { ModalUserLevel, P2PPaymentMethodProps } from 'src/desktop/components'
 import { capitalizeFirstLetter } from 'src/helpers'
 import { ArrowLeft, ArrowRight } from 'src/mobile/assets/Arrow'
 import { ModalFullScreenMobile, PaginationMobile } from 'src/mobile/components'
-import { p2pCurrenciesFetch, p2pPaymentUserFetch, p2pProfileFetch, selectLoadingAbilities, selectP2PCurrenciesData, selectP2PPaymentUser, selectP2PPaymentUserDeleteSuccess } from 'src/modules'
+import { p2pCurrenciesFetch, p2pPaymentUserFetch, p2pProfileFetch, selectLoadingAbilities, selectP2PCurrenciesData, selectP2PPaymentUser, selectP2PPaymentUserDeleteSuccess, selectUserInfo } from 'src/modules'
 
 import './P2PPaymentMethodMobileScreen.pcss'
 
@@ -17,13 +17,15 @@ export const P2PPaymentMethodMobileScreen = () => {
     const paymentMethods: any = useSelector(selectP2PPaymentUser);
     const deleteSuccess = useSelector(selectP2PPaymentUserDeleteSuccess);
     const currenciesData = useSelector(selectP2PCurrenciesData);
+    const user = useSelector(selectUserInfo);
 
     const [loading, setLoading] = React.useState(true);
     const [showChooseBankType, setShowChooseBankType] = React.useState(false);
     const [fiat, setFiat] = React.useState('IDR');
     const [data, setData] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(0);
-    const [limit, setLimit] = React.useState(5)
+    const [limit, setLimit] = React.useState(5);
+    const [showModalUserLevel, setShowModalUserLevel] = React.useState(false)
 
     React.useEffect(() => {
       dispatch(p2pPaymentUserFetch({pageIndex: currentPage, limit: limit , type: ''}));
@@ -31,6 +33,7 @@ export const P2PPaymentMethodMobileScreen = () => {
       setLoading(false)
   }, [dispatch, deleteSuccess, currentPage]);
 
+    console.log(user)
   React.useEffect(() => {
     dispatch(p2pCurrenciesFetch({ fiat }));
 }, [dispatch, fiat]);
@@ -122,7 +125,20 @@ React.useEffect(()=>{
             <p className="m-0 p-0 grey-text-accent text-md font-extrabold mx-auto">Payment Methods</p>
         </div>
         <PaymentMethodList data={data}/>
-        { !loading && <button onClick={()=> setShowChooseBankType(true)} className='bottom-fixed-button btn-primary position-sticky'>Add New Payment Method</button>}
+        { !loading && <button 
+        onClick={
+        user?.level < 3 ?  
+          ()=> setShowModalUserLevel(true)
+        : () => setShowChooseBankType(true)
+        } 
+        className='bottom-fixed-button btn-primary position-sticky'>Add New Payment Method</button>}
+                    {showModalUserLevel && (
+                <ModalUserLevel
+                    show={showModalUserLevel}
+                    title={'Add Payment Method'}
+                    onClose={() => setShowModalUserLevel(false)}
+                />
+            )}
     </section>
   )
 }

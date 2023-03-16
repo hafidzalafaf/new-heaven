@@ -130,15 +130,6 @@ export const P2PEditPaymentMethodMobileScreen = () => {
         dispatch(p2pPaymentUserUpdate(formData, payment_id));
     };
 
-    function renderPaymentForm() {
-        switch (editPaymentItem?.tipe) {
-            case 'bank':
-                return <BankForm />;
-            case 'ewallet':
-                return <EwalletForm />;
-        }
-    }
-
     const EwalletForm = () => {
         return (
             <form className="gap-8">
@@ -261,41 +252,50 @@ export const P2PEditPaymentMethodMobileScreen = () => {
         );
     };
 
-    const ModalDeleteConfirmation = ({ show }) => {
-        return (
-            <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${show ? 'show' : ''}`}>
-                <div className="fixed-bottom off-canvas-content-container-filter overflow-auto d-flex flex-column gap-16 items-align-center">
-                    <BlueWarningIcon className="mx-auto" />
-                    <span className="gradient-text text-center">Delete Payment Method</span>
-                    <span className="grey-text-accent text-center">
-                        Are you sure you want to delete this payment method?
-                    </span>
-                    <button onClick={() => handleDeletePayment(payment.payment_uid)} className="btn-primary">
-                        Delete
-                    </button>
-                    <button
-                        onClick={() => setShowDeleteModal(false)}
-                        className="btn btn-reset grey-text-accent dark-bg-accent">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        );
-    };
+    function renderPaymentForm() {
+        switch (editPaymentItem?.tipe) {
+            case 'bank':
+                return <BankForm />;
+            case 'ewallet':
+                return <EwalletForm />;
+        }
 
-    return (
-        <section className="pg-mobile-screen-p2p mobile-container position-relative">
-            <div className="d-flex justify-content-between px-3 align-items-center mb-32">
-                <div onClick={() => history.goBack()}>
-                    <ArrowLeft className={'cursor-pointer'} />
+        const ModalDeleteConfirmation = ({ show }) => {
+            return (
+                <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${show ? 'show' : ''}`}>
+                    <div className="fixed-bottom off-canvas-content-container-filter overflow-auto d-flex flex-column gap-16 items-align-center">
+                        <BlueWarningIcon className="mx-auto" />
+                        <span className="gradient-text text-center">Delete Payment Method</span>
+                        <span className="grey-text-accent text-center">
+                            Are you sure you want to delete this payment method?
+                        </span>
+                        <button onClick={() => handleDeletePayment(payment.payment_uid)} className="btn-primary">
+                            Delete
+                        </button>
+                        <button
+                            onClick={() => setShowDeleteModal(false)}
+                            className="btn btn-reset grey-text-accent dark-bg-accent">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
-                <p className="m-0 p-0 grey-text-accent text-md font-extrabold">Edit {editPaymentItem?.bank_name}</p>
-                <div onClick={() => setShowDeleteModal(true)}>
-                    <TrashBinMobileIcon className={''} />
+            );
+        };
+
+        return (
+            <section className="pg-mobile-screen-p2p mobile-container position-relative">
+                <div className="d-flex justify-content-between px-3 align-items-center mb-32">
+                    <div onClick={() => history.goBack()}>
+                        <ArrowLeft className={'cursor-pointer'} />
+                    </div>
+                    <p className="m-0 p-0 grey-text-accent text-md font-extrabold">Edit {editPaymentItem?.bank_name}</p>
+                    <div onClick={() => setShowDeleteModal(true)}>
+                        <TrashBinMobileIcon className={''} />
+                    </div>
                 </div>
-            </div>
-            {renderPaymentForm()}
-            <ModalDeleteConfirmation show={showDeleteModal} />
-        </section>
-    );
+                {renderPaymentForm()}
+                <ModalDeleteConfirmation show={showDeleteModal} />
+            </section>
+        );
+    }
 };

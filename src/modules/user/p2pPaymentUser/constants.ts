@@ -1,5 +1,4 @@
 export const P2P_PAYMENT_USER_FETCH = 'p2pPaymentUser/FETCH';
-export const P2P_PAYMENT_USER_FETCH_SINGLE = 'p2pPaymentUser/FETCH';
 export const P2P_PAYMENT_USER_DATA = 'p2pPaymentUser/DATA';
 export const P2P_PAYMENT_USER_ERROR = 'p2pPaymentUser/ERROR';
 
@@ -14,3 +13,7 @@ export const P2P_PAYMENT_USER_UPDATE_ERROR = 'p2pPaymentUser/UPDATE_ERROR';
 export const P2P_PAYMENT_USER_DELETE = 'p2pPaymentUser/DELETE';
 export const P2P_PAYMENT_USER_DELETE_DATA = 'p2pPaymentUser/DELETE_DATA';
 export const P2P_PAYMENT_USER_DELETE_ERROR = 'p2pPaymentUser/DELETE_ERROR';
+
+export const P2P_PAYMENT_USER_FETCH_SINGLE = 'p2pPaymentUser/FETCH_SINGLE';
+export const P2P_PAYMENT_USER_FETCH_SINGLE_DATA = 'p2pPaymentUser/FETCH_SINGLE_DATA';
+export const P2P_PAYMENT_USER_FETCH_SINGLE_ERROR = 'p2pPaymentUser/FETCH_SINGLE_ERROR';
