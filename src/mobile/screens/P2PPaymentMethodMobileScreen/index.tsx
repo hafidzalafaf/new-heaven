@@ -33,7 +33,6 @@ export const P2PPaymentMethodMobileScreen = () => {
       setLoading(false)
   }, [dispatch, deleteSuccess, currentPage]);
 
-    console.log(user)
   React.useEffect(() => {
     dispatch(p2pCurrenciesFetch({ fiat }));
 }, [dispatch, fiat]);
