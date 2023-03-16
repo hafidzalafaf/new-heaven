@@ -45,8 +45,6 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
         handleChangeEndDate,
     } = props;
 
-    console.log(data);
-
     const optionFiats = fiats?.map((item) => {
         return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };
     });

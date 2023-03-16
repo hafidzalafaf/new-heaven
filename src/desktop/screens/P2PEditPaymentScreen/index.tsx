@@ -58,8 +58,6 @@ export const P2PEditPaymentScreen: React.FC = () => {
         }
     }, [createPaymentSuccess]);
 
-    console.log(currentEditedData);
-
     const handleEditPayment = () => {
         const formData = new FormData();
         formData.append('payment_id', payment_user_uid);
