@@ -196,7 +196,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
             return true;
         } else if (otp.length < 6) {
             return true;
-        } else if (!amount || amount < minWithdraw) {
+        } else if (+amount < +minWithdraw) {
             return true;
         } else if (!beneficiaryId) {
             return true;
