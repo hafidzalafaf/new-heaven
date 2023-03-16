@@ -53,6 +53,7 @@ export const P2PPaymentMethod: React.FC = () => {
     const [deletePayment, setDeletePayment] = React.useState<any>({});
     const [limit, setLimit] = React.useState(5);
     const [currentPage, setCurrentPage] = React.useState(0)
+    const [data, setData] = React.useState([])
 
     React.useEffect(() => {
         dispatch(p2pPaymentUserFetch({limit: limit, pageIndex: currentPage }));
@@ -61,6 +62,10 @@ export const P2PPaymentMethod: React.FC = () => {
     React.useEffect(() => {
         dispatch(p2pCurrenciesFetch({ fiat }));
     }, [dispatch, fiat]);
+
+    React.useEffect(()=>{
+        setData(paymentMethods.list)
+    }, [dispatch, deleteSuccess, currentPage])
 
 
     React.useEffect(()=>{
@@ -78,6 +83,7 @@ export const P2PPaymentMethod: React.FC = () => {
             })
         );
     };
+
     const ModalDeletePaymentMethod = () => {
         return (
             <form className="bg-black p-10 pt-20">
@@ -166,14 +172,14 @@ export const P2PPaymentMethod: React.FC = () => {
                     </div>
                 </div>
 
-                {!paymentMethods?.list[0] ? (
+                {!data[0] || data[0] === undefined ? (
                     <div className="d-flex flex-column justify-content-center align-items-center gap-24 no-data-container">
                         <NoDataIcon />
                         <p className="m-0 p-0 grey-text text-sm font-bold">No payment method yet</p>
                     </div>
                 ) : (
                     <div className="data-container d-flex flex-column align-items-center justify-content-center gap-16">
-                        {paymentMethods?.list?.map((bank, i) => (
+                        {data?.map((bank, i) => (
                             <div key={i} className="p-16 radius-sm data-row w-100">
                                 <div className="d-flex justify-content-between align-items- mb-16">
                                     <div className="d-flex align-items-center gap-16">

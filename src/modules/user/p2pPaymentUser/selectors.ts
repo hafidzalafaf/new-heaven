@@ -17,3 +17,9 @@ export const selectP2PPaymentUserCreateSuccess = (state: RootState): boolean =>
 export const selectP2PPaymentUserUpdateSuccess = (state: RootState): boolean => state.user.p2pPaymentUser.update.success;
 
 export const selectP2PPaymentUserDeleteSuccess = (state: RootState): boolean => state.user.p2pPaymentUser.delete.success;
+
+export const selectP2PPaymentUserSingle = (state: RootState): {} => state.user.p2pPaymentUser.fetchSingle.data;
+
+export const selectP2PPaymentUserSingleLoading = (state: RootState): boolean => state.user.p2pPaymentUser.fetchSingle.fetching;
+
+export const selectP2PPaymentUserSingleError = (state: RootState): CommonError | undefined => state.user.p2pPaymentUser.fetchSingle.error;

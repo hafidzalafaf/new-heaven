@@ -102,7 +102,6 @@ const handleEditPayment = () => {
   const formData = new FormData();
   formData.append('payment_id', payment.payment_uid);
   formData.append('account_number', account_number);
-  formData.append('qr_code', image);
   formData.append('full_name', profiles[0]?.first_name);
   formData.append('payment_method', editPaymentItem.symbol);
   formData.append('otp_code', otp_code);

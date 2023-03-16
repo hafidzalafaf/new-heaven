@@ -12,16 +12,13 @@ import {
     p2pPaymentUserFetch,
     P2PPaymentUserFetchSingle,
     p2pPaymentUserUpdate,
+    selectP2PPaymentUserSingle,
 } from 'src/modules';
 import Select from 'react-select';
 import { CustomStylesSelect } from '../../../desktop/components';
 import { InfoWarningIcon, QRIcon } from '../../../assets/images/P2PIcon';
 import { useParams, useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-
-interface uid {
-    payment: string;
-}
 
 export const P2PEditPaymentScreen: React.FC = () => {
     useDocumentTitle('P2P || Edit Payment');
@@ -31,7 +28,8 @@ export const P2PEditPaymentScreen: React.FC = () => {
     const currenciesData = useSelector(selectP2PCurrenciesData);
     const currentPaymentData = useSelector(selectP2PPaymentUser)
     const createPaymentSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
-    const payment_user_uid:any  = useParams();
+    const currentEditedData = useSelector(selectP2PPaymentUserSingle);
+    const {payment_user_uid = ''}  = useParams<{payment_user_uid?: string}>();
     
     const [inputFile, setInputFile] = React.useState(null);
     const [fileName, setFileName] = React.useState('');
@@ -39,16 +37,17 @@ export const P2PEditPaymentScreen: React.FC = () => {
     const [account_number, setAccountNumber] = React.useState('');
     const [bankData, setBankData] = React.useState<any>();
     const [image, setImage] = React.useState<File | null>(null);
-    const [editPaymentItem, setEditPaymentItem] = React.useState<any>()
-
     const profiles = user.profiles.slice(-1);
     // const replacedDash = bank.payment.replace(/-/g, ' ');
     // const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
 
     React.useEffect(()=>{
-        dispatch(P2PPaymentUserFetchSingle(payment_user_uid))
+        dispatch(P2PPaymentUserFetchSingle({payment_user_uid}))
     }, [dispatch])
 
+    React.useEffect(()=>{
+        setAccountNumber(currentEditedData[0]?.account_number);
+    }, [currentEditedData])
     
     React.useEffect(() => {
         if (createPaymentSuccess) {
@@ -56,14 +55,16 @@ export const P2PEditPaymentScreen: React.FC = () => {
         }
     }, [createPaymentSuccess]);
 
+    console.log(currentEditedData);
+
     const handleEditPayment = () => {
 
         const formData = new FormData()
-        formData.append('payment_id', payment_user_uid.payment_user_uid);
+        formData.append('payment_id', payment_user_uid);
         formData.append('account_number', account_number);
         formData.append('full_name', profiles[0]?.first_name);
-        formData.append('payment_method', editPaymentItem.symbol);
-        formData.append('qr_code', image)
+        formData.append('payment_method', currentEditedData[0].symbol);
+        formData.append('qrcode', image)
         const payment_id = formData.get('payment_id').toString();
         dispatch(p2pPaymentUserUpdate(formData, payment_id));
     };
@@ -85,9 +86,6 @@ export const P2PEditPaymentScreen: React.FC = () => {
             return false;
         }
     };
-    React.useEffect(() => {
-        setEditPaymentItem(currentPaymentData?.find((item:any) => item.payment_user_uid === payment_user_uid.payment_user_uid));
-    }, [currentPaymentData]);
 
     return (
         <React.Fragment>
@@ -112,13 +110,13 @@ export const P2PEditPaymentScreen: React.FC = () => {
                             <input
                                 type="text"
                                 className="custom-input-add-payment w-100 white-text"
-                                defaultValue={editPaymentItem?.symbol}
+                                defaultValue={currentEditedData[0]?.symbol}
                                 readOnly
                                 disabled
                             />
                         </div>
 
-                        {editPaymentItem?.tipe === 'bank' ? (
+                        {currentEditedData[0]?.tipe === 'bank' ? (
                             <div className="mb-24">
                                 <label className="m-0 p-0 mb-16 white-text text-ms">Full Name</label>
                                 <input
@@ -143,7 +141,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
                             </div>
                         )}
 
-                        {editPaymentItem?.tipe === 'bank' ? (
+                        {currentEditedData[0]?.tipe === 'bank' ? (
                             <div className="mb-24">
                                 <label className="m-0 p-0 mb-16 white-text text-ms">Account Number</label>
                                 <input
@@ -152,6 +150,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
                                     type="text"
                                     placeholder="Enter Account Number"
                                     className="custom-input-add-payment w-100 white-text"
+                                    defaultValue={currentEditedData[0].account_number}
                                 />
                             </div>
                         ) : (

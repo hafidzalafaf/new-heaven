@@ -14,7 +14,7 @@ import { p2pFetchSinglePaymentUserSaga } from './p2pFetchSinglePaymentUserSaga';
 
 export function* rootP2PPaymentUserSaga() {
     yield takeLatest(P2P_PAYMENT_USER_FETCH, p2pFetchPaymentUserSaga);
-    takeLatest(P2P_PAYMENT_USER_FETCH_SINGLE, p2pFetchSinglePaymentUserSaga);
+    yield takeLatest(P2P_PAYMENT_USER_FETCH_SINGLE, p2pFetchSinglePaymentUserSaga);
     yield takeEvery(P2P_PAYMENT_USER_CREATE, p2pCreatePaymentUserSaga);
     yield takeEvery(P2P_PAYMENT_USER_UPDATE, p2pUpdatePaymentUserSaga);
     yield takeEvery(P2P_PAYMENT_USER_DELETE, p2pDeletePaymentUserSaga);

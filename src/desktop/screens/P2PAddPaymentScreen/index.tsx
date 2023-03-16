@@ -63,7 +63,6 @@ export const P2PAddPaymentScreen: React.FC = () => {
     const handleCreatePayment = () => {
         const formData = new FormData();
         formData.append('account_number', account_number);
-        formData.append('qr_code', image);
         formData.append('full_name', profiles[0]?.first_name);
         formData.append('payment_method', bank.payment);
         formData.append('otp_code', otp_code);

@@ -13,6 +13,8 @@ import {
     P2P_PAYMENT_USER_DELETE,
     P2P_PAYMENT_USER_DELETE_DATA,
     P2P_PAYMENT_USER_DELETE_ERROR,
+    P2P_PAYMENT_USER_FETCH_SINGLE_DATA,
+    P2P_PAYMENT_USER_FETCH_SINGLE_ERROR,
 } from './constants';
 import { IPaymentUser } from './types';
 
@@ -30,8 +32,20 @@ export interface P2PPaymentUserFetch {
 export interface P2PPaymentUserFetchSingle {
     type: typeof P2P_PAYMENT_USER_FETCH_SINGLE;
     payload: {
-        payment_user_uid?: string;
+        payment_user_uid: string;
     }
+}
+
+export interface P2PPaymentUserFetchSingleData {
+    type: typeof P2P_PAYMENT_USER_FETCH_SINGLE_DATA;
+    payload: {
+        data: []
+    }
+}
+
+export interface P2PPaymentUserFetchSingleError {
+    type: typeof P2P_PAYMENT_USER_FETCH_SINGLE_ERROR;
+    error: CommonError
 }
 
 export interface P2PPaymentUserData {
@@ -105,17 +119,15 @@ export type P2PPaymentUserActions =
     | P2PPaymentUserUpdateError
     | P2PPaymentUserDelete
     | P2PPaymentUserDeleteData
-    | P2PPaymentUserDeleteError;
+    | P2PPaymentUserDeleteError
+    | P2PPaymentUserFetchSingle
+    | P2PPaymentUserFetchSingleData
+    | P2PPaymentUserFetchSingleError
 
 export const p2pPaymentUserFetch = (payload: P2PPaymentUserFetch['payload']): P2PPaymentUserFetch => ({
     type: P2P_PAYMENT_USER_FETCH,
     payload
 });
-
-export const P2PPaymentUserFetchSingle = (payload: P2PPaymentUserFetchSingle['payload']): P2PPaymentUserFetchSingle =>({
-    type: P2P_PAYMENT_USER_FETCH,
-    payload
-})
 
 export const p2pPaymentUserData = (payload: P2PPaymentUserData['payload']): P2PPaymentUserData => ({
     type: P2P_PAYMENT_USER_DATA,
@@ -126,6 +138,21 @@ export const p2pPaymentUserError = (error: CommonError): P2PPaymentUserError => 
     type: P2P_PAYMENT_USER_ERROR,
     error,
 });
+
+export const P2PPaymentUserFetchSingle = (payload: P2PPaymentUserFetchSingle['payload']): P2PPaymentUserFetchSingle =>({
+    type: P2P_PAYMENT_USER_FETCH_SINGLE,
+    payload
+})
+
+export const p2pPaymentUserFetchSingleData = (payload: P2PPaymentUserFetchSingleData['payload']): P2PPaymentUserFetchSingleData => ({
+    type: P2P_PAYMENT_USER_FETCH_SINGLE_DATA,
+    payload
+})
+
+export const P2PPaymentUserFetchSingleError = (error: CommonError): P2PPaymentUserFetchSingleError => ({
+    type: P2P_PAYMENT_USER_FETCH_SINGLE_ERROR,
+    error
+})
 
 export const p2pPaymentUserCreate = (payload: P2PPaymentUserCreate['payload']): P2PPaymentUserCreate => ({
     type: P2P_PAYMENT_USER_CREATE,
