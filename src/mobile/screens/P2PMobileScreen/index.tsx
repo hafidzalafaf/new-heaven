@@ -356,8 +356,8 @@ export const P2PMobileScreen: React.FC = () => {
                                 setShowModalSelectCurrency(!showModalSelectCurrency);
                                 setSymbol(fiat?.symbol);
                             }}
-                            className="fiats-option cursor-pointer">
-                            <p className="m-0 p-0 grey-text-accent text-ms font-extrabold">{fiat?.symbol}</p>
+                            className="fiats-option cursor-pointer d-flex align-items-center gap-4">
+                            <img src={fiat?.icon} alt="logo" width={30} height={30} />
                             <p className="m-0 p-0 grey-text text-ms font-extrabold">{fiat?.name}</p>
                         </span>
                     ))}

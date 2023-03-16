@@ -31,7 +31,7 @@ export function* p2pFetchUserOfferDetailSaga(action: P2PUserOfferDetailFetch) {
             min_price,
             limit,
             page,
-            offer_number
+            offer_number,
         } = action.payload;
         let params: any = {
             side,
@@ -46,21 +46,25 @@ export function* p2pFetchUserOfferDetailSaga(action: P2PUserOfferDetailFetch) {
             min_price,
             limit,
             page,
-            offer_number
         };
-        
-        const {data, headers} = yield call(API.get(config), `/account/offer/${offer_number}?${buildQueryString(params)}`);
 
-        yield put(p2pUserOfferDetailData({
-            list: data,
-            total: headers.total,
-            page: action.payload.page,
-            side,
-            sort,
-            base,
-            quote,
-            payment_method,
-        }));
+        const { data, headers } = yield call(
+            API.get(config),
+            `/account/offer/${offer_number}?${buildQueryString(params)}`
+        );
+
+        yield put(
+            p2pUserOfferDetailData({
+                list: data,
+                total: headers.total,
+                page: action.payload.page,
+                side,
+                sort,
+                base,
+                quote,
+                payment_method,
+            })
+        );
     } catch (error) {
         yield put(
             sendError({

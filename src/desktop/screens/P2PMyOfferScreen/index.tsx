@@ -2,10 +2,16 @@ import * as React from 'react';
 import { useDocumentTitle } from '../../../hooks';
 import { HeaderP2P, BannerP2P, OfferP2PTable } from 'src/desktop/containers';
 import { useSelector, useDispatch } from 'react-redux';
-import { p2pFiatFetch, selectP2PFiatsData, p2pUserOfferFetch, selectP2PUserAccountOffer, p2pUserOfferCancel, selectP2PCancelOfferSuccess, selectP2PUserAccountOfferCancelSuccess } from 'src/modules';
+import {
+    p2pFiatFetch,
+    selectP2PFiatsData,
+    p2pUserOfferFetch,
+    selectP2PUserAccountOffer,
+    p2pUserOfferCancel,
+    selectP2PUserAccountOfferCancelSuccess,
+} from 'src/modules';
 import { Modal } from 'src/desktop/components';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
-import { p2pCancelUserOfferSaga } from 'src/modules/user/p2pUserOffer/sagas/p2pCancelUserOfferSaga';
 
 export const P2PMyOfferScreen: React.FC = () => {
     useDocumentTitle('P2P || My Offer');
@@ -26,7 +32,7 @@ export const P2PMyOfferScreen: React.FC = () => {
     const [max_amount, setMaxAmount] = React.useState('');
     const [min_price, setMinPrice] = React.useState('');
     const [side, setSide] = React.useState('');
-    const [cancelPaymentId, setCancelPaymentId] = React.useState('')
+    const [cancelPaymentId, setCancelPaymentId] = React.useState('');
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
@@ -48,17 +54,17 @@ export const P2PMyOfferScreen: React.FC = () => {
                 min_price: '',
                 max_price: '',
                 side: side,
-                state: state
+                state: state,
             })
         );
-        if (cancelPaymentSuccess){
-            setShowModalCancelOffer(false)
+        if (cancelPaymentSuccess) {
+            setShowModalCancelOffer(false);
         }
     }, [dispatch, side, cancelPaymentSuccess, state, fiat]);
 
-    const handleShowModalCancel = (e:string) => {
+    const handleShowModalCancel = (e: string) => {
         setShowModalCancelOffer(!showModalCancelOffer);
-        setCancelPaymentId(e)
+        setCancelPaymentId(e);
     };
 
     const handleChangeFiat = (e: string) => {
@@ -81,7 +87,7 @@ export const P2PMyOfferScreen: React.FC = () => {
         setEndDate(e);
     };
     const handleCancelPayment = () => {
-        dispatch(p2pUserOfferCancel({payment_user_uid: cancelPaymentId}));
+        dispatch(p2pUserOfferCancel({ payment_user_uid: cancelPaymentId }));
     };
 
     const renderModalCancel = () => {
@@ -97,7 +103,11 @@ export const P2PMyOfferScreen: React.FC = () => {
                 </div>
 
                 <p className="m-0 p-0 mb-24 grey-text text-md font-normal text-center">Are you sure want to cancel?</p>
-                <button type="button" onClick={handleCancelPayment} style={{ width: '350px' }} className="btn-primary text-ms">
+                <button
+                    type="button"
+                    onClick={handleCancelPayment}
+                    style={{ width: '350px' }}
+                    className="btn-primary text-ms">
                     Cancel
                 </button>
             </React.Fragment>

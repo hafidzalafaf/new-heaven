@@ -56,7 +56,7 @@ export const P2PUserInfo: React.FC = () => {
     const [reason, setReason] = React.useState('');
     const [data, setData] = React.useState<any>();
     const [limit, setLimit] = React.useState(5);
-    const [currentPage, setCurrentPage] = React.useState(0)
+    const [currentPage, setCurrentPage] = React.useState(0);
 
     React.useEffect(() => {
         dispatch(p2pProfileFetch());
