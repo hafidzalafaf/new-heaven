@@ -22,6 +22,7 @@ export const P2PDetailOfferScreen: React.FC = () => {
     const offer = useSelector(selectP2PUserAccountOffer);
     const offerDetail: P2PUserOfferDetail = useSelector(selectP2PUserAccountOfferDetail);
 
+    const [data, setData] = React.useState([]);
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
     const [fiat, setFiat] = React.useState('');
@@ -38,26 +39,22 @@ export const P2PDetailOfferScreen: React.FC = () => {
     }, [dispatch]);
 
     React.useEffect(() => {
+        setData(offerDetail?.order);
+    }, [offerDetail]);
+
+    React.useEffect(() => {
         setLoading(true);
         setTimeout(() => {
             setLoading(false);
         }, 3000);
-        dispatch(
-            p2pUserOfferFetch({
-                currency: '',
-                amount: '',
-                max_amount: '',
-                min_price: '',
-                max_price: '',
-                side: '',
-            })
-        );
+
         dispatch(
             p2pUserOfferDetailFetch({
-                offer_number: offer_number,
+                offer_number,
             })
         );
-    }, [dispatch]);
+    }, [dispatch, offer_number]);
+
     const handleChangeFiat = (e: string) => {
         setFiat(e);
     };
@@ -96,7 +93,7 @@ export const P2PDetailOfferScreen: React.FC = () => {
                         side={side}
                         startDate={startDate}
                         endDate={endDate}
-                        data={offerDetail?.order}
+                        data={data}
                         fiats={fiats}
                         loading={loading}
                         handleChangeFiat={handleChangeFiat}

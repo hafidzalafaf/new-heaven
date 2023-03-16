@@ -72,7 +72,7 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
     React.useEffect(() => {
         setCurrencies(currenciesData?.currency);
         setPayments(currenciesData?.payment);
-        setPaymentListUser(paymentMethods.list);
+        setPaymentListUser(paymentMethods?.list);
     }, [currenciesData, paymentMethods]);
 
     const handleConfirmOffer = () => {
@@ -98,19 +98,23 @@ export const P2PCreateOfferMobileScreen: React.FC = () => {
     };
 
     const handleChangePrice = (e: string) => {
-        setPrice(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setPrice(value);
     };
 
     const handleChangeTradeAmount = (e: string) => {
-        setTradeAmount(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setTradeAmount(value);
     };
 
     const handleChangeMinOrder = (e: string) => {
-        setMinOrder(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setMinOrder(value);
     };
 
     const handleChangeMaxOrder = (e: string) => {
-        setMaxOrder(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setMaxOrder(value);
     };
 
     const handleChangePayment = (e: any) => {

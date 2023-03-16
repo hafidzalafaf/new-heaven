@@ -98,7 +98,7 @@ export const WalletWitdrawal: React.FC = () => {
                             <WalletWithdrawalForm />
                         </div>
                         <div className="w-30">
-                            <WalletWithdrawalInfo />
+                            <WalletWithdrawalInfo textColor="white-text" />
                         </div>
                     </div>
                     <div className="table-container">

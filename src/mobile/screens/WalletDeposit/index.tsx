@@ -108,7 +108,17 @@ const WalletDepositMobileScreen: React.FC = () => {
 
     const doCopy = (text: string) => {
         copy(text);
-        dispatch(alertPush({ message: ['Link has been copied'], type: 'success' }));
+        dispatch(alertPush({ message: ['Address has been copied'], type: 'success' }));
+    };
+
+    const doCopyDt = (text: string) => {
+        copy(text);
+        dispatch(
+            alertPush({
+                message: [`${currency == 'xrp' ? 'Destination Tag' : 'Memo'} has been copied`],
+                type: 'success',
+            })
+        );
     };
 
     React.useEffect(() => {
@@ -316,7 +326,17 @@ const WalletDepositMobileScreen: React.FC = () => {
                         <React.Fragment>
                             <div className="d-flex relative justify-content-center align-items-center radius-lg dark-bg-accent w-100 qr-container mb-16">
                                 <div className="card p-1">
-                                    <QRCode size={200} value={depositAddress && depositAddress?.address} />
+                                    <QRCode
+                                        size={200}
+                                        value={
+                                            currency == 'xrp' || currency === 'xlm'
+                                                ? depositAddress?.address?.slice(
+                                                      0,
+                                                      depositAddress?.address?.indexOf('?')
+                                                  )
+                                                : depositAddress?.address
+                                        }
+                                    />
                                 </div>
                                 <div className="logo-coin d-flex justify-content-center align-items-center">
                                     <img
@@ -353,7 +373,11 @@ const WalletDepositMobileScreen: React.FC = () => {
                                     <input
                                         id="address"
                                         className="p-0 m-0 text-sm grey-text-accent font-bold address w-90"
-                                        defaultValue={address}
+                                        defaultValue={
+                                            currency == 'xrp' || currency === 'xlm'
+                                                ? address?.slice(0, address?.indexOf('?'))
+                                                : address
+                                        }
                                     />
                                     <button
                                         className="btn-transparent w-10"
@@ -365,17 +389,30 @@ const WalletDepositMobileScreen: React.FC = () => {
                                 </div>
                             </div>
 
-                            {currency == 'bge' && (
+                            {(currency == 'xrp' || currency === 'xlm') && (
                                 <div>
                                     <h2 className="p-0 m-0 text-sm grey-text-accent font-bold mb-8">
-                                        Destination Tag <span className="danger-text">*</span>
+                                        {currency == 'xrp' && 'Destination Tag'}
+                                        {currency == 'xlm' && 'Memo'} <span className="danger-text">*</span>
                                     </h2>
                                     <div className="d-flex justify-content-between align-items-center mb-24">
                                         <input
-                                            id="address"
+                                            id="dt"
                                             className="p-0 m-0 text-sm grey-text-accent font-bold address w-90"
-                                            defaultValue={address}
+                                            defaultValue={
+                                                currency == 'xrp' || currency === 'xlm'
+                                                    ? address?.slice(address?.indexOf('=') + 1)
+                                                    : address
+                                            }
                                         />
+
+                                        <button
+                                            className="btn-transparent w-10"
+                                            type="button"
+                                            disabled={depositAddress?.address === null}
+                                            onClick={() => doCopyDt('dt')}>
+                                            <CopyButton />
+                                        </button>
                                     </div>
                                 </div>
                             )}
@@ -476,16 +513,18 @@ const WalletDepositMobileScreen: React.FC = () => {
                         ''
                     )}
 
-                    <ul className="grey-text text-sm">
-                        {currency == 'bge' && (
-                            <li className="white-text text-sm mb-8">
+                    <ul className="grey-text text-sm p-0 ml-2">
+                        {(currency == 'xrp' || currency === 'xlm') && (
+                            <li>
                                 <span className="danger-text">
                                     {' '}
-                                    It is mandatory to enter the <span className="font-extrabold">
-                                        Destination Tag
+                                    It is mandatory to enter the{' '}
+                                    <span className="font-extrabold">
+                                        {currency == 'xrp' && 'Destination Tag'}
+                                        {currency == 'xlm' && 'Memo'}
                                     </span>{' '}
-                                    when making a transfer. If you don't include it, the deposit will fail (this is the
-                                    Ripple address).
+                                    when making a transfer. If you don't include it, the deposit will fail (this is the{' '}
+                                    {currencyItem?.name} address).
                                 </span>
                             </li>
                         )}

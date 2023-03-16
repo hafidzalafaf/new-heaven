@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { HeaderOrderIcon, HeaderProfileIcon, HeaderGuideIcon, HeaderOthersIcon } from '../../../assets/images/P2PIcon';
-import { p2pProfileFetch, selectP2PProfile } from 'src/modules';
+import { p2pProfileFetch, selectP2PProfile, selectUserInfo } from 'src/modules';
+import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 export const HeaderP2P = () => {
+    const history = useHistory();
     const dispatch = useDispatch();
     const profile = useSelector(selectP2PProfile);
 
@@ -36,14 +38,20 @@ export const HeaderP2P = () => {
                         <p className="m-0 p-0 white-text text-ms">My Order</p>
                     </Link>
 
-                    <Link
-                        to={`/p2p/profile/${profile?.member?.uid}`}
+                    <div
+                        onClick={() => {
+                            if (!profile?.member?.uid) {
+                                history.push('/signin');
+                            } else {
+                                history.push(`/p2p/profile/${profile?.member?.uid}`);
+                            }
+                        }}
                         className="d-flex justify-content-center align-content-center mr-24 cursor-pointer">
                         <span className="mr-8">
                             <HeaderProfileIcon fillColor={'var(--text-secondary-color)'} />
                         </span>
                         <p className="m-0 p-0 white-text text-ms">Profile P2P</p>
-                    </Link>
+                    </div>
 
                     {/* <Link to={'/'} className="d-flex justify-content-center align-content-center mr-24 cursor-pointer">
                         <span className="mr-8">
@@ -52,12 +60,12 @@ export const HeaderP2P = () => {
                         <p className="m-0 p-0 white-text text-ms">User Guide</p>
                     </Link> */}
 
-                    <Link to={'/'} className="d-flex justify-content-center align-content-center cursor-pointer">
+                    {/* <Link to={'/'} className="d-flex justify-content-center align-content-center cursor-pointer">
                         <span className="mr-8">
                             <HeaderOthersIcon fillColor={'var(--text-secondary-color)'} />
                         </span>
                         <p className="m-0 p-0 white-text text-ms">Others</p>
-                    </Link>
+                    </Link> */}
                 </div>
             </div>
         </React.Fragment>

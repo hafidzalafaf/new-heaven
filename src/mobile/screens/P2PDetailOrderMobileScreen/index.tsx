@@ -122,7 +122,9 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
     const supported = detail?.payment?.filter(({ name }) =>
         availablePayment.some(({ bank_name }) => name !== bank_name)
     );
-    const unsupported = myPayment?.list?.filter(({ bank_name }) => detail?.payment?.some(({ name }) => bank_name !== name));
+    const unsupported = myPayment?.list?.filter(({ bank_name }) =>
+        detail?.payment?.some(({ name }) => bank_name !== name)
+    );
 
     const handleChangePrice = (e: string) => {
         const value = e.replace(/[^0-9\.]/g, '');

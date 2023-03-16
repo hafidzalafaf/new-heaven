@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from 'src/modules';
 import Select, { components } from 'react-select';
-import { CustomStylesSelect } from '..';
+import { CustomStyleSelectOfferForm } from './CustomStyleSelectOfferForm';
 import { Link } from 'react-router-dom';
 export interface OfferFormProps {
     showModalCreateOffer?: boolean;
@@ -89,13 +89,13 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
     return (
         <React.Fragment>
             <form className="com-form-crete-offer">
-                <div>
+                <div className="mb-24">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">CRYPTOCURRENCY</p>
                     <Select
                         value={optionCurrency?.filter(function (option) {
                             return option.value === currency;
                         })}
-                        styles={CustomStylesSelect}
+                        styles={CustomStyleSelectOfferForm}
                         options={optionCurrency}
                         onChange={(e) => {
                             handleChangeCurrency(e.value);
@@ -103,7 +103,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     />
                 </div>
 
-                <div>
+                <div className="mb-24">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">PRICE</p>
                     <div className="w-100 d-flex justify-content-between align-items-center input-price-container">
                         <input
@@ -119,7 +119,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                                 value={optionFiats?.filter(function (option) {
                                     return option.value === fiat;
                                 })}
-                                styles={CustomStylesSelect}
+                                styles={CustomStyleSelectOfferForm}
                                 options={optionFiats}
                                 onChange={(e) => {
                                     handleChangeFiat(e.value);
@@ -129,7 +129,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     </div>
                 </div>
 
-                <div>
+                <div className="mb-24">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">TRADING AMOUNT</p>
                     <input
                         type="text"
@@ -141,7 +141,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     />
                 </div>
 
-                <div>
+                <div className="mb-24">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">ORDER LIMIT</p>
                     <div className="w-100 d-flex justify-content-between align-items-center input-price-container">
                         <div className="position-relative w-50">
@@ -169,13 +169,13 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     </div>
                 </div>
 
-                <div>
+                <div className="mb-24">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">PAYMENT METHOD</p>
                     <Select
                         isMulti
                         value={paymentValue}
                         components={{ MenuList: AddPayment }}
-                        styles={CustomStylesSelect}
+                        styles={CustomStyleSelectOfferForm}
                         options={optionPayment}
                         closeMenuOnSelect={false}
                         hideSelectedOptions={false}
@@ -185,7 +185,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     />
                 </div>
 
-                {/* <div>
+                {/* <div className='mb-24'>
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">PAYMENT TIME LIMIT</p>
                     <input
                         type="text"
@@ -197,7 +197,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     />
                 </div> */}
 
-                <div>
+                <div className="mb-24">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">TERM CONDITIONS</p>
                     <input
                         type="text"
@@ -209,7 +209,7 @@ export const OfferForm: React.FunctionComponent<OfferFormProps> = (props) => {
                     />
                 </div>
 
-                <div>
+                <div className="mb-24">
                     <p className="m-0 p-0 mb-8 white-text text-xxs font-bold">AUTO REPLY (OPTIONAL)</p>
                     <input
                         type="text"

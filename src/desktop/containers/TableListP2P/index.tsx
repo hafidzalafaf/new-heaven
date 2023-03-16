@@ -111,12 +111,12 @@ export const TableListP2P = () => {
     const [showModalConfirmation, setShowModalConfirmation] = React.useState(false);
     /* ============== CREATE OFFER STATE END ============== */
 
-    React.useEffect(() => {
-        setOfferLoading(true);
-        setTimeout(() => {
-            setOfferLoading(false);
-        }, 3000);
-    }, []);
+    // React.useEffect(() => {
+    //     setOfferLoading(true);
+    //     setTimeout(() => {
+    //         setOfferLoading(false);
+    //     }, 3000);
+    // }, []);
 
     React.useEffect(() => {
         const defaultPayload = {
@@ -492,23 +492,28 @@ export const TableListP2P = () => {
     };
 
     const handleChangePriceOffer = (e: string) => {
-        setPriceOffer(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setPriceOffer(value);
     };
 
     const handleChangeTradeAmount = (e: string) => {
-        setTradeAmount(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setTradeAmount(value);
     };
 
     const handleChangeMinOrder = (e: string) => {
-        setMinOrder(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setMinOrder(value);
     };
 
     const handleChangeMaxOrder = (e: string) => {
-        setMaxOrder(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setMaxOrder(value);
     };
 
     const handleChangePaymentLimit = (e: string) => {
-        setPaymentLimit(e);
+        const value = e.replace(/[^0-9\.]/g, '');
+        setPaymentLimit(value);
     };
 
     const handleChangeTermOfCondition = (e: string) => {

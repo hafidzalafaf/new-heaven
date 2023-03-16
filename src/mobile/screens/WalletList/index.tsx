@@ -18,10 +18,10 @@ import {
 } from '../../../modules';
 import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch, useDocumentTitle } from '../../../hooks';
 import { Table, Decimal, formatWithSeparators } from '../../../components';
+import { Form, Row, Col } from 'react-bootstrap';
 import { FilterInput } from '../../../desktop/components';
 import { estimateUnitValue, estimateValue } from '../../../helpers/estimateValue';
 import { VALUATION_PRIMARY_CURRENCY, VALUATION_SECONDARY_CURRENCY } from '../../../constants';
-import { Form, Row, Col } from 'react-bootstrap';
 import { WithdrawlIcon, DepositIcon, TransferIcon } from '../../assets/Wallet';
 import { Modal } from 'react-bootstrap';
 import { Modal as ModalComponent } from '../../../desktop/components';
@@ -378,7 +378,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                                     checked={nonZeroSelected}
                                     readOnly={true}
                                     label={formatMessage({ id: 'page.mobile.wallets.hideSmallBalance' })}
-                                    className="text-sm font-semibold grey-text m-0 d-flex justify-content-center align-items-center"
+                                    className="text-sm font-semibold grey-text m-0 d-flex justify-content-center align-items-center cursor-pointer"
                                 />
                             </Col>
                         </Form>

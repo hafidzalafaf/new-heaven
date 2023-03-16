@@ -26,29 +26,32 @@ export const P2PEditPaymentScreen: React.FC = () => {
     const history = useHistory();
     const user = useSelector(selectUserInfo);
     const currenciesData = useSelector(selectP2PCurrenciesData);
-    const currentPaymentData = useSelector(selectP2PPaymentUser)
+    const currentPaymentData: any = useSelector(selectP2PPaymentUser);
     const createPaymentSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
+
     const currentEditedData = useSelector(selectP2PPaymentUserSingle);
-    const {payment_user_uid = ''}  = useParams<{payment_user_uid?: string}>();
-    
+    const { payment_user_uid = '' } = useParams<{ payment_user_uid?: string }>();
+
     const [inputFile, setInputFile] = React.useState(null);
     const [fileName, setFileName] = React.useState('');
     const [fiat, setFiat] = React.useState('IDR');
     const [account_number, setAccountNumber] = React.useState('');
     const [bankData, setBankData] = React.useState<any>();
     const [image, setImage] = React.useState<File | null>(null);
+    const [editPaymentItem, setEditPaymentItem] = React.useState<any>();
+
     const profiles = user.profiles.slice(-1);
     // const replacedDash = bank.payment.replace(/-/g, ' ');
     // const renderedWord = replacedDash.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
 
-    React.useEffect(()=>{
-        dispatch(P2PPaymentUserFetchSingle({payment_user_uid}))
-    }, [dispatch])
+    React.useEffect(() => {
+        dispatch(P2PPaymentUserFetchSingle({ payment_user_uid }));
+    }, [dispatch]);
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         setAccountNumber(currentEditedData[0]?.account_number);
-    }, [currentEditedData])
-    
+    }, [currentEditedData]);
+
     React.useEffect(() => {
         if (createPaymentSuccess) {
             history.push('/p2p/profile');
@@ -58,13 +61,12 @@ export const P2PEditPaymentScreen: React.FC = () => {
     console.log(currentEditedData);
 
     const handleEditPayment = () => {
-
-        const formData = new FormData()
+        const formData = new FormData();
         formData.append('payment_id', payment_user_uid);
         formData.append('account_number', account_number);
         formData.append('full_name', profiles[0]?.first_name);
         formData.append('payment_method', currentEditedData[0].symbol);
-        formData.append('qrcode', image)
+        formData.append('qrcode', image);
         const payment_id = formData.get('payment_id').toString();
         dispatch(p2pPaymentUserUpdate(formData, payment_id));
     };
@@ -74,11 +76,10 @@ export const P2PEditPaymentScreen: React.FC = () => {
         setAccountNumber(value);
     };
 
-
     const handleConfirmPayment = async () => {
         handleEditPayment();
         history.goBack();
-    }
+    };
     const disabledButton = () => {
         if (!profiles[0]?.first_name || !bankData?.symbol || !account_number) {
             return true;
@@ -161,7 +162,7 @@ export const P2PEditPaymentScreen: React.FC = () => {
                                     type="file"
                                     // value={inputFile}
                                     onChange={(e) => {
-                                        setImage(e.target.files[0])
+                                        setImage(e.target.files[0]);
                                     }}
                                     placeholder="Enter Full Name"
                                     className="custom-input-add-payment w-100 white-text d-none"
@@ -171,7 +172,9 @@ export const P2PEditPaymentScreen: React.FC = () => {
                                     className="d-flex justify-content-center align-content-center custom-input-file cursor-pointer dark-bg-accent">
                                     <div className="d-flex flex-column align-items-center justify-content-center">
                                         <QRIcon />
-                                        <p className="m-0 p-0 text-xxs grey-text">{image?.name ? image?.name : 'Upload'}</p>
+                                        <p className="m-0 p-0 text-xxs grey-text">
+                                            {image?.name ? image?.name : 'Upload'}
+                                        </p>
                                     </div>
                                 </label>
                             </div>
