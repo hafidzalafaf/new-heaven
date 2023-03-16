@@ -422,7 +422,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     const disabledButton = () => {
         if (currency == '') {
             return true;
-        } else if (!amount || amount < minWithdraw) {
+        } else if (+amount < +minWithdraw) {
             return true;
         } else if (!beneficiaryId) {
             return true;
