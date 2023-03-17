@@ -9,17 +9,22 @@ import {
     selectP2PUserAccountOffer,
     p2pUserOfferCancel,
     selectP2PUserAccountOfferCancelSuccess,
+    selectP2PUserAccountOfferNextPageExists,
+    selectCurrencies,
 } from 'src/modules';
 import { Modal } from 'src/desktop/components';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
+import { Pagination } from 'src/desktop/components';
 
 export const P2PMyOfferScreen: React.FC = () => {
     useDocumentTitle('P2P || My Offer');
 
     const dispatch = useDispatch();
+    const currencies: any = useSelector(selectCurrencies);
     const fiats = useSelector(selectP2PFiatsData);
     const offer = useSelector(selectP2PUserAccountOffer);
     const cancelPaymentSuccess = useSelector(selectP2PUserAccountOfferCancelSuccess);
+    const nextPageExists = useSelector(selectP2PUserAccountOfferNextPageExists);
 
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
@@ -33,6 +38,8 @@ export const P2PMyOfferScreen: React.FC = () => {
     const [min_price, setMinPrice] = React.useState('');
     const [side, setSide] = React.useState('');
     const [cancelPaymentId, setCancelPaymentId] = React.useState('');
+    const [currentPage, setCurrentPage] = React.useState(0);
+    const [limit, setLimit] = React.useState(5);
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
@@ -55,12 +62,14 @@ export const P2PMyOfferScreen: React.FC = () => {
                 max_price: '',
                 side: side,
                 state: state,
+                pageIndex: currentPage,
+                limit: 5,
             })
         );
         if (cancelPaymentSuccess) {
             setShowModalCancelOffer(false);
         }
-    }, [dispatch, side, cancelPaymentSuccess, state, fiat]);
+    }, [dispatch, side, cancelPaymentSuccess, state, fiat, currentPage, limit]);
 
     const handleShowModalCancel = (e: string) => {
         setShowModalCancelOffer(!showModalCancelOffer);
@@ -133,8 +142,13 @@ export const P2PMyOfferScreen: React.FC = () => {
                         startDate={startDate}
                         endDate={endDate}
                         data={offer}
-                        fiats={fiats}
+                        fiats={currencies}
                         loading={loading}
+                        currentPage={currentPage}
+                        limit={limit}
+                        nextPageExists={nextPageExists}
+                        onClickPrevPage={() => setCurrentPage(currentPage - 1)}
+                        onClickNextPage={() => setCurrentPage(currentPage + 1)}
                         handleShowModalCancel={handleShowModalCancel}
                         handleChangeFiat={handleChangeFiat}
                         handleChangeState={handleChangeState}

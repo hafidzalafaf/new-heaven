@@ -9,41 +9,14 @@ const config: RequestOptions = {
     withHeaders: true,
 };
 
-// const config = (csrfToken?: string): RequestOptions => {
-//     return {
-//         apiVersion: 'p2p',
-//         headers: { 'X-CSRF-Token': csrfToken },
-//     };
-// };
-
 export function* p2pFetchUserOfferDetailSaga(action: P2PUserOfferDetailFetch) {
     try {
-        const {
-            side,
-            sort,
-            base,
-            quote,
-            payment_method,
-            currency,
-            fiat,
-            amount,
-            max_price,
-            min_price,
-            limit,
-            page,
-            offer_number,
-        } = action.payload;
+        const { from, to, state, limit, page, offer_number } = action.payload;
+
         let params: any = {
-            side,
-            sort,
-            base,
-            quote,
-            payment_method,
-            currency,
-            fiat,
-            amount,
-            max_price,
-            min_price,
+            from,
+            to,
+            state,
             limit,
             page,
         };
@@ -58,11 +31,9 @@ export function* p2pFetchUserOfferDetailSaga(action: P2PUserOfferDetailFetch) {
                 list: data,
                 total: headers.total,
                 page: action.payload.page,
-                side,
-                sort,
-                base,
-                quote,
-                payment_method,
+                from,
+                to,
+                state,
             })
         );
     } catch (error) {

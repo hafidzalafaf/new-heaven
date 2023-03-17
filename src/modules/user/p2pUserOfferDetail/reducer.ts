@@ -12,7 +12,6 @@ import {
 } from './constants';
 import { P2PUserOfferDetail } from './types';
 
-
 export interface P2PUserOfferDetailState {
     create: {
         // data: P2PUserOfferDetail;
@@ -58,9 +57,9 @@ export const initialP2PUserOfferDetailState: P2PUserOfferDetailState = {
                 term_of_condition: '',
                 trader: {},
                 payment: [],
-                side: ''
+                side: '',
             },
-            order: []
+            order: [],
         },
         side: '',
         base: '',
@@ -70,7 +69,10 @@ export const initialP2PUserOfferDetailState: P2PUserOfferDetailState = {
     },
 };
 
-export const p2pUserOfferDetailFetchReducer = (state: P2PUserOfferDetailState['fetch'], action: P2PUserOfferDetailActions) => {
+export const p2pUserOfferDetailFetchReducer = (
+    state: P2PUserOfferDetailState['fetch'],
+    action: P2PUserOfferDetailActions
+) => {
     switch (action.type) {
         case P2P_USER_OFFER_DETAIL_FETCH:
             return {
@@ -85,10 +87,10 @@ export const p2pUserOfferDetailFetchReducer = (state: P2PUserOfferDetailState['f
                 list: sliceArray(action.payload.list, defaultStorageLimit()),
                 page: action.payload.page,
                 total: action.payload.total,
-                side: action.payload.side,
-                base: action.payload.base,
-                quote: action.payload.quote,
-                payment_method: action.payload.payment_method,
+                // side: action.payload.side,
+                // base: action.payload.base,
+                // quote: action.payload.quote,
+                // payment_method: action.payload.payment_method,
                 fetching: false,
                 success: true,
                 error: undefined,
@@ -109,7 +111,10 @@ export const p2pUserOfferDetailFetchReducer = (state: P2PUserOfferDetailState['f
     }
 };
 
-const p2pUserOfferDetailCreateReducer = (state: P2PUserOfferDetailState['create'], action: P2PUserOfferDetailActions) => {
+const p2pUserOfferDetailCreateReducer = (
+    state: P2PUserOfferDetailState['create'],
+    action: P2PUserOfferDetailActions
+) => {
     switch (action.type) {
         case P2P_USER_OFFER_DETAIL_CREATE:
             return {
@@ -135,7 +140,10 @@ const p2pUserOfferDetailCreateReducer = (state: P2PUserOfferDetailState['create'
     }
 };
 
-export const p2pUserOfferDetailReducer = (state = initialP2PUserOfferDetailState, action: P2PUserOfferDetailActions) => {
+export const p2pUserOfferDetailReducer = (
+    state = initialP2PUserOfferDetailState,
+    action: P2PUserOfferDetailActions
+) => {
     switch (action.type) {
         case P2P_USER_OFFER_DETAIL_FETCH:
         case P2P_USER_OFFER_DETAIL_DATA:
