@@ -183,7 +183,7 @@ export const P2PPaymentMethod: React.FC = () => {
                             <div key={i} className="p-16 radius-sm data-row w-100">
                                 <div className="d-flex justify-content-between align-items- mb-16">
                                     <div className="d-flex align-items-center gap-16">
-                                        <img src="/img/logo-bca.png" alt="logo" />
+                                        <img src={bank?.logo} height={32} width='auto' alt="logo" />
                                         <p className="m-0 p-0 grey-text text-ms">{bank?.bank_name}</p>
                                     </div>
 
