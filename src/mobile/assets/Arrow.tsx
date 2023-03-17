@@ -28,3 +28,13 @@ export const ArrowRight = ({ className }) => {
         </svg>
     );
 };
+
+
+export const ArrowRightL = ({className}) => {
+    return (
+        <svg width={24} height={24} viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+            <path d="M18.6673 24.5564L16.8006 22.6231L21.534 17.8897L5.33398 17.8897L5.33398 15.2231L21.534 15.2231L16.8006 10.4897L18.6673 8.5564L26.6673 16.5564L18.6673 24.5564Z" fill="#B5B3BC"/>
+        </svg>
+
+    )
+}

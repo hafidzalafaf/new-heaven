@@ -77,6 +77,10 @@ import {
     P2PPaymentMethodMobileScreen,
     P2PAddPaymentMethodMobileScreen,
     P2PEditPaymentMethodMobileScreen,
+<<<<<<< HEAD
+=======
+    P2PFAQMobileScreen
+>>>>>>> 07f15aab7f62a7057f95e003e2e6ee925e23fa95
 } from '../../mobile/screens';
 
 import {
@@ -528,6 +532,13 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         />
 
                         <PublicRoute loading={userLoading} path="/announcements" component={AnnouncementMobileScreen} />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/faq"
+                            component={P2PFAQMobileScreen}
+                        />
 
                         <PrivateRoute
                             loading={userLoading}
