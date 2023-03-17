@@ -222,6 +222,7 @@ export const P2PAddPaymentMethodMobileScreen = () => {
             case 'ewallet':
                 return <EwalletForm />;
         }
+    };
 
         return (
             <section className="pg-mobile-screen-p2p mobile-container position-relative">
@@ -234,5 +235,4 @@ export const P2PAddPaymentMethodMobileScreen = () => {
                 {renderPaymentForm()}
             </section>
         );
-    }
-};
+    };

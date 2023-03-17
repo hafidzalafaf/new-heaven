@@ -547,14 +547,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
-                            path="/p2p/payment-method/edit/:payment_uid"
-                            component={P2PEditPaymentMethodMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/payment-method/edit/:payment_uid"
+                            path="/p2p/payment-method/edit/:payment_user_uid"
                             component={P2PEditPaymentMethodMobileScreen}
                         />
 
