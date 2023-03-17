@@ -124,9 +124,18 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
         };
 
         if (!addressExist) {
-            await dispatch(beneficiariesCreate(payload));
-            handleClearModalsInputs();
-            props.handleAddAddress();
+            if (isRipple && !coinDestinationTag) {
+                dispatch(
+                    alertPush({
+                        message: [`Please insert destination tag. If its your own wallet, you can use random number`],
+                        type: 'error',
+                    })
+                );
+            } else {
+                await dispatch(beneficiariesCreate(payload));
+                handleClearModalsInputs();
+                props.handleAddAddress();
+            }
         } else {
             dispatch(alertPush({ message: [`You can't add your own beneficiary address`], type: 'error' }));
             setCoinAddress('');
@@ -134,7 +143,7 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
             setCoinBeneficiaryName('');
             setCoinDescription('');
         }
-    }, [coinAddress, coinBeneficiaryName, coinDescription, currency, coinBlockchainName]);
+    }, [coinAddress, coinBeneficiaryName, coinDescription, currency, coinBlockchainName, coinDestinationTag]);
 
     const isDisabled = !coinAddress || !coinBeneficiaryName || !coinAddressValid || !coinBlockchainName.blockchainKey;
 

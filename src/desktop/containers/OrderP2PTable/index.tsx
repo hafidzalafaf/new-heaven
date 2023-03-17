@@ -8,7 +8,14 @@ import { CustomStylesSelect, NoData } from '../../../desktop/components';
 import { Loading, Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
-import { orderFetch, selectP2POrder, selectP2POrderLoading, p2pFiatFetch, selectP2PFiatsData } from 'src/modules';
+import {
+    orderFetch,
+    selectP2POrder,
+    selectP2POrderLoading,
+    p2pFiatFetch,
+    selectP2PFiatsData,
+    selectCurrencies,
+} from 'src/modules';
 import { Modal } from '../../../desktop/components';
 import { capitalizeFirstLetter } from 'src/helpers';
 
@@ -19,6 +26,9 @@ export const OrderP2PTable = () => {
     const order = useSelector(selectP2POrder);
     const loading = useSelector(selectP2POrderLoading);
     const fiats = useSelector(selectP2PFiatsData);
+    const currencies = useSelector(selectCurrencies);
+
+    console.log(currencies);
 
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
@@ -45,7 +55,7 @@ export const OrderP2PTable = () => {
 
     React.useEffect(() => {
         const fiatDatePayload = {
-            fiat,
+            currency: fiat,
             from: time_from,
             to: time_to,
         };
@@ -63,7 +73,7 @@ export const OrderP2PTable = () => {
         };
 
         const fullPayload = {
-            fiat,
+            currency: fiat,
             side,
             state,
             from: time_from,
@@ -72,7 +82,7 @@ export const OrderP2PTable = () => {
         dispatch(
             orderFetch(
                 fiat
-                    ? { fiat }
+                    ? { currency: fiat }
                     : side
                     ? { side }
                     : state
@@ -80,9 +90,9 @@ export const OrderP2PTable = () => {
                     : startDate && endDate
                     ? { from: time_from, to: time_to }
                     : fiat && side
-                    ? { fiat, side }
+                    ? { currency: fiat, side }
                     : fiat && state
-                    ? { fiat, state }
+                    ? { currency: fiat, state }
                     : fiat && startDate && endDate
                     ? fiatDatePayload
                     : side && state
@@ -100,7 +110,7 @@ export const OrderP2PTable = () => {
             dispatch(
                 orderFetch(
                     fiat
-                        ? { fiat }
+                        ? { currency: fiat }
                         : side
                         ? { side }
                         : state
@@ -108,9 +118,9 @@ export const OrderP2PTable = () => {
                         : startDate && endDate
                         ? { from: time_from, to: time_to }
                         : fiat && side
-                        ? { fiat, side }
+                        ? { currency: fiat, side }
                         : fiat && state
-                        ? { fiat, state }
+                        ? { currency: fiat, state }
                         : fiat && startDate && endDate
                         ? fiatDatePayload
                         : side && state
@@ -134,7 +144,10 @@ export const OrderP2PTable = () => {
     React.useEffect(() => {
         setData(
             tab == 'done'
-                ? order.filter((item) => item?.state == 'accepted' || item?.state == 'success')
+                ? order.filter(
+                      (item) =>
+                          item?.state == 'accepted' || item?.state == 'success' || item?.state?.includes('canceled')
+                  )
                 : tab == 'processing'
                 ? order.filter(
                       (item) =>
@@ -152,8 +165,8 @@ export const OrderP2PTable = () => {
     };
 
     // fiat, side, state, from, to
-    const optionFiats = fiats?.map((item) => {
-        return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };
+    const optionFiats = currencies?.map((item) => {
+        return { label: <p className="m-0 text-sm grey-text-accent">{item.id?.toUpperCase()}</p>, value: item.id };
     });
 
     const optionState = [

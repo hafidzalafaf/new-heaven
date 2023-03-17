@@ -17,6 +17,8 @@ import {
     selectMaxWithdrawLimit,
     groupFetch,
     withdrawSumFetch,
+    selectWithdrawSuccess,
+    selectBeneficiariesActivateSuccess,
 } from '../../../modules';
 import { beneficiariesResendPin } from '../../../modules';
 import { useBeneficiariesFetch, useWithdrawLimits } from '../../../hooks';
@@ -62,6 +64,8 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
 
     const { currency = '' } = useParams<{ currency?: string }>();
 
+    const withdrawSuccess = useSelector(selectWithdrawSuccess);
+    const beneficiariesSuccess = useSelector(selectBeneficiariesActivateSuccess);
     const withdrawLimits = useSelector(selectMaxWithdrawLimit);
     const withdrawSum = useSelector(selectWithdrawSum);
     const memberGroup = useSelector(selectGroupMember);
@@ -70,7 +74,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
     const beneficiariesList = beneficiaries.filter((item) => item.currency === currency);
     const currencies: Currency[] = useSelector(selectCurrencies);
     const currencyItem: Currency = currencies.find((item) => item.id === currency);
-    const wallets = useSelector(selectWallets);
+    const wallets: any = useSelector(selectWallets);
     const wallet = wallets.length && wallets.find((item) => item.currency.toLowerCase() === currency.toLowerCase());
     const balance = wallet && wallet.balance ? wallet.balance.toString() : '0';
 
@@ -196,7 +200,7 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
             return true;
         } else if (otp.length < 6) {
             return true;
-        } else if (!amount || amount < minWithdraw) {
+        } else if (+amount < +minWithdraw) {
             return true;
         } else if (!beneficiaryId) {
             return true;

@@ -7,6 +7,7 @@ import { Loading, Table } from '../../../components';
 import { HideIcon } from '../../../assets/images/P2PIcon';
 import { Link } from 'react-router-dom';
 import { capitalizeFirstLetter } from 'src/helpers';
+import { Pagination } from '../../components';
 
 export interface OfferP2PTableProps {
     type: string;
@@ -18,6 +19,11 @@ export interface OfferP2PTableProps {
     data: any;
     fiats: any;
     loading: boolean;
+    currentPage: number;
+    limit: number;
+    nextPageExists?: any;
+    onClickPrevPage?: () => void;
+    onClickNextPage?: () => void;
     handleShowModalCancel?: (e: string) => void;
     handleChangeFiat: (e: string) => void;
     handleChangeState: (e: string) => void;
@@ -43,12 +49,15 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
         handleChangeSide,
         handleChangeStartDate,
         handleChangeEndDate,
+        currentPage,
+        limit,
+        nextPageExists,
+        onClickNextPage,
+        onClickPrevPage,
     } = props;
 
-    console.log(data);
-
     const optionFiats = fiats?.map((item) => {
-        return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };
+        return { label: <p className="m-0 text-sm grey-text-accent">{item.id?.toUpperCase()}</p>, value: item.id };
     });
 
     const optionState = [
@@ -231,7 +240,17 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
                         ) : data?.length < 1 ? (
                             <NoData text={type === 'offer' ? 'No Offer Yet' : 'No Order Yet'} />
                         ) : (
-                            <Table header={getTableHeaders()} data={getTableData(data)} />
+                            <>
+                                <Table header={getTableHeaders()} data={getTableData(data)} />
+                                <Pagination
+                                    firstElemIndex={currentPage * limit}
+                                    lastElemIndex={currentPage * limit}
+                                    page={currentPage}
+                                    onClickPrevPage={onClickPrevPage}
+                                    onClickNextPage={onClickNextPage}
+                                    nextPageExists={nextPageExists}
+                                />
+                            </>
                         )}
                     </div>
                 </div>

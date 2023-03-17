@@ -14,17 +14,9 @@ export interface P2PUserOfferDetailFetch {
     payload: {
         page?: number;
         limit?: number;
-        side?: string;
-        fiat?: string;
-        currency?: string;
-        sort?: string;
-        base?: string;
-        quote?: string;
-        payment_method?: number;
-        amount?: string;
-        max_amount?: string;
-        min_price?: string;
-        max_price?: string;
+        state?: string;
+        from?: string;
+        to?: string;
         offer_number: string;
     };
 }
@@ -35,12 +27,10 @@ export interface P2PUserOfferDetailData {
         list: any;
         page: number;
         total: number;
-        side: string;
-        sort?: string;
-        base: string;
-        quote: string;
-        payment_method?: number;
-    }
+        state?: string;
+        from?: string;
+        to?: string;
+    };
 }
 
 export interface P2PUserOfferDetailError {

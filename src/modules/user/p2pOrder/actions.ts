@@ -36,6 +36,7 @@ import { Order, Confirm } from './types';
 export interface OrderFetch {
     type: typeof ORDER_FETCH;
     payload: {
+        currency?: string;
         fiat?: string;
         side?: string;
         state?: string;

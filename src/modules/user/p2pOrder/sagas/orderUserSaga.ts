@@ -14,6 +14,7 @@ const config = (csrfToken?: string): RequestOptions => {
 
 export function* orderSaga(action: OrderFetch) {
     try {
+        let currency = '';
         let fiat = '';
         let side = '';
         let state = '';
@@ -21,6 +22,7 @@ export function* orderSaga(action: OrderFetch) {
         let to = '';
 
         if (action.payload) {
+            currency = action.payload.currency;
             fiat = action.payload.fiat;
             side = action.payload.side;
             state = action.payload.state;
@@ -29,6 +31,7 @@ export function* orderSaga(action: OrderFetch) {
         }
         // const { fiat, side, state, from, to } = action.payload;
         let params: any = {
+            currency,
             fiat,
             side,
             state,

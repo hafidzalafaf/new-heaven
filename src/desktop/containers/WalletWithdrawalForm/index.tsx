@@ -132,12 +132,6 @@ export const WalletWithdrawalForm: React.FC = () => {
         ? (Number(myWithdrawLimit?.limit_1_month) - Number(withdrawSum?.last_1_month)) / Number(currencyItem?.price)
         : 0;
 
-    // const blockchainKeyValue =
-    //     currencyItem && currencyItem?.networks?.find((item) => item?.blockchain_key === blockchainKey);
-    // const fee = blockchainKeyValue?.withdraw_fee;
-    // const minWithdraw = blockchainKeyValue && blockchainKeyValue.min_withdraw_amount;
-    // const withdrawRecive = Number(amount) - Number(fee);
-
     const blockchainKeyValue =
         currencyItem && currencyItem?.networks.find((item) => item.blockchain_key === blockchainKey);
     const fee = blockchainKeyValue && blockchainKeyValue?.withdraw_fee;
@@ -422,7 +416,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     const disabledButton = () => {
         if (currency == '') {
             return true;
-        } else if (!amount || amount < minWithdraw) {
+        } else if (+amount < +minWithdraw) {
             return true;
         } else if (!beneficiaryId) {
             return true;

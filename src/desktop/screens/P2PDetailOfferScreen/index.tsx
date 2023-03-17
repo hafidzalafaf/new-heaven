@@ -11,6 +11,7 @@ import {
     selectP2PUserAccountOfferDetail,
     p2pUserOfferDetailFetch,
     P2PUserOfferDetail,
+    selectCurrencies,
 } from 'src/modules';
 
 export const P2PDetailOfferScreen: React.FC = () => {
@@ -18,6 +19,7 @@ export const P2PDetailOfferScreen: React.FC = () => {
     const dispatch = useDispatch();
     const { offer_number = '' } = useParams<{ offer_number?: string }>();
 
+    const currencies: any = useSelector(selectCurrencies);
     const fiats = useSelector(selectP2PFiatsData);
     const offer = useSelector(selectP2PUserAccountOffer);
     const offerDetail: P2PUserOfferDetail = useSelector(selectP2PUserAccountOfferDetail);
@@ -29,6 +31,8 @@ export const P2PDetailOfferScreen: React.FC = () => {
     const [side, setSide] = React.useState('');
     const [state, setState] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [currentPage, setCurrentPage] = React.useState(0);
+    const [limit, setLimit] = React.useState(5);
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
@@ -51,6 +55,8 @@ export const P2PDetailOfferScreen: React.FC = () => {
         dispatch(
             p2pUserOfferDetailFetch({
                 offer_number,
+                page: currentPage,
+                limit: 5,
             })
         );
     }, [dispatch, offer_number]);
@@ -94,8 +100,13 @@ export const P2PDetailOfferScreen: React.FC = () => {
                         startDate={startDate}
                         endDate={endDate}
                         data={data}
-                        fiats={fiats}
+                        fiats={currencies}
                         loading={loading}
+                        currentPage={currentPage}
+                        limit={limit}
+                        // nextPageExists={nextPageExists}
+                        onClickPrevPage={() => setCurrentPage(currentPage - 1)}
+                        onClickNextPage={() => setCurrentPage(currentPage + 1)}
                         handleChangeFiat={handleChangeFiat}
                         handleChangeState={handleChangeState}
                         handleChangeSide={handleChangeSide}
