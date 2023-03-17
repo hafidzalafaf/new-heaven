@@ -2,7 +2,9 @@ import * as React from 'react';
 import { LikeSuccessIcon, UnLikeDangerIcon, ArrowDown, Wallet } from 'src/assets/images/P2PIcon';
 import { CustomInput } from 'src/desktop/components';
 import { Link } from 'react-router-dom';
-
+import { Modal } from 'src/desktop/components';
+import { DownloadSecondaryIcon } from 'src/assets/images/DownloadIcon';
+import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 export interface P2POrderStepProps {
     paymentMethod: string;
     paymentUser: any;
@@ -57,6 +59,52 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
         minutes,
         seconds,
     } = props;
+
+    const [showImage, setShowImage] = React.useState(false);
+    const [imageView, setImageView] = React.useState('');
+    const [imageBlob, setImageBlob] = React.useState('');
+
+    // console.log(paymentUser);
+
+    // const onImageChange = (e) => {
+    //     if (e.target.files && e.target.files[0]) {
+    //         let img = e.target.files[0];
+    //         setImageBlob(URL.createObjectURL(img));
+    //         setImage(e.target.files);
+    //     }
+    // };
+
+    const download = (url, filename) => {
+        fetch(url)
+            .then((response) => response.blob())
+            .then((blob) => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+            })
+            .catch(console.error);
+    };
+
+    const renderModalImageViewer = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-end gap-8 mb-16 w-100">
+                    <span
+                        onClick={() => download(imageView, `heaven-p2p-transaction-${order_number}.png`)}
+                        className="cursor-pointer">
+                        <DownloadSecondaryIcon />
+                    </span>
+                    <span onClick={() => setShowImage(false)} className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
+                <div className="d-flex justify-content-center align-items-center position-relative px-24">
+                    <img src={imageView} alt="chat" width={720} />
+                </div>
+            </React.Fragment>
+        );
+    };
 
     return (
         <React.Fragment>
@@ -244,6 +292,21 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                     </div>
                                                 ))}
                                             </div>
+
+                                            {(paymentUser?.qrcode?.url || detail?.order?.payment?.qrcode?.url) && (
+                                                <button
+                                                    onClick={() => {
+                                                        setShowImage(!showImage);
+                                                        setImageView(
+                                                            paymentUser?.qrcode?.url ||
+                                                                detail?.order?.payment?.qrcode?.url
+                                                        );
+                                                    }}
+                                                    type="button"
+                                                    className="btn-transparent gradient-text cursor-pointer mt-24">
+                                                    QR Code
+                                                </button>
+                                            )}
                                         </React.Fragment>
                                     ) : (
                                         <React.Fragment>
@@ -514,6 +577,8 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                         )}
                     </div>
                 )}
+
+                <Modal show={showImage} content={renderModalImageViewer()} />
             </div>
         </React.Fragment>
     );

@@ -16,15 +16,17 @@ export function* paymentMethodUpdateSaga(action: PaymentMethodUpdateFetch) {
         const { id } = action.payload;
         yield call(API.put(updateOptions(getCsrfToken())), `/private/payment_methods/${id}`, action.payload);
         yield put(paymentMethodUpdate());
-        yield put(alertPush({ message: ['success.payment_method.updated'], type: 'success' }));
+        yield put(alertPush({ message: ['success.payment.method.updated'], type: 'success' }));
         yield put(paymentMethodModal({ active: false }));
     } catch (error) {
-        yield put(sendError({
-            error,
-            processingType: 'alert',
-            extraOptions: {
-                actionError: paymentMethodError,
-            },
-        }));
+        yield put(
+            sendError({
+                error,
+                processingType: 'alert',
+                extraOptions: {
+                    actionError: paymentMethodError,
+                },
+            })
+        );
     }
 }

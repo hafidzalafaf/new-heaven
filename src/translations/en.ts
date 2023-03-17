@@ -1461,7 +1461,7 @@ export const en = {
     'success.p2p.transfer.created': 'Transfer was created',
     'success.payment_method.deleted': 'Payment method was deleted',
     'success.payment_method.created': 'Payment method was created',
-    'success.payment_method.updated': 'Payment method was updated',
+    'success.payment.method.updated': 'Payment method was updated',
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
 
     //p2p error messages

@@ -222,7 +222,15 @@ const P2PProfileMobileScreen: React.FC = () => {
                     <div onClick={() => setShowModalMoreUserInfo(false)} className="cursor-pointer mr-2">
                         <ArrowLeft className={'back'} />
                     </div>
-                    <div className="font-semibold text-md mx-auto">Nusatech Exchange</div>
+                    <div className="font-semibold text-md mx-auto">
+                        {uid === myProfile?.uid
+                            ? data?.trader_name
+                                ? data?.trader_name
+                                : data?.member?.email
+                            : data?.merchant?.username
+                            ? data?.merchant?.username
+                            : data?.merchant?.member?.email}
+                    </div>
                 </div>
                 <section className="grey-text p-3">
                     <div className="d-flex justify-content-between my-2">

@@ -1479,7 +1479,7 @@ export const ru: LangType = {
     'success.p2p.transfer.created': 'Transfer was created',
     'success.payment_method.deleted': 'Способ оплаты удален',
     'success.payment_method.created': 'Способ оплаты создан',
-    'success.payment_method.updated': 'Способ оплаты обновлен',
+    'success.payment.method.updated': 'Способ оплаты обновлен',
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
 
     'p2p_user.user.insuffient_balance': 'У вас недостаточно средств на балансе',

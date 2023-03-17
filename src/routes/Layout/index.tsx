@@ -77,10 +77,7 @@ import {
     P2PPaymentMethodMobileScreen,
     P2PAddPaymentMethodMobileScreen,
     P2PEditPaymentMethodMobileScreen,
-<<<<<<< HEAD
-=======
-    P2PFAQMobileScreen
->>>>>>> 07f15aab7f62a7057f95e003e2e6ee925e23fa95
+    P2PFAQMobileScreen,
 } from '../../mobile/screens';
 
 import {

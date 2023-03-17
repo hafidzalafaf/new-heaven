@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CustomInput } from 'src/desktop/components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { alertPush } from 'src/modules';
 import { Link } from 'react-router-dom';
 import { DropUpMobileIcon, DropdownMobileIcon, ChatMobileIcon } from 'src/mobile/assets/P2PMobileIcon';
@@ -11,6 +11,10 @@ import { InfoIcon } from 'src/assets/images/InfoIcon';
 import { CopyableTextField } from 'src/components';
 import moment from 'moment';
 import { InfoWarningIcon } from 'src/assets/images/P2PIcon';
+import { selectUserInfo } from 'src/modules';
+import { ModalMobile } from 'src/mobile/components';
+import { DownloadSecondaryIcon } from 'src/assets/images/DownloadIcon';
+import { CloseIconFilter } from 'src/assets/images/CloseIcon';
 
 export interface P2POrderStepMobileProps {
     paymentMethod: string;
@@ -72,10 +76,58 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
     } = props;
 
     const dispatch = useDispatch();
+    const user = useSelector(selectUserInfo);
+    const profiles = user?.profiles?.slice(-1);
 
     const doCopyNumber = () => {
         copy('kid-code');
         dispatch(alertPush({ message: ['Order Number copied'], type: 'success' }));
+    };
+
+    const [showImage, setShowImage] = React.useState(false);
+    const [imageView, setImageView] = React.useState('');
+    const [imageBlob, setImageBlob] = React.useState('');
+
+    // console.log(paymentUser);
+
+    // const onImageChange = (e) => {
+    //     if (e.target.files && e.target.files[0]) {
+    //         let img = e.target.files[0];
+    //         setImageBlob(URL.createObjectURL(img));
+    //         setImage(e.target.files);
+    //     }
+    // };
+
+    const download = (url, filename) => {
+        fetch(url)
+            .then((response) => response.blob())
+            .then((blob) => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+            })
+            .catch(console.error);
+    };
+
+    const renderModalImageViewer = () => {
+        return (
+            <React.Fragment>
+                <div className="d-flex justify-content-end gap-8 mb-16 w-100">
+                    <span
+                        onClick={() => download(imageView, `heaven-p2p-transaction-${order_number}.png`)}
+                        className="cursor-pointer">
+                        <DownloadSecondaryIcon />
+                    </span>
+                    <span onClick={() => setShowImage(false)} className="cursor-pointer">
+                        <CloseIconFilter />
+                    </span>
+                </div>
+                <div className="d-flex justify-content-center align-items-center position-relative px-24">
+                    <img src={imageView} alt="chat" width={720} />
+                </div>
+            </React.Fragment>
+        );
     };
 
     return (
@@ -347,6 +399,18 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                                     </p>
                                 </div>
                             </div>
+
+                            {(paymentUser?.qrcode?.url || detail?.order?.payment?.qrcode?.url) && (
+                                <button
+                                    onClick={() => {
+                                        setShowImage(!showImage);
+                                        setImageView(paymentUser?.qrcode?.url || detail?.order?.payment?.qrcode?.url);
+                                    }}
+                                    type="button"
+                                    className="btn-transparent gradient-text cursor-pointer mt-24">
+                                    QR Code
+                                </button>
+                            )}
                         </div>
 
                         <div className="payment-form last">
@@ -461,8 +525,8 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                             </div>
                             <div className="d-flex align-items-start justify-content-between gap-8 mb-16">
                                 <p className="m-0 p-0 text-sm grey-text">
-                                    Confirm that the payment is made using the buyer’s real time name (Nusatech
-                                    Exchange)
+                                    Confirm that the payment is made using the buyer’s real time name (
+                                    {profiles[0]?.first_name})
                                 </p>
                                 <InfoIcon />
                             </div>
@@ -509,6 +573,8 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                     </div>
                 </div>
             )}
+
+            <ModalMobile show={showImage} content={renderModalImageViewer()} />
         </div>
     );
 };
