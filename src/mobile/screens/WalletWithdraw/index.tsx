@@ -64,9 +64,9 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
 
     const { currency = '' } = useParams<{ currency?: string }>();
 
-    const withdrawSuccess = useSelector(selectWithdrawSuccess);
-    const beneficiariesSuccess = useSelector(selectBeneficiariesActivateSuccess);
+    const beneficiariesActivateSuccess = useSelector(selectBeneficiariesActivateSuccess);
     const withdrawLimits = useSelector(selectMaxWithdrawLimit);
+    const withdrawSuccess = useSelector(selectWithdrawSuccess);
     const withdrawSum = useSelector(selectWithdrawSum);
     const memberGroup = useSelector(selectGroupMember);
     const beneficiaries: Beneficiary[] = useSelector(selectBeneficiaries);
@@ -106,6 +106,21 @@ export const WalletWithdrawMobileScreen: React.FC = () => {
             setShowModalModalAddBeneficiary(true);
         }
     }, [beneficiariesError]);
+
+    React.useEffect(() => {
+        if (beneficiariesActivateSuccess) {
+            setShowModalConfirmationBeneficiary(false);
+        }
+    }, [beneficiariesActivateSuccess]);
+
+    React.useEffect(() => {
+        if (withdrawSuccess) {
+            setAddress('');
+            setOtp('');
+            setAmount('');
+            setBeneficiaryId(0);
+        }
+    }, [withdrawSuccess]);
 
     const myWithdrawLimit = withdrawLimits.find((group) => group?.group == memberGroup?.group);
     const remainingWithdrawDaily = myWithdrawLimit

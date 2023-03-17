@@ -28,6 +28,7 @@ import {
     selectWithdrawSuccess,
     memberLevelsFetch,
     selectMemberLevels,
+    selectBeneficiariesActivateSuccess,
 } from '../../../modules';
 import { GLOBAL_PLATFORM_CURRENCY, DEFAULT_FIAT_PRECISION } from '../../../constants';
 import { Decimal, Tooltip } from '../../../components';
@@ -66,6 +67,7 @@ export const WalletWithdrawalForm: React.FC = () => {
     const [currencyId, setCurrencyId] = React.useState('');
     const [messageAmount, setMessageAmount] = React.useState('');
 
+    const beneficiariesActivateSuccess = useSelector(selectBeneficiariesActivateSuccess);
     const withdrawSuccess = useSelector(selectWithdrawSuccess);
     const beneficiaries: Beneficiary[] = useSelector(selectBeneficiaries);
     const beneficiariesCreate = useSelector(selectBeneficiariesCreate);
@@ -123,6 +125,20 @@ export const WalletWithdrawalForm: React.FC = () => {
             setShowModalLocked(true);
         }
     }, [user, beneficiaryPermited, withdrawPermited, memberLevel]);
+
+    React.useEffect(() => {
+        if (beneficiariesActivateSuccess) {
+            setShowModalBeneficiaryCode(false);
+        }
+    }, [beneficiariesActivateSuccess]);
+
+    React.useEffect(() => {
+        if (withdrawSuccess) {
+            setShowModalWithdrawalConfirmation(!showModalWithdrawalConfirmation);
+            setShowModalWithdrawalSuccessfully(!showModalWithdrawalSuccessfully);
+            setOtp('');
+        }
+    }, [withdrawSuccess]);
 
     const myWithdrawLimit = withdrawLimits?.find((group) => group?.group == memberGroup?.group);
     const remainingWithdrawDaily = myWithdrawLimit
@@ -208,13 +224,6 @@ export const WalletWithdrawalForm: React.FC = () => {
             setShowModalLocked(true);
         }
     };
-
-    React.useEffect(() => {
-        if (withdrawSuccess) {
-            setShowModalWithdrawalConfirmation(!showModalWithdrawalConfirmation);
-            setShowModalWithdrawalSuccessfully(!showModalWithdrawalSuccessfully);
-        }
-    }, [withdrawSuccess]);
 
     const renderHeaderModalWithdrawalConfirmation = () => {
         return (
