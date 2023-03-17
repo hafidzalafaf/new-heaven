@@ -262,10 +262,6 @@ export const P2PUserInfo: React.FC = () => {
 
                             <p className="m-0 p-0 grey-text text-xxs font-semibold">Verified Merchant</p>
                         </div>
-
-                        <div className="cursor-pointer">
-                            <ShareIcon />
-                        </div>
                     </div>
 
                     {isLoggedIn && uid !== userP2P?.member?.uid && (

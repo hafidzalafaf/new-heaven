@@ -530,10 +530,6 @@ const P2PProfileMobileScreen: React.FC = () => {
                                 }}
                             />
                         )}
-
-                        <div className="cursor-pointer">
-                            <ShareIcon />
-                        </div>
                     </div>
 
                     {isLoggedIn && uid !== userP2P?.member?.uid && (
