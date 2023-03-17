@@ -26,6 +26,7 @@ import {
     selectP2PPaymentUser,
     selectP2PPaymentUserCreateSuccess,
     selectP2PPaymentUserDeleteSuccess,
+    selectP2PPaymentUserSingle,
     selectP2PPaymentUserUpdateSuccess,
     selectUserInfo,
 } from 'src/modules';
@@ -37,13 +38,13 @@ interface Bank {
 }
 
 export const P2PEditPaymentMethodMobileScreen = () => {
-    const payment: Bank = useParams();
+    const { payment_user_uid = '' } = useParams<{payment_user_uid?: string}>();
     const history = useHistory();
     const dispatch = useDispatch();
     const user = useSelector(selectUserInfo);
     const paymentMethods: any = useSelector(selectP2PPaymentUser);
     const deleteSuccess = useSelector(selectP2PPaymentUserDeleteSuccess);
-    const currentPaymentData: any = useSelector(selectP2PPaymentUser);
+    const currentPaymentData: any = useSelector(selectP2PPaymentUserSingle);
     const createPaymentSuccess = useSelector(selectP2PPaymentUserCreateSuccess);
     const editPaymentSuccess = useSelector(selectP2PPaymentUserUpdateSuccess);
 
@@ -62,27 +63,24 @@ export const P2PEditPaymentMethodMobileScreen = () => {
     const profiles = user.profiles.slice(-1);
 
     React.useEffect(() => {
-        setEditPaymentItem(
-            currentPaymentData?.list?.find((item: any) => item.payment_user_uid === payment.payment_uid)
-        );
-        setAccountNumber(editPaymentItem?.account_number);
-    }, [currentPaymentData]);
-
-    React.useEffect(() => {
         if (editPaymentSuccess) {
             history.push('/p2p/payment-method');
         }
     }, [editPaymentSuccess]);
 
     React.useEffect(() => {
-        dispatch(p2pPaymentUserFetch({}));
+        dispatch(P2PPaymentUserFetchSingle({payment_user_uid}));
         dispatch(p2pProfileFetch());
         setLoading(false);
     }, [dispatch, deleteSuccess]);
-
+    
     React.useEffect(() => {
         dispatch(p2pCurrenciesFetch({ fiat }));
     }, [dispatch, fiat]);
+
+    React.useEffect(()=>{
+        setAccountNumber(currentPaymentData[0]?.account_number)
+    },[currentPaymentData])
 
     React.useEffect(() => {
         if (createPaymentSuccess) {
@@ -119,7 +117,7 @@ export const P2PEditPaymentMethodMobileScreen = () => {
 
     const handleEditPayment = () => {
         const formData = new FormData();
-        formData.append('payment_id', payment.payment_uid);
+        formData.append('payment_id', payment_user_uid);
         formData.append('account_number', account_number);
         formData.append('qr_code', image);
         formData.append('full_name', profiles[0]?.first_name);
@@ -253,12 +251,12 @@ export const P2PEditPaymentMethodMobileScreen = () => {
     };
 
     function renderPaymentForm() {
-        switch (editPaymentItem?.tipe) {
+        switch (currentPaymentData[0]?.tipe) {
             case 'bank':
                 return <BankForm />;
             case 'ewallet':
                 return <EwalletForm />;
-        }
+        }}
 
         const ModalDeleteConfirmation = ({ show }) => {
             return (
@@ -269,7 +267,7 @@ export const P2PEditPaymentMethodMobileScreen = () => {
                         <span className="grey-text-accent text-center">
                             Are you sure you want to delete this payment method?
                         </span>
-                        <button onClick={() => handleDeletePayment(payment.payment_uid)} className="btn-primary">
+                        <button onClick={() => handleDeletePayment(payment_user_uid)} className="btn-primary">
                             Delete
                         </button>
                         <button
@@ -298,4 +296,4 @@ export const P2PEditPaymentMethodMobileScreen = () => {
             </section>
         );
     }
-};
+;
