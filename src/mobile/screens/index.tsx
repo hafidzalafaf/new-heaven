@@ -45,3 +45,4 @@ export * from './P2PMyOfferDetailMobileScreen';
 export * from './P2PPaymentMethodMobileScreen';
 export * from './P2PAddPaymentMethodMobileScreen';
 export * from './P2PEditPaymentMethodMobileScreen';
+export *  from './P2PFAQMobileScreen';
