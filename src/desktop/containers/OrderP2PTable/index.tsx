@@ -28,8 +28,6 @@ export const OrderP2PTable = () => {
     const fiats = useSelector(selectP2PFiatsData);
     const currencies = useSelector(selectCurrencies);
 
-    console.log(currencies);
-
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
     const [fiat, setFiat] = React.useState('');
