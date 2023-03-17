@@ -183,20 +183,26 @@ export const P2PChatMobile: React.FunctionComponent<P2PChatMobileProps> = (props
                         </span>
                     </div>
                     <div className="order-info-container d-flex flex-column gap-16 p-16 w-100">
-                        <div className="d-flex align-items-center gap-4">
-                            <p className="m-0 p-0 text-ms white-text font-semibold">Order will be cancelled in</p>
-                            <Countdown
-                                days={days}
-                                hours={hours}
-                                minutes={minutes}
-                                seconds={seconds}
-                                showChat={showChat}
-                                detail={detail}
-                                timeLeft={timeLeft}
-                                textColor="gradient-text"
-                            />
-                        </div>
-
+                        {detail?.order?.state == 'prepare' ||
+                            (detail?.order?.state == 'waiting' && (
+                                <div className="d-flex align-items-center gap-4">
+                                    <p className="m-0 p-0 text-ms white-text font-semibold">
+                                        {detail?.order?.state == 'prepare'
+                                            ? 'Order will be cancelled in'
+                                            : 'Crypto will be release in'}
+                                    </p>
+                                    <Countdown
+                                        days={days}
+                                        hours={hours}
+                                        minutes={minutes}
+                                        seconds={seconds}
+                                        showChat={showChat}
+                                        detail={detail}
+                                        timeLeft={timeLeft}
+                                        textColor="gradient-text"
+                                    />
+                                </div>
+                            ))}
                         <div className="d-flex justify-content-between align-items-center">
                             <div className="w-80">
                                 <p className="m-0 p-0 white-text text-sm">
@@ -215,12 +221,14 @@ export const P2PChatMobile: React.FunctionComponent<P2PChatMobileProps> = (props
                             )}
                         </div>
 
-                        <button
-                            type="button"
-                            onClick={handleMakePayment}
-                            className="btn-primary white-text text-ms font-normal">
-                            Make Payment
-                        </button>
+                        {side == 'buy' && detail?.order?.state == 'prepare' && (
+                            <button
+                                type="button"
+                                onClick={handleMakePayment}
+                                className="btn-primary white-text text-ms font-normal">
+                                Make Payment
+                            </button>
+                        )}
 
                         <div className="d-flex flex-column align-items-center justify-content-center gap-8">
                             <span className="dark-bg-main radius-sm p-8 grey-text-accent text-xxs m-0 text-center">

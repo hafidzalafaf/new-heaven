@@ -407,7 +407,7 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                                         setImageView(paymentUser?.qrcode?.url || detail?.order?.payment?.qrcode?.url);
                                     }}
                                     type="button"
-                                    className="btn-transparent gradient-text cursor-pointer mt-24">
+                                    className="btn-transparent gradient-text cursor-pointer font-bold mt-16">
                                     QR Code
                                 </button>
                             )}

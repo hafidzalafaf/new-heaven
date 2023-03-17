@@ -303,7 +303,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                                         );
                                                     }}
                                                     type="button"
-                                                    className="btn-transparent gradient-text cursor-pointer mt-24">
+                                                    className="btn-transparent gradient-text cursor-pointer mt-16 font-bold">
                                                     QR Code
                                                 </button>
                                             )}
@@ -414,10 +414,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                 ) : (
                                     <div className="d-flex gap-24">
                                         <button
-                                            disabled={
-                                                detail?.order?.state !== 'waiting' &&
-                                                detail?.order?.state !== 'rejected'
-                                            }
+                                            disabled={detail?.order?.state !== 'waiting'}
                                             type="button"
                                             onClick={() => handleShowModalSellConfirm()}
                                             className="btn btn-secondary px-5 text-sm">
@@ -460,6 +457,7 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                     ) : detail?.order?.state == 'waiting' || detail?.order?.state == 'rejected' ? (
                                         <button
                                             type="button"
+                                            disabled={detail?.order?.state !== 'waiting'}
                                             onClick={() => side == 'buy' && handleShowModalCancel()}
                                             className="btn btn-transparent btn-inline w-auto font-semibold text-danger">
                                             Cancel Order

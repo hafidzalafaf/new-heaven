@@ -483,8 +483,9 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                                 </button>
 
                                 <button
-                                    onClick={() => setShowModalCancel(!showModalCancel)}
+                                    // onClick={() => setShowModalCancel(!showModalCancel)}
                                     type="button"
+                                    disabled={true}
                                     className="btn-secondary w-100 grey-text text-ms font-normal">
                                     Cancel
                                 </button>
@@ -597,8 +598,9 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                     ) : detail?.order?.state == 'rejected' ? (
                         <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
                             <button
-                                onClick={() => setShowModalSellConfrim(!showModalSellConfirm)}
+                                // onClick={() => setShowModalSellConfrim(!showModalSellConfirm)}
                                 type="button"
+                                disabled={true}
                                 className="btn-primary w-100 white-text text-ms font-normal">
                                 Release Crypto
                             </button>
