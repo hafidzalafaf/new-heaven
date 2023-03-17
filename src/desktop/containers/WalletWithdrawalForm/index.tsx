@@ -168,7 +168,8 @@ export const WalletWithdrawalForm: React.FC = () => {
         amountValidation(e);
     };
 
-    const handleChangeOtp = (value: string) => {
+    const handleChangeOtp = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
         setOtp(value);
     };
 
@@ -245,7 +246,10 @@ export const WalletWithdrawalForm: React.FC = () => {
                 <div className="d-flex">
                     <button
                         className="btn btn-danger sm px-5 mr-3"
-                        onClick={() => setShowModalWithdrawalConfirmation(!showModalWithdrawalConfirmation)}>
+                        onClick={() => {
+                            setShowModalWithdrawalConfirmation(!showModalWithdrawalConfirmation);
+                            setOtp('');
+                        }}>
                         Cancel
                     </button>
                     <button className="btn btn-success sm px-5" onClick={handleSubmitWithdraw}>
@@ -284,7 +288,18 @@ export const WalletWithdrawalForm: React.FC = () => {
     const renderHeaderModalOtp = () => {
         return (
             <React.Fragment>
-                <h6 className="text-xl font-bold white-text mb-0">2FA Code</h6>
+                <div className="d-flex justify-content-between align-items-center w-100">
+                    <h6 className="text-xl font-bold white-text mb-0">2FA Code</h6>
+
+                    <span
+                        className="cursor-pointer"
+                        onClick={() => {
+                            setShowModalOtp(!showModalOtp);
+                            setOtp('');
+                        }}>
+                        <CircleCloseIcon />
+                    </span>
+                </div>
             </React.Fragment>
         );
     };
