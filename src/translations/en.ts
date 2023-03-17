@@ -309,7 +309,7 @@ export const en = {
     'page.body.wallets.tabs.withdraw.content.withdrawal.limit.tip':
         'Withdrawal limits depend on your group. Limits reset every 24h and every month correspondingly. Still, you can create a withdrawal request that exceeds your limit but it will be processed manually.',
 
-    'success.beneficiaries.created': 'Beneficiaries: successfully created',
+    'success.beneficiaries.created': 'Please activated your beneficiaries address',
     'success.beneficiaries.activated': 'Beneficiaries: successfully activated',
     'success.beneficiaries.deleted': 'Beneficiaries: successfully deleted',
     'success.beneficiaries.resent_pin': 'Beneficiaries: pin resent',
