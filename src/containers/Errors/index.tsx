@@ -41,7 +41,7 @@ class HandleErrorWrapper extends React.Component<ErrorProps, ErrorWrapperState> 
             return (
                 <div className="dark-bg-main w-100 pg-error-screen">
                     <div className="container d-flex justify-content-between align-items-center gap-24">
-                        <div>
+                        <div className="text-error-container">
                             <h1 className="m-0 p-0 mb-12 text-error gradient-text">Oops!</h1>
                             <h2 className="m-0 p-0 mb-12 white-text text-xl">Something Went Wrong</h2>
                             <h3 className="m-0 p-0 mb-24 white-text text-sm">
@@ -49,7 +49,7 @@ class HandleErrorWrapper extends React.Component<ErrorProps, ErrorWrapperState> 
                                 fix things.
                             </h3>
 
-                            <div className="d-flex flex-wrap justify-content-start align-items-center gap-24">
+                            <div className="d-flex flex-wrap justify-content-start align-items-center gap-24 button-container">
                                 <button onClick={() => location.reload()} className="btn-primary">
                                     Try Again
                                 </button>
