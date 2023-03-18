@@ -30,7 +30,6 @@ import {
     DocumentMobileIcon,
     CircleHelpMobileIcon,
     UserMobileIcon,
-    ReplayMobileIcon,
 } from 'src/mobile/assets/P2PMobileIcon';
 import { InfoIcon } from 'src/assets/images/InfoIcon';
 import { NoData, FilterInput } from 'src/desktop/components';
@@ -259,16 +258,11 @@ export const P2PMobileScreen: React.FC = () => {
             name: 'P2P Help Center',
             url: '/p2p/faq',
         },
-        {
-            icon: <UserMobileIcon />,
-            name: 'P2P User Center',
-            url: `/p2p/profile/${user?.uid}`,
-        },
-        {
-            icon: <ReplayMobileIcon />,
-            name: 'Replay Guide',
-            url: '/p2p/faq',
-        },
+        // {
+        //     icon: <UserMobileIcon />,
+        //     name: 'P2P User Center',
+        //     url: `/p2p/profile/${user?.uid}`,
+        // },
     ];
 
     const renderModalAnnouncement = () => {
@@ -391,15 +385,30 @@ export const P2PMobileScreen: React.FC = () => {
 
                             <Dropdown.Menu className="dropdown-profile">
                                 <Dropdown.Item className="dark-bg-accent dropdown-profile cursor-pointer">
-                                    {menu?.map((item, i) => (
-                                        <Link
-                                            key={i}
-                                            to={item?.url}
+                                    <>
+                                        {menu?.map((item, i) => (
+                                            <Link
+                                                key={i}
+                                                to={item?.url}
+                                                className="dark-bg-accent p-3 dropdown-profile cursor-pointer d-flex gap-8 align-items-center">
+                                                {item?.icon}
+                                                <p className="m-0 p-0 grey-text-accent text-xxs">{item?.name}</p>
+                                            </Link>
+                                        ))}
+
+                                        <div
+                                            onClick={() => {
+                                                if (!user?.uid) {
+                                                    history.push('/signin');
+                                                } else {
+                                                    history.push(`/p2p/profile/${user?.uid}`);
+                                                }
+                                            }}
                                             className="dark-bg-accent p-3 dropdown-profile cursor-pointer d-flex gap-8 align-items-center">
-                                            {item?.icon}
-                                            <p className="m-0 p-0 grey-text-accent text-xxs">{item?.name}</p>
-                                        </Link>
-                                    ))}
+                                            <UserMobileIcon />
+                                            <p className="m-0 p-0 grey-text-accent text-xxs">P2P User Center</p>
+                                        </div>
+                                    </>
                                 </Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
@@ -423,11 +432,10 @@ export const P2PMobileScreen: React.FC = () => {
                             </button>
                         </div>
 
-                        <div className="d-flex align-items-center gap-8">
-                            <button
-                                type="button"
-                                onClick={() => setShowModalSelectCurrency(!showModalSelectCurrency)}
-                                className="btn-transparent grey-text-accent text-ms">
+                        <div
+                            onClick={() => setShowModalSelectCurrency(!showModalSelectCurrency)}
+                            className="d-flex align-items-center gap-8 cursor-pointer">
+                            <button type="button" className="btn-transparent grey-text-accent text-ms">
                                 {fiat?.toUpperCase()}
                             </button>
                             <span className="cursor-pointer">
@@ -577,7 +585,7 @@ export const P2PMobileScreen: React.FC = () => {
                         </div>
 
                         <div className="mb-24">
-                            <label className="m-0 grey-text text-ms font-extrabold mb-16">Amount</label>
+                            <label className="m-0 grey-text text-ms font-extrabold mb-16">Min Amount</label>
                             <div className="position-relative mb-16">
                                 <label className="input-label-left text-sm grey-text position-absolute m-0 p-0">
                                     e.g

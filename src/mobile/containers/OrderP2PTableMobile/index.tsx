@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Tabs, Tab, Dropdown } from 'react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import '../../../styles/colors.pcss';
 import Select from 'react-select';
 import moment from 'moment';
 import { CustomStylesSelect, NoData } from '../../../desktop/components';
-import { Loading, Table } from '../../../components';
-import { HideIcon, GreyCheck, ActiveCheck, VerificationIcon, MobileMoreArrow } from '../../../assets/images/P2PIcon';
-import { Link, useHistory } from 'react-router-dom';
+import { Loading } from '../../../components';
+import { VerificationIcon, MobileMoreArrow } from '../../../assets/images/P2PIcon';
+import { useHistory } from 'react-router-dom';
 import {
     orderFetch,
     selectP2POrder,
@@ -15,7 +15,9 @@ import {
     p2pFiatFetch,
     selectP2PFiatsData,
     selectCurrencies,
+    alertPush,
 } from 'src/modules';
+import { copy } from 'src/helpers';
 import { capitalizeFirstLetter } from 'src/helpers';
 import './OrderP2PTableMobile.pcss';
 import { MobileFilterIcon } from '../../../assets/images/P2PIcon';
@@ -38,10 +40,9 @@ export const OrderP2PTableMobile = () => {
     const [tab, setTab] = React.useState('processing');
     const [data, setData] = React.useState([]);
     const [orderLoading, setOrderLoading] = React.useState(false);
+    const [showFilter, setShowFilter] = React.useState(false);
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
-
-    const [showFilter, setShowFilter] = React.useState(false);
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
@@ -226,11 +227,13 @@ export const OrderP2PTableMobile = () => {
                             <div>
                                 <span
                                     className={
-                                        item?.state === 'success'
-                                            ? `gradient-text`
-                                            : item?.state.includes('cancel')
-                                            ? `danger-text`
-                                            : ``
+                                        item?.state == 'success' || item?.state == 'accepted'
+                                            ? 'contrast-text'
+                                            : item?.state?.includes('waiting')
+                                            ? 'warning-text'
+                                            : item?.state == 'prepare'
+                                            ? 'blue-text'
+                                            : 'danger-text'
                                     }>
                                     {capitalizeFirstLetter(item?.state)}
                                 </span>
@@ -243,6 +246,10 @@ export const OrderP2PTableMobile = () => {
                                 <img height={24} width={24} src={item?.fiat.icon_url} alt={item?.fiat.name} />
                                 <span className="grey-text-accent font-bold ml-1">{item?.fiat.name}</span>
                             </div>
+                        </div>
+                        <div className="d-flex flex-row justify-content-between">
+                            <span>Date</span>
+                            <span>{moment(item?.created_at).format('YYYY-MM-DD hh:mm:ss')}</span>
                         </div>
                         <div className="d-flex flex-row justify-content-between">
                             <span>Fiat Amount</span>

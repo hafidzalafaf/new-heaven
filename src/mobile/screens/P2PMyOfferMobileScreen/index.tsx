@@ -2,12 +2,10 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { MobileFilterIcon } from 'src/assets/images/P2PIcon';
-import { OfferP2PTable } from 'src/desktop/containers';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import { PaginationMobile } from 'src/mobile/components';
 import { OfferP2PTableMobile } from 'src/mobile/containers/OfferP2PTableMobile';
 import {
-    selectP2POrder,
     selectP2PUserAccountOffer,
     selectP2PFiatsData,
     selectP2PUserAccountOfferCancelSuccess,
@@ -16,6 +14,7 @@ import {
     orderFetch,
     selectP2PUserAccountOfferNextPageExists,
     p2pUserOfferCancel,
+    selectCurrencies,
 } from 'src/modules';
 import { ModalMobile } from 'src/mobile/components';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
@@ -28,6 +27,7 @@ const P2PMyOfferMobileScreen = () => {
 
     const offer = useSelector(selectP2PUserAccountOffer);
     const fiats = useSelector(selectP2PFiatsData);
+    const currencies: any = useSelector(selectCurrencies);
     const cancelOfferSuccess = useSelector(selectP2PUserAccountOfferCancelSuccess);
     const nextPageExists = useSelector(selectP2PUserAccountOfferNextPageExists);
 
@@ -173,8 +173,8 @@ const P2PMyOfferMobileScreen = () => {
         dispatch(p2pUserOfferCancel({ payment_user_uid: idCancel }));
     };
 
-    const optionFiats = fiats?.map((item) => {
-        return { label: <p className="m-0 text-sm grey-text-accent">{item.name}</p>, value: item.name };
+    const optionFiats = currencies?.map((item) => {
+        return { label: <p className="m-0 text-sm grey-text-accent">{item.id?.toUpperCase()}</p>, value: item.id };
     });
 
     const optionState = [

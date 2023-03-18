@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { CustomInput } from 'src/desktop/components';
 import { useDispatch, useSelector } from 'react-redux';
 import { alertPush } from 'src/modules';
 import { Link } from 'react-router-dom';
@@ -46,34 +45,7 @@ export interface P2POrderStepMobileProps {
 }
 
 export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps> = (props) => {
-    const {
-        paymentMethod,
-        paymentUser,
-        showPayment,
-        showModalCancel,
-        comment,
-        side,
-        detail,
-        order_number,
-        handleChangePaymentMethod,
-        handleChangeComment,
-        handleShowPayment,
-        handleShowModalPaymentConfirm,
-        handleConfirmPaymentBuy,
-        handleShowModalBuyOrderCompleted,
-        handleShowModalSellConfirm,
-        handleShowModalCancel,
-        handleSendFeedbackPositive,
-        handleSendFeedbackNegative,
-        handleExpandChat,
-        handleExpandTerms,
-        timeLeft,
-        days,
-        hours,
-        minutes,
-        seconds,
-        showTerms,
-    } = props;
+    const { paymentUser, side, detail, order_number, handleExpandChat, handleExpandTerms, showTerms } = props;
 
     const dispatch = useDispatch();
     const user = useSelector(selectUserInfo);
@@ -86,17 +58,6 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
 
     const [showImage, setShowImage] = React.useState(false);
     const [imageView, setImageView] = React.useState('');
-    const [imageBlob, setImageBlob] = React.useState('');
-
-    // console.log(paymentUser);
-
-    // const onImageChange = (e) => {
-    //     if (e.target.files && e.target.files[0]) {
-    //         let img = e.target.files[0];
-    //         setImageBlob(URL.createObjectURL(img));
-    //         setImage(e.target.files);
-    //     }
-    // };
 
     const download = (url, filename) => {
         fetch(url)

@@ -639,7 +639,7 @@ export const TableListP2P = () => {
 
                     <div className="mb-24">
                         <label htmlFor="" className="mb-16 text-ms font-extrabold grey-text">
-                            Amount
+                            Min Amount
                         </label>
 
                         <div className="position-relative mb-16">
