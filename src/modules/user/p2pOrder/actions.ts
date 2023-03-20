@@ -40,14 +40,21 @@ export interface OrderFetch {
         fiat?: string;
         side?: string;
         state?: string;
-        from?: string;
-        to?: string;
+        from?: number;
+        to?: number;
+        page?: number;
+        limit?: number;
     };
 }
 
 export interface OrderData {
     type: typeof ORDER_DATA;
-    payload: [];
+    payload: {
+        data: [];
+        page: number;
+        total: number;
+        nextPageExists: boolean;
+    }
 }
 
 export interface OrderError {
@@ -243,7 +250,7 @@ export const orderFetch = (payload?: OrderFetch['payload']): OrderFetch => ({
     payload,
 });
 
-export const orderData = (payload?: OrderData['payload']): OrderData => ({
+export const orderData = (payload: OrderData['payload']): OrderData => ({
     type: ORDER_DATA,
     payload,
 });

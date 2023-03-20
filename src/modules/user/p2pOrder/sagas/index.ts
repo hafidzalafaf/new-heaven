@@ -10,6 +10,7 @@ import {
     ORDER_CHAT_CREATE,
     ORDER_REPORT,
     ORDER_REPORT_CREATE,
+    ORDER_DATA,
 } from '../constants';
 import { orderCreateSaga } from './orderCreateSaga';
 import { orderSaga } from './orderUserSaga';
@@ -25,6 +26,7 @@ import { orderReportCreateSaga } from './orderReportCreateSaga';
 export function* rootP2POrderSaga() {
     yield takeEvery(ORDER_CREATE, orderCreateSaga);
     yield takeLatest(ORDER_FETCH, orderSaga);
+    // yield takeLatest(ORDER_DATA, orderSaga);
     yield takeLatest(ORDER_DETAIL_FETCH, orderDetailSaga);
     yield takeLatest(ORDER_CANCEL, orderCancelSaga);
     yield takeLatest(ORDER_CONFIRM_SELL, orderConfirmSellSaga);

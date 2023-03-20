@@ -15,11 +15,35 @@ import {
     p2pFiatFetch,
     selectP2PFiatsData,
     selectCurrencies,
+    selectP2pOrderFirstElemIndex,
+    RootState,
+    selectP2pOrderLastElemIndex,
+    selectP2POrderNextPageExists,
+    selectP2pOrderPage,
 } from 'src/modules';
 import { capitalizeFirstLetter } from 'src/helpers';
 import './OrderP2PTableMobile.pcss';
 import { MobileFilterIcon } from '../../../assets/images/P2PIcon';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
+import { PaginationMobile } from 'src/mobile/components';
+
+
+export interface Order {
+    amount: string;
+    available_amount: string;
+    created_at: string;
+    currency: object;
+    fiat: object;
+    fiat_amount: string;
+    offer_number: string;
+    order_number: string;
+    origin_amount: string | null;
+    price: string;
+    side: string;
+    state: string;
+    trades: object;
+    updated_at: string;
+}
 
 export const OrderP2PTableMobile = () => {
     const history = useHistory();
@@ -29,6 +53,11 @@ export const OrderP2PTableMobile = () => {
     const order = useSelector(selectP2POrder);
     const loading = useSelector(selectP2POrderLoading);
     const fiats = useSelector(selectP2PFiatsData);
+    const nextPageExists = useSelector(selectP2POrderNextPageExists);
+    const firstElementIndex = useSelector((state: RootState) => selectP2pOrderFirstElemIndex(state, 5));
+    const lastElementIndex = useSelector((state: RootState)=> selectP2pOrderLastElemIndex(state, 5));
+    const page = useSelector(selectP2pOrderPage);
+
 
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
@@ -38,6 +67,8 @@ export const OrderP2PTableMobile = () => {
     const [tab, setTab] = React.useState('processing');
     const [data, setData] = React.useState([]);
     const [orderLoading, setOrderLoading] = React.useState(false);
+    const [currentPage, setCurrentPage] = React.useState(0)
+
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
 
@@ -82,57 +113,66 @@ export const OrderP2PTableMobile = () => {
         };
         dispatch(
             orderFetch(
-                fiat
-                    ? { currency: fiat }
-                    : side
-                    ? { side }
-                    : state
-                    ? { state }
-                    : startDate && endDate
-                    ? { from: time_from, to: time_to }
-                    : fiat && side
-                    ? { currency: fiat, side }
-                    : fiat && state
-                    ? { currency: fiat, state }
-                    : fiat && startDate && endDate
-                    ? fiatDatePayload
-                    : side && state
-                    ? { side, state }
-                    : side && startDate && endDate
-                    ? sideDatePayload
-                    : state && startDate && endDate
-                    ? stateDatePayload
-                    : fiat && side && state && startDate && endDate
-                    ? fullPayload
-                    : null
+                // fiat
+                //     ? { currency: fiat }
+                //     : side
+                //     ? { side }
+                //     : state
+                //     ? { state }
+                //     : startDate && endDate
+                //     ? { from: time_from, to: time_to }
+                //     : fiat && side
+                //     ? { currency: fiat, side }
+                //     : fiat && state
+                //     ? { currency: fiat, state }
+                //     : fiat && startDate && endDate
+                //     ? fiatDatePayload
+                //     : side && state
+                //     ? { side, state }
+                //     : side && startDate && endDate
+                //     ? sideDatePayload
+                //     : state && startDate && endDate
+                //     ? stateDatePayload
+                //     : fiat && side && state && startDate && endDate
+                //     ? fullPayload
+                //     : null
             )
         );
         const fetchInterval = setInterval(() => {
             dispatch(
                 orderFetch(
-                    fiat
-                        ? { currency: fiat }
-                        : side
-                        ? { side }
-                        : state
-                        ? { state }
-                        : startDate && endDate
-                        ? { from: time_from, to: time_to }
-                        : fiat && side
-                        ? { currency: fiat, side }
-                        : fiat && state
-                        ? { currency: fiat, state }
-                        : fiat && startDate && endDate
-                        ? fiatDatePayload
-                        : side && state
-                        ? { side, state }
-                        : side && startDate && endDate
-                        ? sideDatePayload
-                        : state && startDate && endDate
-                        ? stateDatePayload
-                        : fiat && side && state && startDate && endDate
-                        ? fullPayload
-                        : null
+                    {
+                        currency: fiat,
+                        side: side,
+                        state: state,
+                        limit: 5,
+                        page: currentPage,
+                        from: +time_from,
+                        to: +time_to
+                    }
+                    // fiat
+                    //     ? { currency: fiat }
+                    //     : side
+                    //     ? { side }
+                    //     : state
+                    //     ? { state }
+                    //     : startDate && endDate
+                    //     ? { from: time_from, to: time_to }
+                    //     : fiat && side
+                    //     ? { currency: fiat, side }
+                    //     : fiat && state
+                    //     ? { currency: fiat, state }
+                    //     : fiat && startDate && endDate
+                    //     ? fiatDatePayload
+                    //     : side && state
+                    //     ? { side, state }
+                    //     : side && startDate && endDate
+                    //     ? sideDatePayload
+                    //     : state && startDate && endDate
+                    //     ? stateDatePayload
+                    //     : fiat && side && state && startDate && endDate
+                    //     ? fullPayload
+                    //     : null
                 )
             );
         }, 5000);
@@ -140,18 +180,18 @@ export const OrderP2PTableMobile = () => {
         return () => {
             clearInterval(fetchInterval);
         };
-    }, [dispatch, startDate, endDate, state, fiat, side, time_from, time_to]);
+    }, [dispatch, startDate, endDate, state, fiat, side, time_from, time_to, currentPage]);
 
     React.useEffect(() => {
         setData(
             tab == 'done'
                 ? order.filter(
-                      (item) =>
+                      (item: Order) =>
                           item?.state == 'accepted' || item?.state == 'success' || item?.state?.includes('canceled')
                   )
                 : tab == 'processing'
                 ? order.filter(
-                      (item) =>
+                      (item: Order) =>
                           item?.state == 'waiting' ||
                           item?.state?.includes('waiting') ||
                           item?.state == 'prepare' ||
@@ -309,6 +349,14 @@ export const OrderP2PTableMobile = () => {
                         </Tabs>
                     </div>
                 </div>
+                <PaginationMobile
+                page={page}
+                onClickPrevPage={()=> setCurrentPage(currentPage -1)}
+                onClickNextPage={()=> setCurrentPage(currentPage +1)}
+                nextPageExists={nextPageExists}
+                lastElementIndex={lastElementIndex}
+                firstElementIndex={firstElementIndex}
+                />
 
                 <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${showFilter ? 'show' : ''}`}>
                     <div className="fixed-bottom off-canvas-content-container-filter overflow-auto">

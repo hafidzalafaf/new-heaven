@@ -2,7 +2,7 @@ import { RootState } from '../../../modules';
 import { CommonError } from '../../../modules/types';
 import { Order } from './types';
 
-export const selectP2POrder = (state: RootState): any[] => state.user.p2pOrder.fetch.data;
+export const selectP2POrder = (state: RootState): [] => state.user.p2pOrder.fetch.data;
 
 export const selectP2POrderLoading = (state: RootState): boolean => state.user.p2pOrder.fetch.fetching;
 
@@ -47,3 +47,15 @@ export const selectP2PChatCreateLoading = (state: RootState): boolean => state.u
 // REPORT
 export const selectP2PCreateReportSuccess = (state: RootState): boolean => state.user.p2pOrder.report_create.success;
 export const selectP2PCreateReportLoading = (state: RootState): boolean => state.user.p2pOrder.report_create.fetching;
+
+
+// PAGINATION
+export const selectP2POrderNextPageExists = (state: RootState): boolean => state.user.p2pOrder.fetch.nextPageExists;
+export const selectP2pOrderFirstElemIndex = (state: RootState, limit: number): number => 
+(state.user.p2pOrder.fetch.page * limit) + 1;
+
+export const selectP2pOrderLastElemIndex = (state: RootState, limit: number): number => 
+(state.user.p2pOrder.fetch.page * limit) + state.user.p2pOrder.fetch.data.length
+
+export const selectP2pOrderPage = (state: RootState): number =>
+state.user.p2pOrder.fetch.page
