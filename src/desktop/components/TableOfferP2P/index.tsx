@@ -8,7 +8,7 @@ import Select, { components } from 'react-select';
 import { Loading } from 'src/components';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { p2pProfileFetch, selectP2PProfile } from 'src/modules';
+import { p2pProfileFetch, selectP2PProfile, selectUserLoggedIn } from 'src/modules';
 
 export interface TableOfferP2PProps {
     side: string;
@@ -22,13 +22,16 @@ export interface TableOfferP2PProps {
     payment_order?: string;
     handleShowPaymentOption?: () => void;
     handleChangePrice: (e: string) => void;
+    handleChangeAmount: (e: string) => void;
     handleChangePaymentOrder?: (e: string) => void;
+    handleClickAll: () => void;
     handleCreacteOrder: () => void;
-    handleSelectOffer: (expand: string, offer_number: string, price: string, payment: any) => void;
+    handleSelectOffer: (expand: string, offer_number: string, price: string, payment: any, maxLimit: string) => void;
     handleCloseExpand: () => void;
     resetForm: () => void;
     loading: boolean;
     refresh: boolean;
+    wallet: any;
 }
 
 export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props) => {
@@ -44,16 +47,20 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
         payment_order,
         handleShowPaymentOption,
         handleChangePrice,
+        handleChangeAmount,
         handleChangePaymentOrder,
+        handleClickAll,
         handleCreacteOrder,
         handleSelectOffer,
         handleCloseExpand,
         resetForm,
         loading,
         refresh,
+        wallet,
     } = props;
     const dispatch = useDispatch();
     const profile = useSelector(selectP2PProfile);
+    const isLoggedIn = useSelector(selectUserLoggedIn);
     const history = useHistory();
     const intl = useIntl();
     React.useEffect(() => {
@@ -105,7 +112,8 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                       item?.offer_number,
                                                       item?.offer_number,
                                                       item?.price,
-                                                      item?.payment
+                                                      item?.payment,
+                                                      item?.max_order
                                                   ),
                                               ]
                                             : null;
@@ -190,19 +198,39 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
 
                                                     <div className="position-relative mb-24">
                                                         <label className="white-text text-xs font-semibold mb-8">
-                                                            I Want To Pay
+                                                            I Want To {side == 'buy' ? 'Pay' : 'Sell'}
                                                         </label>
                                                         <input
                                                             type="text"
                                                             placeholder={'00.00'}
-                                                            value={price}
-                                                            onChange={(e) => handleChangePrice(e.target.value)}
+                                                            value={side == 'buy' ? price : amount}
+                                                            onChange={(e) =>
+                                                                side == 'buy'
+                                                                    ? handleChangePrice(e.target.value)
+                                                                    : handleChangeAmount(e.target.value)
+                                                            }
                                                             required
                                                             className="form-control input-p2p-form white-text"
                                                         />
-                                                        <label className="input-label-order text-sm grey-text position-absolute">
-                                                            All {fiat?.toUpperCase()}
+                                                        <label className="input-label-order text-sm grey-text position-absolute d-flex align-items-center gap-4">
+                                                            <p
+                                                                onClick={handleClickAll}
+                                                                className="m-0 p-0 cursor-pointer">
+                                                                All
+                                                            </p>
+                                                            <p className="m-0 p-0">
+                                                                {side == 'buy'
+                                                                    ? fiat?.toUpperCase()
+                                                                    : currency?.toUpperCase()}
+                                                            </p>
                                                         </label>
+
+                                                        {side == 'sell' && isLoggedIn && (
+                                                            <p className="m-0 p-0 mt-8 text-sm grey-text">
+                                                                Your Balance : {wallet?.p2p_balance}{' '}
+                                                                {currency?.toUpperCase()}
+                                                            </p>
+                                                        )}
                                                     </div>
 
                                                     <div
@@ -215,12 +243,14 @@ export const TableOfferP2P: React.FunctionComponent<TableOfferP2PProps> = (props
                                                         <input
                                                             type="text"
                                                             placeholder={'00.00'}
-                                                            value={amount}
-                                                            required
+                                                            value={side == 'buy' ? amount : price}
+                                                            readOnly
                                                             className="form-control input-p2p-form white-text"
                                                         />
                                                         <label className="input-label-order text-sm grey-text position-absolute">
-                                                            {currency?.toUpperCase()}
+                                                            {side == 'buy'
+                                                                ? currency?.toUpperCase()
+                                                                : fiat?.toUpperCase()}
                                                         </label>
                                                     </div>
 

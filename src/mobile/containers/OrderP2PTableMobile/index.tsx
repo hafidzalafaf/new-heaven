@@ -212,7 +212,7 @@ export const OrderP2PTableMobile = () => {
                         </div>
                         <div
                             onClick={() =>
-                                history.push(`/p2p/wallet/order/${item?.order_number}`, { side: item?.side })
+                                history.push(`/p2p/order/detail/${item?.order_number}`, { side: item?.side })
                             }
                             className="d-flex flex-row justify-content-between cursor-pointer">
                             <div>
@@ -279,7 +279,7 @@ export const OrderP2PTableMobile = () => {
                 <span onClick={() => history.goBack()}>
                     <ArrowLeft className={'cursor-pointer'} />
                 </span>
-                <p className="m-0 p-0 grey-text-accent text-md font-extrabold">Order History</p>
+                <p className="m-0 p-0 grey-text-accent text-md font-extrabold">My Orders</p>
                 <span onClick={() => setShowFilter(!showFilter)}>
                     <MobileFilterIcon className={'cursor-pointer'} />
                 </span>

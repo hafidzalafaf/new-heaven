@@ -117,7 +117,7 @@ export const OfferP2PTableMobile: React.FC<OfferP2PTableMobileProps> = (props) =
                                     </span>
                                 </div>
 
-                                <Link to={`/p2p/offer/${item?.offer_number}`}>
+                                <Link to={`/p2p/order/detail/${item?.order_number}`}>
                                     <span
                                         className={
                                             item?.state == 'success' || item?.state == 'accepted'

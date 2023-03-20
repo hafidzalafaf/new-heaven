@@ -128,7 +128,7 @@ export const OfferP2PTable: React.FunctionComponent<OfferP2PTableProps> = (props
             <div className="d-flex align-items-center gap-24">
                 <Link
                     to={
-                        type == 'offer' ? `/p2p/offer/${item?.offer_number}` : `/p2p/wallet/order/${item?.order_number}`
+                        type == 'offer' ? `/p2p/offer/${item?.offer_number}` : `/p2p/order/detail/${item?.order_number}`
                     }
                     className="d-flex align-items-center cursor-pointer mr-8">
                     <p className="m-0 p-0 mr-6 text-xs grey-text">Detail</p>

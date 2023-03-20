@@ -24,7 +24,9 @@ import {
     selectP2POrderCreateLoading,
     selectP2PCreateOfferLoading,
     selectP2PCreateOfferSuccess,
+    selectWallets,
 } from 'src/modules';
+import { useWalletsFetch } from 'src/hooks';
 import { RefreshIcon, FilterIcon, DropdownIcon, InfoSecondaryIcon } from 'src/assets/images/P2PIcon';
 import {
     CustomStylesSelect,
@@ -32,7 +34,6 @@ import {
     TableOfferP2P,
     ModalUserLevel,
     ModalOptionPayment,
-    P2PPaymentMethodProps,
 } from '../../../desktop/components';
 import Select from 'react-select';
 import '../../../styles/colors.pcss';
@@ -41,6 +42,7 @@ import { Modal } from '../../../desktop/components';
 import { Spinner } from 'react-bootstrap';
 
 export const TableListP2P = () => {
+    useWalletsFetch();
     const dispatch = useDispatch();
     const history = useHistory();
     const intl = useIntl();
@@ -58,6 +60,7 @@ export const TableListP2P = () => {
     const createOfferSuccess = useSelector(selectP2PCreateOfferSuccess);
     const loadingOffers = useSelector(selectP2POffersFetchLoading);
     const paymentMethods: any = useSelector(selectP2PPaymentUser);
+    const wallets = useSelector(selectWallets);
 
     const [currencies, setCurrencies] = React.useState([]);
     const [payments, setPayments] = React.useState([]);
@@ -93,7 +96,9 @@ export const TableListP2P = () => {
     const [price, setPrice] = React.useState('');
     const [amount, setAmount] = React.useState('');
     const [payment_order, setPaymentOrder] = React.useState('');
+    const [max_limit, setMaxLimit] = React.useState('');
     /* ========== ORDER CREATE STATE END ========== */
+    const wallet = wallets?.find((item) => item?.currency == currency);
 
     /* ============== CREATE OFFER STATE START ============== */
     const [currencyOffer, setCurrencyOffer] = React.useState(currencies?.length > 0 ? currencies[0]?.currency : 'eth');
@@ -111,12 +116,12 @@ export const TableListP2P = () => {
     const [showModalConfirmation, setShowModalConfirmation] = React.useState(false);
     /* ============== CREATE OFFER STATE END ============== */
 
-    // React.useEffect(() => {
-    //     setOfferLoading(true);
-    //     setTimeout(() => {
-    //         setOfferLoading(false);
-    //     }, 3000);
-    // }, []);
+    React.useEffect(() => {
+        setOfferLoading(true);
+        setTimeout(() => {
+            setOfferLoading(false);
+        }, 3000);
+    }, []);
 
     React.useEffect(() => {
         const defaultPayload = {
@@ -231,7 +236,7 @@ export const TableListP2P = () => {
     React.useEffect(() => {
         if (createOrderSuccess) {
             dispatch(orderCreateData());
-            history.push(`/p2p/wallet/order/${createData?.order_number}`, { side: createData?.side });
+            history.push(`/p2p/order/detail/${createData?.order_number}`, { side: createData?.side });
         }
     }, [createOrderSuccess, createData]);
 
@@ -358,13 +363,22 @@ export const TableListP2P = () => {
           });
 
     React.useEffect(() => {
-        const temp = +price / +price_actual;
-        if (price && price_actual) {
-            setAmount(temp.toString());
-        } else if (!price) {
-            setAmount('');
+        if (side == 'buy') {
+            const temp = +price / +price_actual;
+            if (price && price_actual) {
+                setAmount(temp?.toString());
+            } else if (!price) {
+                setAmount('');
+            }
+        } else {
+            const temp = +amount * +price_actual;
+            if (amount && price_actual) {
+                setPrice(temp?.toString());
+            } else if (!amount) {
+                setPrice('');
+            }
         }
-    }, [price, price_actual]);
+    }, [price, price_actual, amount, side]);
 
     const handleCreacteOrder = async () => {
         const payloadSell = {
@@ -394,22 +408,56 @@ export const TableListP2P = () => {
         setPrice(value);
     };
 
+    const handleChangeAmount = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setAmount(value);
+    };
+
+    const handleClickAll = () => {
+        if (!isLoggedIn) {
+            const temPrice = +max_limit * +price_actual;
+            const tempAmount = +max_limit;
+            setPrice(temPrice?.toString());
+            setAmount(tempAmount?.toString());
+        } else {
+            const balance = +wallet?.p2p_balance > +max_limit ? +max_limit : +wallet?.p2p_balance;
+            const temPrice = side == 'buy' ? +max_limit : balance * +price_actual;
+            const tempAmount = side == 'buy' ? +max_limit : balance;
+            setPrice(temPrice?.toString());
+            setAmount(tempAmount?.toString());
+        }
+    };
+
     const handleChangePaymentOrder = (e: string) => {
         setPaymentOrder(e);
     };
 
-    const handleSelectOfferBuy = (expand: string, offer_number: string, price: string, payment?: any) => {
+    const handleSelectOfferBuy = (
+        expand: string,
+        offer_number: string,
+        price: string,
+        payment: any,
+        maxLimit: string
+    ) => {
         setExpandBuy(expand);
         setOfferNumber(offer_number);
         setPriceActual(price);
         setPaymentOption([]);
+        setMaxLimit(maxLimit);
     };
 
-    const handleSelectOfferSell = (expand: string, offer_number: string, price: string, payment: any) => {
+    const handleSelectOfferSell = (
+        expand: string,
+        offer_number: string,
+        price: string,
+        payment: any,
+        maxLimit: string
+    ) => {
         setExpandSell(expand);
         setOfferNumber(offer_number);
         setPriceActual(price);
         setPaymentOption(payment);
+        setMaxLimit(maxLimit);
     };
 
     const handleCloseExpandBuy = () => {
@@ -930,12 +978,15 @@ export const TableListP2P = () => {
                         price={price}
                         amount={amount}
                         handleChangePrice={handleChangePrice}
+                        handleClickAll={handleClickAll}
+                        handleChangeAmount={handleChangeAmount}
                         handleCreacteOrder={handleCreacteOrder}
                         handleSelectOffer={handleSelectOfferBuy}
                         handleCloseExpand={handleCloseExpandBuy}
                         resetForm={resetForm}
                         loading={offerLoading}
                         refresh={loadingRefresh}
+                        wallet={wallet}
                     />
                 )}
                 {/* ========= TABLE BUY END ========= */}
@@ -954,6 +1005,8 @@ export const TableListP2P = () => {
                         payment_order={payment_order}
                         handleShowPaymentOption={() => setShowModalOptionPayment(true)}
                         handleChangePrice={handleChangePrice}
+                        handleClickAll={handleClickAll}
+                        handleChangeAmount={handleChangeAmount}
                         handleChangePaymentOrder={handleChangePaymentOrder}
                         handleCreacteOrder={handleCreacteOrder}
                         handleSelectOffer={handleSelectOfferSell}
@@ -961,6 +1014,7 @@ export const TableListP2P = () => {
                         resetForm={resetForm}
                         loading={offerLoading}
                         refresh={loadingRefresh}
+                        wallet={wallet}
                     />
                 )}
                 {/* ========= TABLE SELL END ========= */}

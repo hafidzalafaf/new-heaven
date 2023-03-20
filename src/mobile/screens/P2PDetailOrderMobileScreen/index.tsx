@@ -33,6 +33,7 @@ import { RefreshMobileIcon, CloseMobileIcon, AddMobileIcon } from 'src/mobile/as
 import { Spinner } from 'react-bootstrap';
 import { ArrowRight } from 'src/mobile/assets/Arrow';
 import { ModalFullScreenMobile } from 'src/mobile/components';
+import { Decimal } from 'src/components';
 
 export const P2PDetailOrderMobileScreen: React.FC = () => {
     useDocumentTitle('P2P Detail Order');
@@ -54,9 +55,10 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
     const createData = useSelector(selectP2POrderCreateData);
     const createOrderSuccess = useSelector(selectP2POrderCreateSuccess);
     const createOrderLoading = useSelector(selectP2POrderCreateLoading);
-    const wallets = useSelector(selectWallets);
     const fiats: P2PFiat[] = useSelector(selectP2PFiatsData);
     const myPayment: any = useSelector(selectP2PPaymentUser);
+    const wallets = useSelector(selectWallets);
+    const wallet = wallets?.find((item) => item?.currency == currency);
 
     const [detail, setDetail] = React.useState<any>();
     const [loading, setLoading] = React.useState(false);
@@ -74,13 +76,22 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
     }, [dispatch]);
 
     React.useEffect(() => {
-        const temp = +price / +detail?.price;
-        if (price && detail?.price) {
-            setAmount(temp.toString());
-        } else if (!price) {
-            setAmount('');
+        if (side == 'buy') {
+            const temp = +price / +detail?.price;
+            if (price && detail?.price) {
+                setAmount(temp?.toString());
+            } else if (!price) {
+                setAmount('');
+            }
+        } else {
+            const temp = +amount * +detail?.price;
+            if (amount && detail?.price) {
+                setPrice(temp?.toString());
+            } else if (!amount) {
+                setPrice('');
+            }
         }
-    }, [price, detail]);
+    }, [price, detail, side, amount]);
 
     React.useEffect(() => {
         if (isLoggedIn) {
@@ -112,9 +123,24 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
             setAmount('');
             setPrice('');
             setPaymentOrder('');
-            history.push(`/p2p/wallet/order/${createData?.order_number}`, { side: createData?.side });
+            history.push(`/p2p/order/detail/${createData?.order_number}`, { side: createData?.side });
         }
     }, [createOrderSuccess, createData]);
+
+    const handleClickAll = () => {
+        if (!isLoggedIn) {
+            const temPrice = +detail?.max_order * +detail?.price;
+            const tempAmount = +detail?.max_order;
+            setPrice(temPrice?.toString());
+            setAmount(tempAmount?.toString());
+        } else {
+            const balance = +wallet?.p2p_balance > +detail?.max_order ? +detail?.max_order : +wallet?.p2p_balance;
+            const temPrice = side == 'buy' ? +detail?.max_order : balance * +detail?.price;
+            const tempAmount = side == 'buy' ? +detail?.max_order : balance;
+            setPrice(temPrice?.toString());
+            setAmount(tempAmount?.toString());
+        }
+    };
 
     const availablePayment = myPayment?.list?.filter(({ bank_name }) =>
         detail?.payment?.some(({ name }) => bank_name === name)
@@ -129,6 +155,11 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
     const handleChangePrice = (e: string) => {
         const value = e.replace(/[^0-9\.]/g, '');
         setPrice(value);
+    };
+
+    const handleChangeAmount = (e: string) => {
+        const value = e.replace(/[^0-9\.]/g, '');
+        setAmount(value);
     };
 
     const handleCreacteOrder = async () => {
@@ -303,26 +334,40 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
 
                         <form className="form-container mb-24">
                             <div className="w-100">
-                                <label className="white-text text-ms mb-16">
-                                    I want to {side == 'buy' ? 'pay' : 'sell'}
-                                </label>
+                                <label className="white-text text-ms">I want to {side == 'buy' ? 'pay' : 'sell'}</label>
 
-                                <div className="d-flex align-items-center w-100">
+                                <div className="d-flex align-items-center w-100 mb-8">
                                     <div className="w-80">
                                         <input
                                             type="text"
-                                            value={price}
-                                            onChange={(e) => handleChangePrice(e.target.value)}
+                                            value={side == 'buy' ? price : amount}
+                                            onChange={(e) =>
+                                                side == 'buy'
+                                                    ? handleChangePrice(e.target.value)
+                                                    : handleChangeAmount(e.target.value)
+                                            }
                                             placeholder="Enter amount"
                                             className="input-pay w-100 filter-input"
                                         />
                                     </div>
-                                    <div className="w-20">
-                                        <button type="button" className="btn-pay-all w-100">
+                                    <div className="w-20 d-flex align-items-center justify-content-end gap-4 btn-pay-all">
+                                        <p
+                                            onClick={handleClickAll}
+                                            className="m-0 p-0 text-sm grey-text cursor-pointer">
                                             All
-                                        </button>
+                                        </p>
+                                        <p className="m-0 p-0 text-sm grey-text">
+                                            {side == 'buy' ? fiat?.toUpperCase() : currency?.toUpperCase()}
+                                        </p>
                                     </div>
                                 </div>
+
+                                {side == 'sell' && isLoggedIn && (
+                                    <p className="m-0 p-0 mt-8 text-sm grey-text">
+                                        Your Balance : {Decimal.format(wallet?.p2p_balance, wallet?.fixed)}{' '}
+                                        {currency?.toUpperCase()}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="w-100">
@@ -331,7 +376,7 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
                                 <div className="d-flex align-items-center w-100">
                                     <div className="w-100 position-relative">
                                         <input
-                                            value={amount}
+                                            value={side == 'buy' ? amount : price}
                                             required
                                             readOnly
                                             type="text"
@@ -339,7 +384,7 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
                                             className="custom-input-order w-100 filter-input"
                                         />
                                         <label className="input-label-right text-sm grey-text position-absolute">
-                                            {detail?.currency?.toUpperCase()}
+                                            {side == 'buy' ? currency?.toUpperCase() : fiat?.toUpperCase()}
                                         </label>
                                     </div>
                                 </div>
@@ -372,11 +417,15 @@ export const P2PDetailOrderMobileScreen: React.FC = () => {
 
                             <div className="d-flex justify-content-between align-items-center w-100">
                                 <p className="m-0 p-0 grey-text text-sm">Crypto amount</p>
-                                <p className="m-0 p-0 white-text text-sm">228.13 {detail?.currency?.toUpperCase()}</p>
+                                <p className="m-0 p-0 white-text text-sm">
+                                    {amount ? amount : 0} {detail?.currency?.toUpperCase()}
+                                </p>
                             </div>
                             <div className="d-flex justify-content-between align-items-center w-100">
                                 <p className="m-0 p-0 grey-text text-sm">Fiat amount</p>
-                                <p className="m-0 p-0 white-text text-sm">3.581.541.75 {fiatData?.name}</p>
+                                <p className="m-0 p-0 white-text text-sm">
+                                    {price ? price : 0} {fiatData?.name}
+                                </p>
                             </div>
 
                             <button

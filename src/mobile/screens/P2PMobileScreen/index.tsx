@@ -250,7 +250,7 @@ export const P2PMobileScreen: React.FC = () => {
         },
         {
             icon: <DocumentMobileIcon />,
-            name: 'Order History',
+            name: 'My Orders',
             url: '/p2p/order',
         },
         {
@@ -258,11 +258,6 @@ export const P2PMobileScreen: React.FC = () => {
             name: 'P2P Help Center',
             url: '/p2p/faq',
         },
-        // {
-        //     icon: <UserMobileIcon />,
-        //     name: 'P2P User Center',
-        //     url: `/p2p/profile/${user?.uid}`,
-        // },
     ];
 
     const renderModalAnnouncement = () => {

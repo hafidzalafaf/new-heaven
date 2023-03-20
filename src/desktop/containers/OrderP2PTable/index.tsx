@@ -225,7 +225,7 @@ export const OrderP2PTable = () => {
             </p>,
             <div className="d-flex align-items-center">
                 <div
-                    onClick={() => history.push(`/p2p/wallet/order/${item?.order_number}`, { side: item?.side })}
+                    onClick={() => history.push(`/p2p/order/detail/${item?.order_number}`, { side: item?.side })}
                     className="d-flex align-items-center cursor-pointer mr-8">
                     <p className="m-0 p-0 mr-6 text-xs grey-text">Order</p>
                     <HideIcon />

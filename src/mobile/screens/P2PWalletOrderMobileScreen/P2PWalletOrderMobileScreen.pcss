@@ -47,14 +47,14 @@
         margin-bottom: 12px;
         text-align: left;
         color: #fff;
-        padding: 10px 30px;
+        padding: 10px 20px;
         z-index: 2;
         margin-left: 0px;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 3px 0 0 3px;
-        font-size: 12px;
+        font-size: 10px;
         font-weight: 400;
         line-height: 18px;
         white-space: wrap;
@@ -440,6 +440,21 @@
 
         &:focus-visible {
             outline: 0;
+        }
+    }
+
+    .cr-copyable-text-field {
+        font-size: 12px;
+
+        .custom-input .form-control {
+            width: 150px;
+        }
+    }
+
+    .button-grey {
+        &:focus {
+            outline: none;
+            box-shadow: none;
         }
     }
 }

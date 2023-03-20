@@ -59,7 +59,12 @@ const FooterComponent: React.FC = () => {
             icon: (
                 <OrderIcon
                     className={'mb-1'}
-                    fillColor={menuActive == 'Order' || location.pathname.includes('order') ? '#fff' : '#6F6F6F'}
+                    fillColor={
+                        menuActive == 'Order' ||
+                        (location.pathname.includes('order') && !location.pathname.includes('p2p'))
+                            ? '#fff'
+                            : '#6F6F6F'
+                    }
                 />
             ),
             url: '/order',
@@ -95,6 +100,8 @@ const FooterComponent: React.FC = () => {
                                     className={`p-0 m-0 text-xs font-semibold text-capitalize ${
                                         location.pathname == '/' && location.pathname.includes(item.url)
                                             ? 'white-text'
+                                            : location.pathname.includes('order') && location.pathname.includes('p2p')
+                                            ? 'grey-text'
                                             : item.url != '/' && location.pathname.includes(item.url)
                                             ? 'white-text'
                                             : 'grey-text'
