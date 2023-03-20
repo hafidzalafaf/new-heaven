@@ -1,3 +1,4 @@
+import { sliceArray } from 'src/helpers';
 import { CommonError } from '../../../modules/types';
 import { OrderActions } from './actions';
 import {
@@ -61,10 +62,13 @@ export interface OrderState {
         timestamp?: number;
     };
     fetch: {
-        data: Order[];
+        data: [];
         fetching: boolean;
         success: boolean;
         error?: CommonError;
+        page: number;
+        limit: number;
+        nextPageExists?: boolean;
     };
     cancel: {
         data: Confirm;
@@ -123,8 +127,11 @@ export const initialOrderState: OrderState = {
     },
     fetch: {
         data: [],
+        limit: 5,
+        page: 1,
         fetching: false,
         success: false,
+        nextPageExists: false,
     },
 
     cancel: {
@@ -176,10 +183,12 @@ export const orderFetchReducer = (state: OrderState['fetch'], action: OrderActio
         case ORDER_DATA:
             return {
                 ...state,
-                data: action.payload,
+                data: action.payload.data,
                 fetching: false,
                 success: true,
                 error: undefined,
+                page: action.payload.page,
+                nextPageExists: action.payload.nextPageExists
             };
         case ORDER_ERROR:
             return {

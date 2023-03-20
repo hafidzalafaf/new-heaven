@@ -9,6 +9,7 @@ const config = (csrfToken?: string): RequestOptions => {
     return {
         apiVersion: 'p2p',
         headers: { 'X-CSRF-Token': csrfToken },
+        withHeaders: true
     };
 };
 
@@ -18,16 +19,20 @@ export function* orderSaga(action: OrderFetch) {
         let fiat = '';
         let side = '';
         let state = '';
-        let from = '';
-        let to = '';
-
+        // let from = '';
+        // let to = '';
+        let pageIndex = 0;
+        let limit = 5
+        
         if (action.payload) {
             currency = action.payload.currency;
             fiat = action.payload.fiat;
             side = action.payload.side;
             state = action.payload.state;
-            from = action.payload.from;
-            to = action.payload.to;
+            // from = action.payload.from;
+            // to = action.payload.to;
+            pageIndex = action.payload.page
+            limit = action.payload.limit
         }
         // const { fiat, side, state, from, to } = action.payload;
         let params: any = {
@@ -35,16 +40,32 @@ export function* orderSaga(action: OrderFetch) {
             fiat,
             side,
             state,
-            from,
-            to,
+            // from,
+            // to,
+            page: action.payload.page,
+            limit
         };
 
         // const data = yield call(
         //     API.get(config(getCsrfToken())),
         //     action.payload ? `/account/order?${buildQueryString(params)}` : `/account/order`
         // );
-        const data = yield call(API.get(config(getCsrfToken())), `/account/order${`?${buildQueryString(params)}`}`);
-        yield put(orderData(data));
+        const data = yield call(API.get(config(getCsrfToken())), `/account/order?${`${buildQueryString(params)}`}`);
+        let nextPageExists = false;
+        
+        if (data.data.length === limit){
+            params = {...params, page: (pageIndex + 1) * limit, limit: 1};
+            const checkData = yield call(API.get(config(getCsrfToken())), `/account/order?${buildQueryString(params)}`);
+            if (checkData.data.length === 1){
+                    nextPageExists = true;
+            }}
+
+        yield put(orderData({
+            data: data.data,
+            nextPageExists: nextPageExists,
+            page: pageIndex,
+            total: data.total
+        }));
     } catch (error) {
         yield put(
             sendError({

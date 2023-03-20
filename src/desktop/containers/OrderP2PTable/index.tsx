@@ -4,7 +4,7 @@ import { Tabs, Tab, Dropdown } from 'react-bootstrap';
 import '../../../styles/colors.pcss';
 import Select from 'react-select';
 import moment from 'moment';
-import { CustomStylesSelect, NoData } from '../../../desktop/components';
+import { CustomStylesSelect, NoData, Pagination } from '../../../desktop/components';
 import { Loading, Table } from '../../../components';
 import { HideIcon, GreyCheck, ActiveCheck } from '../../../assets/images/P2PIcon';
 import { Link, useHistory } from 'react-router-dom';
@@ -15,9 +15,32 @@ import {
     p2pFiatFetch,
     selectP2PFiatsData,
     selectCurrencies,
+    orderData,
+    selectP2POrderNextPageExists,
+    selectP2pOrderFirstElemIndex,
+    RootState,
+    selectP2pOrderLastElemIndex,
+    selectP2pOrderPage,
 } from 'src/modules';
 import { Modal } from '../../../desktop/components';
 import { capitalizeFirstLetter } from 'src/helpers';
+
+export interface Order {
+    amount: string;
+    available_amount: string;
+    created_at: string;
+    currency: object;
+    fiat: object;
+    fiat_amount: string;
+    offer_number: string;
+    order_number: string;
+    origin_amount: string | null;
+    price: string;
+    side: string;
+    state: string;
+    trades: object;
+    updated_at: string;
+}
 
 export const OrderP2PTable = () => {
     const history = useHistory();
@@ -27,6 +50,10 @@ export const OrderP2PTable = () => {
     const loading = useSelector(selectP2POrderLoading);
     const fiats = useSelector(selectP2PFiatsData);
     const currencies = useSelector(selectCurrencies);
+    const nextPageExists = useSelector(selectP2POrderNextPageExists);
+    const firstElementIndex = useSelector((state: RootState) => selectP2pOrderFirstElemIndex(state, 5));
+    const lastElementIndex = useSelector((state: RootState)=> selectP2pOrderLastElemIndex(state, 5));
+    const page = useSelector(selectP2pOrderPage);
 
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
@@ -36,10 +63,11 @@ export const OrderP2PTable = () => {
     const [tab, setTab] = React.useState('processing');
     const [data, setData] = React.useState([]);
     const [orderLoading, setOrderLoading] = React.useState(false);
+    const [currentPage, setCurrentPage] = React.useState(0)
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
-
+    
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
     }, [dispatch]);
@@ -50,6 +78,13 @@ export const OrderP2PTable = () => {
             setOrderLoading(false);
         }, 3000);
     }, []);
+
+    React.useEffect(()=>{
+        dispatch(orderFetch({
+            page: currentPage,
+            limit: 5
+        }))
+    }, [dispatch, currentPage])
 
     React.useEffect(() => {
         const fiatDatePayload = {
@@ -76,60 +111,71 @@ export const OrderP2PTable = () => {
             state,
             from: time_from,
             to: time_to,
+            page:  currentPage,
+            limit: 5
         };
         dispatch(
             orderFetch(
-                fiat
-                    ? { currency: fiat }
-                    : side
-                    ? { side }
-                    : state
-                    ? { state }
-                    : startDate && endDate
-                    ? { from: time_from, to: time_to }
-                    : fiat && side
-                    ? { currency: fiat, side }
-                    : fiat && state
-                    ? { currency: fiat, state }
-                    : fiat && startDate && endDate
-                    ? fiatDatePayload
-                    : side && state
-                    ? { side, state }
-                    : side && startDate && endDate
-                    ? sideDatePayload
-                    : state && startDate && endDate
-                    ? stateDatePayload
-                    : fiat && side && state && startDate && endDate
-                    ? fullPayload
-                    : null
+                // fiat
+                //     ? { currency: fiat }
+                //     : side
+                //     ? { side }
+                //     : state
+                //     ? { state }
+                //     : startDate && endDate
+                //     ? { from: time_from, to: time_to }
+                //     : fiat && side
+                //     ? { currency: fiat, side }
+                //     : fiat && state
+                //     ? { currency: fiat, state }
+                //     : fiat && startDate && endDate
+                //     ? fiatDatePayload
+                //     : side && state
+                //     ? { side, state }
+                //     : side && startDate && endDate
+                //     ? sideDatePayload
+                //     : state && startDate && endDate
+                //     ? stateDatePayload
+                //     : fiat && side && state && startDate && endDate
+                //     ? fullPayload
+                //     : null 
             )
         );
         const fetchInterval = setInterval(() => {
             dispatch(
                 orderFetch(
-                    fiat
-                        ? { currency: fiat }
-                        : side
-                        ? { side }
-                        : state
-                        ? { state }
-                        : startDate && endDate
-                        ? { from: time_from, to: time_to }
-                        : fiat && side
-                        ? { currency: fiat, side }
-                        : fiat && state
-                        ? { currency: fiat, state }
-                        : fiat && startDate && endDate
-                        ? fiatDatePayload
-                        : side && state
-                        ? { side, state }
-                        : side && startDate && endDate
-                        ? sideDatePayload
-                        : state && startDate && endDate
-                        ? stateDatePayload
-                        : fiat && side && state && startDate && endDate
-                        ? fullPayload
-                        : null
+                    {
+                        currency: fiat,
+                        side: side,
+                        state: state,
+                        limit: 5,
+                        page: currentPage,
+                        from: +time_from,
+                        to: +time_to
+                    }
+                    // fiat
+                    //     ? { currency: fiat }
+                    //     : side
+                    //     ? { side }
+                    //     : state
+                    //     ? { state }
+                    //     : startDate && endDate
+                    //     ? { from: time_from, to: time_to }
+                    //     : fiat && side
+                    //     ? { currency: fiat, side }
+                    //     : fiat && state
+                    //     ? { currency: fiat, state }
+                    //     : fiat && startDate && endDate
+                    //     ? fiatDatePayload
+                    //     : side && state
+                    //     ? { side, state }
+                    //     : side && startDate && endDate
+                    //     ? sideDatePayload
+                    //     : state && startDate && endDate
+                    //     ? stateDatePayload
+                    //     : fiat && side && state && startDate && endDate
+                    //     ? fullPayload
+                    //     : null
                 )
             );
         }, 5000);
@@ -137,18 +183,18 @@ export const OrderP2PTable = () => {
         return () => {
             clearInterval(fetchInterval);
         };
-    }, [dispatch, startDate, endDate, state, fiat, side, time_from, time_to]);
+    }, [dispatch, startDate, endDate, state, fiat, side, time_from, time_to, currentPage]);
 
     React.useEffect(() => {
         setData(
             tab == 'done'
                 ? order.filter(
-                      (item) =>
+                      (item: Order ) =>
                           item?.state == 'accepted' || item?.state == 'success' || item?.state?.includes('canceled')
                   )
                 : tab == 'processing'
                 ? order.filter(
-                      (item) =>
+                      (item: Order) =>
                           item?.state == 'waiting' ||
                           item?.state?.includes('waiting') ||
                           item?.state == 'prepare' ||
@@ -343,6 +389,15 @@ export const OrderP2PTable = () => {
                                 {(!data || !data[0]) && !orderLoading && <NoData text="No Order Yet" />}
                             </Tab>
                         </Tabs>
+
+                        <Pagination
+                            onClickPrevPage={()=> [setCurrentPage(currentPage - 1), console.log(currentPage)]}
+                            onClickNextPage={()=> [setCurrentPage(currentPage + 1), console.log(currentPage)]}
+                            page={page}
+                            nextPageExists={nextPageExists}
+                            firstElemIndex={firstElementIndex}
+                            lastElemIndex={lastElementIndex}
+                        />
 
                         <div className="btn-warning-container position-absolute">
                             <Dropdown>

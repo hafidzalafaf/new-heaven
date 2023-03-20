@@ -1,6 +1,6 @@
-export const ORDER_FETCH = 'order/FETCH';
-export const ORDER_DATA = 'order/DATA';
-export const ORDER_ERROR = 'order/ERROR';
+export const ORDER_FETCH = 'p2p/order/FETCH';
+export const ORDER_DATA = 'p2p/order/DATA';
+export const ORDER_ERROR = 'p2p/order/ERROR';
 
 export const ORDER_DETAIL_FETCH = 'order/FETCH_DETAIL';
 export const ORDER_DETAIL_DATA = 'order/DATA_DETAIL';
