@@ -379,11 +379,13 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                     </div>
                                 ) : (
                                     <div className="d-flex gap-16">
-                                        <button
-                                            type="button"
-                                            className="btn btn-transparent font-semibold gradient-text text-sm">
+                                        <a
+                                            href="https://t.me/heavenexchange"
+                                            target="__blank"
+                                            rel="noopener noreferrer"
+                                            className="btn btn-transparent font-semibold gradient-text text-sm cursor-pointer">
                                             Have a question
-                                        </button>
+                                        </a>
                                         <Link
                                             to={`/p2p/wallets`}
                                             type="button"
