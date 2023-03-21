@@ -2,6 +2,9 @@ import React from 'react'
 import { useHistory } from 'react-router'
 import { ArrowLeft, ArrowRightL } from 'src/mobile/assets/Arrow'
 import P2PMobileHelpPlaceholder from '../../../assets/images/MobileP2PHelpPlaceholder.png'
+import P2PMobileHelpPlaceholderTwo from '../../../assets/images/P2PHelpMobilePlaceHolder-2.png'
+import P2PMobileHelpPlaceholderThree from '../../../assets/images/P2PHelpMobilePlaceHolder-3.png'
+import P2PMobileHelpPlaceholderFour from '../../../assets/images/P2PHelpMobilePlaceHolder-4.png'
 
 
 
@@ -46,11 +49,32 @@ export const P2PFAQMobileScreen = () => {
         <div className='d-flex flex-column justify-content-between'>
             <h5 className='grey-text-accent'>Welcome to Heaven Exchange P2P</h5>
             <span className='grey-text-accent text-xs'>P2P platform allows user to buy or sell crypto directly from other users</span>
-            <img
-                src={P2PMobileHelpPlaceholder}
-                alt='placeholder'
-                className='img-placeholder'
-            />
+            {
+                currentPage === 1 ?
+                <img
+                    src={P2PMobileHelpPlaceholder}
+                    alt='placeholder'
+                    className='img-placeholder'
+                />
+                : currentPage === 2 ?
+                <img
+                    src={P2PMobileHelpPlaceholderTwo}
+                    alt='placeholder'
+                    className='img-placeholder'
+                />
+                : currentPage === 3 ?
+                <img
+                    src={P2PMobileHelpPlaceholderThree}
+                    alt='placeholder'
+                    className='img-placeholder'
+                /> 
+                :
+                <img
+                    src={P2PMobileHelpPlaceholderFour}
+                    alt='placeholder'
+                    className='img-placeholder'
+                />
+            }
         </div>
         <P2PHelpPagination/>
     </section>
