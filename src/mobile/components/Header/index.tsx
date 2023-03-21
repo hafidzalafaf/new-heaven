@@ -18,6 +18,8 @@ import {
     TradeHistory,
     Wallet,
     SettingProfile,
+    Help,
+    Privacy,
 } from '../../assets/Sidebar';
 import { CalendarIcon } from '../../assets/CalendarIcon';
 const HeaderComponent: React.FC = () => {
@@ -44,11 +46,12 @@ const HeaderComponent: React.FC = () => {
             showNotLoggedin: false,
         },
         { icon: <Security />, name: 'Security', path: '/security', showNotLoggedin: false },
-        // { icon: <SettingProfile />, name: 'Setting', path: '/setting', showNotLoggedin: false },
+        // { icon: <SettingProfile />, name: 'Setting', path: '/setting', showNotLoggedin: true },
         { icon: <Referral />, name: 'Referral', path: '/referral', showNotLoggedin: false },
         { icon: <ApiManagement />, name: 'Api Management', path: '/api-key', showNotLoggedin: false },
         { icon: <Announcement />, name: 'Announcement', path: '/announcements', showNotLoggedin: true },
         { icon: <Faq />, name: 'Faq', path: '/faq', showNotLoggedin: true },
+        { icon: <Privacy />, name: 'Privacy Policy', path: '/privacy', showNotLoggedin: true },
     ];
     return (
         <div>
@@ -58,9 +61,6 @@ const HeaderComponent: React.FC = () => {
                         <LogoIcon className={''} />
                     </Link>
                     <div className="d-flex align-items-center">
-                        {/* <div className="mr-2">
-                            <ScanIcon className={''} />
-                        </div> */}
                         <div className="cursor-pointer" onClick={() => setShowSidebar(true)}>
                             <UserIcon className={'cursor-pointer'} />
                         </div>
@@ -89,26 +89,6 @@ const HeaderComponent: React.FC = () => {
                                                         {user?.level == 3 ? 'Verified' : 'Unverified'}
                                                     </p>
                                                 </div>
-                                                {/* <div className="user-id d-flex align-items-center">
-                                                    <h3 className="text-sm grey-text d-flex align-items-center">
-                                                        UID :{' '}
-                                                        <span
-                                                            onClick={() =>
-                                                                dispatch(
-                                                                    alertPush({
-                                                                        message: [`UID copied`],
-                                                                        type: 'success',
-                                                                    })
-                                                                )
-                                                            }>
-                                                            <CopyableTextField
-                                                                value={user && user.uid}
-                                                                className="ml-3"
-                                                                fieldId="referral-code"
-                                                            />
-                                                        </span>
-                                                    </h3>
-                                                </div> */}
                                             </div>
                                         </div>
                                     </div>
@@ -155,7 +135,7 @@ const HeaderComponent: React.FC = () => {
                                             </React.Fragment>
                                         ) : item.showNotLoggedin ? (
                                             <Link to={item.path} key={key} onClick={() => setShowSidebar(false)}>
-                                                <div className=" w-100 px-24 py-3 d-flex justify-content-between align-items-center cursor-ointer">
+                                                <div className=" w-100 px-24 py-3 d-flex justify-content-between align-items-center cursor-pointer">
                                                     <div className="card-menu-name d-flex align-items-center">
                                                         {item.icon}
                                                         <h3 className="text-sm grey-text font-bold mb-0 ml-2">
@@ -169,6 +149,16 @@ const HeaderComponent: React.FC = () => {
                                         )}
                                     </div>
                                 ))}
+                            <a
+                                href="https://t.me/heavenexchange"
+                                target="__blank"
+                                rel="noopener noreferrer"
+                                className=" w-100 px-24 py-3 d-flex justify-content-between align-items-center cursor-pointer">
+                                <div className="card-menu-name d-flex align-items-center">
+                                    <Help />
+                                    <h3 className="text-sm grey-text font-bold mb-0 ml-2">Help & Support</h3>
+                                </div>
+                            </a>
 
                             {userLoggedIn && (
                                 <div className="px-24 mt-5 btn-logout">

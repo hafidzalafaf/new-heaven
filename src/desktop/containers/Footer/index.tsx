@@ -14,6 +14,8 @@ import {
     selectUserInfo,
     selectUserLoggedIn,
     User,
+    selectCurrentMarket,
+    Market,
 } from '../../../modules';
 import { Logo } from '../../../assets/images/Logo';
 import { Facebook, Linkedin, Youtube } from '../../../assets/images/SocialMedia';
@@ -32,6 +34,7 @@ interface ReduxProps {
     colorTheme: string;
     isLoggedIn: boolean;
     user: User;
+    currentMarket: Market;
 }
 
 interface OwnProps {
@@ -51,9 +54,10 @@ class FooterContainer extends React.Component<Props, State> {
     };
 
     public render() {
-        const { isLoggedIn, lang } = this.props;
+        const { isLoggedIn, lang, currentMarket } = this.props;
         const date = new Date();
         let year = date.getFullYear();
+
         return (
             <React.Fragment>
                 <footer className=" pt-5">
@@ -66,7 +70,22 @@ class FooterContainer extends React.Component<Props, State> {
                                 <p className="text-lg gradient-text mb-36">
                                     {this.translate('page.body.landing.footer.links').toUpperCase()}
                                 </p>
-                                <a href="#" className="mb-8 d-block text-ms grey-text-accent">
+
+                                <Link
+                                    to={`/markets/trading/${currentMarket?.id}`}
+                                    className="mb-8 d-block text-ms grey-text-accent">
+                                    Trade
+                                </Link>
+                                <Link to="/markets" className="mb-8 d-block text-ms grey-text-accent">
+                                    Markets
+                                </Link>
+                                <Link to="/markets" className="mb-8 d-block text-ms grey-text-accent">
+                                    Futures
+                                </Link>
+                                <Link to="/announcement" className="mb-8 d-block text-ms grey-text-accent">
+                                    Announcement
+                                </Link>
+                                {/* <a href="#" className="mb-8 d-block text-ms grey-text-accent">
                                     {this.translate('page.body.landing.footer.links.how')}
                                 </a>
                                 <a href="#" className="mb-8 d-block text-ms grey-text-accent">
@@ -80,13 +99,28 @@ class FooterContainer extends React.Component<Props, State> {
                                 </a>
                                 <a href="#" className="mb-8 d-block text-ms grey-text-accent">
                                     {this.translate('page.body.landing.footer.links.blogs')}
-                                </a>
+                                </a> */}
                             </div>
                             <div className="legal px-3">
                                 <p className="text-lg gradient-text mb-36">
-                                    {this.translate('page.body.landing.footer.legal').toUpperCase()}
+                                    SUPPORT
+                                    {/* {this.translate('page.body.landing.footer.legal').toUpperCase()} */}
                                 </p>
-                                <a href="#" className="mb-8 text-ms d-block grey-text-accent">
+
+                                <a
+                                    href="https://t.me/heavenexchange"
+                                    target="__blank"
+                                    rel="noopener noreferrer"
+                                    className="mb-8 d-block text-ms grey-text-accent">
+                                    Help Center
+                                </a>
+                                <Link to="/faq" className="mb-8 d-block text-ms grey-text-accent">
+                                    FAQ
+                                </Link>
+                                <Link to="/privacy" className="mb-8 d-block text-ms grey-text-accent">
+                                    Privacy Policy
+                                </Link>
+                                {/* <a href="#" className="mb-8 text-ms d-block grey-text-accent">
                                     {this.translate('page.body.landing.footer.legal.tos')}
                                 </a>
                                 <a href="#" className="mb-8 text-ms d-block grey-text-accent">
@@ -97,7 +131,7 @@ class FooterContainer extends React.Component<Props, State> {
                                 </a>
                                 <a href="#" className="mb-8 text-ms d-block grey-text-accent">
                                     {this.translate('page.body.landing.footer.legal.cookie')}
-                                </a>
+                                </a> */}
                             </div>
                             <div className="newsletter px-3">
                                 <p className="text-lg gradient-text mb-36">
@@ -123,11 +157,12 @@ class FooterContainer extends React.Component<Props, State> {
                     <div className="container pb-5">
                         <div className="d-flex justify-content-between align-items-center">
                             <div className="mr-2">
-                                <a href="" className="text-sm font-normal white-text">
-                                    Privacy &amp; Terms{' '}
-                                </a>
-                                <a href="" className="text-sm font-normal white-text">
-                                    Contact
+                                <a
+                                    href="https://t.me/heavenexchange"
+                                    target="__blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm font-normal white-text">
+                                    Privacy &amp; Terms Contact
                                 </a>
                             </div>
                             <p className="text-sm font-normal white-text mb-0">Copyright @ {year} Heaven Exchange</p>
@@ -165,6 +200,7 @@ const mapStateToProps = (state: RootState): ReduxProps => ({
     isLoggedIn: selectUserLoggedIn(state),
     lang: selectCurrentLanguage(state),
     user: selectUserInfo(state),
+    currentMarket: selectCurrentMarket(state),
 });
 
 const mapDispatchToProps: MapDispatchToPropsFunction<DispatchProps, {}> = (dispatch) => ({

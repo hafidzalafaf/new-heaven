@@ -1,29 +1,25 @@
 import * as React from 'react';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import { useHistory } from 'react-router-dom';
-import { useDocumentTitle, useBlogsFetch, useContactsFetch } from 'src/hooks';
+import { useDocumentTitle, useBlogsFetch } from 'src/hooks';
 import { Logo } from '../../../assets/images/Logo';
 import { useSelector } from 'react-redux';
-import { selectBlogs, selectContact } from 'src/modules';
+import { selectBlogs } from 'src/modules';
 import moment from 'moment';
 
 const FAQMobileScreen: React.FC = () => {
     const history = useHistory();
     useDocumentTitle('FAQ');
     useBlogsFetch({ tag: 'faq' });
-    useContactsFetch();
     const [faq, setFaq] = React.useState<any[]>([]);
-    const [support, setSupport] = React.useState<any>([]);
 
     const blogs = useSelector(selectBlogs);
-    const contact = useSelector(selectContact);
 
     React.useEffect(() => {
         if (blogs) {
             setFaq(blogs);
-            setSupport(contact);
         }
-    }, [blogs, contact]);
+    }, [blogs]);
 
     return (
         <section className="mobile-container home-screen dark-bg-main">

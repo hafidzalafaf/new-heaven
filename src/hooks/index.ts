@@ -25,4 +25,3 @@ export * from './useUserWithdrawalLimits';
 export * from './useP2PWalletsFetch';
 export * from './useP2PCurrenciesFetch';
 export * from './useP2PPaymentMethodsFetch';
-export * from './useContactsFetch';
