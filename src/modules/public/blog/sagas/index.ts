@@ -1,9 +1,9 @@
 import { takeEvery } from 'redux-saga/effects';
-import { BLOGS_FETCH, BLOGS_CONTACT_FETCH } from '../constants';
+import { BLOGS_FETCH, BLOGS_FAQ_FETCH } from '../constants';
 import { blogsSaga } from './blogsSaga';
-import { contactsSaga } from './contactsSaga';
+import { faqsSaga } from './faqsSaga';
 
 export function* rootBlogsSaga() {
     yield takeEvery(BLOGS_FETCH, blogsSaga);
-    yield takeEvery(BLOGS_CONTACT_FETCH, contactsSaga);
+    yield takeEvery(BLOGS_FAQ_FETCH, faqsSaga);
 }

@@ -5,6 +5,6 @@ export const selectBlogs = (state: RootState): Blogs[] => state.public.blogs.blo
 
 export const selectBlogsLoading = (state: RootState): boolean => state.public.blogs.blog.loading;
 
-export const selectContact = (state: RootState): Blogs[] => state.public.blogs.contact.data;
+export const selectFaqs = (state: RootState): Blogs[] => state.public.blogs.faq.data;
 
-export const selectContactLoading = (state: RootState): boolean => state.public.blogs.contact.loading;
+export const selectFaqsLoading = (state: RootState): boolean => state.public.blogs.faq.loading;
