@@ -1,10 +1,10 @@
 import React from 'react'
 import { useHistory } from 'react-router'
 import { ArrowLeft, ArrowRightL } from 'src/mobile/assets/Arrow'
-import P2PMobileHelpPlaceholder from '../../../assets/images/MobileP2PHelpPlaceholder.png'
-import P2PMobileHelpPlaceholderTwo from '../../../assets/images/P2PHelpMobilePlaceHolder-2.png'
-import P2PMobileHelpPlaceholderThree from '../../../assets/images/P2PHelpMobilePlaceHolder-3.png'
-import P2PMobileHelpPlaceholderFour from '../../../assets/images/P2PHelpMobilePlaceHolder-4.png'
+import P2PMobileHelpPlaceholder from '../../../assets/images/MobileP2PHelpPlaceholder-1.png'
+import P2PMobileHelpPlaceholderTwo from '../../../assets/images/MobileP2PHelpPlaceholder-2.png'
+import P2PMobileHelpPlaceholderThree from '../../../assets/images/MobileP2PHelpPlaceHolder-3.png'
+import P2PMobileHelpPlaceholderFour from '../../../assets/images/MobileP2PHelpPlaceHolder-4.png'
 
 
 
