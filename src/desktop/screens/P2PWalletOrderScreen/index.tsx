@@ -45,10 +45,10 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const dispatch = useDispatch();
     const { order_number = '' } = useParams<{ order_number?: string }>();
     const location: { state: { side: string } } = useLocation();
-    const side = location.state?.side;
     const history = useHistory();
-
     const detail = useSelector(selectP2POrderDetail);
+    const side = location.state?.side ? location.state?.side : detail?.offer?.side;
+
     const paymentConfirmSuccess = useSelector(selectP2PConfirmPaymentSuccess);
     const paymentConfimLoading = useSelector(selectP2PConfirmPaymentLoading);
     const confirmSellSuccess = useSelector(selectP2PConfirmSellSuccess);
@@ -98,11 +98,11 @@ export const P2PWalletOrderScreen: React.FC = () => {
     const [minutes, setMinutes] = React.useState(currentMinutes);
     const [seconds, setSeconds] = React.useState(currentSeconds);
 
-    if (window.location.pathname === '/p2p/wallet/order/undefined') {
+    if (window.location.pathname === '/p2p/order/detail/undefined') {
         window.location.replace('/p2p');
     }
 
-    if (window.location.pathname === '/p2p/wallet/order/undefined') {
+    if (window.location.pathname === '/p2p/order/detail/undefined') {
         window.location.replace('/p2p');
     }
 

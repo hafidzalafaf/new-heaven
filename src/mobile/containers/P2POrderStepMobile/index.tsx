@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { CustomInput } from 'src/desktop/components';
 import { useDispatch, useSelector } from 'react-redux';
 import { alertPush } from 'src/modules';
 import { Link } from 'react-router-dom';
@@ -15,6 +14,7 @@ import { selectUserInfo } from 'src/modules';
 import { ModalMobile } from 'src/mobile/components';
 import { DownloadSecondaryIcon } from 'src/assets/images/DownloadIcon';
 import { CloseIconFilter } from 'src/assets/images/CloseIcon';
+import { Decimal } from 'src/components';
 
 export interface P2POrderStepMobileProps {
     paymentMethod: string;
@@ -43,37 +43,11 @@ export interface P2POrderStepMobileProps {
     minutes: number;
     seconds: number;
     showTerms: boolean;
+    wallet: any;
 }
 
 export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps> = (props) => {
-    const {
-        paymentMethod,
-        paymentUser,
-        showPayment,
-        showModalCancel,
-        comment,
-        side,
-        detail,
-        order_number,
-        handleChangePaymentMethod,
-        handleChangeComment,
-        handleShowPayment,
-        handleShowModalPaymentConfirm,
-        handleConfirmPaymentBuy,
-        handleShowModalBuyOrderCompleted,
-        handleShowModalSellConfirm,
-        handleShowModalCancel,
-        handleSendFeedbackPositive,
-        handleSendFeedbackNegative,
-        handleExpandChat,
-        handleExpandTerms,
-        timeLeft,
-        days,
-        hours,
-        minutes,
-        seconds,
-        showTerms,
-    } = props;
+    const { paymentUser, side, detail, order_number, handleExpandChat, handleExpandTerms, showTerms, wallet } = props;
 
     const dispatch = useDispatch();
     const user = useSelector(selectUserInfo);
@@ -86,17 +60,6 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
 
     const [showImage, setShowImage] = React.useState(false);
     const [imageView, setImageView] = React.useState('');
-    const [imageBlob, setImageBlob] = React.useState('');
-
-    // console.log(paymentUser);
-
-    // const onImageChange = (e) => {
-    //     if (e.target.files && e.target.files[0]) {
-    //         let img = e.target.files[0];
-    //         setImageBlob(URL.createObjectURL(img));
-    //         setImage(e.target.files);
-    //     }
-    // };
 
     const download = (url, filename) => {
         fetch(url)
@@ -302,21 +265,25 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                             <div className="mb-16">
                                 <p className="m-0 p-0 white-text text-sm mb-8">Order Info</p>
 
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div className="d-flex flex-column align-items-center justify-content-center gap-8">
+                                <div className="d-flex justify-content-between align-items-center gap-4">
+                                    <div className="d-flex flex-column flex-wrap align-items-center justify-content-center gap-8">
                                         <p className="m-0 p-0 grey-text text-sm">Amount</p>
-                                        <p className="m-0 p-0 white-text font-bold text-sm">{detail?.order?.amount}</p>
+                                        <p className="m-0 p-0 white-text font-bold text-sm text-wrap">
+                                            {Decimal.format(+detail?.order?.amount, wallet?.fixed)}
+                                        </p>
                                     </div>
 
                                     <div className="d-flex flex-column align-items-center justify-content-center gap-8">
                                         <p className="m-0 p-0 grey-text text-sm">Price</p>
-                                        <p className="m-0 p-0 white-text font-bold text-sm">{detail?.offer?.price}</p>
+                                        <p className="m-0 p-0 white-text font-bold text-sm text-wrap">
+                                            {Decimal.format(+detail?.offer?.price, wallet?.fixed)}
+                                        </p>
                                     </div>
 
-                                    <div className="d-flex flex-column align-items-center justify-content-center gap-8">
+                                    <div className="d-flex flex-column align-items-center justify-content-center gap-8 text-wrap">
                                         <p className="m-0 p-0 grey-text text-sm">Quantity</p>
                                         <p className="m-0 p-0 white-text font-bold text-sm">
-                                            {detail?.order?.quantity}
+                                            {Decimal.format(+detail?.order?.quantity, wallet?.fixed)}
                                         </p>
                                     </div>
                                 </div>
@@ -501,20 +468,27 @@ export const P2POrderStepMobile: React.FunctionComponent<P2POrderStepMobileProps
                                 </div>
                             </div>
 
-                            <div className="d-flex justify-content-between align-items-center mb-16">
+                            <div className="d-flex justify-content-between align-items-center mb-16 gap-4">
                                 <div className="d-flex flex-column align-items-center justify-content-center gap-8">
                                     <p className="m-0 p-0 grey-text text-sm">Amount</p>
-                                    <p className="m-0 p-0 white-text font-bold text-sm">{detail?.order?.amount}</p>
+                                    <p className="m-0 p-0 white-text font-bold text-sm">
+                                        {Decimal.format(detail?.order?.amount, wallet?.fixed)}
+                                    </p>
                                 </div>
 
                                 <div className="d-flex flex-column align-items-center justify-content-center gap-8">
                                     <p className="m-0 p-0 grey-text text-sm">Price</p>
-                                    <p className="m-0 p-0 white-text font-bold text-sm">{detail?.offer?.price}</p>
+                                    <p className="m-0 p-0 white-text font-bold text-sm">
+                                        {' '}
+                                        {Decimal.format(+detail?.offer?.price, wallet?.fixed)}
+                                    </p>
                                 </div>
 
                                 <div className="d-flex flex-column align-items-center justify-content-center gap-8">
                                     <p className="m-0 p-0 grey-text text-sm">Quantity</p>
-                                    <p className="m-0 p-0 white-text font-bold text-sm">{detail?.order?.quantity}</p>
+                                    <p className="m-0 p-0 white-text font-bold text-sm">
+                                        {Decimal.format(detail?.order?.quantity, wallet?.fixed)}
+                                    </p>
                                 </div>
                             </div>
                         </div>

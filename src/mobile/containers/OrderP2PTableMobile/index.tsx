@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Tabs, Tab, Dropdown } from 'react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import '../../../styles/colors.pcss';
 import Select from 'react-select';
 import moment from 'moment';
 import { CustomStylesSelect, NoData } from '../../../desktop/components';
-import { Loading, Table } from '../../../components';
-import { HideIcon, GreyCheck, ActiveCheck, VerificationIcon, MobileMoreArrow } from '../../../assets/images/P2PIcon';
-import { Link, useHistory } from 'react-router-dom';
+import { Loading } from '../../../components';
+import { VerificationIcon, MobileMoreArrow } from '../../../assets/images/P2PIcon';
+import { useHistory } from 'react-router-dom';
 import {
     orderFetch,
     selectP2POrder,
@@ -15,18 +15,19 @@ import {
     p2pFiatFetch,
     selectP2PFiatsData,
     selectCurrencies,
+    alertPush,
     selectP2pOrderFirstElemIndex,
     RootState,
     selectP2pOrderLastElemIndex,
     selectP2POrderNextPageExists,
     selectP2pOrderPage,
 } from 'src/modules';
+import { copy } from 'src/helpers';
 import { capitalizeFirstLetter } from 'src/helpers';
 import './OrderP2PTableMobile.pcss';
 import { MobileFilterIcon } from '../../../assets/images/P2PIcon';
 import { ArrowLeft } from 'src/mobile/assets/Arrow';
 import { PaginationMobile } from 'src/mobile/components';
-
 
 export interface Order {
     amount: string;
@@ -55,9 +56,8 @@ export const OrderP2PTableMobile = () => {
     const fiats = useSelector(selectP2PFiatsData);
     const nextPageExists = useSelector(selectP2POrderNextPageExists);
     const firstElementIndex = useSelector((state: RootState) => selectP2pOrderFirstElemIndex(state, 5));
-    const lastElementIndex = useSelector((state: RootState)=> selectP2pOrderLastElemIndex(state, 5));
+    const lastElementIndex = useSelector((state: RootState) => selectP2pOrderLastElemIndex(state, 5));
     const page = useSelector(selectP2pOrderPage);
-
 
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
@@ -67,12 +67,11 @@ export const OrderP2PTableMobile = () => {
     const [tab, setTab] = React.useState('processing');
     const [data, setData] = React.useState([]);
     const [orderLoading, setOrderLoading] = React.useState(false);
-    const [currentPage, setCurrentPage] = React.useState(0)
+    const [showFilter, setShowFilter] = React.useState(false);
+    const [currentPage, setCurrentPage] = React.useState(0);
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
-
-    const [showFilter, setShowFilter] = React.useState(false);
 
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
@@ -112,31 +111,30 @@ export const OrderP2PTableMobile = () => {
             to: time_to,
         };
         dispatch(
-            orderFetch(
-                // fiat
-                //     ? { currency: fiat }
-                //     : side
-                //     ? { side }
-                //     : state
-                //     ? { state }
-                //     : startDate && endDate
-                //     ? { from: time_from, to: time_to }
-                //     : fiat && side
-                //     ? { currency: fiat, side }
-                //     : fiat && state
-                //     ? { currency: fiat, state }
-                //     : fiat && startDate && endDate
-                //     ? fiatDatePayload
-                //     : side && state
-                //     ? { side, state }
-                //     : side && startDate && endDate
-                //     ? sideDatePayload
-                //     : state && startDate && endDate
-                //     ? stateDatePayload
-                //     : fiat && side && state && startDate && endDate
-                //     ? fullPayload
-                //     : null
-            )
+            orderFetch()
+            // fiat
+            //     ? { currency: fiat }
+            //     : side
+            //     ? { side }
+            //     : state
+            //     ? { state }
+            //     : startDate && endDate
+            //     ? { from: time_from, to: time_to }
+            //     : fiat && side
+            //     ? { currency: fiat, side }
+            //     : fiat && state
+            //     ? { currency: fiat, state }
+            //     : fiat && startDate && endDate
+            //     ? fiatDatePayload
+            //     : side && state
+            //     ? { side, state }
+            //     : side && startDate && endDate
+            //     ? sideDatePayload
+            //     : state && startDate && endDate
+            //     ? stateDatePayload
+            //     : fiat && side && state && startDate && endDate
+            //     ? fullPayload
+            //     : null
         );
         const fetchInterval = setInterval(() => {
             dispatch(
@@ -148,7 +146,7 @@ export const OrderP2PTableMobile = () => {
                         limit: 5,
                         page: currentPage,
                         from: +time_from,
-                        to: +time_to
+                        to: +time_to,
                     }
                     // fiat
                     //     ? { currency: fiat }
@@ -251,7 +249,7 @@ export const OrderP2PTableMobile = () => {
                         </div>
                         <div
                             onClick={() =>
-                                history.push(`/p2p/wallet/order/${item?.order_number}`, { side: item?.side })
+                                history.push(`/p2p/order/detail/${item?.order_number}`, { side: item?.side })
                             }
                             className="d-flex flex-row justify-content-between cursor-pointer">
                             <div>
@@ -266,11 +264,13 @@ export const OrderP2PTableMobile = () => {
                             <div>
                                 <span
                                     className={
-                                        item?.state === 'success'
-                                            ? `gradient-text`
-                                            : item?.state.includes('cancel')
-                                            ? `danger-text`
-                                            : ``
+                                        item?.state == 'success' || item?.state == 'accepted'
+                                            ? 'contrast-text'
+                                            : item?.state?.includes('waiting')
+                                            ? 'warning-text'
+                                            : item?.state == 'prepare'
+                                            ? 'blue-text'
+                                            : 'danger-text'
                                     }>
                                     {capitalizeFirstLetter(item?.state)}
                                 </span>
@@ -283,6 +283,10 @@ export const OrderP2PTableMobile = () => {
                                 <img height={24} width={24} src={item?.fiat.icon_url} alt={item?.fiat.name} />
                                 <span className="grey-text-accent font-bold ml-1">{item?.fiat.name}</span>
                             </div>
+                        </div>
+                        <div className="d-flex flex-row justify-content-between">
+                            <span>Date</span>
+                            <span>{moment(item?.created_at).format('YYYY-MM-DD hh:mm:ss')}</span>
                         </div>
                         <div className="d-flex flex-row justify-content-between">
                             <span>Fiat Amount</span>
@@ -312,7 +316,7 @@ export const OrderP2PTableMobile = () => {
                 <span onClick={() => history.goBack()}>
                     <ArrowLeft className={'cursor-pointer'} />
                 </span>
-                <p className="m-0 p-0 grey-text-accent text-md font-extrabold">Order History</p>
+                <p className="m-0 p-0 grey-text-accent text-md font-extrabold">My Orders</p>
                 <span onClick={() => setShowFilter(!showFilter)}>
                     <MobileFilterIcon className={'cursor-pointer'} />
                 </span>
@@ -350,12 +354,12 @@ export const OrderP2PTableMobile = () => {
                     </div>
                 </div>
                 <PaginationMobile
-                page={page}
-                onClickPrevPage={()=> setCurrentPage(currentPage -1)}
-                onClickNextPage={()=> setCurrentPage(currentPage +1)}
-                nextPageExists={nextPageExists}
-                lastElementIndex={lastElementIndex}
-                firstElementIndex={firstElementIndex}
+                    page={page}
+                    onClickPrevPage={() => setCurrentPage(currentPage - 1)}
+                    onClickNextPage={() => setCurrentPage(currentPage + 1)}
+                    nextPageExists={nextPageExists}
+                    lastElementIndex={lastElementIndex}
+                    firstElementIndex={firstElementIndex}
                 />
 
                 <div id="off-canvas-filter" className={`position-fixed off-canvas-filter ${showFilter ? 'show' : ''}`}>

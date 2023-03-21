@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDocumentTitle } from '../../../hooks';
+import { useDocumentTitle, useWalletsFetch } from '../../../hooks';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useHistory, useLocation } from 'react-router';
 import {
@@ -19,6 +19,7 @@ import {
     selectP2PChat,
     orderChat,
     selectP2PCreateReportSuccess,
+    selectWallets,
 } from 'src/modules';
 import { ModalMobile, ModalFullScreenMobile } from 'src/mobile/components';
 import moment from 'moment';
@@ -30,16 +31,17 @@ import { ArrowRight } from 'src/mobile/assets/Arrow';
 import { P2PChatMobile, P2POrderStepMobile, P2PReportOrderMobile } from 'src/mobile/containers';
 import { InfoIcon } from 'src/assets/images/InfoIcon';
 import { CustomInput } from 'src/desktop/components';
+import { Link } from 'react-router-dom';
 
 export const P2PWalletOrderMobileScreen: React.FC = () => {
+    useWalletsFetch();
     useDocumentTitle('P2P Wallet Order');
     const dispatch = useDispatch();
     const history = useHistory();
     const { order_number = '' } = useParams<{ order_number?: string }>();
     const location: { state: { side: string } } = useLocation();
-    const side = location.state?.side;
-
     const detail = useSelector(selectP2POrderDetail);
+    const side = location.state?.side ? location.state?.side : detail?.offer?.side;
     const paymentConfirmSuccess = useSelector(selectP2PConfirmPaymentSuccess);
     const paymentConfimLoading = useSelector(selectP2PConfirmPaymentLoading);
     const confirmSellSuccess = useSelector(selectP2PConfirmSellSuccess);
@@ -49,6 +51,8 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
     const createFeedbackSuccess = useSelector(selectP2PCreateFeedbackSuccess);
     const p2pChat = useSelector(selectP2PChat);
     const createReportSuccess = useSelector(selectP2PCreateReportSuccess);
+    const wallets = useSelector(selectWallets);
+    const wallet = wallets?.find((item) => item?.currency?.toLowerCase() == detail?.offer?.fiat?.toLowerCase());
 
     const [showPayment, setShowPayment] = React.useState(false);
     const [showChat, setShowChat] = React.useState(false);
@@ -409,6 +413,7 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                         handleSendFeedbackNegative={handleSendFeedbackNegative}
                         handleExpandChat={() => setShowChat(!showChat)}
                         handleExpandTerms={() => setShowTerms(!showTerms)}
+                        wallet={wallet}
                     />
 
                     {side == 'buy' ? (
@@ -522,20 +527,41 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                                     handleChangeInput={(e) => handleChangeComment(e)}
                                 />
                                 <div className="w-100 d-flex align-items-center gap-8">
-                                    <button
-                                        disabled={detail?.feedback?.assesment ? true : false}
-                                        type="button"
-                                        onClick={handleSendFeedbackPositive}
-                                        className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
-                                        Positive <LikeSuccessIcon />{' '}
-                                    </button>
-                                    <button
-                                        disabled={detail?.feedback?.assesment ? true : false}
-                                        type="button"
-                                        onClick={handleSendFeedbackNegative}
-                                        className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
-                                        Negative <UnLikeDangerIcon />{' '}
-                                    </button>
+                                    {!detail?.feedback?.assesment ? (
+                                        <>
+                                            {' '}
+                                            <button
+                                                disabled={detail?.feedback?.assesment ? true : false}
+                                                type="button"
+                                                onClick={handleSendFeedbackPositive}
+                                                className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
+                                                Positive <LikeSuccessIcon />{' '}
+                                            </button>
+                                            <button
+                                                disabled={detail?.feedback?.assesment ? true : false}
+                                                type="button"
+                                                onClick={handleSendFeedbackNegative}
+                                                className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
+                                                Negative <UnLikeDangerIcon />{' '}
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {' '}
+                                            <button
+                                                disabled={detail?.feedback?.assesment == 'negative' ? true : false}
+                                                type="button"
+                                                className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
+                                                Positive <LikeSuccessIcon />{' '}
+                                            </button>
+                                            <button
+                                                disabled={detail?.feedback?.assesment == 'positive' ? true : false}
+                                                type="button"
+                                                className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
+                                                Negative <UnLikeDangerIcon />{' '}
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
 
                                 <button type="button" className="btn-primary w-100 white-text text-ms font-normal">
@@ -571,7 +597,7 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                             <button
                                 onClick={() => setShowModalSellConfrim(!showModalSellConfirm)}
                                 type="button"
-                                className="btn-primary w-100 white-text text-ms font-normal">
+                                className="btn-primary w-50 white-text text-ms font-normal">
                                 <div className="d-flex align-items-center justify-content-center gap-4">
                                     <p className="m-0 p-0">Release Crypto : </p>
 
@@ -598,10 +624,9 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                     ) : detail?.order?.state == 'rejected' ? (
                         <div className="bottom-nav-order-step d-flex align-items-center gap-12 w-100">
                             <button
-                                // onClick={() => setShowModalSellConfrim(!showModalSellConfirm)}
                                 type="button"
                                 disabled={true}
-                                className="btn-primary w-100 white-text text-ms font-normal">
+                                className="btn-primary w-50 white-text text-ms font-normal">
                                 Release Crypto
                             </button>
 
@@ -623,20 +648,22 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                         </div>
                     ) : (
                         <div className="bottom-nav-order-step d-flex flex-column align-items-center gap-12 w-100">
+                            <div className="d-flex justify-content-between align-items-center w-100">
+                                <p className="m-0 p-0 grey-text-accent text-sm font-semibold">
+                                    {side == 'sell' && !detail?.feedback?.assesment
+                                        ? 'Waiting feedback'
+                                        : 'Buyer feedback'}
+                                </p>
+                                <Link to={'/p2p/wallets'} className="m-0 p-0 gradient-text text-sm font-semibold">
+                                    View wallet
+                                </Link>
+                            </div>
                             <CustomInput
                                 isDisabled={true}
                                 inputValue={comment}
                                 type="text"
-                                label={
-                                    side == 'sell' && !detail?.feedback?.assesment
-                                        ? 'Waiting feedback'
-                                        : 'Buyer feedback'
-                                }
-                                defaultLabel={
-                                    side == 'sell' && !detail?.feedback?.assesment
-                                        ? 'Waiting feedback'
-                                        : 'Buyer feedback'
-                                }
+                                label=""
+                                defaultLabel=""
                                 placeholder={
                                     side == 'sell' && !detail?.feedback?.assesment
                                         ? '-'
@@ -647,19 +674,31 @@ export const P2PWalletOrderMobileScreen: React.FC = () => {
                                         : ''
                                 }
                                 labelVisible
-                                classNameLabel="grey-text-accent text-sm font-semibold"
+                                classNameLabel="d-none"
                                 handleChangeInput={(e) => handleChangeComment(e)}
                                 classNameGroup="w-100"
                             />
                             <div className="w-100 d-flex align-items-center gap-8">
                                 <button
-                                    disabled={true}
+                                    disabled={
+                                        !detail?.feedback?.assesment
+                                            ? true
+                                            : detail?.feedback?.assesment == 'negative'
+                                            ? true
+                                            : false
+                                    }
                                     type="button"
                                     className="btn button-grey white-text text-sm font-semibold align-items-center mr-2 py-3 w-50">
                                     Positive <LikeSuccessIcon />{' '}
                                 </button>
                                 <button
-                                    disabled={true}
+                                    disabled={
+                                        !detail?.feedback?.assesment
+                                            ? true
+                                            : detail?.feedback?.assesment == 'positive'
+                                            ? true
+                                            : false
+                                    }
                                     type="button"
                                     className="btn button-grey white-text text-sm font-semibold align-items-center ml-2 py-3 w-50">
                                     Negative <UnLikeDangerIcon />{' '}

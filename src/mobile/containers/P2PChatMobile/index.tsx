@@ -160,18 +160,19 @@ export const P2PChatMobile: React.FunctionComponent<P2PChatMobileProps> = (props
     return (
         <React.Fragment>
             <div className="w-100">
-                <div className="position-fixed nav-chat-info-top dark-bg-main">
+                <div className=" nav-chat-info-top dark-bg-main">
                     <div className="d-flex justify-content-center align-items-center position-relative mb-24 w-100">
                         <div className="d-flex align-items-center gap-8">
                             <div className="ava-container d-flex justify-content-center align-items-center white-text text-xxs font-bold">
-                                {detail?.order?.trades?.username
-                                    ? detail?.order?.trades?.username?.toUpperCase()?.slice(0, 1)
-                                    : detail?.order?.trades?.email?.toUpperCase()?.slice(0, 1)}
+                                {p2pChat?.target?.member?.email &&
+                                    p2pChat?.target?.member?.email?.toUpperCase()?.slice(0, 1)}
                             </div>
                             <p className="m-0 p-0 text-ms grey-text-accent">
-                                {detail?.order?.trades?.username
+                                {/* {detail?.order?.trades?.username
                                     ? detail?.order?.trades?.username
-                                    : detail?.order?.trades?.email}
+                                    : detail?.order?.trades?.email} */}
+
+                                {p2pChat?.target?.member?.email}
                             </p>
 
                             <span>

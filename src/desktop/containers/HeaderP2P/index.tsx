@@ -26,7 +26,7 @@ export const HeaderP2P = () => {
                         <span className="mr-8">
                             <HeaderOrderIcon fillColor={'var(--text-secondary-color)'} />
                         </span>
-                        <p className="m-0 p-0 white-text text-ms">My Offer</p>
+                        <p className="m-0 p-0 white-text text-ms">My Offers</p>
                     </Link>
 
                     <Link
@@ -35,7 +35,7 @@ export const HeaderP2P = () => {
                         <span className="mr-8">
                             <HeaderOrderIcon fillColor={'var(--text-secondary-color)'} />
                         </span>
-                        <p className="m-0 p-0 white-text text-ms">My Order</p>
+                        <p className="m-0 p-0 white-text text-ms">My Orders</p>
                     </Link>
 
                     <div

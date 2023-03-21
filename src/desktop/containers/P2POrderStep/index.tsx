@@ -62,17 +62,6 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
 
     const [showImage, setShowImage] = React.useState(false);
     const [imageView, setImageView] = React.useState('');
-    const [imageBlob, setImageBlob] = React.useState('');
-
-    // console.log(paymentUser);
-
-    // const onImageChange = (e) => {
-    //     if (e.target.files && e.target.files[0]) {
-    //         let img = e.target.files[0];
-    //         setImageBlob(URL.createObjectURL(img));
-    //         setImage(e.target.files);
-    //     }
-    // };
 
     const download = (url, filename) => {
         fetch(url)
@@ -390,11 +379,13 @@ export const P2POrderStep: React.FunctionComponent<P2POrderStepProps> = (props) 
                                     </div>
                                 ) : (
                                     <div className="d-flex gap-16">
-                                        <button
-                                            type="button"
-                                            className="btn btn-transparent font-semibold gradient-text text-sm">
+                                        <a
+                                            href="https://t.me/heavenexchange"
+                                            target="__blank"
+                                            rel="noopener noreferrer"
+                                            className="btn btn-transparent font-semibold gradient-text text-sm cursor-pointer">
                                             Have a question
-                                        </button>
+                                        </a>
                                         <Link
                                             to={`/p2p/wallets`}
                                             type="button"

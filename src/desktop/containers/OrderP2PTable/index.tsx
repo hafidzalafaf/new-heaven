@@ -261,15 +261,17 @@ export const OrderP2PTable = () => {
                 className={`m-0 p-0 text-sm font-semibold ${
                     item?.state == 'success' || item?.state == 'accepted'
                         ? 'contrast-text'
-                        : item?.state?.includes('waiting') || item?.state == 'prepare'
+                        : item?.state?.includes('waiting')
                         ? 'warning-text'
+                        : item?.state == 'prepare'
+                        ? 'blue-text'
                         : 'danger-text'
                 }`}>
                 {capitalizeFirstLetter(item?.state)}
             </p>,
             <div className="d-flex align-items-center">
                 <div
-                    onClick={() => history.push(`/p2p/wallet/order/${item?.order_number}`, { side: item?.side })}
+                    onClick={() => history.push(`/p2p/order/detail/${item?.order_number}`, { side: item?.side })}
                     className="d-flex align-items-center cursor-pointer mr-8">
                     <p className="m-0 p-0 mr-6 text-xs grey-text">Order</p>
                     <HideIcon />

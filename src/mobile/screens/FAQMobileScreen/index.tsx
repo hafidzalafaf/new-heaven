@@ -44,16 +44,6 @@ const FAQMobileScreen: React.FC = () => {
                         className="btn-primary cursor-pointer">
                         Contact Support
                     </a>
-                    {/* {support.map((item, i) => (
-                <a
-                    key={i}
-                    href={item?.excerpt}
-                    target="__blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary cursor-pointer">
-                    {item.title}
-                </a>
-            ))} */}
                 </div>
                 <div className="container">
                     <div className="articles">

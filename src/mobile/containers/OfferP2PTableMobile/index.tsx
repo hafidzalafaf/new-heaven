@@ -1,24 +1,10 @@
 import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Tabs, Tab, Dropdown } from 'react-bootstrap';
 import '../../../styles/colors.pcss';
-import Select from 'react-select';
 import moment from 'moment';
-import { CustomStylesSelect, NoData } from '../../../desktop/components';
-import { Loading, Table } from '../../../components';
-import { HideIcon, GreyCheck, ActiveCheck, VerificationIcon, MobileMoreArrow } from '../../../assets/images/P2PIcon';
-import { Link, useHistory } from 'react-router-dom';
-import {
-    orderFetch,
-    selectP2POrder,
-    selectP2POrderLoading,
-    p2pFiatFetch,
-    selectP2PFiatsData,
-    selectP2PUserAccountOffer,
-    p2pOfferFetch,
-    p2pUserOfferFetch,
-    selectP2PUserAccountOfferCancelSuccess,
-} from 'src/modules';
+import { NoData } from '../../../desktop/components';
+import { Loading } from '../../../components';
+import { MobileMoreArrow } from '../../../assets/images/P2PIcon';
+import { Link } from 'react-router-dom';
 import { capitalizeFirstLetter } from 'src/helpers';
 import './OrderP2PTableMobile.pcss';
 
@@ -71,20 +57,30 @@ export const OfferP2PTableMobile: React.FC<OfferP2PTableMobileProps> = (props) =
                                 <span>Coin</span>
                                 <div className="d-flex flex-row align-items-center">
                                     <img height={24} width={24} src={item?.fiat.icon_url} alt={item?.fiat.name} />
-                                    <span className="grey-text-accent font-bold ml-1">{item?.fiat.name}</span>
+                                    <span className="white-text font-bold ml-1">{item?.fiat.name}</span>
                                 </div>
                             </div>
                             <div className="d-flex flex-row justify-content-between my-1">
                                 <span>Date</span>
-                                <span>{moment(item?.created_at).format('DD/MM/YYYY')}</span>
+                                <span>{moment(item?.created_at).format('YYYY-MM-DD hh:mm:ss')}</span>
                             </div>
                             <div className="d-flex flex-row justify-content-between my-1">
                                 <span>Amount</span>
-                                <span>{item?.price}</span>
+                                <span>{item?.available_amount}</span>
                             </div>
                             <div className="d-flex flex-row justify-content-between my-1">
-                                <span>Crypto Amount</span>
-                                <span>{item?.available_amount}</span>
+                                <span>Sale</span>
+                                <span>
+                                    {item?.side == 'sell' ? item?.stats_offer?.bought : item?.stats_offer?.sold}
+                                </span>
+                            </div>
+                            <div className="d-flex flex-row justify-content-between my-1">
+                                <span>Available</span>
+                                <span>
+                                    {item?.side == 'sell'
+                                        ? +item?.available_amount - +item?.stats_offer?.bought
+                                        : +item?.available_amount - +item?.stats_offer?.sold}
+                                </span>
                             </div>
                             <div className="d-flex flex-row justify-content-between my-1">
                                 <span>Offer ID</span>
@@ -121,14 +117,16 @@ export const OfferP2PTableMobile: React.FC<OfferP2PTableMobileProps> = (props) =
                                     </span>
                                 </div>
 
-                                <Link to={`/p2p/offer/${item?.offer_number}`}>
+                                <Link to={`/p2p/order/detail/${item?.order_number}`}>
                                     <span
                                         className={
-                                            item?.state === 'success'
-                                                ? `gradient-text`
-                                                : item?.state.includes('cancel')
-                                                ? `danger-text`
-                                                : ``
+                                            item?.state == 'success' || item?.state == 'accepted'
+                                                ? 'contrast-text'
+                                                : item?.state?.includes('waiting')
+                                                ? 'warning-text'
+                                                : item?.state == 'prepare'
+                                                ? 'blue-text'
+                                                : 'danger-text'
                                         }>
                                         {capitalizeFirstLetter(item?.state)}
                                     </span>
@@ -139,12 +137,12 @@ export const OfferP2PTableMobile: React.FC<OfferP2PTableMobileProps> = (props) =
                                 <span>Coin</span>
                                 <div className="d-flex flex-row align-items-center">
                                     <img height={24} width={24} src={item?.fiat.icon_url} alt={item?.fiat.name} />
-                                    <span className="grey-text-accent font-bold ml-1">{item?.fiat.name}</span>
+                                    <span className="white-text font-bold ml-1">{item?.fiat.name}</span>
                                 </div>
                             </div>
                             <div className="d-flex flex-row justify-content-between my-1">
                                 <span>Date</span>
-                                <span>{moment(item?.created_at).format('DD/MM/YYYY')}</span>
+                                <span>{moment(item?.created_at).format('YYYY-MM-DD hh:mm:ss')}</span>
                             </div>
                             <div className="d-flex flex-row justify-content-between my-1">
                                 <span>Amount</span>
