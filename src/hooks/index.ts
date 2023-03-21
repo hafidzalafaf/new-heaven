@@ -22,4 +22,3 @@ export * from './useWithdrawalLimits';
 export * from './useWithdrawSum';
 export * from './useFeeGroup';
 export * from './useUserWithdrawalLimits';
-export * from './useContactsFetch';

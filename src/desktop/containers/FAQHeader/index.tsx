@@ -1,22 +1,6 @@
 import React, { FC, ReactElement } from 'react';
-import { useBlogsFetch, useContactsFetch } from 'src/hooks';
-import { useSelector } from 'react-redux';
-import { selectContact, selectBlogs } from 'src/modules';
 
 export const FAQHeader: FC = (): ReactElement => {
-    useContactsFetch();
-    // useBlogsFetch({ tag: 'contact' });
-    const [support, setSupport] = React.useState<any>([]);
-
-    // const blogs = useSelector(selectBlogs);
-    const contacts = useSelector(selectContact);
-
-    React.useEffect(() => {
-        if (contacts) {
-            setSupport(contacts);
-        }
-    }, [contacts]);
-
     return (
         <React.Fragment>
             <div
@@ -33,16 +17,6 @@ export const FAQHeader: FC = (): ReactElement => {
                             className="btn-primary cursor-pointer">
                             Contact Support
                         </a>
-                        {/* {support.map((item, i) => (
-                            <a
-                                key={i}
-                                href={item?.excerpt}
-                                target="__blank"
-                                rel="noopener noreferrer"
-                                className="btn-primary cursor-pointer">
-                                {item.title}
-                            </a>
-                        ))} */}
                     </div>
                 </div>
             </div>

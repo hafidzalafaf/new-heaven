@@ -357,80 +357,11 @@ const MarketOrderMobileScreen: React.FC = () => {
         </React.Fragment>
     );
 
-    // const renderFilter = () => {
-    //     return (
-    //         <div className="d-flex align-items-center">
-    //             <div className="w-20 mr-24">
-    //                 <label className="m-0 white-text text-sm mb-8">Start Date</label>
-    //                 <input
-    //                     type="date"
-    //                     className="form-control mb-24"
-    //                     onChange={(e) => {
-    //                         setStartDate(e.target.value);
-    //                     }}
-    //                 />
-    //             </div>
-
-    //             <div className="w-20 mr-24">
-    //                 <label className="m-0 white-text text-sm mb-8">End Date</label>
-    //                 <input
-    //                     type="date"
-    //                     className="form-control mb-24"
-    //                     onChange={(e) => {
-    //                         setEndDate(e.target.value);
-    //                     }}
-    //                 />
-    //             </div>
-
-    //             <div className="w-20 mr-24">
-    //                 <p className="m-0 white-text text-sm mb-8">Assets</p>
-    //                 <Select
-    //                     value={optionAssets.filter(function (option) {
-    //                         return option.value === asset;
-    //                     })}
-    //                     onChange={(e) => {
-    //                         setAsset(e.value);
-    //                         filterredAsset(e.value);
-    //                     }}
-    //                     styles={CustomStylesSelect}
-    //                     options={optionAssets}
-    //                 />
-    //             </div>
-
-    //             {tab === 'close' && (
-    //                 <div className="w-20 mr-24">
-    //                     <p className="m-0 white-text text-sm mb-8">Status</p>
-    //                     <Select
-    //                         value={optionStatus.filter(function (option) {
-    //                             return option.value === status;
-    //                         })}
-    //                         onChange={(e) => {
-    //                             setStatus(e.value);
-    //                             filterredStatus(e.value);
-    //                         }}
-    //                         styles={CustomStylesSelect}
-    //                         options={optionStatus}
-    //                     />
-    //                 </div>
-    //             )}
-    //         </div>
-    //     );
-    // };
-
     return (
         <React.Fragment>
             <div className="mobile-container pg-market-order no-header dark-bg-main">
                 <div className="d-flex justify-content-between align-items-center head-container">
                     <h1 className="text-md font-extrabold mb-0 grey-text-accent">Market Order</h1>
-
-                    {/* <div className="d-flex justify-content-start align-items-center head-action">
-                        <span className="mr-8">
-                            <FilterIcon />
-                        </span>
-                        <span>
-                            <EditIcon />
-                        </span>
-                    </div> */}
                 </div>
 
                 <div className="position-relative">
