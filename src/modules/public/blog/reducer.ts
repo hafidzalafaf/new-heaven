@@ -1,13 +1,6 @@
 import { CommonState } from '../../types';
 import { BlogsAction } from './actions';
-import {
-    BLOGS_CONTACT_DATA,
-    BLOGS_CONTACT_ERROR,
-    BLOGS_CONTACT_FETCH,
-    BLOGS_DATA,
-    BLOGS_ERROR,
-    BLOGS_FETCH,
-} from './constants';
+import { BLOGS_FAQ_DATA, BLOGS_FAQ_ERROR, BLOGS_FAQ_FETCH, BLOGS_DATA, BLOGS_ERROR, BLOGS_FETCH } from './constants';
 import { Blogs } from './types';
 
 export interface BlogsState extends CommonState {
@@ -16,7 +9,7 @@ export interface BlogsState extends CommonState {
         loading: boolean;
     };
 
-    contact: {
+    faq: {
         data?: Blogs[];
         loading: boolean;
     };
@@ -27,7 +20,7 @@ export const initialBlogsState: BlogsState = {
         data: [],
         loading: false,
     },
-    contact: {
+    faq: {
         data: [],
         loading: false,
     },
@@ -56,20 +49,20 @@ export const blogReducer = (state = initialBlogsState['blog'], action: BlogsActi
     }
 };
 
-export const blogContactReducer = (state = initialBlogsState['contact'], action: BlogsAction) => {
+export const blogFaqReducer = (state = initialBlogsState['faq'], action: BlogsAction) => {
     switch (action.type) {
-        case BLOGS_CONTACT_FETCH:
+        case BLOGS_FAQ_FETCH:
             return {
                 ...state,
                 loading: true,
             };
-        case BLOGS_CONTACT_DATA:
+        case BLOGS_FAQ_DATA:
             return {
                 ...state,
                 loading: false,
                 data: action.payload,
             };
-        case BLOGS_CONTACT_ERROR:
+        case BLOGS_FAQ_ERROR:
             return {
                 ...state,
                 loading: false,
@@ -91,14 +84,14 @@ export const blogsReducer = (state = initialBlogsState, action: BlogsAction) => 
                 blog: blogReducer(blogState, action),
             };
 
-        case BLOGS_CONTACT_FETCH:
-        case BLOGS_CONTACT_DATA:
-        case BLOGS_CONTACT_ERROR:
-            const contactState = { ...state.contact };
+        case BLOGS_FAQ_FETCH:
+        case BLOGS_FAQ_DATA:
+        case BLOGS_FAQ_ERROR:
+            const contactState = { ...state.faq };
 
             return {
                 ...state,
-                contact: blogContactReducer(contactState, action),
+                faq: blogFaqReducer(contactState, action),
             };
         default:
             return state;

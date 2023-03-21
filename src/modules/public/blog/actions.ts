@@ -1,12 +1,5 @@
 import { CommonError } from '../../types';
-import {
-    BLOGS_DATA,
-    BLOGS_ERROR,
-    BLOGS_FETCH,
-    BLOGS_CONTACT_DATA,
-    BLOGS_CONTACT_ERROR,
-    BLOGS_CONTACT_FETCH,
-} from './constants';
+import { BLOGS_DATA, BLOGS_ERROR, BLOGS_FETCH, BLOGS_FAQ_DATA, BLOGS_FAQ_ERROR, BLOGS_FAQ_FETCH } from './constants';
 import { Blogs } from './types';
 
 export interface BlogsFetch {
@@ -27,21 +20,21 @@ export interface BlogsError {
     error: CommonError;
 }
 
-export interface ContactsFetch {
-    type: typeof BLOGS_CONTACT_FETCH;
+export interface FaqsFetch {
+    type: typeof BLOGS_FAQ_FETCH;
 }
 
-export interface ContactsData {
-    type: typeof BLOGS_CONTACT_DATA;
+export interface FaqsData {
+    type: typeof BLOGS_FAQ_DATA;
     payload: Blogs[];
 }
 
-export interface ContactsError {
-    type: typeof BLOGS_CONTACT_ERROR;
+export interface FaqsError {
+    type: typeof BLOGS_FAQ_ERROR;
     error: CommonError;
 }
 
-export type BlogsAction = BlogsFetch | BlogsData | BlogsError | ContactsFetch | ContactsData | ContactsError;
+export type BlogsAction = BlogsFetch | BlogsData | BlogsError | FaqsFetch | FaqsData | FaqsError;
 
 export const blogsFetch = (payload: BlogsFetch['payload']): BlogsFetch => ({
     type: BLOGS_FETCH,
@@ -58,16 +51,16 @@ export const blogsError = (error: CommonError): BlogsError => ({
     error,
 });
 
-export const contactsFetch = (): ContactsFetch => ({
-    type: BLOGS_CONTACT_FETCH,
+export const faqsFetch = (): FaqsFetch => ({
+    type: BLOGS_FAQ_FETCH,
 });
 
-export const contactsData = (payload: ContactsData['payload']): ContactsData => ({
-    type: BLOGS_CONTACT_DATA,
+export const faqsData = (payload: FaqsData['payload']): FaqsData => ({
+    type: BLOGS_FAQ_DATA,
     payload,
 });
 
-export const contactsError = (error: CommonError): ContactsError => ({
-    type: BLOGS_CONTACT_ERROR,
+export const faqsError = (error: CommonError): FaqsError => ({
+    type: BLOGS_FAQ_ERROR,
     error,
 });
