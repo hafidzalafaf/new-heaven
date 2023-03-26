@@ -5,6 +5,7 @@ import { p2pMerchantDetailData, p2pMerchantDetailError, P2PMerchantDetailFetch }
 
 const config: RequestOptions = {
     apiVersion: 'p2p',
+    withHeaders: true,
 };
 
 export function* p2pMerchantDetailSaga(action: P2PMerchantDetailFetch) {

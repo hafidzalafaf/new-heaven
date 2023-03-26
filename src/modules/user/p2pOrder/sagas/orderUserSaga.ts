@@ -19,8 +19,8 @@ export function* orderSaga(action: OrderFetch) {
         let fiat = '';
         let side = '';
         let state = '';
-        // let from = '';
-        // let to = '';
+        let from = '';
+        let to = '';
         let pageIndex = 0;
         let limit = 5
         
@@ -29,8 +29,8 @@ export function* orderSaga(action: OrderFetch) {
             fiat = action.payload.fiat;
             side = action.payload.side;
             state = action.payload.state;
-            // from = action.payload.from;
-            // to = action.payload.to;
+            from = action.payload.from;
+            to = action.payload.to;
             pageIndex = action.payload.page
             limit = action.payload.limit
         }
@@ -40,8 +40,8 @@ export function* orderSaga(action: OrderFetch) {
             fiat,
             side,
             state,
-            // from,
-            // to,
+            from,
+            to,
             page: action.payload.page,
             limit
         };

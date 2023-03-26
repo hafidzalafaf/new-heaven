@@ -2,10 +2,10 @@ import { call, put } from 'redux-saga/effects';
 import { sendError } from '../../..';
 import { API, RequestOptions } from '../../../../api';
 import { p2pCurrenciesData, p2pCurrenciesError, P2PCurrenciesFetch } from '../actions';
-import axios from 'axios';
 
 const config: RequestOptions = {
     apiVersion: 'p2p',
+    withHeaders: true,
 };
 
 export function* p2pCurrenciesSaga(action: P2PCurrenciesFetch) {

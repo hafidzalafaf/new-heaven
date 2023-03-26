@@ -5,6 +5,7 @@ import { p2pPaymentMethodsData, p2pPaymentMethodsError } from '../actions';
 
 const config: RequestOptions = {
     apiVersion: 'p2p',
+    withHeaders: true,
 };
 
 export function* p2pPaymentMethodsSaga() {

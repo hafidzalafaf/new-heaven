@@ -42,29 +42,22 @@ import { PasswordState, rootPasswordSaga } from './user/password';
 import { ProfileState, rootProfileSaga } from './user/profile';
 import { rootUserActivitySaga, UserActivityState } from './user/userActivity';
 import { rootWalletsSaga, WalletsState } from './user/wallets';
-import { QuickExchangeState, rootQuickExchangeSaga } from './user/quickExchange';
 import { rootWithdrawLimitSaga, WithdrawLimitState } from './user/withdrawLimit';
 import { rootWithdrawSumSaga, WithdrawSumState } from './user/withdrawSum';
 import { MarketsAdminState, rootMarketsAdminSaga } from './admin/markets';
 import { PlatformCreateState, rootPlatformCreateSaga } from './admin/platform';
 import { P2PState, rootP2PSaga } from './public/p2p';
-import { PaymentMethodState, rootPaymentMethodSaga } from './user/paymentMethod';
-import { P2POffersState, rootP2POffersSaga } from './user/p2pOffers';
 import { P2PTransfersState, rootP2PTransfersSaga } from './user/p2pTransfers';
-import { P2POrdersState, rootP2POrdersSaga } from './user/p2pOrders';
-import { P2PDisputeState, rootP2PDisputeSaga } from './user/p2pDispute';
 import { FeeGroupState, rootFeeGroupSaga } from './user/feeGroup';
 import { WithdrawLimitsState, rootWithdrawLimitsSaga } from './public/withdrawLimits';
 import { ConfirmationCodeState, rootConfirmationCodeSaga } from './user/emailVerificationCode';
-import { FeedbackState, rootP2PFeedbackSaga } from './user/p2pFeedback';
-import { OrderState, rootP2POrderSaga } from './user/p2pOrder';
+import { P2PFeedbackState, rootP2PFeedbackSaga } from './user/p2pFeedback';
+import { P2POrderState, rootP2POrderSaga } from './user/p2pOrder';
 import { P2POfferState, rootP2POfferSaga } from './user/p2pOffer';
 import { P2POfferAvailableState, rootP2PAvailableOfferSaga } from './user/p2pAvailableOffer';
 import { P2PProfileState, rootP2PProfileSaga } from './user/p2pProfile';
 import { rootP2PPaymentUserSaga, P2PPaymentUserState } from './user/p2pPaymentUser';
-import { P2PUserSettingState } from './user/p2pUserSetting/reducer';
 import { GroupMemberState, rootMemberGroupSaga } from './user/memberGroup';
-import { rootP2PUserSettingSaga } from './user/p2pUserSetting';
 import { P2PUserOfferState, rootP2PUserOfferSaga } from './user/p2pUserOffer';
 import { P2PUserOfferDetailState, rootP2PUserOfferDetailSaga } from './user/p2pUserOfferDetail';
 
@@ -108,13 +101,8 @@ export * from './user/wallets';
 export * from './user/feeGroup';
 export * from './user/withdrawLimit';
 export * from './user/withdrawSum';
-export * from './user/quickExchange';
 export * from './user/abilities';
-export * from './user/paymentMethod';
-export * from './user/p2pOffers';
-export * from './user/p2pOrders';
 export * from './user/p2pTransfers';
-export * from './user/p2pDispute';
 export * from './user/emailVerificationCode';
 export * from './user/memberGroup';
 export * from './user/p2pFeedback';
@@ -122,10 +110,10 @@ export * from './user/p2pOrder';
 export * from './user/p2pOffer';
 export * from './user/p2pAvailableOffer';
 export * from './user/p2pProfile';
-export * from './user/p2pUserSetting';
 export * from './user/p2pPaymentUser';
 export * from './user/p2pUserOffer'
 export * from './user/p2pUserOfferDetail';
+
 export interface RootState {
     public: {
         alerts: AlertState;
@@ -176,20 +164,14 @@ export interface RootState {
         withdrawLimit: WithdrawLimitState;
         withdrawSum: WithdrawSumState;
         feeGroup: FeeGroupState;
-        quickExchange: QuickExchangeState;
-        paymentMethod: PaymentMethodState;
-        p2pOffers: P2POffersState;
         p2pTransfers: P2PTransfersState;
-        p2pOrders: P2POrdersState;
-        p2pDispute: P2PDisputeState;
         confirmationCode: ConfirmationCodeState;
         memberGroup: GroupMemberState;
-        p2pFeedback: FeedbackState;
-        p2pOrder: OrderState;
+        p2pFeedback: P2PFeedbackState;
+        p2pOrder: P2POrderState;
         p2pOffer: P2POfferState;
         p2pOfferAvailable: P2POfferAvailableState;
         p2pProfile: P2PProfileState;
-        p2pUserSetting: P2PUserSettingState;
         p2pPaymentUser: P2PPaymentUserState;
         p2pUserOffer : P2PUserOfferState;
         p2pUserOfferDetail: P2PUserOfferDetailState;
@@ -211,7 +193,6 @@ export function* rootSaga() {
     yield all([
         call(rootWithdrawLimitsSaga),
         call(rootFeeGroupSaga),
-        call(rootQuickExchangeSaga),
         call(rootAbilitiesSaga),
         call(rootApiKeysSaga),
         call(rootAuthSaga),
@@ -248,12 +229,7 @@ export function* rootSaga() {
         call(rootWalletsSaga),
         call(rootWithdrawLimitSaga),
         call(rootWithdrawSumSaga),
-        call(rootQuickExchangeSaga),
-        call(rootPaymentMethodSaga),
-        call(rootP2POffersSaga),
-        call(rootP2POrdersSaga),
         call(rootP2PTransfersSaga),
-        call(rootP2PDisputeSaga),
         call(rootConfigsSaga),
         call(rootConfirmationCodeSaga),
         call(rootMemberGroupSaga),
@@ -262,7 +238,6 @@ export function* rootSaga() {
         call(rootP2POfferSaga),
         call(rootP2PAvailableOfferSaga),
         call(rootP2PProfileSaga),
-        call(rootP2PUserSettingSaga),
         call(rootP2PPaymentUserSaga),
         call(rootP2PUserOfferSaga),
         call(rootP2PUserOfferDetailSaga)

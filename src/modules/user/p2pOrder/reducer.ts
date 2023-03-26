@@ -47,7 +47,7 @@ const defaultConfirm: Confirm = {
     payment_method: '',
 };
 
-export interface OrderState {
+export interface P2POrderState {
     create: {
         data: any;
         fetching: boolean;
@@ -114,7 +114,7 @@ export interface OrderState {
     };
 }
 
-export const initialOrderState: OrderState = {
+export const initialOrderState: P2POrderState = {
     create: {
         data: {},
         fetching: false,
@@ -171,7 +171,7 @@ export const initialOrderState: OrderState = {
     },
 };
 
-export const orderFetchReducer = (state: OrderState['fetch'], action: OrderActions) => {
+export const orderFetchReducer = (state: P2POrderState['fetch'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_FETCH:
             return {
@@ -202,7 +202,7 @@ export const orderFetchReducer = (state: OrderState['fetch'], action: OrderActio
     }
 };
 
-export const orderDetailReducer = (state: OrderState['detail'], action: OrderActions) => {
+export const orderDetailReducer = (state: P2POrderState['detail'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_DETAIL_FETCH:
             return {
@@ -232,7 +232,7 @@ export const orderDetailReducer = (state: OrderState['detail'], action: OrderAct
     }
 };
 
-const orderCreateReducer = (state: OrderState['create'], action: OrderActions) => {
+const orderCreateReducer = (state: P2POrderState['create'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_CREATE:
             return {
@@ -261,7 +261,7 @@ const orderCreateReducer = (state: OrderState['create'], action: OrderActions) =
     }
 };
 
-const orderCancelReducer = (state: OrderState['cancel'], action: OrderActions) => {
+const orderCancelReducer = (state: P2POrderState['cancel'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_CANCEL:
             return {
@@ -289,7 +289,7 @@ const orderCancelReducer = (state: OrderState['cancel'], action: OrderActions) =
     }
 };
 
-const orderConfirmSellReducer = (state: OrderState['order_confirm_sell'], action: OrderActions) => {
+const orderConfirmSellReducer = (state: P2POrderState['order_confirm_sell'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_CONFIRM_SELL:
             return {
@@ -318,7 +318,7 @@ const orderConfirmSellReducer = (state: OrderState['order_confirm_sell'], action
     }
 };
 
-const orderConfirmPaymentReducer = (state: OrderState['payment_confirm'], action: OrderActions) => {
+const orderConfirmPaymentReducer = (state: P2POrderState['payment_confirm'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_CONFIRM_PAYMENT:
             return {
@@ -347,7 +347,7 @@ const orderConfirmPaymentReducer = (state: OrderState['payment_confirm'], action
     }
 };
 
-export const orderChatReducer = (state: OrderState['chat'], action: OrderActions) => {
+export const orderChatReducer = (state: P2POrderState['chat'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_CHAT:
             return {
@@ -376,7 +376,7 @@ export const orderChatReducer = (state: OrderState['chat'], action: OrderActions
     }
 };
 
-const orderChatCreateReducer = (state: OrderState['chat_create'], action: OrderActions) => {
+const orderChatCreateReducer = (state: P2POrderState['chat_create'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_CHAT_CREATE:
             return {
@@ -405,7 +405,7 @@ const orderChatCreateReducer = (state: OrderState['chat_create'], action: OrderA
     }
 };
 
-export const orderReportReducer = (state: OrderState['report'], action: OrderActions) => {
+export const orderReportReducer = (state: P2POrderState['report'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_REPORT:
             return {
@@ -434,7 +434,7 @@ export const orderReportReducer = (state: OrderState['report'], action: OrderAct
     }
 };
 
-const orderReportCreateReducer = (state: OrderState['report_create'], action: OrderActions) => {
+const orderReportCreateReducer = (state: P2POrderState['report_create'], action: OrderActions) => {
     switch (action.type) {
         case ORDER_REPORT_CREATE:
             return {
@@ -463,7 +463,7 @@ const orderReportCreateReducer = (state: OrderState['report_create'], action: Or
     }
 };
 
-export const orderReducer = (state = initialOrderState, action: OrderActions) => {
+export const p2pOrderReducer = (state = initialOrderState, action: OrderActions) => {
     switch (action.type) {
         case ORDER_FETCH:
         case ORDER_DATA:

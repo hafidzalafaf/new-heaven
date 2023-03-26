@@ -1,5 +1,3 @@
-import { UserPaymentMethod } from 'src/modules';
-
 export interface Payment {
     payment_user_id: number | string;
     bank_name: string;

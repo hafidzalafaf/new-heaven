@@ -6,13 +6,9 @@ import {
     P2P_FIAT_DATA,
     P2P_FIAT_ERROR,
     P2P_FIAT_FETCH,
-    P2P_HIGHEST_PRICE_DATA,
-    P2P_HIGHEST_PRICE_ERROR,
-    P2P_HIGHEST_PRICE_FETCH,
     P2P_OFFERS_DATA,
     P2P_OFFERS_ERROR,
     P2P_OFFERS_FETCH,
-    P2P_OFFERS_UPDATE,
     P2P_PAYMENT_METHODS_DATA,
     P2P_PAYMENT_METHODS_ERROR,
     P2P_PAYMENT_METHODS_FETCH,
@@ -60,11 +56,6 @@ export interface OffersData {
 export interface OffersError {
     type: typeof P2P_OFFERS_ERROR;
     error: CommonError;
-}
-
-export interface P2POffersUpdate {
-    type: typeof P2P_OFFERS_UPDATE;
-    payload: Offer;
 }
 
 export interface P2POfferDetailFetch {
@@ -150,24 +141,6 @@ export interface P2PPaymentMethodsError {
     error: CommonError;
 }
 
-export interface P2PHighestPriceFetch {
-    type: typeof P2P_HIGHEST_PRICE_FETCH;
-    payload: {
-        base: string;
-        quote: string;
-    };
-}
-
-export interface P2PHighestPriceData {
-    type: typeof P2P_HIGHEST_PRICE_DATA;
-    payload: string;
-}
-
-export interface P2PHighestPriceError {
-    type: typeof P2P_HIGHEST_PRICE_ERROR;
-    error: CommonError;
-}
-
 export type P2PActions =
     | OffersFetch
     | OffersData
@@ -181,10 +154,6 @@ export type P2PActions =
     | P2PPaymentMethodsFetch
     | P2PPaymentMethodsData
     | P2PPaymentMethodsError
-    | P2POffersUpdate
-    | P2PHighestPriceFetch
-    | P2PHighestPriceData
-    | P2PHighestPriceError
     | P2POfferDetailData
     | P2POfferDetailError
     | P2POfferDetailFetch
@@ -251,11 +220,6 @@ export const p2pFiatError = (error: CommonError): P2PFiatError => ({
     error,
 });
 
-export const p2pOffersUpdate = (payload: P2POffersUpdate['payload']): P2POffersUpdate => ({
-    type: P2P_OFFERS_UPDATE,
-    payload,
-});
-
 export const p2pCurrenciesFetch = (payload: P2PCurrenciesFetch['payload']): P2PCurrenciesFetch => ({
     type: P2P_CURRENCIES_FETCH,
     payload,
@@ -285,17 +249,3 @@ export const p2pPaymentMethodsError = (error: CommonError): P2PPaymentMethodsErr
     error,
 });
 
-export const p2pHighestPriceFetch = (payload: P2PHighestPriceFetch['payload']): P2PHighestPriceFetch => ({
-    type: P2P_HIGHEST_PRICE_FETCH,
-    payload,
-});
-
-export const p2pHighestPriceData = (payload: P2PHighestPriceData['payload']): P2PHighestPriceData => ({
-    type: P2P_HIGHEST_PRICE_DATA,
-    payload,
-});
-
-export const p2pHighestPriceError = (error: CommonError): P2PHighestPriceError => ({
-    type: P2P_HIGHEST_PRICE_ERROR,
-    error,
-});

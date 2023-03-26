@@ -41,21 +41,15 @@ import { withdrawLimitReducer } from './user/withdrawLimit';
 import { withdrawSumReducer } from './user/withdrawSum';
 import { marketsAdminReducer } from './admin/markets';
 import { platformCreateReducer } from './admin/platform';
-import { quickExchangeReducer } from './user/quickExchange';
 import { p2pReducer } from './public/p2p';
-import { paymentMethodReducer } from './user/paymentMethod';
-import { p2pOffersReducer } from './user/p2pOffers';
 import { p2pTransfersReducer } from './user/p2pTransfers';
-import { p2pOrdersReducer } from './user/p2pOrders';
-import { p2pDisputeReducer } from './user/p2pDispute';
 import { feeGroupReducer } from './user/feeGroup';
-import { feedbackReducer } from './user/p2pFeedback';
-import { orderReducer } from './user/p2pOrder';
+import { p2pFeedbackReducer } from './user/p2pFeedback';
+import { p2pOrderReducer } from './user/p2pOrder';
 import { groupMemberReducer } from './user/memberGroup';
 import { p2pOfferReducer } from './user/p2pOffer';
 import { p2pOfferAvailableReducer } from './user/p2pAvailableOffer';
 import { p2pProfileReducer } from './user/p2pProfile';
-import { p2pUserSettingReducer } from './user/p2pUserSetting';
 import { p2pPaymentUserReducer } from './user/p2pPaymentUser/reducer';
 import { p2pUserOfferReducer } from './user/p2pUserOffer';
 import { p2pUserOfferDetailReducer } from './user/p2pUserOfferDetail';
@@ -109,21 +103,15 @@ export const userReducer = combineReducers({
     withdrawLimit: withdrawLimitReducer,
     withdrawSum: withdrawSumReducer,
     internalTransfers: internalTransfersReducer,
-    quickExchange: quickExchangeReducer,
     abilities: abilitiesReducer,
-    paymentMethod: paymentMethodReducer,
-    p2pOffers: p2pOffersReducer,
     p2pTransfers: p2pTransfersReducer,
-    p2pOrders: p2pOrdersReducer,
-    p2pDispute: p2pDisputeReducer,
     confirmationCode: confirmationCodeReducer,
     memberGroup: groupMemberReducer,
-    p2pFeedback: feedbackReducer,
-    p2pOrder: orderReducer,
+    p2pFeedback: p2pFeedbackReducer,
+    p2pOrder: p2pOrderReducer,
     p2pOffer: p2pOfferReducer,
     p2pOfferAvailable: p2pOfferAvailableReducer,
     p2pProfile: p2pProfileReducer,
-    p2pUserSetting: p2pUserSettingReducer,
     p2pPaymentUser: p2pPaymentUserReducer,
     p2pUserOffer: p2pUserOfferReducer,
     p2pUserOfferDetail: p2pUserOfferDetailReducer

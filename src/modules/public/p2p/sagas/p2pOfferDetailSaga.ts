@@ -6,6 +6,7 @@ import axios from 'axios';
 
 const config: RequestOptions = {
     apiVersion: 'p2p',
+    withHeaders: true,
 };
 
 export function* p2pOfferDetailSaga(action: P2POfferDetailFetch) {

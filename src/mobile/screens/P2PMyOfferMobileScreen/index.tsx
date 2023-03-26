@@ -82,86 +82,16 @@ const P2PMyOfferMobileScreen = () => {
     }, []);
 
     React.useEffect(() => {
-        const fiatDatePayload = {
-            fiat,
-            from: time_from,
-            to: time_to,
-        };
-
-        const sideDatePayload = {
-            side,
-            from: time_from,
-            to: time_to,
-        };
-
-        const stateDatePayload = {
-            state,
-            from: time_from,
-            to: time_to,
-        };
-
-        const fullPayload = {
+        const payload = {
             fiat,
             side,
             state,
             from: time_from,
             to: time_to,
         };
-        dispatch(
-            orderFetch(
-                fiat
-                    ? { fiat }
-                    : side
-                    ? { side }
-                    : state
-                    ? { state }
-                    : startDate && endDate
-                    ? { from: time_from, to: time_to }
-                    : fiat && side
-                    ? { fiat, side }
-                    : fiat && state
-                    ? { fiat, state }
-                    : fiat && startDate && endDate
-                    ? fiatDatePayload
-                    : side && state
-                    ? { side, state }
-                    : side && startDate && endDate
-                    ? sideDatePayload
-                    : state && startDate && endDate
-                    ? stateDatePayload
-                    : fiat && side && state && startDate && endDate
-                    ? fullPayload
-                    : null
-            )
-        );
+        dispatch(orderFetch(payload));
         const fetchInterval = setInterval(() => {
-            dispatch(
-                orderFetch(
-                    fiat
-                        ? { fiat }
-                        : side
-                        ? { side }
-                        : state
-                        ? { state }
-                        : startDate && endDate
-                        ? { from: time_from, to: time_to }
-                        : fiat && side
-                        ? { fiat, side }
-                        : fiat && state
-                        ? { fiat, state }
-                        : fiat && startDate && endDate
-                        ? fiatDatePayload
-                        : side && state
-                        ? { side, state }
-                        : side && startDate && endDate
-                        ? sideDatePayload
-                        : state && startDate && endDate
-                        ? stateDatePayload
-                        : fiat && side && state && startDate && endDate
-                        ? fullPayload
-                        : null
-                )
-            );
+            dispatch(orderFetch(payload));
         }, 5000);
 
         return () => {

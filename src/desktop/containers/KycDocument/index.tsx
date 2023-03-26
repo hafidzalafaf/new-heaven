@@ -22,7 +22,6 @@ import {
     selectUserInfo,
     User,
     sendDocuments,
-    UserOffersData,
     userFetch,
 } from '../../../modules';
 import { CloseIcon } from '../../../assets/images/CloseIcon';

@@ -52,7 +52,7 @@ export const OrderP2PTable = () => {
     const currencies = useSelector(selectCurrencies);
     const nextPageExists = useSelector(selectP2POrderNextPageExists);
     const firstElementIndex = useSelector((state: RootState) => selectP2pOrderFirstElemIndex(state, 5));
-    const lastElementIndex = useSelector((state: RootState)=> selectP2pOrderLastElemIndex(state, 5));
+    const lastElementIndex = useSelector((state: RootState) => selectP2pOrderLastElemIndex(state, 5));
     const page = useSelector(selectP2pOrderPage);
 
     const [startDate, setStartDate] = React.useState<string | number>();
@@ -63,11 +63,11 @@ export const OrderP2PTable = () => {
     const [tab, setTab] = React.useState('processing');
     const [data, setData] = React.useState([]);
     const [orderLoading, setOrderLoading] = React.useState(false);
-    const [currentPage, setCurrentPage] = React.useState(0)
+    const [currentPage, setCurrentPage] = React.useState(0);
 
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
-    
+
     React.useEffect(() => {
         dispatch(p2pFiatFetch());
     }, [dispatch]);
@@ -79,104 +79,28 @@ export const OrderP2PTable = () => {
         }, 3000);
     }, []);
 
-    React.useEffect(()=>{
-        dispatch(orderFetch({
-            page: currentPage,
-            limit: 5
-        }))
-    }, [dispatch, currentPage])
+    React.useEffect(() => {
+        dispatch(
+            orderFetch({
+                page: currentPage,
+                limit: 5,
+            })
+        );
+    }, [dispatch, currentPage]);
 
     React.useEffect(() => {
-        const fiatDatePayload = {
-            currency: fiat,
-            from: time_from,
-            to: time_to,
-        };
-
-        const sideDatePayload = {
-            side,
-            from: time_from,
-            to: time_to,
-        };
-
-        const stateDatePayload = {
-            state,
-            from: time_from,
-            to: time_to,
-        };
-
-        const fullPayload = {
-            currency: fiat,
-            side,
-            state,
-            from: time_from,
-            to: time_to,
-            page:  currentPage,
-            limit: 5
-        };
-        dispatch(
-            orderFetch(
-                // fiat
-                //     ? { currency: fiat }
-                //     : side
-                //     ? { side }
-                //     : state
-                //     ? { state }
-                //     : startDate && endDate
-                //     ? { from: time_from, to: time_to }
-                //     : fiat && side
-                //     ? { currency: fiat, side }
-                //     : fiat && state
-                //     ? { currency: fiat, state }
-                //     : fiat && startDate && endDate
-                //     ? fiatDatePayload
-                //     : side && state
-                //     ? { side, state }
-                //     : side && startDate && endDate
-                //     ? sideDatePayload
-                //     : state && startDate && endDate
-                //     ? stateDatePayload
-                //     : fiat && side && state && startDate && endDate
-                //     ? fullPayload
-                //     : null 
-            )
-        );
+        dispatch(orderFetch());
         const fetchInterval = setInterval(() => {
             dispatch(
-                orderFetch(
-                    {
-                        currency: fiat,
-                        side: side,
-                        state: state,
-                        limit: 5,
-                        page: currentPage,
-                        from: +time_from,
-                        to: +time_to
-                    }
-                    // fiat
-                    //     ? { currency: fiat }
-                    //     : side
-                    //     ? { side }
-                    //     : state
-                    //     ? { state }
-                    //     : startDate && endDate
-                    //     ? { from: time_from, to: time_to }
-                    //     : fiat && side
-                    //     ? { currency: fiat, side }
-                    //     : fiat && state
-                    //     ? { currency: fiat, state }
-                    //     : fiat && startDate && endDate
-                    //     ? fiatDatePayload
-                    //     : side && state
-                    //     ? { side, state }
-                    //     : side && startDate && endDate
-                    //     ? sideDatePayload
-                    //     : state && startDate && endDate
-                    //     ? stateDatePayload
-                    //     : fiat && side && state && startDate && endDate
-                    //     ? fullPayload
-                    //     : null
-                )
+                orderFetch({
+                    currency: fiat,
+                    side: side,
+                    state: state,
+                    limit: 5,
+                    page: currentPage,
+                    from: time_from,
+                    to: time_to,
+                })
             );
         }, 5000);
 
@@ -189,7 +113,7 @@ export const OrderP2PTable = () => {
         setData(
             tab == 'done'
                 ? order.filter(
-                      (item: Order ) =>
+                      (item: Order) =>
                           item?.state == 'accepted' || item?.state == 'success' || item?.state?.includes('canceled')
                   )
                 : tab == 'processing'
@@ -391,8 +315,8 @@ export const OrderP2PTable = () => {
                         </Tabs>
 
                         <Pagination
-                            onClickPrevPage={()=> [setCurrentPage(currentPage - 1), console.log(currentPage)]}
-                            onClickNextPage={()=> [setCurrentPage(currentPage + 1), console.log(currentPage)]}
+                            onClickPrevPage={() => [setCurrentPage(currentPage - 1), console.log(currentPage)]}
+                            onClickNextPage={() => [setCurrentPage(currentPage + 1), console.log(currentPage)]}
                             page={page}
                             nextPageExists={nextPageExists}
                             firstElemIndex={firstElementIndex}

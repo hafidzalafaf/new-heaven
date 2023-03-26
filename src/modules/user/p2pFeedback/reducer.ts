@@ -15,7 +15,7 @@ const defaultFeedback: Feedback = {
     assesment: '',
 };
 
-export interface FeedbackState {
+export interface P2PFeedbackState {
     create: {
         data: Feedback;
         fetching: boolean;
@@ -30,7 +30,7 @@ export interface FeedbackState {
     };
 }
 
-export const initialFeedbackState: FeedbackState = {
+export const initialFeedbackState: P2PFeedbackState = {
     create: {
         data: defaultFeedback,
         fetching: false,
@@ -43,7 +43,7 @@ export const initialFeedbackState: FeedbackState = {
     },
 };
 
-export const feedbackFetchReducer = (state: FeedbackState['fetch'], action: FeedbackActions) => {
+export const feedbackFetchReducer = (state: P2PFeedbackState['fetch'], action: FeedbackActions) => {
     switch (action.type) {
         case FEEDBACK_FETCH:
             return {
@@ -72,7 +72,7 @@ export const feedbackFetchReducer = (state: FeedbackState['fetch'], action: Feed
     }
 };
 
-const feedbackCreateReducer = (state: FeedbackState['create'], action: FeedbackActions) => {
+const feedbackCreateReducer = (state: P2PFeedbackState['create'], action: FeedbackActions) => {
     switch (action.type) {
         case FEEDBACK_CREATE:
             return {
@@ -101,7 +101,7 @@ const feedbackCreateReducer = (state: FeedbackState['create'], action: FeedbackA
     }
 };
 
-export const feedbackReducer = (state = initialFeedbackState, action: FeedbackActions) => {
+export const p2pFeedbackReducer = (state = initialFeedbackState, action: FeedbackActions) => {
     switch (action.type) {
         case FEEDBACK_FETCH:
         case FEEDBACK_DATA:

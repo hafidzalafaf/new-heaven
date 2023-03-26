@@ -85,93 +85,18 @@ export const OrderP2PTableMobile = () => {
     }, []);
 
     React.useEffect(() => {
-        const fiatDatePayload = {
-            currency: fiat,
-            from: time_from,
-            to: time_to,
-        };
-
-        const sideDatePayload = {
-            side,
-            from: time_from,
-            to: time_to,
-        };
-
-        const stateDatePayload = {
-            state,
-            from: time_from,
-            to: time_to,
-        };
-
-        const fullPayload = {
-            currency: fiat,
-            side,
-            state,
-            from: time_from,
-            to: time_to,
-        };
-        dispatch(
-            orderFetch()
-            // fiat
-            //     ? { currency: fiat }
-            //     : side
-            //     ? { side }
-            //     : state
-            //     ? { state }
-            //     : startDate && endDate
-            //     ? { from: time_from, to: time_to }
-            //     : fiat && side
-            //     ? { currency: fiat, side }
-            //     : fiat && state
-            //     ? { currency: fiat, state }
-            //     : fiat && startDate && endDate
-            //     ? fiatDatePayload
-            //     : side && state
-            //     ? { side, state }
-            //     : side && startDate && endDate
-            //     ? sideDatePayload
-            //     : state && startDate && endDate
-            //     ? stateDatePayload
-            //     : fiat && side && state && startDate && endDate
-            //     ? fullPayload
-            //     : null
-        );
+        dispatch(orderFetch());
         const fetchInterval = setInterval(() => {
             dispatch(
-                orderFetch(
-                    {
-                        currency: fiat,
-                        side: side,
-                        state: state,
-                        limit: 5,
-                        page: currentPage,
-                        from: +time_from,
-                        to: +time_to,
-                    }
-                    // fiat
-                    //     ? { currency: fiat }
-                    //     : side
-                    //     ? { side }
-                    //     : state
-                    //     ? { state }
-                    //     : startDate && endDate
-                    //     ? { from: time_from, to: time_to }
-                    //     : fiat && side
-                    //     ? { currency: fiat, side }
-                    //     : fiat && state
-                    //     ? { currency: fiat, state }
-                    //     : fiat && startDate && endDate
-                    //     ? fiatDatePayload
-                    //     : side && state
-                    //     ? { side, state }
-                    //     : side && startDate && endDate
-                    //     ? sideDatePayload
-                    //     : state && startDate && endDate
-                    //     ? stateDatePayload
-                    //     : fiat && side && state && startDate && endDate
-                    //     ? fullPayload
-                    //     : null
-                )
+                orderFetch({
+                    currency: fiat,
+                    side: side,
+                    state: state,
+                    limit: 5,
+                    page: currentPage,
+                    from: time_from,
+                    to: time_to,
+                })
             );
         }, 5000);
 

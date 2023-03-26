@@ -1,6 +1,5 @@
 import { defaultStorageLimit } from 'src/api';
 import { sliceArray } from 'src/helpers';
-// import { insertOrUpdate } from './helpers';
 import { CommonError } from '../../types';
 import { P2PActions } from './actions';
 import {
@@ -10,13 +9,9 @@ import {
     P2P_FIAT_DATA,
     P2P_FIAT_FETCH,
     P2P_FIAT_ERROR,
-    P2P_HIGHEST_PRICE_DATA,
-    P2P_HIGHEST_PRICE_ERROR,
-    P2P_HIGHEST_PRICE_FETCH,
     P2P_OFFERS_DATA,
     P2P_OFFERS_ERROR,
     P2P_OFFERS_FETCH,
-    P2P_OFFERS_UPDATE,
     P2P_PAYMENT_METHODS_DATA,
     P2P_PAYMENT_METHODS_ERROR,
     P2P_PAYMENT_METHODS_FETCH,
@@ -34,22 +29,22 @@ export interface P2PState {
         data: P2PFiat[];
         fetching: boolean;
         success: boolean;
-        timestamp?: number;
-        error?: CommonError;
+        timestamp?: number | undefined;
+        error?: CommonError | undefined;
     };
     currencies: {
         data: P2PCurrency[];
         fetching: boolean;
         success: boolean;
-        timestamp?: number;
-        error?: CommonError;
+        timestamp?: number | undefined;
+        error?: CommonError | undefined;
     };
     paymentMethods: {
         data: PaymentMethod[];
         fetching: boolean;
         success: boolean;
-        timestamp?: number;
-        error?: CommonError;
+        timestamp?: number | undefined;
+        error?: CommonError | undefined;
     };
     offers: {
         page: number;
@@ -61,28 +56,22 @@ export interface P2PState {
         payment_method?: number;
         fetching: boolean;
         success: boolean;
-        timestamp?: number;
-        error?: CommonError;
+        timestamp?: number | undefined;
+        error?: CommonError | undefined;
     };
     offer_detail: {
-        data: [];
+        data: any;
         fetching: boolean;
         success: boolean;
-        timestamp?: number;
-        error?: CommonError;
+        timestamp?: number | undefined;
+        error?: CommonError | undefined;
     };
     merchant_detail: {
         data: P2PMerchantDetailInterface;
         fetching: boolean;
         success: boolean;
-        timestamp?: number;
-        error?: CommonError;
-    };
-    highestPrice: {
-        data: string;
-        fetching: boolean;
-        error?: CommonError;
-        timestamp?: number;
+        timestamp?: number | undefined;
+        error?: CommonError | undefined;
     };
 }
 
@@ -125,10 +114,6 @@ export const initialP2PState: P2PState = {
         fetching: false,
         success: false,
     },
-    highestPrice: {
-        data: '',
-        fetching: false,
-    },
 };
 
 export const p2pOffersFetchReducer = (state: P2PState['offers'], action: P2PActions) => {
@@ -153,17 +138,7 @@ export const p2pOffersFetchReducer = (state: P2PState['offers'], action: P2PActi
                 success: true,
                 error: undefined,
             };
-        case P2P_OFFERS_UPDATE:
-            // const newList = sliceArray(
-            //     insertOrUpdate(state.list, action.payload, state.side, state.base, state.quote, state.payment_method),
-            //     defaultStorageLimit()
-            // );
 
-            return {
-                ...state,
-                // list: newList,
-                // total: newList.length,
-            };
         case P2P_OFFERS_ERROR:
             return {
                 ...state,
@@ -320,32 +295,6 @@ const p2pMerchantDetailReducer = (state: P2PState['merchant_detail'], action: P2
     }
 };
 
-const p2pHighestPriceReducer = (state: P2PState['highestPrice'], action: P2PActions) => {
-    switch (action.type) {
-        case P2P_HIGHEST_PRICE_FETCH:
-            return {
-                ...state,
-                fetching: true,
-                timestamp: Math.floor(Date.now() / 1000),
-            };
-        case P2P_HIGHEST_PRICE_DATA:
-            return {
-                ...state,
-                data: action.payload,
-                fetching: false,
-                error: undefined,
-            };
-        case P2P_HIGHEST_PRICE_ERROR:
-            return {
-                ...state,
-                fetching: false,
-                error: action.error,
-            };
-        default:
-            return state;
-    }
-};
-
 export const p2pReducer = (state = initialP2PState, action: P2PActions) => {
     switch (action.type) {
         case P2P_CURRENCIES_FETCH:
@@ -355,7 +304,7 @@ export const p2pReducer = (state = initialP2PState, action: P2PActions) => {
 
             return {
                 ...state,
-                currencies: p2pCurrenciesReducer(p2pCurrenciesState, action),
+                p2pCurrencies: p2pCurrenciesReducer(p2pCurrenciesState, action),
             };
 
         case P2P_FIAT_FETCH:
@@ -381,7 +330,6 @@ export const p2pReducer = (state = initialP2PState, action: P2PActions) => {
         case P2P_OFFERS_FETCH:
         case P2P_OFFERS_DATA:
         case P2P_OFFERS_ERROR:
-        case P2P_OFFERS_UPDATE:
             const p2pOffersFetchState = { ...state.offers };
 
             return {
@@ -409,15 +357,6 @@ export const p2pReducer = (state = initialP2PState, action: P2PActions) => {
                 merchant_detail: p2pMerchantDetailReducer(p2pMerchantDetailState, action),
             };
 
-        case P2P_HIGHEST_PRICE_FETCH:
-        case P2P_HIGHEST_PRICE_DATA:
-        case P2P_HIGHEST_PRICE_ERROR:
-            const p2pHighestPriceState = { ...state.highestPrice };
-
-            return {
-                ...state,
-                highestPrice: p2pHighestPriceReducer(p2pHighestPriceState, action),
-            };
         default:
             return state;
     }

@@ -40,8 +40,8 @@ export interface OrderFetch {
         fiat?: string;
         side?: string;
         state?: string;
-        from?: number;
-        to?: number;
+        from?: string;
+        to?: string;
         page?: number;
         limit?: number;
     };
