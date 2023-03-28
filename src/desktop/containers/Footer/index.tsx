@@ -136,16 +136,19 @@ class FooterContainer extends React.Component<Props, State> {
                             </div>
                             <p className="text-sm font-normal white-text mb-0">Copyright @ {year} Heaven Exchange</p>
                             <div className="d-flex">
-                                <Link to="https://twitter.com/heaven_exchange">
+                                <a
+                                    href="https://twitter.com/heaven_exchange"
+                                    target="__blank"
+                                    rel="noopener noreferrer">
                                     <div className="mx-1">
                                         <Twitter />
                                     </div>
-                                </Link>
-                                <Link to="https://t.me/heavenexchange">
+                                </a>
+                                <a href="https://t.me/heavenexchange" target="__blank" rel="noopener noreferrer">
                                     <div className="mx-1">
                                         <Telegram />
                                     </div>
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </div>
