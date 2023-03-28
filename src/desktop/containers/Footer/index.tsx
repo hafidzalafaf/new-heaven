@@ -18,7 +18,7 @@ import {
     Market,
 } from '../../../modules';
 import { Logo } from '../../../assets/images/Logo';
-import { Facebook, Linkedin, Youtube } from '../../../assets/images/SocialMedia';
+import { Twitter, Telegram } from '../../../assets/images/SocialMedia';
 
 interface State {
     isOpenLanguage: boolean;
@@ -84,27 +84,9 @@ class FooterContainer extends React.Component<Props, State> {
                                 <Link to="/announcement" className="mb-8 d-block text-ms grey-text-accent">
                                     Announcement
                                 </Link>
-                                {/* <a href="#" className="mb-8 d-block text-ms grey-text-accent">
-                                    {this.translate('page.body.landing.footer.links.how')}
-                                </a>
-                                <a href="#" className="mb-8 d-block text-ms grey-text-accent">
-                                    {this.translate('page.body.landing.footer.links.cryptos')}
-                                </a>
-                                <a href="#" className="mb-8 d-block text-ms grey-text-accent">
-                                    {this.translate('page.body.landing.footer.links.features')}
-                                </a>
-                                <a href="#" className="mb-8 d-block text-ms grey-text-accent">
-                                    {this.translate('page.body.landing.footer.links.testimonial')}
-                                </a>
-                                <a href="#" className="mb-8 d-block text-ms grey-text-accent">
-                                    {this.translate('page.body.landing.footer.links.blogs')}
-                                </a> */}
                             </div>
                             <div className="legal px-3">
-                                <p className="text-lg gradient-text mb-36">
-                                    SUPPORT
-                                    {/* {this.translate('page.body.landing.footer.legal').toUpperCase()} */}
-                                </p>
+                                <p className="text-lg gradient-text mb-36">SUPPORT</p>
 
                                 <a
                                     href="https://t.me/heavenexchange"
@@ -119,18 +101,6 @@ class FooterContainer extends React.Component<Props, State> {
                                 <Link to="/privacy" className="mb-8 d-block text-ms grey-text-accent">
                                     Privacy Policy
                                 </Link>
-                                {/* <a href="#" className="mb-8 text-ms d-block grey-text-accent">
-                                    {this.translate('page.body.landing.footer.legal.tos')}
-                                </a>
-                                <a href="#" className="mb-8 text-ms d-block grey-text-accent">
-                                    {this.translate('page.body.landing.footer.legal.toc')}
-                                </a>
-                                <a href="#" className="mb-8 text-ms d-block grey-text-accent">
-                                    {this.translate('page.body.landing.footer.legal.privacy')}
-                                </a>
-                                <a href="#" className="mb-8 text-ms d-block grey-text-accent">
-                                    {this.translate('page.body.landing.footer.legal.cookie')}
-                                </a> */}
                             </div>
                             <div className="newsletter px-3">
                                 <p className="text-lg gradient-text mb-36">
@@ -166,19 +136,17 @@ class FooterContainer extends React.Component<Props, State> {
                             </div>
                             <p className="text-sm font-normal white-text mb-0">Copyright @ {year} Heaven Exchange</p>
                             <div className="d-flex">
-                                <a href="">
+                                <a
+                                    href="https://twitter.com/heaven_exchange"
+                                    target="__blank"
+                                    rel="noopener noreferrer">
                                     <div className="mx-1">
-                                        <Facebook />
+                                        <Twitter />
                                     </div>
                                 </a>
-                                <a href="">
+                                <a href="https://t.me/heavenexchange" target="__blank" rel="noopener noreferrer">
                                     <div className="mx-1">
-                                        <Linkedin />
-                                    </div>
-                                </a>
-                                <a href="">
-                                    <div className="mx-1">
-                                        <Youtube />
+                                        <Telegram />
                                     </div>
                                 </a>
                             </div>
