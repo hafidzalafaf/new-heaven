@@ -1,4 +1,3 @@
-import { LandingBlock } from '@openware/react-components';
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect, MapDispatchToPropsFunction, MapStateToProps } from 'react-redux';
@@ -8,7 +7,6 @@ import { IntlProps } from '../../../';
 import { MarketsTable } from '../../containers';
 import { toggleColorTheme } from '../../../helpers';
 import { RootState, selectCurrentColorTheme, selectUserLoggedIn, selectBlogs, blogsFetch } from '../../../modules';
-import { BnbIcon, BtcIcon, DogeIcon, TronIcon } from '../../../assets/images/CoinIcon';
 import { AndroidIcon, AppleStoreIcon, GooglePlayIcon, MacOsIcon, WindowsIcon } from '../../../assets/images/DeviceIcon';
 
 interface ReduxProps {
@@ -159,36 +157,56 @@ class Landing extends React.Component<Props> {
                                         Compatible with multiple devices, start trading with safety and convenience.
                                     </p>
                                     <div className="row">
-                                        <div className="col-4">
+                                        <a
+                                            target="__blank"
+                                            rel="noopener noreferrer"
+                                            href="https://play.google.com/store/apps/details?id=io.heavenexchange.mobile&pli=1"
+                                            className="col-4">
                                             <div className="mr-3 mb-3 d-flex flex-column justify-content-center align-items-center">
                                                 <AndroidIcon className="icon-aplication" />
                                                 <p className="text-ms white-text mt-2 mb-0">Android APK</p>
                                             </div>
-                                        </div>
-                                        <div className="col-4">
+                                        </a>
+                                        <a
+                                            target="__blank"
+                                            rel="noopener noreferrer"
+                                            href="https://play.google.com/store/apps/details?id=io.heavenexchange.mobile&pli=1"
+                                            className="col-4">
                                             <div className="mr-3 mb-3 d-flex flex-column justify-content-center align-items-center">
                                                 <AppleStoreIcon className="icon-aplication" />
                                                 <p className="text-ms white-text mt-2 mb-0">App Store</p>
                                             </div>
-                                        </div>
-                                        <div className="col-4">
+                                        </a>
+                                        <a
+                                            target="__blank"
+                                            rel="noopener noreferrer"
+                                            href="https://play.google.com/store/apps/details?id=io.heavenexchange.mobile&pli=1"
+                                            className="col-4">
                                             <div className="mr-3 mb-3 d-flex flex-column justify-content-center align-items-center">
                                                 <GooglePlayIcon className="icon-aplication" />
                                                 <p className="text-ms white-text mt-2 mb-0">Google Play</p>
                                             </div>
-                                        </div>
-                                        <div className="col-4">
+                                        </a>
+                                        <a
+                                            target="__blank"
+                                            rel="noopener noreferrer"
+                                            href="https://play.google.com/store/apps/details?id=io.heavenexchange.mobile&pli=1"
+                                            className="col-4">
                                             <div className="mr-3 mb-3 d-flex flex-column justify-content-center align-items-center">
                                                 <WindowsIcon className="icon-aplication" />
                                                 <p className="text-ms white-text mt-2 mb-0">Windows</p>
                                             </div>
-                                        </div>
-                                        <div className="col-4">
+                                        </a>
+                                        <a
+                                            target="__blank"
+                                            rel="noopener noreferrer"
+                                            href="https://play.google.com/store/apps/details?id=io.heavenexchange.mobile&pli=1"
+                                            className="col-4">
                                             <div className="mr-3 mb-3 d-flex flex-column justify-content-center align-items-center">
                                                 <MacOsIcon className="icon-aplication" />
                                                 <p className="text-ms white-text mt-2 mb-0">Mac Os</p>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
