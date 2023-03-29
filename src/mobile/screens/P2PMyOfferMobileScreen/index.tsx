@@ -83,15 +83,26 @@ const P2PMyOfferMobileScreen = () => {
 
     React.useEffect(() => {
         const payload = {
-            fiat,
-            side,
-            state,
-            from: time_from,
-            to: time_to,
+            currency: fiat,
+            side: side,
+            state: state,
+            limit: 5,
+            page: currentPage,
         };
-        dispatch(orderFetch(payload));
+
+        const payloadWithDate = {
+            currency: fiat,
+            side: side,
+            state: state,
+            limit: 5,
+            page: currentPage,
+            from: +time_from,
+            to: +time_to,
+        };
+
+        dispatch(orderFetch(startDate && endDate ? payloadWithDate : payload));
         const fetchInterval = setInterval(() => {
-            dispatch(orderFetch(payload));
+            dispatch(orderFetch(startDate && endDate ? payloadWithDate : payload));
         }, 5000);
 
         return () => {

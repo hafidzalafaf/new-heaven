@@ -40,8 +40,8 @@ export interface OrderFetch {
         fiat?: string;
         side?: string;
         state?: string;
-        from?: string;
-        to?: string;
+        from?: number;
+        to?: number;
         page?: number;
         limit?: number;
     };
@@ -54,7 +54,7 @@ export interface OrderData {
         page: number;
         total: number;
         nextPageExists: boolean;
-    }
+    };
 }
 
 export interface OrderError {

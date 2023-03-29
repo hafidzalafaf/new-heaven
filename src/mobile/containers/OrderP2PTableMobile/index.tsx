@@ -85,19 +85,27 @@ export const OrderP2PTableMobile = () => {
     }, []);
 
     React.useEffect(() => {
-        dispatch(orderFetch());
+        const payload = {
+            currency: fiat,
+            side: side,
+            state: state,
+            limit: 5,
+            page: currentPage,
+        };
+
+        const payloadWithDate = {
+            currency: fiat,
+            side: side,
+            state: state,
+            limit: 5,
+            page: currentPage,
+            from: +time_from,
+            to: +time_to,
+        };
+
+        dispatch(orderFetch(startDate && endDate ? payloadWithDate : payload));
         const fetchInterval = setInterval(() => {
-            dispatch(
-                orderFetch({
-                    currency: fiat,
-                    side: side,
-                    state: state,
-                    limit: 5,
-                    page: currentPage,
-                    from: time_from,
-                    to: time_to,
-                })
-            );
+            dispatch(orderFetch(startDate && endDate ? payloadWithDate : payload));
         }, 5000);
 
         return () => {
