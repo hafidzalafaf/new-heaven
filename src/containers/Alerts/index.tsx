@@ -25,14 +25,14 @@ class AlertComponent extends React.Component<Props> {
     };
 
     public translate = (id: string) => {
-        return id ? this?.props?.intl?.formatMessage({ id }) : '';
+        return id ? this.props.intl.formatMessage({ id }) : '';
     };
 
     public render() {
         return (
             <div className="alert-component">
-                {this?.props?.alerts?.alerts?.map((w) =>
-                    w?.message?.map((msg, index) => (
+                {this.props.alerts.alerts?.map((w) =>
+                    w.message.map((msg, index) => (
                         <div className="alert-wrapper">
                             <FadeIn key={index}>
                                 <div>
