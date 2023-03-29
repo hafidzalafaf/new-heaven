@@ -31,7 +31,7 @@ class AlertComponent extends React.Component<Props> {
     public render() {
         return (
             <div className="alert-component">
-                {/* {this?.props?.alerts?.alerts?.map((w) =>
+                {this?.props?.alerts?.alerts?.map((w) =>
                     w?.message?.map((msg, index) => (
                         <div className="alert-wrapper">
                             <FadeIn key={index}>
@@ -55,7 +55,7 @@ class AlertComponent extends React.Component<Props> {
                             </FadeIn>
                         </div>
                     ))
-                )} */}
+                )}
             </div>
         );
     }
