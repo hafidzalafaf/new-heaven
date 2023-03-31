@@ -446,7 +446,7 @@ export const WalletWithdrawalForm: React.FC = () => {
             return true;
         } else if (!address) {
             return true;
-        } else if (withdrawRecive < 1) {
+        } else if (withdrawRecive <= 0) {
             return true;
         } else if (messageAmount) {
             return true;
