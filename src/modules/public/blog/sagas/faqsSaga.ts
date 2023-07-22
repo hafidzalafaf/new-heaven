@@ -7,7 +7,7 @@ import { buildQueryString } from 'src/helpers';
 
 async function fetchFaqs() {
     const apiKey = '01c32b65528575f7b27dfb6bf2';
-    const sURL = `https://api.heavenexchange.io/blog/ghost/api/v3/content/posts/?key=${apiKey}&limit=15&filter=tag%3Afaq`;
+    const sURL = `https://www.heavenexchange.io/blog/ghost/api/v3/content/posts/?key=${apiKey}&limit=15&filter=tag%3Afaq`;
     const result = await axios.get(sURL);
 
     return result.data.posts;

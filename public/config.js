@@ -1,7 +1,6 @@
 function fetchConfigs() {
     const fetchConfig = new XMLHttpRequest();
-    const hostUrl = 'https://api.heavenexchange.io';
-    // const hostUrl = 'https://dev.heavenexchange.io';
+    const hostUrl = 'https://www.heavenexchange.io';
 
     fetchConfig.open('GET', `${hostUrl}/api/v2/sonic/public/config`, false);
     fetchConfig.send(null);
