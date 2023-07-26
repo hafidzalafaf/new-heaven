@@ -6,7 +6,7 @@ import { API, RequestOptions } from '../../../../api';
 import { buildQueryString } from 'src/helpers';
 
 async function fetchBlogs({ tag }) {
-    const apiKey = '01c32b65528575f7b27dfb6bf2';
+    const apiKey = '81d3ce71aaee00c6c6d4472e44';
     const sURL = `https://www.heavenexchange.io/blog/ghost/api/v3/content/posts/?key=${apiKey}&limit=15&filter=tag%3A${tag}`;
     const result = await axios.get(sURL);
 
