@@ -24,7 +24,7 @@ export interface ApiWrapper {
 }
 
 export const API: ApiWrapper = {
-    get: (config: RequestOptions) => async (url: string) =>       
+    get: (config: RequestOptions) => async (url: string) =>
         makeRequest(
             {
                 method: 'get',

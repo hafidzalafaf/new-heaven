@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 import { sendError } from '../../..';
 import { API, RequestOptions } from '../../../../api';
-import { buildQueryString } from '../../../../helpers';
+import { buildQueryString, getOrderAPI } from 'src/helpers';
 import { offersData, offersError, OffersFetch } from '../actions';
 
 const config: RequestOptions = {
@@ -11,26 +11,58 @@ const config: RequestOptions = {
 
 export function* p2pOffersSaga(action: OffersFetch) {
     try {
-        const { side, sort, base, quote, payment_method } = action.payload;
-        const { data, headers } = yield call(API.get(config), `/public/offers?${buildQueryString(action.payload)}`);
-
-        yield put(offersData({
-            list: data,
-            total: headers.total,
-            page: action.payload.page,
+        const {
             side,
             sort,
             base,
             quote,
             payment_method,
-        }));
+            currency,
+            fiat,
+            amount,
+            max_price,
+            min_price,
+            limit,
+            page,
+        } = action.payload;
+        let params: any = {
+            side,
+            sort,
+            base,
+            quote,
+            payment_method,
+            currency,
+            fiat,
+            amount,
+            max_price,
+            min_price,
+            limit,
+            page,
+        };
+
+        const { data, headers } = yield call(API.get(config), `/public/trades?${buildQueryString(params)}`);
+
+        yield put(
+            offersData({
+                list: data,
+                total: headers.total,
+                page: action.payload.page,
+                side,
+                sort,
+                base,
+                quote,
+                payment_method,
+            })
+        );
     } catch (error) {
-        yield put(sendError({
-            error,
-            processingType: 'alert',
-            extraOptions: {
-                actionError: offersError,
-            },
-        }));
+        yield put(
+            sendError({
+                error,
+                processingType: 'alert',
+                extraOptions: {
+                    actionError: offersError,
+                },
+            })
+        );
     }
 }

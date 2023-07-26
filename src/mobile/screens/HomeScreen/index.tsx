@@ -198,44 +198,88 @@ const HomeMobileScreen: React.FC = () => {
                                 ))}
                         </Slider>
                     </div>
+
+                    <div className="d-flex justify-content-around align-items-center gap-8 flex-wrap mb-3">
+                        <Link
+                            to={'/wallets'}
+                            className="d-flex flex-column align-items-center justify-content-center gap-4 cursor-pointer">
+                            <img src="/img/deposit.svg" alt="deposit" height={32} width={32} />
+                            <p className="m-0 p-0 grey-text-accent text-xxs font-normal">Deposit</p>
+                        </Link>
+                        <Link
+                            to={`/referral`}
+                            className="d-flex flex-column align-items-center justify-content-center gap-4 cursor-pointer">
+                            <img src="/img/referral-id.svg" alt="referral" height={32} width={32} />
+                            <p className="m-0 p-0 grey-text-accent text-xxs font-normal">Referral ID</p>
+                        </Link>
+                        <Link
+                            to={`/markets`}
+                            className="d-flex flex-column align-items-center justify-content-center gap-4 cursor-pointer">
+                            <img src="/img/futures.svg" alt="future" height={32} width={32} />
+                            <p className="m-0 p-0 grey-text-accent text-xxs font-normal">Future</p>
+                        </Link>
+                        <Link
+                            to={``}
+                            className="d-flex flex-column align-items-center justify-content-center gap-4 cursor-pointer">
+                            <img src="/img/earn.svg" alt="earn" height={32} width={32} />
+                            <p className="m-0 p-0 grey-text-accent text-xxs font-normal">Earn</p>
+                        </Link>
+                        <Link
+                            to={`/p2p`}
+                            className="d-flex flex-column align-items-center justify-content-center gap-4 cursor-pointer">
+                            <img src="/img/p2p.svg" alt="p2p" height={32} width={32} />
+                            <p className="m-0 p-0 grey-text-accent text-xxs font-normal">P2P</p>
+                        </Link>
+                        <Link
+                            to={`/faq`}
+                            className="d-flex flex-column align-items-center justify-content-center gap-4 cursor-pointer">
+                            <img src="/img/support.svg" alt="support" height={32} width={32} />
+                            <p className="m-0 p-0 grey-text-accent text-xxs font-normal">Support</p>
+                        </Link>
+                        <Link
+                            to={``}
+                            className="d-flex flex-column align-items-center justify-content-center gap-4 cursor-pointer">
+                            <img src="/img/more.svg" alt="more" height={32} width={32} />
+                            <p className="m-0 p-0 grey-text-accent text-xxs font-normal">More</p>
+                        </Link>
+                    </div>
                     <div className="beginner-wrapper mb-3">
-                        <h5 className="text-ms font-bold grey-text-accent">For Beginners</h5>
+                        {/* <h5 className="text-ms font-bold grey-text-accent">For Beginners</h5>
                         <h6 className="mb-3 text-xs grey-text font-normal">
                             Most popular and widely known coin for early investment
-                        </h6>
+                        </h6> */}
                         <Slider {...settings2}>
-                            {blog &&
-                                blog.map((item, key) => (
-                                    <a
-                                        href={item.url}
-                                        target="__blank"
-                                        rel="noopener noreferrer"
-                                        className="slider-ite"
-                                        key={key}>
-                                        <div className="card-item position-relative">
-                                            <div className="small-thumbnail-cover mb-8">
-                                                <img
-                                                    src={
-                                                        item?.feature_image === null
-                                                            ? '/img/announcement-big.png'
-                                                            : item.feature_image
-                                                    }
-                                                    alt="card"
-                                                    className="small-thumbnail"
-                                                />
-                                            </div>
-                                            <div className="cover-thumbnail d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <p className="text-xxs grey-text mb-0">
-                                                        {moment(item.published_at).startOf('day').fromNow()}
-                                                    </p>
-                                                    <h5 className="text-xxs white-text font-bold mb-0">{item.title}</h5>
-                                                </div>
-                                                <ArrowRight className={''} />
-                                            </div>
+                            {blog?.map((item, key) => (
+                                <a
+                                    href={item.url}
+                                    target="__blank"
+                                    rel="noopener noreferrer"
+                                    className="slider-ite"
+                                    key={key}>
+                                    <div className="card-item position-relative">
+                                        <div className="small-thumbnail-cover mb-8">
+                                            <img
+                                                src={
+                                                    item?.feature_image === null
+                                                        ? '/img/announcement-big.png'
+                                                        : item.feature_image
+                                                }
+                                                alt="card"
+                                                className="small-thumbnail"
+                                            />
                                         </div>
-                                    </a>
-                                ))}
+                                        <div className="cover-thumbnail d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <p className="text-xxs grey-text mb-0">
+                                                    {moment(item.published_at).startOf('day').fromNow()}
+                                                </p>
+                                                <h5 className="text-xxs white-text font-bold mb-0">{item.title}</h5>
+                                            </div>
+                                            <ArrowRight className={''} />
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
                         </Slider>
                     </div>
                     <Tabs

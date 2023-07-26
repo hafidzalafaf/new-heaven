@@ -17,7 +17,7 @@ import {
     selectP2PWallets,
 } from 'src/modules';
 import { Table } from '../../../components';
-import { FilterInput } from 'src/desktop/components';
+import { FilterInput, NoData } from 'src/desktop/components';
 import { CircleCloseModalNetworkIcon } from '../../../assets/images/CircleCloseIcon';
 import { InfoModalNetworkIcon } from '../../../assets/images/InfoIcon';
 

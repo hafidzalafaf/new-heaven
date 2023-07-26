@@ -1,8 +1,5 @@
 import { Channel, eventChannel, EventChannel } from 'redux-saga';
 import { all, call, cancel, delay, fork, put, race, select, take, takeEvery } from 'redux-saga/effects';
-import { p2pOffersUpdate } from 'src/modules';
-import { p2pUserOffersUpdate } from 'src/modules/user/p2pOffers';
-import { p2pOrdersDataWS } from 'src/modules/user/p2pOrders';
 import { isFinexEnabled, rangerUrl } from '../../../../api';
 import { store } from '../../../../store';
 import { pushHistoryEmit } from '../../../user/history';
@@ -216,37 +213,6 @@ const initRanger = (
                         // private
                         case 'deposit_address':
                             emitter(walletsAddressDataWS(event));
-
-                            return;
-
-                        // public
-                        case 'p2p.event':
-                            const p2pPublicOffersMatch = event && String(event.event).includes('p2p_offer');
-
-                            if (p2pPublicOffersMatch) {
-                                emitter(p2pOffersUpdate(event.payload));
-                                return;
-                            }
-
-                            return;
-
-                        // private
-                        case 'p2p':
-                            const p2pOrdersMatch = event && String(event.event).includes('p2p_order');
-
-                            if (p2pOrdersMatch) {
-                                emitter(p2pOrdersDataWS(event.payload));
-
-                                return;
-                            }
-
-                            const p2pOffersMatch = event && String(event.event).includes('p2p_offer');
-
-                            if (p2pOffersMatch) {
-                                emitter(p2pUserOffersUpdate(event.payload));
-
-                                return;
-                            }
 
                             return;
                         default:

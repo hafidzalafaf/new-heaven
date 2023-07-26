@@ -3,7 +3,7 @@ import * as React from 'react';
 export const ReferralIcon = () => {
     return (
         <svg width="67" height="67" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_462_5915)">
+            <g clipPath="url(#clip0_462_5915)">
                 <path
                     d="M6.8136 50.276V61.3219L19.3051 66.9999V47.6948L13.6272 53.3728L6.8136 50.276Z"
                     fill="url(#paint0_linear_462_5915)"

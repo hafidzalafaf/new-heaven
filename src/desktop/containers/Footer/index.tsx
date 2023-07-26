@@ -110,7 +110,7 @@ class FooterContainer extends React.Component<Props, State> {
                                 <div className="input-group mb-0">
                                     <input
                                         type="text"
-                                        className="form-control newsletter-input"
+                                        className="form-control newsletter-input footer-input"
                                         placeholder="Enter Your Email"
                                     />
                                     <label htmlFor="newslatter" className=" newsletter-input-label">

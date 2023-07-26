@@ -10,3 +10,4 @@ export * from './ModalBeneficiaryMobile';
 export * from './ModalBeneficiaryListMobile';
 export * from './ChartLanding';
 export * from './OrderFormComponent';
+export * from './CardOfferListMobile';

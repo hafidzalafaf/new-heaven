@@ -469,9 +469,9 @@ const WalletDetailMobileScreen: React.FC<Props> = (props: Props) => {
         <>
             <div className="mobile-container wallet-detail dark-bg-main position-relative pg-mobile-wallet-detail">
                 <div className="head-container position-relative mb-24">
-                    <Link to={'/wallets'} className="cursor-pointer position-absolute">
+                    <div onClick={() => history.goBack()} className="cursor-pointer position-absolute">
                         <ArrowLeft className={'back'} />
-                    </Link>
+                    </div>
                     <p className="text-md font-extrabold grey-text-accent m-0 text-center">
                         {currencyItem && currencyItem.name}
                     </p>

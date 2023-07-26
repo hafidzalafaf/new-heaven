@@ -1,0 +1,140 @@
+.wallet-list {
+    nav,
+    .container-fluid {
+        background: var(--main-background-color);
+        max-width: 768px;
+        margin: 0 auto;
+    }
+
+    .menu-snackbar.active {
+        color: var(--text-grey-color);
+    }
+
+    .menu-snackbar {
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 16px;
+        color: var(--text-secondary-color);
+    }
+
+    .heading-one {
+        margin: 16px 0;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 23px;
+        color: var(--text-grey-color);
+    }
+
+    .estimate-container {
+        gap: 16px;
+    }
+
+    .total-container {
+        gap: 8px;
+    }
+
+    .total-container h3 {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 16px;
+        color: var(--text-secondary-color);
+    }
+
+    .total-value h4 {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 16px;
+        color: var(--text-grey-color);
+    }
+
+    .total-value img {
+        cursor: pointer;
+    }
+
+    .hide-small {
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 16px;
+        color: var(--text-secondary-color);
+        gap: 8px;
+    }
+
+    table {
+        margin-bottom: 60px;
+    }
+
+    table tr {
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .td-coin {
+        gap: 8px;
+    }
+
+    .text-one {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 16px;
+        color: var(--text-secondary-color);
+    }
+
+    .text-two {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 16px;
+        color: var(--text-grey-color);
+    }
+
+    .action-container {
+        gap: 4px;
+    }
+
+    .btn-primary {
+        padding: 8px 14px;
+        font-size: 14px;
+    }
+
+    .search-icon {
+        left: 10px;
+    }
+
+    .search-wallet {
+        width: 150px;
+    }
+    .cancel-icon {
+        left: unset;
+        right: 10px;
+    }
+    .cr-table-container {
+        overflow-x: auto;
+    }
+
+    .btn-wallet {
+        background: transparent;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 10px 4px;
+        gap: 10px;
+
+        &.active {
+            background: linear-gradient(var(--main-background-color), var(--main-background-color)) padding-box,
+                var(--text-gradient-color) border-box !important;
+            border-bottom: 1px solid transparent !important;
+        }
+    }
+}
+
+.modal-transfer-fullscreen {
+    margin: 0;
+    padding: 0;
+}
+
+.modal-transfer.modal-content {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    right: 50px;
+    height: 100%;
+    bottom: 50px;
+}

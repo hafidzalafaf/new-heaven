@@ -21,7 +21,7 @@ type Props = ReduxProps & DispatchProps & IntlProps;
 
 class AlertComponent extends React.Component<Props> {
     public deleteAlertByIndex = (key: number) => {
-        this.props.alertDeleteByIndex(key);
+        this?.props?.alertDeleteByIndex(key);
     };
 
     public translate = (id: string) => {
@@ -31,19 +31,19 @@ class AlertComponent extends React.Component<Props> {
     public render() {
         return (
             <div className="alert-component">
-                {this.props.alerts.alerts.map((w) =>
+                {this.props.alerts.alerts?.map((w) =>
                     w.message.map((msg, index) => (
                         <div className="alert-wrapper">
                             <FadeIn key={index}>
                                 <div>
-                                    <Alert variant={w.type === 'error' ? 'danger' : 'success'}>
+                                    <Alert variant={w?.type === 'error' ? 'danger' : 'success'}>
                                         <div className="d-flex align-items-center">
-                                            {w.type === 'error' ? (
+                                            {w?.type === 'error' ? (
                                                 <ErrorAlertIcon className="mr-2" />
                                             ) : (
                                                 <SuccessAlertIcon className="mr-2" />
                                             )}
-                                            {this.translate(msg)}
+                                            {this?.translate(msg)}
                                             <CloseIcon
                                                 fill="#fff"
                                                 className="ml-2 cursor-pointer"

@@ -109,6 +109,21 @@
         overflow-x: auto;
     }
 
+    .btn-wallet {
+        background: transparent;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 10px 4px;
+        gap: 10px;
+
+        &.active {
+            background: linear-gradient(var(--main-background-color), var(--main-background-color)) padding-box,
+                var(--text-gradient-color) border-box !important;
+            border-bottom: 1px solid transparent !important;
+        }
+    }
+
     .custom-control-label {
         padding: 3px;
         &::after {

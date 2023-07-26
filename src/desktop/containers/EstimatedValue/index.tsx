@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { useMarketsFetch, useMarketsTickersFetch, useWalletsFetch } from 'src/hooks';
 import { formatWithSeparators, Decimal } from '../../../components';
 import { VALUATION_PRIMARY_CURRENCY, VALUATION_SECONDARY_CURRENCY } from '../../../constants';
-import { estimateUnitValue, estimateValue, estimateLokcedValue } from '../../../helpers/estimateValue';
 import { selectCurrencies, selectMarkets, selectMarketTickers, Wallet } from '../../../modules';
 
 interface EstimatedValueProps {
@@ -28,10 +27,6 @@ const EstimatedValue: React.FC<Props> = (props: Props): React.ReactElement => {
     useMarketsTickersFetch();
     useMarketsFetch();
     useWalletsFetch();
-
-    const estimatedValue = React.useMemo(() => {
-        return estimateValue(VALUATION_PRIMARY_CURRENCY, currencies, wallets, markets, tickers);
-    }, [currencies, wallets, markets, tickers]);
 
     const dataWallet = wallets.map((item) => ({
         ...item,
@@ -72,15 +67,6 @@ const EstimatedValue: React.FC<Props> = (props: Props): React.ReactElement => {
                     </span>
                 </div>
             </div>
-            {/* <div>
-                <p className="text-ms grey-text-accent font-extrabold mb-12">Locked Estimated Balance</p>
-                <div className="d-flex align-items-center">
-                    <span className="value-container text-md white-text">
-                        <span className="value">{formatWithSeparators(estimatedLockedValue, ',')} </span>
-                        <span className="value-sign mr-24">{VALUATION_PRIMARY_CURRENCY.toUpperCase()}</span>
-                    </span>
-                </div>
-            </div> */}
         </div>
     );
 };

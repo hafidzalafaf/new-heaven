@@ -915,6 +915,14 @@ export const en = {
     'success.message.sent': 'Message was sent',
     'success.email.confirmed': 'Your email address has been successfully confirmed',
     'success.order.created': 'Order was created',
+    'success.feedback.created': 'Feedback was created',
+    'success.payment.method.created': 'Payment method was created',
+    'success.order.chat': 'Message has been sent',
+    'success.order.confirm.payment': 'Payment method was confirmed',
+    'success.merchant.blocked': 'Merchant was blocked',
+    'success.merchant.unblocked': 'Merchant was unblocked',
+    'success.order.confirm': 'Order successfull completed',
+    'success.username.changed': 'Username was changed',
     'success.order.done': 'Order successfully completed',
     'success.order.approve': 'Order successfully approved',
     'success.order.cancel': 'Order successfully cancelled',
@@ -1446,12 +1454,19 @@ export const en = {
     'page.body.wallets.transfers.note.message':
         'Internal transfers are free and instant. You can use them to manage your funds between different accounts on the platform',
 
+    // p2p
+    'p2p_user.payment_user.payment_user_is_exists': 'Payment method already exists',
+
     // p2p success messages
     'success.p2p.transfer.created': 'Transfer was created',
-    'success.payment_method.deleted': 'Payment Method: successfully deleted',
-    'success.payment_method.created': 'Payment Method: successfully created',
-    'success.payment_method.updated': 'Payment Method: successfully updated',
+    'success.payment_method.deleted': 'Payment method was deleted',
+    'success.payment_method.created': 'Payment method was created',
+    'success.payment.method.updated': 'Payment method was updated',
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
+
+    //p2p error messages
+    'p2p_user.user.insuffient_balance': 'You have insufficient balance',
+    'account.users.username_limit_change': 'You have reached the limit for changing your username',
 
     ...nationalitiesNames,
     ...customTranslations,

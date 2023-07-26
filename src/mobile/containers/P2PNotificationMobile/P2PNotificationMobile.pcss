@@ -1,0 +1,65 @@
+.p2p-com-notif-mobile {
+    .nav-notif-info-top {
+        top: 0;
+        left: 0;
+        right: 0;
+        padding-top: 24px;
+        margin: 0 12px;
+        background: var(--main-background-color);
+        z-index: 99;
+    }
+
+    .notif-close {
+        left: 0;
+    }
+
+    .p2p-notif-tabs-container {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        gap: 16px;
+        background: #0e1114;
+        border-radius: 8px;
+        min-height: 650px;
+    }
+
+    .nav-tabs {
+        border-bottom: none;
+        gap: 24px;
+        width: 30%;
+    }
+
+    a.nav-link,
+    .nav-tabs {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 16px;
+        color: var(--text-primary-color);
+        background: transparent;
+        border: none;
+        padding: 8px 0;
+        text-align: center;
+    }
+
+    .nav-tabs .nav-link:hover {
+        border-color: transparent;
+    }
+
+    .nav-tabs .nav-item.show .nav-link,
+    .nav-tabs .nav-link.active {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 16px;
+        text-align: center;
+        background: var(--text-gradient-color) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        padding: 8px 0;
+        border: none;
+        border-bottom: 1px solid var(--text-contrast-color);
+    }
+
+    .notif-item {
+        border-bottom: 1px solid var(--border-color);
+    }
+}

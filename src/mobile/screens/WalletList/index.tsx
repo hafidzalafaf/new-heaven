@@ -29,6 +29,7 @@ import { CoinTransfer } from '../../../mobile/components/CoinTransfer/CoinTransf
 import { ArrowRight } from '../../assets/Arrow';
 import { GearIcon } from 'src/mobile/assets/Gear';
 import { CircleCloseDangerLargeIcon } from 'src/assets/images/CircleCloseIcon';
+import { DocumentMobileIcon } from 'src/mobile/assets/DocumentMobileIcon';
 
 interface Props {
     isP2PEnabled?: boolean;
@@ -297,7 +298,21 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
     return (
         <React.Fragment>
             <div className="mobile-container wallet-list no-header dark-bg-main position-relative">
-                <h1 className="w-100 heading-one mb-24 mt-0 white-text">Overview</h1>
+                <div className="d-flex justify-content-between align-items-center gap-16 mb-24">
+                    <div className="d-flex align-items-center gap-16">
+                        <Link to={`/wallets`} className="btn-wallet active">
+                            <span className="gradient-text text-sm font-bold">Spot Wallet</span>
+                        </Link>
+                        <Link to={`/p2p/wallets`} className="btn-wallet">
+                            <span className="grey-text text-sm font-bold">P2P Wallet</span>
+                        </Link>
+                    </div>
+
+                    <Link to={`/history-transaction`}>
+                        <DocumentMobileIcon />
+                    </Link>
+                </div>
+                <h1 className="w-100 heading-one mb-24 mt-0 white-text">Spot Wallet</h1>
                 <div className="estimate-container d-flex flex-column w-100">
                     <div className="total-container w-50 d-flex flex-column">
                         <h3 className="text-md grey-text font-bold  mb-0">

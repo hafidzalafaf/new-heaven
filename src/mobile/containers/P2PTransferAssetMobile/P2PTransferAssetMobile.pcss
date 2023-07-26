@@ -1,0 +1,74 @@
+.p2p-com-transfer-mobile {
+    .nav-transfer-info-top {
+        top: 0;
+        left: 0;
+        right: 0;
+        padding-top: 24px;
+        margin: 0 12px;
+        background: var(--main-background-color);
+        z-index: 99;
+    }
+
+    .bottom-nav-create-transfer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        background: var(--main-background-color);
+        padding: 12px;
+        button {
+            width: calc(100% - 24px);
+        }
+    }
+
+    .transfer-close {
+        left: 0;
+    }
+
+    .tranfer-content-form-container {
+        margin: 60px 0;
+    }
+
+    .transfer-form-container {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        gap: 16px;
+        background: #0e1114;
+        border-radius: 8px;
+    }
+
+    .coin-container {
+        padding: 16px;
+        height: 54px;
+        background: #15191d;
+        border-radius: 8px;
+    }
+
+    .input-transfer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 16px;
+        gap: 10px;
+        height: 54px;
+        background: #15191d;
+        border-radius: 8px;
+        border: none;
+
+        &:focus {
+            box-shadow: none;
+            outline: none;
+            border: none;
+        }
+    }
+
+    .btn-primary {
+        &:focus {
+            box-shadow: none;
+            outline: none;
+            border: none;
+        }
+    }
+}

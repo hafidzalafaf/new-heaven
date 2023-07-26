@@ -121,7 +121,7 @@ export const TradingScreen: FC = (): ReactElement => {
 
     const translate = React.useCallback((id: string) => formatMessage({ id: id }), [formatMessage]);
 
-    const current: Market | undefined = markets.find((item) => item.id === currency);
+    const current = markets.find((item) => item.id === currency);
     React.useEffect(() => {
         if (current) {
             dispatch(setCurrentMarket(current));

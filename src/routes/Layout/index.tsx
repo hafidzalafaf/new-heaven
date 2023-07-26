@@ -64,6 +64,20 @@ import {
     OrderHistoryMobileScreen,
     AnnouncementMobileScreen,
     FAQMobileScreen,
+    P2PMobileScreen,
+    P2PDetailOrderMobileScreen,
+    P2PWalletOrderMobileScreen,
+    P2PWalletMobileScreen,
+    P2PWalletDetailMobileScreen,
+    P2PCreateOfferMobileScreen,
+    P2PProfileMobileScreen,
+    P2PMyOrderMobileScreen,
+    P2PMyOfferMobileScreen,
+    P2PMyOfferDetailMobileScreen,
+    P2PPaymentMethodMobileScreen,
+    P2PAddPaymentMethodMobileScreen,
+    P2PEditPaymentMethodMobileScreen,
+    P2PFAQMobileScreen,
     PrivacyMobileScreen,
     SettingProfileMobileScreen,
 } from '../../mobile/screens';
@@ -101,6 +115,11 @@ import {
     P2PProfileScreen,
     P2POrderScreen,
     P2PWalletScreen,
+    P2PAddPaymentScreen,
+    P2PWalletOrderScreen,
+    P2PEditPaymentScreen,
+    P2PMyOfferScreen,
+    P2PDetailOfferScreen,
     PrivacyScreen,
 } from '../../desktop/screens';
 
@@ -488,12 +507,19 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={OrderHistoryMobileScreen}
                         />
 
+                        <PublicRoute
+                            loading={userLoading}
+                            path="/p2p/profile/:uid"
+                            component={P2PProfileMobileScreen}
+                        />
+
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
                             path="/order"
                             component={MarketOrderMobileScreen}
                         />
+
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
@@ -501,12 +527,91 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={HistoryTransactionMobileScreen}
                         />
 
-                        <Route
+                        <PublicRoute loading={userLoading} path="/announcements" component={AnnouncementMobileScreen} />
+
+                        <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
-                            path="/announcements"
-                            component={AnnouncementMobileScreen}
+                            path="/p2p/faq"
+                            component={P2PFAQMobileScreen}
                         />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/create-offer"
+                            component={P2PCreateOfferMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/payment-method/edit/:payment_user_uid"
+                            component={P2PEditPaymentMethodMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/payment-method/create/:bank"
+                            component={P2PAddPaymentMethodMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/payment-method"
+                            component={P2PPaymentMethodMobileScreen}
+                        />
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/offer/:offer_number"
+                            component={P2PMyOfferDetailMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/offer"
+                            component={P2PMyOfferMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/order/detail/:order_number"
+                            component={P2PWalletOrderMobileScreen}
+                        />
+
+                        <PublicRoute
+                            loading={userLoading}
+                            path="/p2p/order/:offer_number"
+                            component={P2PDetailOrderMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/order"
+                            component={P2PMyOrderMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/wallets/:currency/detail"
+                            component={P2PWalletDetailMobileScreen}
+                        />
+
+                        <PrivateRoute
+                            loading={userLoading}
+                            isLogged={isLoggedIn}
+                            path="/p2p/wallets"
+                            component={P2PWalletMobileScreen}
+                        />
+
+                        <PublicRoute loading={userLoading} path="/p2p" component={P2PMobileScreen} />
 
                         {/* <PublicRoute loading={userLoading} path="/trading" component={TradingMobileScreen} />    */}
                         <PublicRoute loading={userLoading} path="/privacy" component={PrivacyMobileScreen} />
@@ -680,9 +785,53 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         component={ChangeEmail}
                     />
 
-                    <PublicRoute loading={userLoading} path="/p2p/order" component={P2POrderScreen} />
-                    <PublicRoute loading={userLoading} path="/p2p/wallets" component={P2PWalletScreen} />
-                    <PublicRoute loading={userLoading} path="/p2p/profile" component={P2PProfileScreen} />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/payment-method/edit/:payment_user_uid"
+                        component={P2PEditPaymentScreen}
+                    />
+
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/payment-method/create/:payment"
+                        component={P2PAddPaymentScreen}
+                    />
+
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/order/detail/:order_number"
+                        component={P2PWalletOrderScreen}
+                    />
+
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/order"
+                        component={P2POrderScreen}
+                    />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/wallets"
+                        component={P2PWalletScreen}
+                    />
+                    <PublicRoute loading={userLoading} path="/p2p/profile/:uid" component={P2PProfileScreen} />
+
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/offer/:offer_number"
+                        component={P2PDetailOfferScreen}
+                    />
+                    <PrivateRoute
+                        loading={userLoading}
+                        isLogged={isLoggedIn}
+                        path="/p2p/offer"
+                        component={P2PMyOfferScreen}
+                    />
                     <PublicRoute loading={userLoading} path="/p2p" component={P2PScreen} />
                     <Route exact={true} path="/" component={LandingScreen} />
                     <Route path="**">

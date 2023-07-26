@@ -1,0 +1,65 @@
+.cr-table {
+    &__head {
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 18px;
+        color: var(--text-secondary-color);
+
+        &-row th {
+            padding: 9px 16px;
+        }
+    }
+
+    &__body {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 18px;
+        color: var(--text-secondary-color);
+
+        td {
+            padding: 9px 16px;
+        }
+    }
+}
+
+.modal-p2p-transfer {
+    .custom-modal-dialog {
+        min-width: 660px !important;
+        .custom-modal-content {
+            min-width: 660px !important;
+            border-radius: 8px !important;
+        }
+    }
+}
+
+.modal-body-transfer-p2p {
+    .form-control {
+        padding: 6px 14px;
+        background: var(--body-background-color);
+        border-color: var(--border-color);
+        height: 52px;
+        color: var(--text-secondary-color);
+
+        &:focus-visible {
+            border-color: var(--border-color);
+            outline: 0;
+            box-shadow: 0 0 0 0;
+        }
+    }
+}
+
+.modal-backdrop {
+    background-color: var(--modal-background-color);
+    z-index: 99999;
+}
+
+/* .modal-content {
+    background-color: rgb(23, 23, 23) !important;
+} */
+
+.option-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    object-fit: contain;
+}

@@ -922,6 +922,14 @@ export const ru: LangType = {
     'success.message.sent': 'Письмо было успешно отправлено',
     'success.email.confirmed': 'Email был успешно подтвержден',
     'success.order.created': 'Запрос успешно создан',
+    'success.feedback.created': 'Отзыв был создан',
+    'success.payment.method.created': 'Способ оплаты создан',
+    'success.order.chat': 'сообщение было отправлено',
+    'success.order.confirm.payment': 'Способ оплаты подтвержден',
+    'success.merchant.blocked': 'Продавец был заблокирован',
+    'success.merchant.unblocked': 'Продавец был заблокирован',
+    'success.order.confirm': 'Заказ успешно выполнен',
+    'success.username.changed': 'Имя пользователя изменено',
     'success.order.done': 'Запрос успешно завершён',
     'success.order.approve': 'Order successfully approved',
     'success.order.cancel': 'Order successfully cancelled',
@@ -1464,12 +1472,18 @@ export const ru: LangType = {
     'page.body.wallets.transfers.note.message':
         'Internal transfers are free and instant. You can use them to manage your funds between different accounts on the platform',
 
+    // p2p
+    'p2p_user.payment_user.payment_user_is_exists': 'Способ оплаты уже существует',
+
     // p2p success messages
     'success.p2p.transfer.created': 'Transfer was created',
-    'success.payment_method.deleted': 'Payment Method: successfully deleted',
-    'success.payment_method.created': 'Payment Method: successfully created',
-    'success.payment_method.updated': 'Payment Method: successfully updated',
+    'success.payment_method.deleted': 'Способ оплаты удален',
+    'success.payment_method.created': 'Способ оплаты создан',
+    'success.payment.method.updated': 'Способ оплаты обновлен',
     'success.p2p.dispute.submit': 'Dispute has been successfully submitted',
+
+    'p2p_user.user.insuffient_balance': 'У вас недостаточно средств на балансе',
+    'account.users.username_limit_change': 'Вы достигли лимита на смену имени пользователя',
 
     ...nationalitiesNames,
     ...mobileTranslationsRu,

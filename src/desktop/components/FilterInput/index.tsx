@@ -15,12 +15,12 @@ export interface FilterInputProps {
     /**
      * Data on which the search will be performed
      */
-    data: object[];
+    data?: object[];
     /**
      * filter function prop is used to filter data
      */
     // tslint:disable-next-line
-    filter: (item: any, term: string) => boolean;
+    filter?: (item: any, term: string) => boolean;
     /**
      * onFilter prop is called whenever input value changes
      */
