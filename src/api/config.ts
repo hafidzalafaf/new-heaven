@@ -10,7 +10,7 @@ export const defaultConfig: Config = {
         rangerUrl: `${rangerHostUrl}/api/v2/ranger`,
         finexUrl: `${hostUrl}/api/v2/finex`,
         p2pUrl: `${hostUrl}/api/v2/p2p`,
-        newsUrl: `api.heavenexchange.io/blog/ghost/api/v3`,
+        newsUrl: `www.heavenexchange.io/blog/ghost/api/v3`,
     },
     finex: false,
     withCredentials: false,
