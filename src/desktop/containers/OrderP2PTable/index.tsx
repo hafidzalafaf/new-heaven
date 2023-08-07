@@ -111,18 +111,18 @@ export const OrderP2PTable = () => {
         setData(
             tab == 'done'
                 ? order.filter(
-                      (item: Order) =>
-                          item?.state == 'accepted' || item?.state == 'success' || item?.state?.includes('canceled')
-                  )
+                    (item: Order) =>
+                        item?.state == 'accepted' || item?.state == 'success' || item?.state?.includes('canceled')
+                )
                 : tab == 'processing'
-                ? order.filter(
-                      (item: Order) =>
-                          item?.state == 'waiting' ||
-                          item?.state?.includes('waiting') ||
-                          item?.state == 'prepare' ||
-                          item?.state == 'rejected'
-                  )
-                : order
+                    ? order.filter(
+                        (item: Order) =>
+                            item?.state == 'waiting' ||
+                            item?.state?.includes('waiting') ||
+                            item?.state == 'prepare' ||
+                            item?.state == 'rejected'
+                    )
+                    : order
         );
     }, [order, tab]);
 
@@ -158,9 +158,8 @@ export const OrderP2PTable = () => {
         return data.map((item) => [
             <div>
                 <p
-                    className={`m-0 p-0 text-ms font-bold mb-4 ${
-                        item.side === 'sell' ? 'danger-text' : 'contrast-text'
-                    }`}>
+                    className={`m-0 p-0 text-ms font-bold mb-4 ${item.side === 'sell' ? 'danger-text' : 'contrast-text'
+                        }`}>
                     {item.side === 'sell' ? 'Sell' : 'Buy'}
                 </p>
                 <p className="m-0 p-0 white-text text-xs">{moment(item?.created_at).format('DD-MM-YYYY hh:mm:ss')}</p>
@@ -180,15 +179,14 @@ export const OrderP2PTable = () => {
                 {item?.trades?.uid}
             </Link>,
             <p
-                className={`m-0 p-0 text-sm font-semibold ${
-                    item?.state == 'success' || item?.state == 'accepted'
+                className={`m-0 p-0 text-sm font-semibold ${item?.state == 'success' || item?.state == 'accepted'
                         ? 'contrast-text'
                         : item?.state?.includes('waiting')
-                        ? 'warning-text'
-                        : item?.state == 'prepare'
-                        ? 'blue-text'
-                        : 'danger-text'
-                }`}>
+                            ? 'warning-text'
+                            : item?.state == 'prepare'
+                                ? 'blue-text'
+                                : 'danger-text'
+                    }`}>
                 {capitalizeFirstLetter(item?.state)}
             </p>,
             <div className="d-flex align-items-center">
@@ -313,8 +311,8 @@ export const OrderP2PTable = () => {
                         </Tabs>
 
                         <Pagination
-                            onClickPrevPage={() => [setCurrentPage(currentPage - 1), console.log(currentPage)]}
-                            onClickNextPage={() => [setCurrentPage(currentPage + 1), console.log(currentPage)]}
+                            onClickPrevPage={() => setCurrentPage(currentPage - 1)}
+                            onClickNextPage={() => setCurrentPage(currentPage + 1)}
                             page={page}
                             nextPageExists={nextPageExists}
                             firstElemIndex={firstElementIndex}
