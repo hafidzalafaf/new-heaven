@@ -438,7 +438,7 @@ const WalletDepositMobileScreen: React.FC = () => {
                                 disabled={depositAddress?.address === null}
                                 onClick={() => doCopy('address')}
                                 className="btn-primary w-100 mb-24">
-                                Copy Address
+                                Copy Address zamn
                             </button>
                         </React.Fragment>
                     )}
