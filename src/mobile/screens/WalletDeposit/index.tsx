@@ -89,7 +89,7 @@ const WalletDepositMobileScreen: React.FC = () => {
     const depositAddress =
         (wallet &&
             blockchainKey &&
-            wallet.deposit_addresses.find((w) => w.blockchain_key.toLowerCase() === blockchainKey.toLowerCase())) ||
+            wallet.deposit_addresses.find((w) => w.blockchain_key.toLowerCase() === blockchain_key.toLowerCase())) ||
         null;
 
     const handleGenerateAddress = (e) => {
@@ -105,7 +105,6 @@ const WalletDepositMobileScreen: React.FC = () => {
             dispatch(walletsAddressFetch({ currency, blockchain_key }));
         }
     };
-
     const doCopy = (text: string) => {
         copy(text);
         dispatch(alertPush({ message: ['Address has been copied'], type: 'success' }));
@@ -331,9 +330,9 @@ const WalletDepositMobileScreen: React.FC = () => {
                                         value={
                                             currency == 'xrp' || currency === 'xlm'
                                                 ? depositAddress?.address?.slice(
-                                                      0,
-                                                      depositAddress?.address?.indexOf('?')
-                                                  )
+                                                    0,
+                                                    depositAddress?.address?.indexOf('?')
+                                                )
                                                 : depositAddress?.address
                                         }
                                     />
@@ -342,8 +341,8 @@ const WalletDepositMobileScreen: React.FC = () => {
                                     <img
                                         src={
                                             currencyItem?.icon_url !== '-' &&
-                                            currencyItem?.icon_url !== null &&
-                                            currencyItem?.icon_url !== 'null'
+                                                currencyItem?.icon_url !== null &&
+                                                currencyItem?.icon_url !== 'null'
                                                 ? currencyItem?.icon_url
                                                 : '/img/dummycoin.png'
                                         }
@@ -451,8 +450,8 @@ const WalletDepositMobileScreen: React.FC = () => {
                                     <img
                                         src={
                                             currencyItem?.icon_url !== '-' &&
-                                            currencyItem?.icon_url !== null &&
-                                            currencyItem?.icon_url !== 'null'
+                                                currencyItem?.icon_url !== null &&
+                                                currencyItem?.icon_url !== 'null'
                                                 ? currencyItem?.icon_url
                                                 : '/img/dummycoin.png'
                                         }
@@ -595,9 +594,8 @@ const WalletDepositMobileScreen: React.FC = () => {
                                         <div
                                             onClick={() => handleSelectChangeNetwork(item)}
                                             key={i}
-                                            className={`${
-                                                protocol === item.protocol ? `border border-info` : `border border-dark`
-                                            } rounded-lg cursor-pointer mb-8 p-2`}>
+                                            className={`${protocol === item.protocol ? `border border-info` : `border border-dark`
+                                                } rounded-lg cursor-pointer mb-8 p-2`}>
                                             <h3 className="p-0 m-0 text-ms grey-text-accent">
                                                 {item && item.protocol}
                                             </h3>
