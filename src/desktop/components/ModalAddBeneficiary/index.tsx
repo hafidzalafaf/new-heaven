@@ -92,17 +92,17 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
         });
     }, [coinBlockchainName]);
 
-    const validateCoinAddressFormat = React.useCallback(
-        (value: string) => {
-            const valid = WAValidator.validate(value, currencyID);
-            setCoinAddressValid(valid);
-        },
-        [currencyID]
-    );
+    // const validateCoinAddressFormat = React.useCallback(
+    //     (value: string) => {
+    //         const valid = WAValidator.validate(value, currencyID);
+    //         setCoinAddressValid(valid);
+    //     },
+    //     [currencyID]
+    // );
 
     const handleChangeCoinAddress = (value: string) => {
         setCoinAddress(value);
-        validateCoinAddressFormat(value);
+        // validateCoinAddressFormat(value);
     };
 
     const handleChangeBeneficiaryName = (value: string) => {
@@ -163,7 +163,11 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
         coinDestinationTag,
     ]);
 
-    const isDisabled = !coinAddress || !coinBeneficiaryName || !coinAddressValid || !coinBlockchainName.blockchainKey;
+    const isDisabled = 
+    !coinAddress 
+    || !coinBeneficiaryName 
+    // || !coinAddressValid 
+    || !coinBlockchainName.blockchainKey;
 
     const enableWithdraw = currencyItem?.networks?.filter((item) => item.withdrawal_enabled == true);
 
@@ -244,11 +248,11 @@ export const ModalAddBeneficiary: React.FunctionComponent<ModalAddBeneficiaryPro
                                 classNameGroup={'mb-1'}
                                 labelVisible
                             />
-                            <div className="mb-3">
+                            {/* <div className="mb-3">
                                 {coinAddress != '' && !coinAddressValid && (
                                     <span className="text-xs danger-text">Invalid Address</span>
                                 )}
-                            </div>
+                            </div> */}
                             {protocol && (
                                 <p className="mb-16 text-xs grey-text ">
                                     Do not send <strong className="gradient-text">{currency?.toUpperCase()}</strong>{' '}
