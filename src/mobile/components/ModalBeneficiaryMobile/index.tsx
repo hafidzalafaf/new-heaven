@@ -84,17 +84,17 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
         });
     }, [coinBlockchainName]);
 
-    const validateCoinAddressFormat = React.useCallback(
-        (value: string) => {
-            const valid = WAValidator.validate(value, currencyID);
-            setCoinAddressValid(valid);
-        },
-        [currencyID]
-    );
+    // const validateCoinAddressFormat = React.useCallback(
+    //     (value: string) => {
+    //         const valid = WAValidator.validate(value, currencyID);
+    //         setCoinAddressValid(valid);
+    //     },
+    //     [currencyID]
+    // );
 
     const handleChangeCoinAddress = (value: string) => {
         setCoinAddress(value);
-        validateCoinAddressFormat(value);
+        // validateCoinAddressFormat(value);
     };
 
     const handleChangeBeneficiaryName = (value: string) => {
@@ -145,7 +145,10 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
         }
     }, [coinAddress, coinBeneficiaryName, coinDescription, currency, coinBlockchainName, coinDestinationTag]);
 
-    const isDisabled = !coinAddress || !coinBeneficiaryName || !coinAddressValid || !coinBlockchainName.blockchainKey;
+    const isDisabled = !coinAddress 
+    || !coinBeneficiaryName 
+    // || !coinAddressValid 
+    || !coinBlockchainName.blockchainKey;
 
     const enableWithdraw = currencyItem?.networks?.filter((item) => item.withdrawal_enabled == true);
 
@@ -213,11 +216,11 @@ export const ModalAddBeneficiaryMobile: React.FC<ModalBeneficiaryMobileProps> = 
                                     autoFocus={false}
                                     labelVisible={false}
                                 />
-                                <div className="mb-3">
+                                {/* <div className="mb-3">
                                     {coinAddress != '' && !coinAddressValid && (
                                         <span className="text-xs danger-text">Invalid Address</span>
                                     )}
-                                </div>
+                                </div> */}
                                 {protocol && (
                                     <p className="text-xs grey-text ">
                                         Do not send <strong className="gradient-text">{currency?.toUpperCase()}</strong>{' '}
