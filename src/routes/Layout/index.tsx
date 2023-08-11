@@ -8,7 +8,7 @@ import { Redirect, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import { IntlProps } from '../../';
 import { minutesUntilAutoLogout, sessionCheckInterval, showLanding, wizardStep } from '../../api';
-import { ExpiredSessionModal } from '../../components';
+import { ExpiredSessionModal, UpdateAppModal } from '../../components';
 import { WalletsFetch } from '../../containers';
 import { applyCustomizationSettings, toggleColorTheme } from '../../helpers';
 import {
@@ -28,6 +28,8 @@ import {
     walletsReset,
     AbilitiesInterface,
     selectAbilities,
+    getLatestVersionFetch,
+    selectLatestVersion,
 } from '../../modules';
 
 import {
@@ -122,6 +124,8 @@ import {
     P2PDetailOfferScreen,
     PrivacyScreen,
 } from '../../desktop/screens';
+import { LatestVersion } from 'src/modules/public/latestVersion/types';
+import { CURRENT_VERSION, GOOGLE_PLAY_LINK } from 'src/config';
 
 interface ReduxProps {
     colorTheme: string;
@@ -132,12 +136,14 @@ interface ReduxProps {
     userLoading?: boolean;
     platformAccessStatus: string;
     abilities: AbilitiesInterface;
+    latestVersionState: LatestVersion;
 }
 
 interface DispatchProps {
     logout: typeof logoutFetch;
     userFetch: typeof userFetch;
     walletsReset: typeof walletsReset;
+    latestVersionFetch: typeof getLatestVersionFetch;
 }
 
 interface LocationProps extends RouterProps {
@@ -148,6 +154,7 @@ interface LocationProps extends RouterProps {
 
 interface LayoutState {
     isShownExpSessionModal: boolean;
+    isShownUpdater: boolean;
 }
 
 interface OwnProps {
@@ -213,6 +220,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
 
         this.state = {
             isShownExpSessionModal: false,
+            isShownUpdater: false,
         };
     }
 
@@ -233,6 +241,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                     break;
                 default:
                     const token = localStorage.getItem('csrfToken');
+                    this.props.latestVersionFetch()
 
                     if (token) {
                         this.props.userFetch();
@@ -246,6 +255,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
     }
 
     public componentWillReceiveProps(nextProps: LayoutProps) {
+        this.checkLatestVersion()
         if (
             !(
                 nextProps.location.pathname.includes('/magic-link') ||
@@ -623,6 +633,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                     </Switch>
                     {isLoggedIn && <WalletsFetch />}
                     {isShownExpSessionModal && this.handleRenderExpiredSessionModal()}
+                    {this.state.isShownUpdater && this.handleUpdater()}
                 </div>
             );
         }
@@ -911,7 +922,39 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
             isShownExpSessionModal: !this.state.isShownExpSessionModal,
         });
     };
+
+    private checkLatestVersion = () => {
+        const { latestVersionState } = this.props
+        const currentVersion = CURRENT_VERSION
+        if (latestVersionState.value !== currentVersion) {
+            this.setState({
+                isShownUpdater: true,
+            })
+        }
+    }
+
+    private handleUpdaterModalState = () => {
+        this.setState({
+            isShownUpdater: !this.state.isShownUpdater
+        })
+    }
+
+    private handleUpdateApp = () => {
+        this.handleUpdaterModalState();
+        window.location.href = GOOGLE_PLAY_LINK
+    }
+
+    private handleUpdater = () => (
+        <UpdateAppModal
+            title={'New App Version is Live'}
+            buttonLabel={'Update'}
+            show={this.state.isShownUpdater}
+            handleChangeUpdateAppModalState={this.handleUpdaterModalState}
+            handleSubmitUpdateAppModal={this.handleUpdateApp}
+        />
+    );
 }
+
 
 const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> = (state) => ({
     colorTheme: selectCurrentColorTheme(state),
@@ -922,6 +965,7 @@ const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> = (state) => (
     userLoading: selectUserFetching(state),
     platformAccessStatus: selectPlatformAccessStatus(state),
     abilities: selectAbilities(state),
+    latestVersionState: selectLatestVersion(state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
@@ -929,6 +973,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => 
     toggleChartRebuild: () => dispatch(toggleChartRebuild()),
     userFetch: () => dispatch(userFetch()),
     walletsReset: () => dispatch(walletsReset()),
+    latestVersionFetch: () => dispatch(getLatestVersionFetch())
 });
 
 export const Layout = compose(
