@@ -126,6 +126,7 @@ import {
 } from '../../desktop/screens';
 import { LatestVersion } from 'src/modules/public/latestVersion/types';
 import { CURRENT_VERSION, GOOGLE_PLAY_LINK } from 'src/config';
+import { Capacitor } from '@capacitor/core';
 
 interface ReduxProps {
     colorTheme: string;
@@ -926,7 +927,8 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
     private checkLatestVersion = () => {
         const { latestVersionState } = this.props
         const currentVersion = CURRENT_VERSION
-        if (latestVersionState.value !== currentVersion) {
+        const platform = Capacitor.getPlatform()
+        if (platform === 'android' && latestVersionState.value !== currentVersion) {
             this.setState({
                 isShownUpdater: true,
             })
