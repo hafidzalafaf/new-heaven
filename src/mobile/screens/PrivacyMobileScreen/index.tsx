@@ -54,7 +54,7 @@ export const PrivacyMobileScreen: React.FC = () => {
                         referred to as the "HEAVEN EXCHANGE Platform"). hereinafter referred to as the "HEAVEN EXCHANGE
                         Platform" to the extent not specifically regulated as set out in the HEAVEN EXCHANGE Account
                         registration section which is made on the day and date listed in the Account registration
-                        section https://heavenexchange.io, constitutes an integral and inseparable unity and approval of
+                        section https://www.heavenexchange.io, constitutes an integral and inseparable unity and approval of
                         this GTC. By registering to become Member/Verified Member, you declare that you have READ,
                         UNDERSTAND, AGREE and FOLLOW the Terms and Conditions below. You are advised to read all terms
                         and conditions carefully before using the HEAVEN EXCHANGE platform services or any services that
@@ -62,7 +62,7 @@ export const PrivacyMobileScreen: React.FC = () => {
                         with the terms and conditions as follows in this GTC with the following terms and conditions:
                         DEFINITIONS as long as the context sentence does not determine otherwise, the terms or
                         definitions in the GTC have the following meanings :<br />
-                        Website refers to an online site with the address https://heavenexchange.io. This website is
+                        Website refers to an online site with the address https://www.heavenexchange.io. This website is
                         managed by HEAVEN EXCHANGE, with no limitation to its owners, investors, employees and related
                         parties. parties associated with HEAVEN EXCHANGE. Depending on the context, "Website" may also
                         refer to other services, products, sites, content or services provided by HEAVEN EXCHANGE.
