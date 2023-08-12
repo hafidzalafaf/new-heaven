@@ -319,7 +319,6 @@ const HomeMobileScreen: React.FC = () => {
                                 <Table data={renderDataTable(dataGainers)} />
                             )}
                         </Tab>
-                        <div>{Capacitor.getPlatform()}</div>
                         <Tab eventKey="loser" title="Loser" className="mb-3">
                             <div className="table-mobile-wrapper">
                                 {!dataLosers[0] || dataLosers === null ? (
