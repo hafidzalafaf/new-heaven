@@ -16,6 +16,7 @@ import { ArrowRight } from '../../assets/Arrow';
 import { ChartLandingMobile } from 'src/mobile/components';
 import { ChartEmpty } from 'src/mobile/assets/ChartEmpty';
 import moment from 'moment';
+import { Capacitor } from '@capacitor/core';
 
 const defaultTicker = {
     amount: '0.0',
@@ -31,6 +32,8 @@ const HomeMobileScreen: React.FC = () => {
     useDocumentTitle('Home');
     useBlogsFetch({ tag: 'news' });
     useMarketsFetch();
+
+    const platform = Capacitor.getPlatform();
 
     const [loading, setLoading] = React.useState(true);
     const { formatMessage } = useIntl();
@@ -162,9 +165,8 @@ const HomeMobileScreen: React.FC = () => {
                 />
             </>,
             <p
-                className={`badge white-text font-bold ${
-                    item.price_change_percent?.includes('-') ? 'badge-danger' : 'badge-plus'
-                }`}>
+                className={`badge white-text font-bold ${item.price_change_percent?.includes('-') ? 'badge-danger' : 'badge-plus'
+                    }`}>
                 {item && item.price_change_percent}
             </p>,
         ]);

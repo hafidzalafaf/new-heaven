@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Heaven Exchange</string>
+    <string name="title_activity_main">Heaven Exchange</string>
+    <string name="package_name">www.heavenexchange.io</string>
+    <string name="custom_url_scheme">www.heavenexchange.io</string>
+</resources>

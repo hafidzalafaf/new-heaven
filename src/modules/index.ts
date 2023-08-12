@@ -60,6 +60,8 @@ import { rootP2PPaymentUserSaga, P2PPaymentUserState } from './user/p2pPaymentUs
 import { GroupMemberState, rootMemberGroupSaga } from './user/memberGroup';
 import { P2PUserOfferState, rootP2PUserOfferSaga } from './user/p2pUserOffer';
 import { P2PUserOfferDetailState, rootP2PUserOfferDetailSaga } from './user/p2pUserOfferDetail';
+import {GetLatestVersionState, rootGetLatestVersionSaga } from './public/latestVersion';
+
 
 export * from './admin/config';
 export * from './admin/markets';
@@ -82,6 +84,7 @@ export * from './public/recentTrades';
 export * from './public/p2p';
 export * from './public/withdrawLimits';
 export * from './public/maxWithdrawLimit';
+export * from './public/latestVersion';
 export * from './user/apiKeys';
 export * from './user/auth';
 export * from './user/beneficiaries';
@@ -138,6 +141,7 @@ export interface RootState {
         p2p: P2PState;
         withdrawLimits: WithdrawLimitsState;
         maxWithdrawLimit: MaxWithdrawLimitState;
+        latestVersion: GetLatestVersionState;
     };
     user: {
         abilities: AbilitiesState;
@@ -240,6 +244,7 @@ export function* rootSaga() {
         call(rootP2PProfileSaga),
         call(rootP2PPaymentUserSaga),
         call(rootP2PUserOfferSaga),
-        call(rootP2PUserOfferDetailSaga)
+        call(rootP2PUserOfferDetailSaga),
+        call(rootGetLatestVersionSaga)
     ]);
 }

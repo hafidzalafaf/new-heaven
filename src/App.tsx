@@ -53,6 +53,8 @@ const getTranslations = (lang: string, isMobileDevice: boolean) => {
     return languageMap[lang];
 };
 
+
+
 const RenderDeviceContainers = () => {
     const isMobileDevice = useSelector(selectMobileDeviceState);
     if (!isMobileDevice) {
@@ -66,6 +68,8 @@ const RenderDeviceContainers = () => {
             </React.Fragment>
         );
     }
+
+
 
     return (
         <div className="pg-mobile-app">

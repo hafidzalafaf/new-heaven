@@ -53,6 +53,7 @@ import { p2pProfileReducer } from './user/p2pProfile';
 import { p2pPaymentUserReducer } from './user/p2pPaymentUser/reducer';
 import { p2pUserOfferReducer } from './user/p2pUserOffer';
 import { p2pUserOfferDetailReducer } from './user/p2pUserOfferDetail';
+import { getLatestVersionReducer} from './public/latestVersion'
 
 export const publicReducer = combineReducers({
     alerts: alertReducer,
@@ -77,6 +78,7 @@ export const publicReducer = combineReducers({
     p2p: p2pReducer,
     withdrawLimits: withdrawLimitsReducer,
     maxWithdrawLimit: maxWithdrawLimitReducer,
+    latestVersion: getLatestVersionReducer
 });
 
 export const userReducer = combineReducers({
