@@ -6,7 +6,7 @@ const BASE_URL = 'www.heavenexchange.io';
 // const USE_SSL = true;
 // const BASE_URL = 'www.heavenexchange.io';
 
-export const CURRENT_VERSION = '3.0.0';
+export const CURRENT_VERSION = '3.0.2';
 export const GOOGLE_PLAY_LINK = 'https://play.google.com/store/apps/details?id=io.heavenexchange.mobile&pli=1';
 
 export const API_URL = USE_SSL ? 'https://' + BASE_URL : 'http://' + BASE_URL;
