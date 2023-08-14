@@ -928,9 +928,13 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
         const { latestVersionState } = this.props
         const currentVersion = CURRENT_VERSION
         const platform = Capacitor.getPlatform()
-        if (platform === 'android' && latestVersionState.value !== currentVersion) {
+        if (platform === 'android' && latestVersionState[0]?.value !== currentVersion) {
             this.setState({
                 isShownUpdater: true,
+            })
+        } else {
+            this.setState({
+                isShownUpdater: false,
             })
         }
     }
@@ -948,7 +952,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
 
     private handleUpdater = () => (
         <UpdateAppModal
-            title={'New App Version is Live'}
+            title={`New App Version is Live`}
             buttonLabel={'Update'}
             show={this.state.isShownUpdater}
             handleChangeUpdateAppModalState={this.handleUpdaterModalState}
