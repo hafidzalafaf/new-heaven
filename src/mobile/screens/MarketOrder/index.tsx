@@ -39,6 +39,7 @@ import { NoData, Modal } from 'src/desktop/components';
 interface MarketOrderMobileScreenProps {
     market: string;
     created_at: string;
+    updated_at: string;
     type: string;
     price: string;
     amount: string;
@@ -76,6 +77,7 @@ const MarketOrderMobileScreen: React.FC = () => {
     const [detailData, setDetailData] = React.useState<MarketOrderMobileScreenProps>(
         {} as MarketOrderMobileScreenProps
     );
+
     // const [deleteRow, setDeleteRow] = React.useState<OrderCommon>();
     const [showModalCancel, setShowModalCancel] = React.useState(false);
     const [showModalCancelAll, setShowModalCancelAll] = React.useState(false);
@@ -301,14 +303,14 @@ const MarketOrderMobileScreen: React.FC = () => {
                 }`}>
                 {item.state.charAt(0).toUpperCase() + item.state.slice(1)}
             </p>,
-            tab === 'open' && (
-                <p
-                    key={index}
-                    className={`badge text-sm mb-0 cursor-pointer danger-text`}
-                    onClick={() => handleItemDetail(data[index])}>
-                    Cancel
-                </p>
-            ),
+            // tab === 'open' && (
+            <p
+                key={index}
+                className={`badge text-sm mb-0 cursor-pointer gradient-text`}
+                onClick={() => handleItemDetail(data[index])}>
+                Detail
+            </p>,
+            // ),
         ]);
     };
 
@@ -444,8 +446,13 @@ const MarketOrderMobileScreen: React.FC = () => {
                     )}
                 </div>
 
-                <div id="off-canvas" className={`position-fixed off-canvas ${showDetail ? ' show' : ''}`}>
-                    <div className="fixed-bottom off-canvas-content-container overflow-auto">
+                <div
+                    id="off-canvas"
+                    onClick={() => setShowDetail(false)}
+                    className={`position-fixed off-canvas ${showDetail ? ' show' : ''}`}>
+                    <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="fixed-bottom off-canvas-content-container overflow-auto">
                         <div className="d-flex align-items-center off-canvas-content-head">
                             <img
                                 height={30}
@@ -459,55 +466,59 @@ const MarketOrderMobileScreen: React.FC = () => {
                         </div>
                         <table className="w-100 table-canvas">
                             <tbody>
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                <tr className="w-100 d-flex justify-content-between align-items-center">
                                     <td className="td-title">Date</td>
                                     <td className="td-value">
-                                        {moment(detailData.created_at).format('D MMM YYYY - HH:mm')}
+                                        {moment(detailData.updated_at).format('D MMM YYYY - HH:mm:ss')}
                                     </td>
                                 </tr>
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                <tr className="w-100 d-flex justify-content-between align-items-center text-capitalize">
                                     <td className="td-title">Market</td>
                                     <td className="td-value">{detailData.market_type}</td>
                                 </tr>
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                <tr className="w-100 d-flex justify-content-between align-items-center text-capitalize">
                                     <td className="td-title">Type</td>
-                                    <td className="td-value">{detailData.side}</td>
+                                    <td
+                                        className={`td-value ${
+                                            detailData?.side?.toLowerCase() === 'buy' ? 'contrast-text' : 'danger-text'
+                                        }`}>
+                                        {detailData.side}
+                                    </td>
                                 </tr>
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                <tr className="w-100 d-flex justify-content-between align-items-center">
                                     <td className="td-title">Price</td>
                                     <td className="td-value">{detailData.price}</td>
                                 </tr>
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                <tr className="w-100 d-flex justify-content-between align-items-center">
                                     <td className="td-title">Volume</td>
-                                    <td className="td-value">{detailData.remaining_volume}</td>
+                                    <td className="td-value">{detailData.origin_volume}</td>
                                 </tr>
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                <tr className="w-100 d-flex justify-content-between align-items-center">
                                     <td className="td-title">Execute</td>
                                     <td className="td-value">{detailData.executed_volume}</td>
                                 </tr>
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
-                                    <td className="td-title">Execute</td>
-                                    <td className="td-value">{detailData?.dataCurrency?.name}</td>
-                                </tr>
-                                <tr className="w-100 d-flex justify-content-between align-items0center">
+                                <tr className="w-100 d-flex justify-content-between align-items-center">
                                     <td className="td-title">Unexecute</td>
-                                    <td className="td-value">{detailData.origin_volume}</td>
+                                    <td className="td-value">{detailData.remaining_volume}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <button
-                            id="cancel-canvas"
-                            className="btn btn-danger btn-mobile w-100 mb-3 mt-4"
-                            type="button"
-                            onClick={() => {
-                                setShowModalCancel(true);
-                                setShowDetail(false);
-                            }}>
-                            Cancel
-                        </button>
+                        {tab === 'open' && (
+                            <button
+                                id="cancel-canvas"
+                                className="btn btn-danger btn-mobile w-100 mb-3 mt-4"
+                                type="button"
+                                onClick={() => {
+                                    setShowModalCancel(true);
+                                    setShowDetail(false);
+                                }}>
+                                Cancel
+                            </button>
+                        )}
+
                         <button
                             id="close-canvas"
-                            className="btn btn-secondary btn-outline btn-mobile btn-block mb-4"
+                            className="btn btn-secondary btn-outline btn-mobile btn-block mb-5"
                             onClick={() => setShowDetail(false)}>
                             Close
                         </button>
