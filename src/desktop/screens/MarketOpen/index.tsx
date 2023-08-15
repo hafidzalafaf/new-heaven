@@ -67,8 +67,6 @@ export const MarketOpen: FC = (): ReactElement => {
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
 
-    console.log('data', data);
-
     React.useEffect(() => {
         const defaultPayload = {
             type: tab,
