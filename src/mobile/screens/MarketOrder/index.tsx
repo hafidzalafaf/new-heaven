@@ -276,17 +276,29 @@ const MarketOrderMobileScreen: React.FC = () => {
                         {item.price} {item.market.toUpperCase()}
                     </p>
                     <p className="mb-0 grey-text text-xxs text-nowrap">
-                        {moment(item.created_at).format('DD-MM-YYYY HH:mm:ss')}
+                        {/* {moment(item.created_at).format('DD-MM-YYYY HH:mm:ss')} */}
+                        {!item.maker_fee
+                            ? moment(item.updated_at * 1000).format('DD-MM-YYYY HH:mm:ss')
+                            : moment(item.updated_at).format('DD-MM-YYYY HH:mm:ss')}
                     </p>
                 </div>
             </div>,
             <p className={`badge grey-text text-sm mb-0`}>
                 {item.ord_type === 'market' ? item.avg_price : item.price}
             </p>,
-            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>
+            <p className={`badge text-sm mb-0 cursor-pointer ${item.side === 'buy' ? 'contrast-text' : 'danger-text'}`}>
                 {item.side.charAt(0).toUpperCase() + item.side.slice(1)}
             </p>,
-            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>
+            <p
+                className={`badge text-sm mb-0 cursor-pointer ${
+                    item.state.toLowerCase() === 'wait'
+                        ? 'warning-text'
+                        : item.state.toLowerCase() === 'done'
+                        ? 'contrast-text'
+                        : item.state.toLowerCase() === 'cancel'
+                        ? 'danger-text'
+                        : ''
+                }`}>
                 {item.state.charAt(0).toUpperCase() + item.state.slice(1)}
             </p>,
             tab === 'open' && (

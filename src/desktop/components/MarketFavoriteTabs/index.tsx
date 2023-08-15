@@ -84,7 +84,7 @@ export const MarketFavoriteTabs: FC = (): ReactElement => {
         }));
 
     const getTableHeaders = () => {
-        return ['Name', 'Price', '24 Change', 'Volume', ''];
+        return ['Name', 'Price', '24h Change', '24h Volume', ''];
     };
 
     const favoriteMarketData = marketList.filter((market) =>

@@ -78,7 +78,7 @@ export const MarketAllCryptoTabs: FC = (): ReactElement => {
         }));
 
     const getTableHeaders = () => {
-        return ['Name', 'Price', 'Price Change', 'Volume', ''];
+        return ['Name', 'Price', '24h Change', '24h Volume', ''];
     };
 
     const handleFilter = (result) => {
