@@ -52,7 +52,7 @@ export class OpenOrders extends React.Component<OpenOrdersProps> {
         }
 
         return (
-            <div className="max-400 overflow-visible">
+            <div className="max-400">
                 <div className="d-flex justify-content-between dark-bg-accent sort-filter">
                     {!this.props.isMobileDevices && <p className="white-text font-bold text-sm">Open Orders</p>}
 
