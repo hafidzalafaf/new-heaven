@@ -97,6 +97,8 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
                 const ticker = tickers[market?.id];
                 const currencyItem = currencies.find((item) => item.id == cur.id);
 
+
+
                 return {
                     ...spotWallet,
                     spotBalance: spotWallet ? spotWallet.balance : '0',
@@ -135,57 +137,57 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
             return !filteredList.length
                 ? [[]]
                 : filteredList.map((item, index) => {
-                      const { currency, iconUrl, name, fixed, spotBalance, spotLocked } = item;
-                      //   const totalBalance =
-                      //       Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
-                      const totalBalance = Number(spotBalance) + Number(spotLocked);
-                      const estimatedValue =
-                          item?.currencyItem?.price !== null ? item?.currencyItem?.price * totalBalance : '0';
-                      return [
-                          <Link
-                              to={`/wallets/${currency}/detail`}
-                              className="d-flex justify-content-start align-items-center td-coin">
-                              <img
-                                  alt={currency?.toUpperCase()}
-                                  src={
-                                      iconUrl !== '-' && iconUrl !== null && iconUrl !== 'null'
-                                          ? iconUrl
-                                          : '/img/dummycoin.png'
-                                  }
-                                  style={{ height: '24px', marginRight: '16px' }}
-                              />
-                          </Link>,
-                          <Link
-                              to={`/wallets/${currency}/detail`}
-                              className="d-flex flex-column justify-content-start align-items-start">
-                              <h3 className="p-0 m-0 text-one">{name}</h3>
-                              <h4 className="p-0 m-0 text-two">{currency?.toUpperCase()}</h4>
-                          </Link>,
-                          <Link
-                              to={`/wallets/${currency}/detail`}
-                              className="td-available-order d-flex flex-column justify-content-start align-items-start">
-                              <h3 className="p-0 m-0 text-one">Total Balance</h3>
-                              <h4 className="p-0 m-0 text-two">
-                                  <Decimal key={index} fixed={fixed}>
-                                      {spotBalance ? spotBalance.toString() : '0'}
-                                  </Decimal>
-                              </h4>
-                          </Link>,
-                          <Link
-                              to={`/wallets/${currency}/detail`}
-                              className="td-available-order d-flex flex-column justify-content-start align-items-start">
-                              <h3 className="p-0 m-0 text-one">Estimated Value</h3>
-                              <h4 className="p-0 m-0 text-two">
-                                  <Decimal key={index} fixed={fixed}>
-                                      {estimatedValue ? estimatedValue.toString() : '0'}
-                                  </Decimal>
-                              </h4>
-                          </Link>,
-                          <Link to={`/wallets/${currency}/detail`}>
-                              <ArrowRight className={''} />
-                          </Link>,
-                      ];
-                  });
+                    const { currency, iconUrl, name, fixed, spotBalance, spotLocked, balance, locked } = item;
+                    //   const totalBalance =
+                    //       Number(spotBalance) + Number(spotLocked) + Number(p2pBalance) + Number(p2pLocked);
+                    const totalBalance = Number(spotBalance) + Number(spotLocked);
+                    const estimatedValue =
+                        item?.currencyItem?.price !== null ? item?.currencyItem?.price * totalBalance : '0';
+                    return [
+                        <Link
+                            to={`/wallets/${currency}/detail`}
+                            className="d-flex justify-content-start align-items-center td-coin">
+                            <img
+                                alt={currency?.toUpperCase()}
+                                src={
+                                    iconUrl !== '-' && iconUrl !== null && iconUrl !== 'null'
+                                        ? iconUrl
+                                        : '/img/dummycoin.png'
+                                }
+                                style={{ height: '24px', marginRight: '16px' }}
+                            />
+                        </Link>,
+                        <Link
+                            to={`/wallets/${currency}/detail`}
+                            className="d-flex flex-column justify-content-start align-items-start">
+                            <h3 className="p-0 m-0 text-one">{name}</h3>
+                            <h4 className="p-0 m-0 text-two">{currency?.toUpperCase()}</h4>
+                        </Link>,
+                        <Link
+                            to={`/wallets/${currency}/detail`}
+                            className="td-available-order d-flex flex-column justify-content-start align-items-start">
+                            <h3 className="p-0 m-0 text-one">Total Balance</h3>
+                            <h4 className="p-0 m-0 text-two">
+                                <Decimal key={index} fixed={fixed}>
+                                    {totalBalance ? totalBalance.toString() : '0'}
+                                </Decimal>
+                            </h4>
+                        </Link>,
+                        <Link
+                            to={`/wallets/${currency}/detail`}
+                            className="td-available-order d-flex flex-column justify-content-start align-items-start">
+                            <h3 className="p-0 m-0 text-one">Estimated Value</h3>
+                            <h4 className="p-0 m-0 text-two">
+                                <Decimal key={index} fixed={fixed}>
+                                    {estimatedValue ? estimatedValue.toString() : '0'}
+                                </Decimal>
+                            </h4>
+                        </Link>,
+                        <Link to={`/wallets/${currency}/detail`}>
+                            <ArrowRight className={''} />
+                        </Link>,
+                    ];
+                });
         },
         [filteredWallets, nonZeroSelected, abilities, currencies, markets, tickers]
     );
@@ -239,7 +241,7 @@ const WalletListMobileScreen: React.FC<Props> = (props: Props) => {
         setFilterValue(searchKey);
         return row
             ? row.name?.toLowerCase().includes(searchKey.toLowerCase()) ||
-                  row.currency?.toLowerCase().includes(searchKey.toLowerCase())
+            row.currency?.toLowerCase().includes(searchKey.toLowerCase())
             : false;
     };
 
