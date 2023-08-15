@@ -67,6 +67,8 @@ export const MarketOpen: FC = (): ReactElement => {
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
 
+    console.log('data', data);
+
     React.useEffect(() => {
         const defaultPayload = {
             type: tab,
@@ -218,8 +220,8 @@ export const MarketOpen: FC = (): ReactElement => {
         return data.map((item) => [
             <p className="m-0 text-sm white-text">
                 {!item.maker_fee
-                    ? moment(item.created_at * 1000).format('DD-MM-YYYY HH:mm:ss')
-                    : moment(item.created_at).format('DD-MM-YYYY HH:mm:ss')}
+                    ? moment(item.updated_at * 1000).format('DD-MM-YYYY HH:mm:ss')
+                    : moment(item.updated_at).format('DD-MM-YYYY HH:mm:ss')}
             </p>,
             <p className="m-0 text-sm white-text">{item.market.toUpperCase()}</p>,
             <p className={`m-0 text-sm ${item.side == 'buy' ? 'green-text' : 'danger-text'}`}>
