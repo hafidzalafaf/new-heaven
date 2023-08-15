@@ -76,7 +76,7 @@ const MarketListlMobileScreen: React.FC = () => {
     const renderTableHeader = [
         <p className="mb-0 text-sm grey-text">Name</p>,
         <p className="mb-0 text-sm grey-text text-nowrap">Last Price</p>,
-        <p className="mb-0 text-sm grey-text">Change</p>,
+        <p className="mb-0 text-sm grey-text">24h Change</p>,
         <p className="mb-0 text-sm grey-text">Action</p>,
     ];
 
@@ -192,7 +192,7 @@ const MarketListlMobileScreen: React.FC = () => {
                                 {item && item.base_unit && item.base_unit.toUpperCase()} /
                                 {item && item.quote_unit && item.quote_unit.toUpperCase()}
                             </p>
-                            <p className="mb-0 grey-text text-xxs ml-2">vol : {item && item.volume}</p>
+                            <p className="mb-0 grey-text text-xxs ml-2">24h vol : {item && item.volume}</p>
                         </div>
                     </div>
                 )}
