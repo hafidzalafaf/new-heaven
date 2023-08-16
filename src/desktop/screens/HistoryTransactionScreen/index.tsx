@@ -114,25 +114,6 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
             state: status,
             currency: currency,
         };
-        // JANGAN DIHAPUS
-        // var datePayload;
-        // if (type == 'transfers') {
-        //     datePayload = {
-        //         type: type,
-        //         page: currentPage,
-        //         limit: DEFAULT_LIMIT,
-        //         from: time_from,
-        //         to: time_to,
-        //     };
-        // } else {
-        //     datePayload = {
-        //         type: type,
-        //         page: currentPage,
-        //         limit: DEFAULT_LIMIT,
-        //         time_from: time_from,
-        //         time_to: time_to,
-        //     };
-        // }
 
         const datePayload = {
             type: type,
@@ -305,10 +286,10 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     };
 
     const optionStatusDeposit = [
-        { label: <p className="m-0 text-sm grey-text-accent">Submitted</p>, value: 'submitted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: ['submitted', 'accepted'] },
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
         { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
-        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
+        // { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
         { label: <p className="m-0 text-sm grey-text-accent">Collected</p>, value: 'collected' },
         { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
         { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
@@ -316,9 +297,9 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     ];
 
     const optionStatusWithdraw = [
-        { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepared' },
+        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: ['prepared', 'accepted'] },
         { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
-        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
+        // { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
         { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
         { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
         { label: <p className="m-0 text-sm grey-text-accent">Succeed</p>, value: 'succeed' },
