@@ -46,8 +46,6 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const [endDate, setEndDate] = React.useState<string | number>();
     const [loading, setLoading] = React.useState(false);
 
-    console.log('status', status);
-
     const firstElemIndex = useSelector((state: RootState) => selectFirstElemIndex(state, DEFAULT_LIMIT));
     const lastElemIndex = useSelector((state: RootState) => selectLastElemIndex(state, DEFAULT_LIMIT));
     const nextPageExists = useSelector((state: RootState) => selectNextPageExists(state, DEFAULT_LIMIT));

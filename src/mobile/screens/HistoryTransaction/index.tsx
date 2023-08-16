@@ -516,10 +516,9 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     };
 
     const optionStatusDeposit = [
-        { label: <p className="m-0 text-sm grey-text-accent">Submitted</p>, value: 'submitted' },
+        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: ['submitted', 'accepted'] },
         { label: <p className="m-0 text-sm grey-text-accent">Canceled</p>, value: 'canceled' },
         { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
-        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
         { label: <p className="m-0 text-sm grey-text-accent">Collected</p>, value: 'collected' },
         { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
         { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
@@ -527,9 +526,8 @@ const HistoryTransactionMobileScreen: React.FC = () => {
     ];
 
     const optionStatusWithdraw = [
-        { label: <p className="m-0 text-sm grey-text-accent">Prepared</p>, value: 'prepared' },
+        { label: <p className="m-0 text-sm grey-text-accent">Pending</p>, value: ['prepared', 'accepted'] },
         { label: <p className="m-0 text-sm grey-text-accent">Rejected</p>, value: 'rejected' },
-        { label: <p className="m-0 text-sm grey-text-accent">Accepted</p>, value: 'accepted' },
         { label: <p className="m-0 text-sm grey-text-accent">Skipped</p>, value: 'skipped' },
         { label: <p className="m-0 text-sm grey-text-accent">Processing</p>, value: 'processing' },
         { label: <p className="m-0 text-sm grey-text-accent">Succeed</p>, value: 'succeed' },
