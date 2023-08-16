@@ -707,7 +707,11 @@ const HistoryTransactionMobileScreen: React.FC = () => {
                             ) : null}
                             <tr className="w-100 d-flex justify-content-between align-items-center">
                                 <td className="td-title">
-                                    {type === 'withdraws' ? 'RID' : type === 'deposits' ? 'TXID' : 'Receiver UID'}
+                                    {type === 'withdraws'
+                                        ? 'Recipient Address'
+                                        : type === 'deposits'
+                                        ? 'TXID'
+                                        : 'Receiver UID'}
                                 </td>
 
                                 {type === 'transfers' ? (
