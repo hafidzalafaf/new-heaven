@@ -4,7 +4,7 @@ import { useDocumentTitle, useHistoryFetch, useMarketsFetch } from '../../../hoo
 import {
     selectCurrencies,
     Currency,
-    selectHistory,
+    selectHistoryTrade,
     selectHistoryLoading,
     selectFirstElemIndex,
     selectCurrentPage,
@@ -22,14 +22,14 @@ import moment from 'moment';
 import { NoData } from '../../components';
 import { Loading } from '../../../components';
 
-const DEFAULT_LIMIT = 7;
+const DEFAULT_LIMIT = 10;
 
 export const HistoryTrade: FC = (): ReactElement => {
     const dispatch = useDispatch();
     const currencies: Currency[] = useSelector(selectCurrencies);
     const markets = useSelector(selectMarkets);
     const page = useSelector(selectCurrentPage);
-    const list = useSelector(selectHistory);
+    const list = useSelector(selectHistoryTrade);
     const historyLoading = useSelector(selectHistoryLoading);
 
     const [historys, setHistorys] = React.useState([]);

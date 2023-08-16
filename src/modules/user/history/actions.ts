@@ -21,6 +21,7 @@ export interface HistoryFetchPayload {
 }
 
 interface HistorySuccessPayload {
+    listTrade: WalletHistoryList;
     list: WalletHistoryList;
     page: number;
     nextPageExists: boolean;
