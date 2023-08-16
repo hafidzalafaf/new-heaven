@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 import { sendError } from '../../../';
 import { API, defaultStorageLimit, RequestOptions } from '../../../../api';
-import { getHistorySagaParam, sliceArray } from '../../../../helpers';
+import { buildQueryString, getHistorySagaParam, sliceArray } from '../../../../helpers';
 import { failHistory, HistoryFetch, successHistory } from '../actions';
 
 const config: RequestOptions = {
@@ -17,7 +17,16 @@ export function* historySaga(action: HistoryFetch) {
             trades: '/market/trades',
             transfers: '/account/internal_transfers',
         };
-        const params = getHistorySagaParam(action.payload);
+
+        let params = '';
+
+        if (type === 'trades') {
+            params = getHistorySagaParam(action.payload);
+        } else {
+            params = buildQueryString(action.payload);
+        }
+
+        // const params =  getHistorySagaParam(action.payload);
         const data = yield call(API.get(config), `${coreEndpoint[type]}?${params}`);
 
         let nextPageExists = false;

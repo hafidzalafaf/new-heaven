@@ -41,10 +41,12 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const [currentPage, setCurrentPage] = React.useState(0);
     const [currency, setCurrency] = React.useState('');
     const [type, setType] = React.useState(location?.state?.types ? location?.state?.types : 'withdraws');
-    const [status, setStatus] = React.useState('');
+    const [status, setStatus] = React.useState([]);
     const [startDate, setStartDate] = React.useState<string | number>();
     const [endDate, setEndDate] = React.useState<string | number>();
     const [loading, setLoading] = React.useState(false);
+
+    console.log('status', status);
 
     const firstElemIndex = useSelector((state: RootState) => selectFirstElemIndex(state, DEFAULT_LIMIT));
     const lastElemIndex = useSelector((state: RootState) => selectLastElemIndex(state, DEFAULT_LIMIT));
@@ -61,7 +63,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     const handleChangeType = (e) => {
         setType(e);
         setCurrency('');
-        setStatus('');
+        setStatus([]);
     };
 
     const onClickPrevPage = () => {
@@ -165,7 +167,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                     ? datePayload
                     : currency
                     ? marketPayload
-                    : status
+                    : status?.length > 0
                     ? statePayload
                     : defaultPayload
             )
@@ -441,7 +443,10 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
                                         <NoData text="No Data Yet" />
                                     ) : (
                                         <>
-                                            <Table header={getTableHeaders(historys)} data={getTableData(historys)} />
+                                            <Table
+                                                header={getTableHeaders(historys)}
+                                                data={getTableDataDeposit(historys)}
+                                            />
 
                                             <Pagination
                                                 firstElemIndex={firstElemIndex}
