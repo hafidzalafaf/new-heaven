@@ -16,7 +16,7 @@ import {
     selectFirstElemIndex,
     selectLastElemIndex,
     selectNextPageExists,
-    selectHistory,
+    selectHistoryTrade,
     selectMarkets,
     fetchHistory,
 } from '../../../modules';
@@ -64,7 +64,7 @@ const OrderHistoryMobileScreen: React.FC = () => {
 
     const markets = useSelector(selectMarkets);
     const page = useSelector(selectCurrentPage);
-    const orders = useSelector(selectHistory);
+    const orders = useSelector(selectHistoryTrade);
     const currencies: Currency[] = useSelector(selectCurrencies);
 
     // Handle get item pagination
