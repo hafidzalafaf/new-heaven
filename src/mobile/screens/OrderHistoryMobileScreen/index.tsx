@@ -18,6 +18,7 @@ import {
     selectNextPageExists,
     selectHistory,
     selectMarkets,
+    fetchHistory,
 } from '../../../modules';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -71,7 +72,11 @@ const OrderHistoryMobileScreen: React.FC = () => {
     const lastElementIndex = useSelector((state: RootState) => selectLastElemIndex(state, 8));
     const nextPageExists = useSelector((state: RootState) => selectNextPageExists(state, 8));
 
-    useHistoryFetch({ page: currentPageIndex, type: 'trades', limit: 8 });
+    // useHistoryFetch({ page: currentPageIndex, type: 'trades', limit: 8 });
+
+    React.useEffect(() => {
+        dispatch(fetchHistory({ page: currentPageIndex, type: 'trades', limit: 8 }));
+    }, [currentPageIndex]);
 
     const dataListWithIcon = orders
         .map((item) => ({
@@ -95,8 +100,8 @@ const OrderHistoryMobileScreen: React.FC = () => {
         <p className="mb-0 text-sm grey-text">Coins</p>,
         <p className="mb-0 text-sm grey-text">Amount</p>,
         <p className="mb-0 text-sm grey-text">Price</p>,
+        <p className="mb-0 text-sm grey-text">Total</p>,
         <p className="mb-0 text-sm grey-text">Type</p>,
-        <p className="mb-0 text-sm grey-text">Status</p>,
     ];
 
     const renderDataTable = (data) => {
@@ -113,19 +118,25 @@ const OrderHistoryMobileScreen: React.FC = () => {
             <div className="d-flex align-items-center text-sm">
                 <div className="">
                     <p className="mb-0 grey-text-accent font-bold text-sm text-nowrap">
-                        {item.price} {item.market?.toUpperCase()}
+                        {item.amount} {item.market?.toUpperCase()}
                     </p>
                     <p className="mb-0 grey-text text-xxs text-nowrap">
-                        {moment(item.created_at).format('D MMM YYYY')}
+                        {moment(item.created_at).format('D MMM YYYY hh:mm:ss')}
                     </p>
                 </div>
             </div>,
             <p className={`badge grey-text text-sm mb-0`}>{item.price}</p>,
-            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>
+            <p className={`badge text-sm mb-0 cursor-pointer grey-text`}>{item?.total}</p>,
+            <p
+                className={`badge text-sm mb-0 cursor-pointer ${
+                    item?.side?.toLowerCase() === 'buy' ? 'contrast-text' : 'danger-text'
+                }`}>
                 {item.side?.charAt(0)?.toUpperCase() + item.side?.slice(1)}
             </p>,
-            <p className={`badge text-sm mb-0 cursor-pointer gradient-text`}>Done</p>,
-            // <p key={index} className={`badge text-sm mb-0 cursor-pointer danger-text`} onClick={()=> handleItemDetail(data[index])}>
+            // <p
+            //     key={index}
+            //     className={`badge text-sm mb-0 cursor-pointer danger-text`}
+            //     onClick={() => handleItemDetail(data[index])}>
             //     Detail
             // </p>,
         ]);
