@@ -933,11 +933,11 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
         setTimeout(() => {
             if (platform === 'android' && latestVersionState[0]?.value !== currentVersion) {
                 this.setState({
-                    isShownUpdater: false,
+                    isShownUpdater: true,
                 })
             } else {
                 this.setState({
-                    isShownUpdater: true,
+                    isShownUpdater: false,
                 })
             }
         }, 3000)
