@@ -931,7 +931,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
         const currentVersion = CURRENT_VERSION
         const platform = Capacitor.getPlatform()
         setTimeout(() => {
-            if (platform === 'web' && latestVersionState[0]?.value !== currentVersion) {
+            if (platform === 'android' && latestVersionState[0]?.value !== currentVersion) {
                 this.setState({
                     isShownUpdater: false,
                 })
