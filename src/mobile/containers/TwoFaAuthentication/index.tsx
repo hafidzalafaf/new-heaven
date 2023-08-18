@@ -46,7 +46,7 @@ const TwoFaAuthenticationMobile: React.FC<TwoFactorAuthProps> = ({
                 <ArrowLeft className={'back'} />
             </Link>
             <h1 className="mt-4 font-extrabold text-md grey-text-accent mb-3">Authentication Code</h1>
-            <p className="text-sm grey-text">Enter the code we just sent you on your email address</p>
+            <p className="text-sm grey-text">Please enter 6 Digits authenticationcode from yout App</p>
             <div className="mb-2">
                 <PinInput
                     length={6}
