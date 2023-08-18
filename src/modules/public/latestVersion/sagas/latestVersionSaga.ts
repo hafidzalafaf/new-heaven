@@ -12,7 +12,7 @@ const getLatestVersionOptions: RequestOptions = {
 export function* latestVersionSaga(action: GetLatestVersionFetch) {
     try {
         const response = yield call(API.get(getLatestVersionOptions), '/public/setting');
-        yield put(getLatestVersionData(response));
+        yield put(getLatestVersionData(response && response[0]));
     } catch (error) {
         yield put(
             sendError({
