@@ -256,7 +256,6 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
     }
 
     public componentWillReceiveProps(nextProps: LayoutProps) {
-        this.checkLatestVersion()
         if (
             !(
                 nextProps.location.pathname.includes('/magic-link') ||
@@ -284,6 +283,9 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
         if (!this.props.isLoggedIn && nextProps.isLoggedIn && !this.props.user.email) {
             this.initInterval();
             this.check();
+        }
+        if (!this.props.latestVersionState && nextProps.latestVersionState) {
+            this.checkLatestVersion()
         }
     }
 
@@ -926,16 +928,22 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
 
     private checkLatestVersion = () => {
         const { latestVersionState } = this.props
+        const latestVersionServer = latestVersionState[0]?.value;
         const currentVersion = CURRENT_VERSION
         const platform = Capacitor.getPlatform()
-        if (platform === 'android' && latestVersionState[0]?.value !== currentVersion) {
-            this.setState({
-                isShownUpdater: true,
-            })
+        if (platform === 'android' && latestVersionServer !== '' && currentVersion && latestVersionServer === currentVersion) {
+            setTimeout(() => {
+                this.setState({
+                    isShownUpdater: false,
+                })
+            }, 3000);
+
         } else {
-            this.setState({
-                isShownUpdater: false,
-            })
+            setTimeout(() => {
+                this.setState({
+                    isShownUpdater: true,
+                })
+            }, 3000)
         }
     }
 
