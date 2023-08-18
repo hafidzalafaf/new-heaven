@@ -284,7 +284,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
             this.initInterval();
             this.check();
         }
-        if (!this.props.latestVersionState && nextProps.latestVersionState) {
+        if (this.props.latestVersionState !== nextProps.latestVersionState) {
             this.checkLatestVersion()
         }
     }
@@ -928,23 +928,19 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
 
     private checkLatestVersion = () => {
         const { latestVersionState } = this.props
-        const latestVersionServer = latestVersionState[0]?.value;
         const currentVersion = CURRENT_VERSION
         const platform = Capacitor.getPlatform()
-        if (platform === 'android' && latestVersionServer !== '' && currentVersion && latestVersionServer === currentVersion) {
-            setTimeout(() => {
+        setTimeout(() => {
+            if (platform === 'web' && latestVersionState[0]?.value !== currentVersion) {
                 this.setState({
                     isShownUpdater: false,
                 })
-            }, 3000);
-
-        } else {
-            setTimeout(() => {
+            } else {
                 this.setState({
                     isShownUpdater: true,
                 })
-            }, 3000)
-        }
+            }
+        }, 3000)
     }
 
     private handleUpdaterModalState = () => {
