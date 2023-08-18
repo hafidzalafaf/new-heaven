@@ -256,7 +256,6 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
     }
 
     public componentWillReceiveProps(nextProps: LayoutProps) {
-        this.checkLatestVersion()
         if (
             !(
                 nextProps.location.pathname.includes('/magic-link') ||
@@ -284,6 +283,9 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
         if (!this.props.isLoggedIn && nextProps.isLoggedIn && !this.props.user.email) {
             this.initInterval();
             this.check();
+        }
+        if (this.props.latestVersionState !== nextProps.latestVersionState) {
+            this.checkLatestVersion()
         }
     }
 
@@ -928,15 +930,17 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
         const { latestVersionState } = this.props
         const currentVersion = CURRENT_VERSION
         const platform = Capacitor.getPlatform()
-        if (platform === 'android' && latestVersionState[0]?.value !== currentVersion) {
-            this.setState({
-                isShownUpdater: true,
-            })
-        } else {
-            this.setState({
-                isShownUpdater: false,
-            })
-        }
+        setTimeout(() => {
+            if (platform === 'android' && latestVersionState[0]?.value !== currentVersion) {
+                this.setState({
+                    isShownUpdater: true,
+                })
+            } else {
+                this.setState({
+                    isShownUpdater: false,
+                })
+            }
+        }, 3000)
     }
 
     private handleUpdaterModalState = () => {
