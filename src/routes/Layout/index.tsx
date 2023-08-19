@@ -125,7 +125,7 @@ import {
     PrivacyScreen,
 } from '../../desktop/screens';
 import { LatestVersion } from 'src/modules/public/latestVersion/types';
-import { COMPATIBLE_VERSION, CURRENT_VERSION, GOOGLE_PLAY_LINK } from 'src/config';
+import { COMPATIBLE_VERSION, GOOGLE_PLAY_LINK } from 'src/config';
 import { Capacitor } from '@capacitor/core';
 
 interface ReduxProps {
@@ -926,8 +926,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
         });
     };
 
-    private checkLatestVersion = (value) => {
-        // const currentVersion = CURRENT_VERSION
+    private checkLatestVersion = (value: string) => {
         const compatibleVersion = COMPATIBLE_VERSION
         const platform = Capacitor.getPlatform()
         setTimeout(() => {
