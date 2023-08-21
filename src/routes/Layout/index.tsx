@@ -125,7 +125,7 @@ import {
     PrivacyScreen,
 } from '../../desktop/screens';
 import { LatestVersion } from 'src/modules/public/latestVersion/types';
-import { CURRENT_VERSION, GOOGLE_PLAY_LINK } from 'src/config';
+import { COMPATIBLE_VERSION, CURRENT_VERSION, GOOGLE_PLAY_LINK } from 'src/config';
 import { Capacitor } from '@capacitor/core';
 
 interface ReduxProps {
@@ -284,8 +284,8 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
             this.initInterval();
             this.check();
         }
-        if (this.props.latestVersionState !== nextProps.latestVersionState) {
-            this.checkLatestVersion()
+        if ((this.props.latestVersionState.value !== '') !== (nextProps.latestVersionState.value !== '')) {
+            this.checkLatestVersion(nextProps.latestVersionState.value)
         }
     }
 
@@ -926,12 +926,12 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
         });
     };
 
-    private checkLatestVersion = () => {
-        const { latestVersionState } = this.props
+    private checkLatestVersion = (value: string) => {
         const currentVersion = CURRENT_VERSION
+        // const compatibleVersion = COMPATIBLE_VERSION
         const platform = Capacitor.getPlatform()
         setTimeout(() => {
-            if (platform === 'android' && latestVersionState[0]?.value !== currentVersion) {
+            if (platform === 'android' && value !== currentVersion) {
                 this.setState({
                     isShownUpdater: true,
                 })
