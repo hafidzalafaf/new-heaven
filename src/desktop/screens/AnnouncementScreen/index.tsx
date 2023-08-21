@@ -1,7 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 import { useDocumentTitle, useBlogsFetch } from 'src/hooks';
 import { selectBlogs } from 'src/modules';
-import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useSelector } from 'react-redux';
@@ -26,65 +25,9 @@ export const AnnouncementScreen: FC = (): ReactElement => {
     blog.sort(function (a, b) {
         return new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
     });
-
-    const settings = {
-        dots: true,
-        infinite: false,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 3000,
-        pauseOnHover: true,
-        responsive: [
-            {
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                    infinite: true,
-                    dots: true,
-                },
-            },
-            {
-                breakpoint: 1020,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    initialSlide: 2,
-                    infinite: true,
-                    dots: true,
-                },
-            },
-        ],
-    };
-
     return (
         <React.Fragment>
             <div className="announcement-screen no-sidebar dark-bg-accent pb-5">
-                <div className="py-5 background" style={{ backgroundImage: `url('img/background-landing.png')` }}>
-                    <Slider {...settings}>
-                        {blog &&
-                            blog.slice(0, 4).map((item, key) => (
-                                <div className="px-3 radius-md" key={key}>
-                                    <a
-                                        href={item.url}
-                                        target="__blank"
-                                        rel="noopener noreferrer"
-                                        className="slider-item p-3">
-                                        <img
-                                            src={
-                                                item.feature_image !== null
-                                                    ? item.feature_image
-                                                    : '/img/landing-card.png'
-                                            }
-                                            alt={item.title}
-                                            className="w-100 h-100 rounded-lg announcement-slider-img"
-                                        />
-                                    </a>
-                                </div>
-                            ))}
-                    </Slider>
-                </div>
                 <div className="container">
                     <div className="articles">
                         <div className="row justify-content-center">
