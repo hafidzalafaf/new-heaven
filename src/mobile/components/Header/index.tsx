@@ -1,23 +1,19 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { selectUserLoggedIn, selectUserInfo, logoutFetch, alertPush } from '../../../modules';
+import { selectUserLoggedIn, selectUserInfo, logoutFetch } from '../../../modules';
 import { LogoIcon } from '../../assets/Logo';
-import { ScanIcon } from '../../assets/ScanIcon';
 import { UserIcon } from '../../assets/UserIcon';
-import { ArrowLeft, ArrowRight } from '../../assets/Arrow';
-import { CopyableTextField } from '../../../components';
+import { ArrowLeft } from '../../assets/Arrow';
 import {
     Announcement,
     ApiManagement,
     Dashboard,
     Faq,
-    MarketOrder,
     Referral,
     Security,
     TradeHistory,
     Wallet,
-    SettingProfile,
     Help,
     Privacy,
 } from '../../assets/Sidebar';

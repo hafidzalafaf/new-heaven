@@ -128,7 +128,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
             const kycStatus = kycLabel.value;
             this.setState({ kycStatus: kycStatus });
         }
-        if (this.props.user.level != 2){
+        if (this.props.user.level != 2) {
             this.props.history.push('/profile');
         }
     }
@@ -157,6 +157,8 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
         /* tslint:disable */
         languages.map((l: string) => countries.registerLocale(require(`i18n-iso-countries/langs/${l}.json`)));
         /* tslint:enable */
+
+        console.log('hello');
 
         const onSelect = (value) => this.handleChangeDocumentsType(this.data[value]);
         const dataCountries = Object.values(countries.getNames(lang)).map((item) => {
@@ -300,7 +302,16 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
                                                     <div className="col-12">
                                                         <div className="mt-3">
                                                             <button
-                                                                disabled={(Number(this.state.birthYear) > Number(moment().subtract(18, 'years').format('YYYY'))) || this.handleNextButtonDisabled() ? true : false}
+                                                                disabled={
+                                                                    Number(this.state.birthYear) >
+                                                                        Number(
+                                                                            moment()
+                                                                                .subtract(18, 'years')
+                                                                                .format('YYYY')
+                                                                        ) || this.handleNextButtonDisabled()
+                                                                        ? true
+                                                                        : false
+                                                                }
                                                                 type="button"
                                                                 className="btn btn-block btn-lg btn-primary"
                                                                 onClick={() => this.setState({ step: 'document' })}>
@@ -541,7 +552,12 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
         });
         const birthYear = Number(moment(e.target.value).format('YYYY'));
         const minYear = moment().subtract(18, 'years').format('YYYY');
-        Number(minYear) < Number(birthYear) ? this.props.fetchAlert({ message : ['You must be at least 18 years old to use this service'], type: 'error' }) : null;
+        Number(minYear) < Number(birthYear)
+            ? this.props.fetchAlert({
+                  message: ['You must be at least 18 years old to use this service'],
+                  type: 'error',
+              })
+            : null;
     };
 
     private handleUploadScan = (uploadEvent, id) => {
@@ -641,16 +657,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
     };
 
     private handleNextButtonDisabled = () => {
-        const {
-            address,
-            birthDate,
-            city,
-            country,
-            district,
-            name,
-            province,
-            placeBirth,
-        } = this.state;
+        const { address, birthDate, city, country, district, name, province, placeBirth } = this.state;
 
         const profileValid =
             address !== '' &&
@@ -661,7 +668,6 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
             name !== '' &&
             province !== '' &&
             placeBirth !== '';
-
 
         return !profileValid;
     };
