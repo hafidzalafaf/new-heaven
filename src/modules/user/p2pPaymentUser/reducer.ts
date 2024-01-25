@@ -24,8 +24,8 @@ export interface P2PPaymentUserState {
         fetching: boolean;
         success: boolean;
         error?: CommonError;
-        page: number
-        limit: number
+        page: number;
+        limit: number;
     };
 
     create: {
@@ -49,7 +49,7 @@ export interface P2PPaymentUserState {
         data: {};
         fetching: boolean;
         success: boolean;
-        error?:CommonError;
+        error?: CommonError;
     };
 }
 
@@ -59,7 +59,7 @@ export const initialP2PPaymentUserState: P2PPaymentUserState = {
         fetching: false,
         success: false,
         page: 1,
-        limit: 5
+        limit: 5,
     },
 
     create: {
@@ -79,8 +79,8 @@ export const initialP2PPaymentUserState: P2PPaymentUserState = {
     fetchSingle: {
         data: {},
         fetching: false,
-        success: false
-    }
+        success: false,
+    },
 };
 
 export const p2pPaymentUserFetchReducer = (state: P2PPaymentUserState['fetch'], action: P2PPaymentUserActions) => {
@@ -98,7 +98,7 @@ export const p2pPaymentUserFetchReducer = (state: P2PPaymentUserState['fetch'], 
                 fetching: true,
                 success: false,
                 error: undefined,
-            }
+            };
         case P2P_PAYMENT_USER_DATA:
             return {
                 ...state,
@@ -197,29 +197,32 @@ export const p2pPaymentDeleteReducer = (state: P2PPaymentUserState['delete'], ac
     }
 };
 
-export const P2PPaymentUserFetchSingleReducer = (state: P2PPaymentUserState['fetchSingle'], action: P2PPaymentUserActions) => {
-    switch(action.type){
+export const P2PPaymentUserFetchSingleReducer = (
+    state: P2PPaymentUserState['fetchSingle'],
+    action: P2PPaymentUserActions
+) => {
+    switch (action.type) {
         case P2P_PAYMENT_USER_FETCH_SINGLE:
             return {
                 ...state,
-                fetching: true
-            }
+                fetching: true,
+            };
         case P2P_PAYMENT_USER_FETCH_SINGLE_DATA:
             return {
                 ...state,
                 data: action.payload,
                 fetching: false,
                 success: true,
-                error: undefined
-            }
+                error: undefined,
+            };
         case P2P_PAYMENT_USER_FETCH_SINGLE_ERROR:
             return {
                 ...state,
                 fetching: false,
-                error: action.error
-            }
+                error: action.error,
+            };
     }
-}
+};
 
 export const p2pPaymentUserReducer = (state = initialP2PPaymentUserState, action: P2PPaymentUserActions) => {
     switch (action.type) {
@@ -228,7 +231,7 @@ export const p2pPaymentUserReducer = (state = initialP2PPaymentUserState, action
         case P2P_PAYMENT_USER_ERROR:
             return {
                 ...state,
-                fetch: p2pPaymentUserFetchReducer({ ...state.fetch }, action),
+                p2pPaymentUserFetch: p2pPaymentUserFetchReducer({ ...state.fetch }, action),
             };
         case P2P_PAYMENT_USER_CREATE:
         case P2P_PAYMENT_USER_CREATE_DATA:
@@ -237,7 +240,7 @@ export const p2pPaymentUserReducer = (state = initialP2PPaymentUserState, action
 
             return {
                 ...state,
-                create: p2pPaymentCreateReducer(p2pPaymentUserCreateState, action),
+                p2pPaymentUserCreate: p2pPaymentCreateReducer(p2pPaymentUserCreateState, action),
             };
 
         case P2P_PAYMENT_USER_UPDATE:
@@ -247,7 +250,7 @@ export const p2pPaymentUserReducer = (state = initialP2PPaymentUserState, action
 
             return {
                 ...state,
-                update: p2pPaymentUpdateReducer(p2pPaymentUserUpdateState, action),
+                p2pPaymentUserUpdate: p2pPaymentUpdateReducer(p2pPaymentUserUpdateState, action),
             };
 
         case P2P_PAYMENT_USER_DELETE:
@@ -257,17 +260,17 @@ export const p2pPaymentUserReducer = (state = initialP2PPaymentUserState, action
 
             return {
                 ...state,
-                delete: p2pPaymentDeleteReducer(p2pPaymentUserDeleteState, action),
+                p2pPaymentUserDelete: p2pPaymentDeleteReducer(p2pPaymentUserDeleteState, action),
             };
         case P2P_PAYMENT_USER_FETCH_SINGLE:
         case P2P_PAYMENT_USER_FETCH_SINGLE_DATA:
         case P2P_PAYMENT_USER_FETCH_SINGLE_ERROR:
-            const p2pPaymentUserFetchSingleState = {...state.fetchSingle};
+            const p2pPaymentUserFetchSingleState = { ...state.fetchSingle };
 
             return {
                 ...state,
-                fetchSingle: P2PPaymentUserFetchSingleReducer(p2pPaymentUserFetchSingleState, action)
-            }
+                p2pPaymentUserFetchSingle: P2PPaymentUserFetchSingleReducer(p2pPaymentUserFetchSingleState, action),
+            };
         default:
             return state;
     }
