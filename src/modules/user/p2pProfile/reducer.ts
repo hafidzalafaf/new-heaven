@@ -40,23 +40,23 @@ export interface P2PProfileFetchInterface {
     trader_name: string;
 }
 export interface P2PProfileState {
-    fetch: {
+    p2p_profile_fetch: {
         data: P2PProfileFetchInterface;
         fetching: boolean;
         success: boolean;
         error?: CommonError;
     };
-    changeUsername: {
+    p2p_profile_change_username: {
         fetching: boolean;
         success: boolean;
         error?: CommonError;
     };
-    block_merchant: {
+    p2p_profile_block_merchant: {
         fetching: boolean;
         success: boolean;
         error?: CommonError;
     };
-    list_block_merchant: {
+    p2p_profile_list_block_merchant: {
         data: any;
         fetching: boolean;
         success: boolean;
@@ -65,7 +65,7 @@ export interface P2PProfileState {
 }
 
 export const initialP2PProfileState: P2PProfileState = {
-    fetch: {
+    p2p_profile_fetch: {
         data: {
             banned_state: false,
             logo: '',
@@ -93,22 +93,22 @@ export const initialP2PProfileState: P2PProfileState = {
         fetching: false,
         success: false,
     },
-    changeUsername: {
+    p2p_profile_change_username: {
         fetching: false,
         success: false,
     },
-    block_merchant: {
+    p2p_profile_block_merchant: {
         fetching: false,
         success: false,
     },
-    list_block_merchant: {
+    p2p_profile_list_block_merchant: {
         data: [],
         fetching: false,
         success: false,
     },
 };
 
-const p2pProfileFetchReducer = (state: P2PProfileState['fetch'], action: P2PProfileActions) => {
+const p2pProfileFetchReducer = (state: P2PProfileState['p2p_profile_fetch'], action: P2PProfileActions) => {
     switch (action.type) {
         case P2P_PROFILE_FETCH:
             return {
@@ -137,7 +137,10 @@ const p2pProfileFetchReducer = (state: P2PProfileState['fetch'], action: P2PProf
     }
 };
 
-const p2pProfileChangeUsernameReducer = (state: P2PProfileState['changeUsername'], action: P2PProfileActions) => {
+const p2pProfileChangeUsernameReducer = (
+    state: P2PProfileState['p2p_profile_change_username'],
+    action: P2PProfileActions
+) => {
     switch (action.type) {
         case P2P_PROFILE_CHANGE_USERNAME:
             return {
@@ -165,7 +168,10 @@ const p2pProfileChangeUsernameReducer = (state: P2PProfileState['changeUsername'
     }
 };
 
-const p2pProfileBlockMerchantReducer = (state: P2PProfileState['block_merchant'], action: P2PProfileActions) => {
+const p2pProfileBlockMerchantReducer = (
+    state: P2PProfileState['p2p_profile_block_merchant'],
+    action: P2PProfileActions
+) => {
     switch (action.type) {
         case P2P_PROFILE_BLOCK_MERCHANT:
             return {
@@ -194,7 +200,7 @@ const p2pProfileBlockMerchantReducer = (state: P2PProfileState['block_merchant']
 };
 
 const p2pProfileListBlockMerchantReducer = (
-    state: P2PProfileState['list_block_merchant'],
+    state: P2PProfileState['p2p_profile_list_block_merchant'],
     action: P2PProfileActions
 ) => {
     switch (action.type) {
@@ -232,7 +238,7 @@ export const p2pProfileReducer = (state = initialP2PProfileState, action: P2PPro
         case P2P_PROFILE_FETCH_ERROR:
             return {
                 ...state,
-                fetch: p2pProfileFetchReducer({ ...state.fetch }, action),
+                p2pProfileFetch: p2pProfileFetchReducer({ ...state.p2p_profile_fetch }, action),
             };
 
         case P2P_PROFILE_CHANGE_USERNAME:
@@ -240,7 +246,10 @@ export const p2pProfileReducer = (state = initialP2PProfileState, action: P2PPro
         case P2P_PROFILE_CHANGE_USERNAME_ERROR:
             return {
                 ...state,
-                changeUsername: p2pProfileChangeUsernameReducer({ ...state.changeUsername }, action),
+                p2p_profile_change_username: p2pProfileChangeUsernameReducer(
+                    { ...state.p2p_profile_change_username },
+                    action
+                ),
             };
 
         case P2P_PROFILE_BLOCK_MERCHANT:
@@ -248,7 +257,7 @@ export const p2pProfileReducer = (state = initialP2PProfileState, action: P2PPro
         case P2P_PROFILE_BLOCK_MERCHANT_ERROR:
             return {
                 ...state,
-                block_merchant: p2pProfileBlockMerchantReducer({ ...state.block_merchant }, action),
+                block_merchant: p2pProfileBlockMerchantReducer({ ...state.p2p_profile_block_merchant }, action),
             };
 
         case P2P_PROFILE_LIST_BLOCK_MERCHANT:
@@ -256,7 +265,10 @@ export const p2pProfileReducer = (state = initialP2PProfileState, action: P2PPro
         case P2P_PROFILE_LIST_BLOCK_MERCHANT_ERROR:
             return {
                 ...state,
-                list_block_merchant: p2pProfileListBlockMerchantReducer({ ...state.list_block_merchant }, action),
+                p2p_profile_list_block_merchant: p2pProfileListBlockMerchantReducer(
+                    { ...state.p2p_profile_list_block_merchant },
+                    action
+                ),
             };
 
         default:
