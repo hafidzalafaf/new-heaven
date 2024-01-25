@@ -1,4 +1,4 @@
-import { Payment } from "src/modules/public/p2p";
+import { P2PPublicPayment } from 'src/modules/public/p2p';
 
 export interface P2PUserOfferDetail {
     offer: {
@@ -13,9 +13,9 @@ export interface P2PUserOfferDetail {
         persentage: string | number;
         term_of_condition: string;
         trader: any;
-        payment: Payment[];
+        payment: P2PPublicPayment[];
         side: string;
-    }
+    };
     order: [];
 }
 
@@ -31,5 +31,5 @@ export interface P2PCreateUserOfferDetail {
     term_of_condition: string;
     auto_replay: string;
     side: string;
-    order: []
+    order: [];
 }

@@ -114,7 +114,7 @@ export * from './user/p2pAvailableOffer';
 export * from './user/p2pProfile';
 export * from './user/p2pPaymentUser';
 export * from './user/p2pUserOffer';
-// export * from './user/p2pUserOfferDetail';
+export * from './user/p2pUserOfferDetail';
 
 export interface RootState {
     public: {
@@ -177,7 +177,7 @@ export interface RootState {
         p2pProfile: P2PProfileState;
         p2pPaymentUser: P2PPaymentUserState;
         p2pUserOffer: P2PUserOfferState;
-        // p2pUserOfferDetail: P2PUserOfferDetailState;
+        p2pUserOfferDetail: P2PUserOfferDetailState;
     };
     admin: {
         configUpdate: ConfigUpdateState;
@@ -243,7 +243,7 @@ export function* rootSaga() {
         call(rootP2PProfileSaga),
         call(rootP2PPaymentUserSaga),
         call(rootP2PUserOfferSaga),
-        // call(rootP2PUserOfferDetailSaga),
+        call(rootP2PUserOfferDetailSaga),
         call(rootGetLatestVersionSaga),
     ]);
 }

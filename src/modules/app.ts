@@ -116,7 +116,7 @@ export const userReducer = combineReducers({
     p2pProfile: p2pProfileReducer,
     p2pPaymentUser: p2pPaymentUserReducer,
     p2pUserOffer: p2pUserOfferReducer,
-    // p2pUserOfferDetail: p2pUserOfferDetailReducer,
+    p2pUserOfferDetail: p2pUserOfferDetailReducer,
 });
 
 export const adminReducer = combineReducers({

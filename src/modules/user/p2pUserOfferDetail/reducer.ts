@@ -13,13 +13,13 @@ import {
 import { P2PUserOfferDetail } from './types';
 
 export interface P2PUserOfferDetailState {
-    create: {
+    p2p_user_offer_detail_create: {
         // data: P2PUserOfferDetail;
         fetching: boolean;
         success: boolean;
         error?: CommonError;
     };
-    fetch: {
+    p2p_user_offer_detail_fetch: {
         page: number;
         total: number;
         list: P2PUserOfferDetail;
@@ -35,12 +35,12 @@ export interface P2PUserOfferDetailState {
 }
 
 export const initialP2PUserOfferDetailState: P2PUserOfferDetailState = {
-    create: {
+    p2p_user_offer_detail_create: {
         // data: defaultP2PUserOfferDetail,
         fetching: false,
         success: false,
     },
-    fetch: {
+    p2p_user_offer_detail_fetch: {
         page: 0,
         total: 0,
         list: {
@@ -70,7 +70,7 @@ export const initialP2PUserOfferDetailState: P2PUserOfferDetailState = {
 };
 
 export const p2pUserOfferDetailFetchReducer = (
-    state: P2PUserOfferDetailState['fetch'],
+    state: P2PUserOfferDetailState['p2p_user_offer_detail_fetch'],
     action: P2PUserOfferDetailActions
 ) => {
     switch (action.type) {
@@ -112,7 +112,7 @@ export const p2pUserOfferDetailFetchReducer = (
 };
 
 const p2pUserOfferDetailCreateReducer = (
-    state: P2PUserOfferDetailState['create'],
+    state: P2PUserOfferDetailState['p2p_user_offer_detail_create'],
     action: P2PUserOfferDetailActions
 ) => {
     switch (action.type) {
@@ -150,16 +150,19 @@ export const p2pUserOfferDetailReducer = (
         case P2P_USER_OFFER_DETAIL_ERROR:
             return {
                 ...state,
-                fetch: p2pUserOfferDetailFetchReducer({ ...state.fetch }, action),
+                p2pUserOfferDetailFetch: p2pUserOfferDetailFetchReducer(
+                    { ...state.p2p_user_offer_detail_fetch },
+                    action
+                ),
             };
         case P2P_USER_OFFER_DETAIL_CREATE:
         case P2P_USER_OFFER_DETAIL_CREATE_DATA:
         case P2P_USER_OFFER_DETAIL_CREATE_ERROR:
-            const p2pUserOfferDetailCreateState = { ...state.create };
+            const p2pUserOfferDetailCreateState = { ...state.p2p_user_offer_detail_create };
 
             return {
                 ...state,
-                create: p2pUserOfferDetailCreateReducer(p2pUserOfferDetailCreateState, action),
+                p2p_user_offer_detail_create: p2pUserOfferDetailCreateReducer(p2pUserOfferDetailCreateState, action),
             };
 
         default:
