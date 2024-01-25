@@ -242,7 +242,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                     break;
                 default:
                     const token = localStorage.getItem('csrfToken');
-                    this.props.latestVersionFetch()
+                    this.props.latestVersionFetch();
 
                     if (token) {
                         this.props.userFetch();
@@ -285,7 +285,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
             this.check();
         }
         if ((this.props.latestVersionState.value !== '') !== (nextProps.latestVersionState.value !== '')) {
-            this.checkLatestVersion(nextProps.latestVersionState.value)
+            this.checkLatestVersion(nextProps.latestVersionState.value);
         }
     }
 
@@ -927,32 +927,32 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
     };
 
     private checkLatestVersion = (value: string) => {
-        const currentVersion = CURRENT_VERSION
+        const currentVersion = CURRENT_VERSION;
         // const compatibleVersion = COMPATIBLE_VERSION
-        const platform = Capacitor.getPlatform()
+        const platform = Capacitor.getPlatform();
         setTimeout(() => {
             if (platform === 'android' && value !== currentVersion) {
                 this.setState({
                     isShownUpdater: true,
-                })
+                });
             } else {
                 this.setState({
                     isShownUpdater: false,
-                })
+                });
             }
-        }, 3000)
-    }
+        }, 3000);
+    };
 
     private handleUpdaterModalState = () => {
         this.setState({
-            isShownUpdater: !this.state.isShownUpdater
-        })
-    }
+            isShownUpdater: !this.state.isShownUpdater,
+        });
+    };
 
     private handleUpdateApp = () => {
         this.handleUpdaterModalState();
-        window.location.href = GOOGLE_PLAY_LINK
-    }
+        window.location.href = GOOGLE_PLAY_LINK;
+    };
 
     private handleUpdater = () => (
         <UpdateAppModal
@@ -965,7 +965,6 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
     );
 }
 
-
 const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> = (state) => ({
     colorTheme: selectCurrentColorTheme(state),
     currentMarket: selectCurrentMarket(state),
@@ -975,7 +974,7 @@ const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> = (state) => (
     userLoading: selectUserFetching(state),
     platformAccessStatus: selectPlatformAccessStatus(state),
     abilities: selectAbilities(state),
-    latestVersionState: selectLatestVersion(state)
+    latestVersionState: selectLatestVersion(state),
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
@@ -983,7 +982,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => 
     toggleChartRebuild: () => dispatch(toggleChartRebuild()),
     userFetch: () => dispatch(userFetch()),
     walletsReset: () => dispatch(walletsReset()),
-    latestVersionFetch: () => dispatch(getLatestVersionFetch())
+    latestVersionFetch: () => dispatch(getLatestVersionFetch()),
 });
 
 export const Layout = compose(

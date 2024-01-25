@@ -413,6 +413,16 @@ class Head extends React.Component<Props, HeaderState> {
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </li>
+                            {/* <li>
+                                <button
+                                    onClick={(e) =>
+                                        this.handleChangeCurrentStyleMode(
+                                            this.props.colorTheme === 'light' ? 'dark' : 'light'
+                                        )
+                                    }>
+                                    Warna
+                                </button>
+                            </li> */}
 
                             {isLoggedIn ? (
                                 <li className="nav-item dropdown avatar px-3">
