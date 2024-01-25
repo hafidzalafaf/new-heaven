@@ -1,4 +1,3 @@
-import { type } from 'os';
 import { CommonError } from '../../types';
 import {
     P2P_USER_OFFER_FETCH,
@@ -9,15 +8,15 @@ import {
     P2P_USER_OFFER_CREATE_ERROR,
     P2P_USER_OFFER_CANCEL,
     P2P_USER_OFFER_CANCEL_DATA,
-    P2P_USER_OFFER_CANCEL_ERROR
+    P2P_USER_OFFER_CANCEL_ERROR,
 } from './constants';
-import { P2PUserOffer, P2PCreateUserOffer } from './types';
+import { P2PCreateUserOffer } from './types';
 
 export interface P2PUserOfferCancel {
     type: typeof P2P_USER_OFFER_CANCEL;
     payload: {
         payment_user_uid: string;
-    }
+    };
 }
 
 export interface P2PUserOfferCancelData {
@@ -62,7 +61,7 @@ export interface P2PUserOfferData {
         payment_method?: number;
         state?: string;
         nextPageExists: boolean;
-    }
+    };
 }
 
 export interface P2PUserOfferError {
@@ -93,7 +92,7 @@ export type P2PUserOfferActions =
     | P2PUserOfferCreateError
     | P2PUserOfferCancel
     | P2PUserOfferCancelData
-    | P2PUserOfferCancelError
+    | P2PUserOfferCancelError;
 
 export const p2pUserOfferFetch = (payload?: P2PUserOfferFetch['payload']): P2PUserOfferFetch => ({
     type: P2P_USER_OFFER_FETCH,
@@ -126,14 +125,14 @@ export const p2pUserOfferCreateError = (error: CommonError): P2PUserOfferCreateE
 
 export const p2pUserOfferCancel = (payload: P2PUserOfferCancel['payload']): P2PUserOfferCancel => ({
     type: P2P_USER_OFFER_CANCEL,
-    payload
-})
+    payload,
+});
 
 export const p2pUserOfferCancelData = (): P2PUserOfferCancelData => ({
-    type: P2P_USER_OFFER_CANCEL_DATA
-})
+    type: P2P_USER_OFFER_CANCEL_DATA,
+});
 
 export const p2pUserOfferCancelError = (error: CommonError): P2PUserOfferCancelError => ({
     type: P2P_USER_OFFER_CANCEL_ERROR,
-    error
-})
+    error,
+});
