@@ -66,20 +66,6 @@ import {
     OrderHistoryMobileScreen,
     AnnouncementMobileScreen,
     FAQMobileScreen,
-    P2PMobileScreen,
-    P2PDetailOrderMobileScreen,
-    P2PWalletOrderMobileScreen,
-    P2PWalletMobileScreen,
-    P2PWalletDetailMobileScreen,
-    P2PCreateOfferMobileScreen,
-    P2PProfileMobileScreen,
-    P2PMyOrderMobileScreen,
-    P2PMyOfferMobileScreen,
-    P2PMyOfferDetailMobileScreen,
-    P2PPaymentMethodMobileScreen,
-    P2PAddPaymentMethodMobileScreen,
-    P2PEditPaymentMethodMobileScreen,
-    P2PFAQMobileScreen,
     PrivacyMobileScreen,
     SettingProfileMobileScreen,
 } from '../../mobile/screens';
@@ -113,15 +99,6 @@ import {
     FAQScreen,
     ChangeEmail,
     ProfileSetting,
-    P2PScreen,
-    P2PProfileScreen,
-    P2POrderScreen,
-    P2PWalletScreen,
-    P2PAddPaymentScreen,
-    P2PWalletOrderScreen,
-    P2PEditPaymentScreen,
-    P2PMyOfferScreen,
-    P2PDetailOfferScreen,
     PrivacyScreen,
 } from '../../desktop/screens';
 import { LatestVersion } from 'src/modules/public/latestVersion/types';
@@ -242,7 +219,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                     break;
                 default:
                     const token = localStorage.getItem('csrfToken');
-                    this.props.latestVersionFetch()
+                    this.props.latestVersionFetch();
 
                     if (token) {
                         this.props.userFetch();
@@ -285,7 +262,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
             this.check();
         }
         if ((this.props.latestVersionState.value !== '') !== (nextProps.latestVersionState.value !== '')) {
-            this.checkLatestVersion(nextProps.latestVersionState.value)
+            this.checkLatestVersion(nextProps.latestVersionState.value);
         }
     }
 
@@ -520,12 +497,6 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                             component={OrderHistoryMobileScreen}
                         />
 
-                        <PublicRoute
-                            loading={userLoading}
-                            path="/p2p/profile/:uid"
-                            component={P2PProfileMobileScreen}
-                        />
-
                         <PrivateRoute
                             loading={userLoading}
                             isLogged={isLoggedIn}
@@ -541,90 +512,6 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         />
 
                         <PublicRoute loading={userLoading} path="/announcements" component={AnnouncementMobileScreen} />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/faq"
-                            component={P2PFAQMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/create-offer"
-                            component={P2PCreateOfferMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/payment-method/edit/:payment_user_uid"
-                            component={P2PEditPaymentMethodMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/payment-method/create/:bank"
-                            component={P2PAddPaymentMethodMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/payment-method"
-                            component={P2PPaymentMethodMobileScreen}
-                        />
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/offer/:offer_number"
-                            component={P2PMyOfferDetailMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/offer"
-                            component={P2PMyOfferMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/order/detail/:order_number"
-                            component={P2PWalletOrderMobileScreen}
-                        />
-
-                        <PublicRoute
-                            loading={userLoading}
-                            path="/p2p/order/:offer_number"
-                            component={P2PDetailOrderMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/order"
-                            component={P2PMyOrderMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/wallets/:currency/detail"
-                            component={P2PWalletDetailMobileScreen}
-                        />
-
-                        <PrivateRoute
-                            loading={userLoading}
-                            isLogged={isLoggedIn}
-                            path="/p2p/wallets"
-                            component={P2PWalletMobileScreen}
-                        />
-
-                        <PublicRoute loading={userLoading} path="/p2p" component={P2PMobileScreen} />
 
                         {/* <PublicRoute loading={userLoading} path="/trading" component={TradingMobileScreen} />    */}
                         <PublicRoute loading={userLoading} path="/privacy" component={PrivacyMobileScreen} />
@@ -799,54 +686,6 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                         component={ChangeEmail}
                     />
 
-                    <PrivateRoute
-                        loading={userLoading}
-                        isLogged={isLoggedIn}
-                        path="/p2p/payment-method/edit/:payment_user_uid"
-                        component={P2PEditPaymentScreen}
-                    />
-
-                    <PrivateRoute
-                        loading={userLoading}
-                        isLogged={isLoggedIn}
-                        path="/p2p/payment-method/create/:payment"
-                        component={P2PAddPaymentScreen}
-                    />
-
-                    <PrivateRoute
-                        loading={userLoading}
-                        isLogged={isLoggedIn}
-                        path="/p2p/order/detail/:order_number"
-                        component={P2PWalletOrderScreen}
-                    />
-
-                    <PrivateRoute
-                        loading={userLoading}
-                        isLogged={isLoggedIn}
-                        path="/p2p/order"
-                        component={P2POrderScreen}
-                    />
-                    <PrivateRoute
-                        loading={userLoading}
-                        isLogged={isLoggedIn}
-                        path="/p2p/wallets"
-                        component={P2PWalletScreen}
-                    />
-                    <PublicRoute loading={userLoading} path="/p2p/profile/:uid" component={P2PProfileScreen} />
-
-                    <PrivateRoute
-                        loading={userLoading}
-                        isLogged={isLoggedIn}
-                        path="/p2p/offer/:offer_number"
-                        component={P2PDetailOfferScreen}
-                    />
-                    <PrivateRoute
-                        loading={userLoading}
-                        isLogged={isLoggedIn}
-                        path="/p2p/offer"
-                        component={P2PMyOfferScreen}
-                    />
-                    <PublicRoute loading={userLoading} path="/p2p" component={P2PScreen} />
                     <Route exact={true} path="/" component={LandingScreen} />
                     <Route path="**">
                         <Redirect to="/markets/" />
@@ -927,32 +766,32 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
     };
 
     private checkLatestVersion = (value: string) => {
-        const currentVersion = CURRENT_VERSION
+        const currentVersion = CURRENT_VERSION;
         // const compatibleVersion = COMPATIBLE_VERSION
-        const platform = Capacitor.getPlatform()
+        const platform = Capacitor.getPlatform();
         setTimeout(() => {
             if (platform === 'android' && value !== currentVersion) {
                 this.setState({
                     isShownUpdater: true,
-                })
+                });
             } else {
                 this.setState({
                     isShownUpdater: false,
-                })
+                });
             }
-        }, 3000)
-    }
+        }, 3000);
+    };
 
     private handleUpdaterModalState = () => {
         this.setState({
-            isShownUpdater: !this.state.isShownUpdater
-        })
-    }
+            isShownUpdater: !this.state.isShownUpdater,
+        });
+    };
 
     private handleUpdateApp = () => {
         this.handleUpdaterModalState();
-        window.location.href = GOOGLE_PLAY_LINK
-    }
+        window.location.href = GOOGLE_PLAY_LINK;
+    };
 
     private handleUpdater = () => (
         <UpdateAppModal
@@ -965,7 +804,6 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
     );
 }
 
-
 const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> = (state) => ({
     colorTheme: selectCurrentColorTheme(state),
     currentMarket: selectCurrentMarket(state),
@@ -975,7 +813,7 @@ const mapStateToProps: MapStateToProps<ReduxProps, {}, RootState> = (state) => (
     userLoading: selectUserFetching(state),
     platformAccessStatus: selectPlatformAccessStatus(state),
     abilities: selectAbilities(state),
-    latestVersionState: selectLatestVersion(state)
+    latestVersionState: selectLatestVersion(state),
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
@@ -983,7 +821,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => 
     toggleChartRebuild: () => dispatch(toggleChartRebuild()),
     userFetch: () => dispatch(userFetch()),
     walletsReset: () => dispatch(walletsReset()),
-    latestVersionFetch: () => dispatch(getLatestVersionFetch())
+    latestVersionFetch: () => dispatch(getLatestVersionFetch()),
 });
 
 export const Layout = compose(

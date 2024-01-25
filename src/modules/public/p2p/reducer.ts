@@ -3,53 +3,66 @@ import { sliceArray } from 'src/helpers';
 import { CommonError } from '../../types';
 import { P2PActions } from './actions';
 import {
-    P2P_CURRENCIES_DATA,
-    P2P_CURRENCIES_ERROR,
-    P2P_CURRENCIES_FETCH,
-    P2P_FIAT_DATA,
-    P2P_FIAT_FETCH,
-    P2P_FIAT_ERROR,
-    P2P_OFFERS_DATA,
-    P2P_OFFERS_ERROR,
-    P2P_OFFERS_FETCH,
-    P2P_PAYMENT_METHODS_DATA,
-    P2P_PAYMENT_METHODS_ERROR,
-    P2P_PAYMENT_METHODS_FETCH,
-    P2P_MERCHANT_DETAIL_DATA,
-    P2P_MERCHANT_DETAIL_ERROR,
-    P2P_MERCHANT_DETAIL_FETCH,
-    P2P_OFFER_DETAIL_DATA,
-    P2P_OFFER_DETAIL_ERROR,
-    P2P_OFFER_DETAIL_FETCH,
+    P2P_PUBLIC_CURRENCIES_DATA,
+    P2P_PUBLIC_CURRENCIES_ERROR,
+    P2P_PUBLIC_CURRENCIES_FETCH,
+    P2P_PUBLIC_FIAT_DATA,
+    P2P_PUBLIC_FIAT_FETCH,
+    P2P_PUBLIC_FIAT_ERROR,
+    P2P_PUBLIC_MERCHANT_DETAIL_DATA,
+    P2P_PUBLIC_MERCHANT_DETAIL_ERROR,
+    P2P_PUBLIC_MERCHANT_DETAIL_FETCH,
+    P2P_PUBLIC_OFFERS_DATA,
+    P2P_PUBLIC_OFFERS_ERROR,
+    P2P_PUBLIC_OFFERS_FETCH,
+    P2P_PUBLIC_PAYMENT_METHODS_DATA,
+    P2P_PUBLIC_PAYMENT_METHODS_ERROR,
+    P2P_PUBLIC_PAYMENT_METHODS_FETCH,
+    P2P_PUBLIC_OFFER_DETAIL_DATA,
+    P2P_PUBLIC_OFFER_DETAIL_ERROR,
+    P2P_PUBLIC_OFFER_DETAIL_FETCH,
 } from './constants';
-import { Offer, P2PCurrency, P2PFiat, PaymentMethod, P2PMerchantDetailInterface } from './types';
+import {
+    P2PPublicOffer,
+    P2PPublicCurrency,
+    P2PPublicFiat,
+    P2PPublicPaymentMethod,
+    P2PPublicMerchantDetailInterface,
+} from './types';
 
 export interface P2PState {
-    fiats: {
-        data: P2PFiat[];
+    p2p_public_currencies: {
+        data: P2PPublicCurrency[];
         fetching: boolean;
         success: boolean;
         timestamp?: number | undefined;
         error?: CommonError | undefined;
     };
-    currencies: {
-        data: P2PCurrency[];
+    p2p_public_fiat: {
+        data: P2PPublicFiat[];
         fetching: boolean;
         success: boolean;
         timestamp?: number | undefined;
         error?: CommonError | undefined;
     };
-    paymentMethods: {
-        data: PaymentMethod[];
+    p2p_public_merchant_detail: {
+        data: P2PPublicMerchantDetailInterface;
         fetching: boolean;
         success: boolean;
         timestamp?: number | undefined;
         error?: CommonError | undefined;
     };
-    offers: {
+    p2p_public_offer_detail: {
+        data: any;
+        fetching: boolean;
+        success: boolean;
+        timestamp?: number | undefined;
+        error?: CommonError | undefined;
+    };
+    p2p_public_offers: {
         page: number;
         total: number;
-        list: Offer[];
+        list: P2PPublicOffer[];
         side: string;
         base: string;
         quote: string;
@@ -59,15 +72,8 @@ export interface P2PState {
         timestamp?: number | undefined;
         error?: CommonError | undefined;
     };
-    offer_detail: {
-        data: any;
-        fetching: boolean;
-        success: boolean;
-        timestamp?: number | undefined;
-        error?: CommonError | undefined;
-    };
-    merchant_detail: {
-        data: P2PMerchantDetailInterface;
+    p2p_public_payment_methods: {
+        data: P2PPublicPaymentMethod[];
         fetching: boolean;
         success: boolean;
         timestamp?: number | undefined;
@@ -76,22 +82,30 @@ export interface P2PState {
 }
 
 export const initialP2PState: P2PState = {
-    fiats: {
+    p2p_public_currencies: {
         data: [],
         fetching: false,
         success: false,
     },
-    currencies: {
+    p2p_public_fiat: {
         data: [],
         fetching: false,
         success: false,
     },
-    paymentMethods: {
+    p2p_public_merchant_detail: {
+        data: {
+            merchant: {},
+            feedbacks: [],
+        },
+        fetching: false,
+        success: false,
+    },
+    p2p_public_offer_detail: {
         data: [],
         fetching: false,
         success: false,
     },
-    offers: {
+    p2p_public_offers: {
         page: 0,
         total: 0,
         list: [],
@@ -101,30 +115,134 @@ export const initialP2PState: P2PState = {
         fetching: false,
         success: false,
     },
-    offer_detail: {
+    p2p_public_payment_methods: {
         data: [],
-        fetching: false,
-        success: false,
-    },
-    merchant_detail: {
-        data: {
-            merchant: {},
-            feedbacks: [],
-        },
         fetching: false,
         success: false,
     },
 };
 
-export const p2pOffersFetchReducer = (state: P2PState['offers'], action: P2PActions) => {
+const p2pPublicCurrenciesReducer = (state: P2PState['p2p_public_currencies'], action: P2PActions) => {
     switch (action.type) {
-        case P2P_OFFERS_FETCH:
+        case P2P_PUBLIC_CURRENCIES_FETCH:
             return {
                 ...state,
                 fetching: true,
                 timestamp: Math.floor(Date.now() / 1000),
             };
-        case P2P_OFFERS_DATA:
+        case P2P_PUBLIC_CURRENCIES_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case P2P_PUBLIC_CURRENCIES_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+const p2pPublicFiatsReducer = (state: P2PState['p2p_public_fiat'], action: P2PActions) => {
+    switch (action.type) {
+        case P2P_PUBLIC_FIAT_FETCH:
+            return {
+                ...state,
+                fetching: true,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+        case P2P_PUBLIC_FIAT_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case P2P_PUBLIC_FIAT_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+const p2pPublicMerchantDetailReducer = (state: P2PState['p2p_public_merchant_detail'], action: P2PActions) => {
+    switch (action.type) {
+        case P2P_PUBLIC_MERCHANT_DETAIL_FETCH:
+            return {
+                ...state,
+                fetching: true,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+        case P2P_PUBLIC_MERCHANT_DETAIL_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case P2P_PUBLIC_MERCHANT_DETAIL_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+const p2pPublicOfferDetailReducer = (state: P2PState['p2p_public_offer_detail'], action: P2PActions) => {
+    switch (action.type) {
+        case P2P_PUBLIC_OFFER_DETAIL_FETCH:
+            return {
+                ...state,
+                fetching: true,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+        case P2P_PUBLIC_OFFER_DETAIL_DATA:
+            return {
+                ...state,
+                data: action.payload,
+                fetching: false,
+                success: true,
+                error: undefined,
+            };
+        case P2P_PUBLIC_OFFER_DETAIL_ERROR:
+            return {
+                ...state,
+                fetching: false,
+                success: false,
+                error: action.error,
+            };
+        default:
+            return state;
+    }
+};
+
+export const p2pPublicOffersFetchReducer = (state: P2PState['p2p_public_offers'], action: P2PActions) => {
+    switch (action.type) {
+        case P2P_PUBLIC_OFFERS_FETCH:
+            return {
+                ...state,
+                fetching: true,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+        case P2P_PUBLIC_OFFERS_DATA:
             return {
                 ...state,
                 list: sliceArray(action.payload.list, defaultStorageLimit()),
@@ -139,7 +257,7 @@ export const p2pOffersFetchReducer = (state: P2PState['offers'], action: P2PActi
                 error: undefined,
             };
 
-        case P2P_OFFERS_ERROR:
+        case P2P_PUBLIC_OFFERS_ERROR:
             return {
                 ...state,
                 fetching: false,
@@ -155,15 +273,15 @@ export const p2pOffersFetchReducer = (state: P2PState['offers'], action: P2PActi
     }
 };
 
-const p2pFiatsReducer = (state: P2PState['fiats'], action: P2PActions) => {
+const p2pPublicPaymentMethodsReducer = (state: P2PState['p2p_public_payment_methods'], action: P2PActions) => {
     switch (action.type) {
-        case P2P_FIAT_FETCH:
+        case P2P_PUBLIC_PAYMENT_METHODS_FETCH:
             return {
                 ...state,
                 fetching: true,
                 timestamp: Math.floor(Date.now() / 1000),
             };
-        case P2P_FIAT_DATA:
+        case P2P_PUBLIC_PAYMENT_METHODS_DATA:
             return {
                 ...state,
                 data: action.payload,
@@ -171,119 +289,7 @@ const p2pFiatsReducer = (state: P2PState['fiats'], action: P2PActions) => {
                 success: true,
                 error: undefined,
             };
-        case P2P_FIAT_ERROR:
-            return {
-                ...state,
-                fetching: false,
-                success: false,
-                error: action.error,
-            };
-        default:
-            return state;
-    }
-};
-
-const p2pCurrenciesReducer = (state: P2PState['currencies'], action: P2PActions) => {
-    switch (action.type) {
-        case P2P_CURRENCIES_FETCH:
-            return {
-                ...state,
-                fetching: true,
-                timestamp: Math.floor(Date.now() / 1000),
-            };
-        case P2P_CURRENCIES_DATA:
-            return {
-                ...state,
-                data: action.payload,
-                fetching: false,
-                success: true,
-                error: undefined,
-            };
-        case P2P_CURRENCIES_ERROR:
-            return {
-                ...state,
-                fetching: false,
-                success: false,
-                error: action.error,
-            };
-        default:
-            return state;
-    }
-};
-
-const p2pPaymentMethodsReducer = (state: P2PState['paymentMethods'], action: P2PActions) => {
-    switch (action.type) {
-        case P2P_PAYMENT_METHODS_FETCH:
-            return {
-                ...state,
-                fetching: true,
-                timestamp: Math.floor(Date.now() / 1000),
-            };
-        case P2P_PAYMENT_METHODS_DATA:
-            return {
-                ...state,
-                data: action.payload,
-                fetching: false,
-                success: true,
-                error: undefined,
-            };
-        case P2P_PAYMENT_METHODS_ERROR:
-            return {
-                ...state,
-                fetching: false,
-                success: false,
-                error: action.error,
-            };
-        default:
-            return state;
-    }
-};
-
-const p2pOfferDetailReducer = (state: P2PState['offer_detail'], action: P2PActions) => {
-    switch (action.type) {
-        case P2P_OFFER_DETAIL_FETCH:
-            return {
-                ...state,
-                fetching: true,
-                timestamp: Math.floor(Date.now() / 1000),
-            };
-        case P2P_OFFER_DETAIL_DATA:
-            return {
-                ...state,
-                data: action.payload,
-                fetching: false,
-                success: true,
-                error: undefined,
-            };
-        case P2P_OFFER_DETAIL_ERROR:
-            return {
-                ...state,
-                fetching: false,
-                success: false,
-                error: action.error,
-            };
-        default:
-            return state;
-    }
-};
-
-const p2pMerchantDetailReducer = (state: P2PState['merchant_detail'], action: P2PActions) => {
-    switch (action.type) {
-        case P2P_MERCHANT_DETAIL_FETCH:
-            return {
-                ...state,
-                fetching: true,
-                timestamp: Math.floor(Date.now() / 1000),
-            };
-        case P2P_MERCHANT_DETAIL_DATA:
-            return {
-                ...state,
-                data: action.payload,
-                fetching: false,
-                success: true,
-                error: undefined,
-            };
-        case P2P_MERCHANT_DETAIL_ERROR:
+        case P2P_PUBLIC_PAYMENT_METHODS_ERROR:
             return {
                 ...state,
                 fetching: false,
@@ -297,64 +303,64 @@ const p2pMerchantDetailReducer = (state: P2PState['merchant_detail'], action: P2
 
 export const p2pReducer = (state = initialP2PState, action: P2PActions) => {
     switch (action.type) {
-        case P2P_CURRENCIES_FETCH:
-        case P2P_CURRENCIES_DATA:
-        case P2P_CURRENCIES_ERROR:
-            const p2pCurrenciesState = { ...state.currencies };
+        case P2P_PUBLIC_CURRENCIES_FETCH:
+        case P2P_PUBLIC_CURRENCIES_DATA:
+        case P2P_PUBLIC_CURRENCIES_ERROR:
+            const p2pPublicCurrenciesState = { ...state.p2p_public_currencies };
 
             return {
                 ...state,
-                p2pCurrencies: p2pCurrenciesReducer(p2pCurrenciesState, action),
+                p2pPublicCurrencies: p2pPublicCurrenciesReducer(p2pPublicCurrenciesState, action),
             };
 
-        case P2P_FIAT_FETCH:
-        case P2P_FIAT_DATA:
-        case P2P_FIAT_ERROR:
-            const p2pFiatState = { ...state.fiats };
+        case P2P_PUBLIC_FIAT_FETCH:
+        case P2P_PUBLIC_FIAT_DATA:
+        case P2P_PUBLIC_FIAT_ERROR:
+            const p2pPublicFiatState = { ...state.p2p_public_fiat };
 
             return {
                 ...state,
-                fiats: p2pFiatsReducer(p2pFiatState, action),
+                p2p_public_fiat: p2pPublicFiatsReducer(p2pPublicFiatState, action),
             };
 
-        case P2P_PAYMENT_METHODS_FETCH:
-        case P2P_PAYMENT_METHODS_DATA:
-        case P2P_PAYMENT_METHODS_ERROR:
-            const p2pPaymentMethodsState = { ...state.paymentMethods };
+        case P2P_PUBLIC_MERCHANT_DETAIL_FETCH:
+        case P2P_PUBLIC_MERCHANT_DETAIL_DATA:
+        case P2P_PUBLIC_MERCHANT_DETAIL_ERROR:
+            const p2pPublicMerchantDetailState = { ...state.p2p_public_merchant_detail };
 
             return {
                 ...state,
-                paymentMethods: p2pPaymentMethodsReducer(p2pPaymentMethodsState, action),
+                p2pPublicMerchantDetail: p2pPublicMerchantDetailReducer(p2pPublicMerchantDetailState, action),
             };
 
-        case P2P_OFFERS_FETCH:
-        case P2P_OFFERS_DATA:
-        case P2P_OFFERS_ERROR:
-            const p2pOffersFetchState = { ...state.offers };
+        case P2P_PUBLIC_OFFER_DETAIL_FETCH:
+        case P2P_PUBLIC_OFFER_DETAIL_DATA:
+        case P2P_PUBLIC_OFFER_DETAIL_ERROR:
+            const p2pPublicOfferDetailState = { ...state.p2p_public_offer_detail };
 
             return {
                 ...state,
-                offers: p2pOffersFetchReducer(p2pOffersFetchState, action),
+                p2p_public_offer_detail: p2pPublicOfferDetailReducer(p2pPublicOfferDetailState, action),
             };
 
-        case P2P_OFFER_DETAIL_FETCH:
-        case P2P_OFFER_DETAIL_DATA:
-        case P2P_OFFER_DETAIL_ERROR:
-            const p2pOfferDetailState = { ...state.offer_detail };
+        case P2P_PUBLIC_OFFERS_FETCH:
+        case P2P_PUBLIC_OFFERS_DATA:
+        case P2P_PUBLIC_OFFERS_ERROR:
+            const p2pPublicOffersFetchState = { ...state.p2p_public_offers };
 
             return {
                 ...state,
-                offer_detail: p2pOfferDetailReducer(p2pOfferDetailState, action),
+                p2p_public_offers: p2pPublicOffersFetchReducer(p2pPublicOffersFetchState, action),
             };
 
-        case P2P_MERCHANT_DETAIL_FETCH:
-        case P2P_MERCHANT_DETAIL_DATA:
-        case P2P_MERCHANT_DETAIL_ERROR:
-            const p2pMerchantDetailState = { ...state.merchant_detail };
+        case P2P_PUBLIC_PAYMENT_METHODS_FETCH:
+        case P2P_PUBLIC_PAYMENT_METHODS_DATA:
+        case P2P_PUBLIC_PAYMENT_METHODS_ERROR:
+            const p2pPublicPaymentMethodsState = { ...state.p2p_public_payment_methods };
 
             return {
                 ...state,
-                merchant_detail: p2pMerchantDetailReducer(p2pMerchantDetailState, action),
+                p2p_public_payment_methods: p2pPublicPaymentMethodsReducer(p2pPublicPaymentMethodsState, action),
             };
 
         default:

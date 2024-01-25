@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { p2pPaymentMethodsFetch, selectShouldFetchP2PPaymentMethods } from '../modules';
+// import { p2pPaymentMethodsFetch, selectShouldFetchP2PPaymentMethods } from '../modules';
 
-export const useP2PPaymentMethodsFetch = () => {
-    const shouldDispatch = useSelector(selectShouldFetchP2PPaymentMethods);
-    const dispatch = useDispatch();
+// export const useP2PPaymentMethodsFetch = () => {
+//     const shouldDispatch = useSelector(selectShouldFetchP2PPaymentMethods);
+//     const dispatch = useDispatch();
 
-    React.useEffect(() => {
-        if (shouldDispatch) {
-            dispatch(p2pPaymentMethodsFetch());
-        }
-    }, [shouldDispatch]);
-};
+//     React.useEffect(() => {
+//         if (shouldDispatch) {
+//             dispatch(p2pPaymentMethodsFetch());
+//         }
+//     }, [shouldDispatch]);
+// };

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable import/namespace */
 import * as React from 'react';
 import { History } from 'history';
 import { injectIntl } from 'react-intl';
@@ -5,6 +7,9 @@ import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import { RouterProps } from 'react-router';
 import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'redux';
+
+import { Dropdown } from 'react-bootstrap';
+
 import { IntlProps } from '../../../';
 import { Decimal } from 'src/components';
 import '../../../styles/colors.pcss';
@@ -29,9 +34,7 @@ import {
     changeUserDataFetch,
 } from '../../../modules';
 import { Logo } from '../../../assets/images/Logo';
-import { MoonIcon, SunIcon } from 'src/assets/images/SwitchTheme';
 import { Api, Dashboard, Logout, Referral, Security, Wallet } from '../../../assets/images/ProfileDropdown';
-import { Dropdown } from 'react-bootstrap';
 
 interface ReduxProps {
     currentMarket: Market | undefined;
@@ -150,9 +153,9 @@ class Head extends React.Component<Props, HeaderState> {
             },
         ];
 
-        const currencyItem: Currency | any =
-            this.props.currencies &&
-            this.props.currencies.find((item) => item.id === this.props.currentMarket?.base_unit);
+        // const currencyItem: Currency | any =
+        //     this.props.currencies &&
+        //     this.props.currencies.find((item) => item.id === this.props.currentMarket?.base_unit);
 
         const ticker = this.props.tickers[this.props.currentMarket?.id];
 
@@ -248,13 +251,6 @@ class Head extends React.Component<Props, HeaderState> {
                                             onClick={() => this.setState({ showHeader: false })}>
                                             <Link to={'/markets'} className="nav-link px-3 text-sm font-bold">
                                                 {this.translate('page.header.navbar.market')}
-                                            </Link>
-                                        </li>
-                                        <li
-                                            className={`nav-item ${location.pathname == '/p2p' && 'active'}`}
-                                            onClick={() => this.setState({ showHeader: false })}>
-                                            <Link to={'/p2p'} className="nav-link px-3 text-sm font-bold">
-                                                P2P
                                             </Link>
                                         </li>
                                         <li

@@ -1,4 +1,4 @@
-export interface Payment {
+export interface P2PPublicPayment {
     payment_user_id: number | string;
     bank_name: string;
     symbol: string;
@@ -7,11 +7,11 @@ export interface Payment {
     state: string;
 }
 
-export interface FiatCurrency {
+export interface P2PPublicFiatCurrency {
     fiat: string;
     currency: string;
 }
-export interface Offer {
+export interface P2PPublicOffer {
     offer_number: string;
     available_amount: string | number;
     price: string | number;
@@ -23,30 +23,30 @@ export interface Offer {
     persentage: string | number;
     term_of_condition: string;
     trader: any;
-    payment: Payment[];
+    payment: P2PPublicPayment[];
 }
 
-export interface P2PFiat {
+export interface P2PPublicFiat {
     name: string;
     code: string;
     symbol: string;
     scale: number;
     icon: string;
 }
-export interface P2PCurrency {
+export interface P2PPublicCurrency {
     fiat: string;
-    currency: FiatCurrency[];
-    payment: Payment[];
+    currency: P2PPublicFiatCurrency[];
+    payment: P2PPublicPayment[];
 }
 
-export interface PaymentMethod {
+export interface P2PPublicPaymentMethod {
     id: number;
     type: string;
     name: string;
     options?: any;
 }
 
-export interface P2PMerchantDetailInterface {
+export interface P2PPublicMerchantDetailInterface {
     merchant: any;
     feedbacks: any;
 }

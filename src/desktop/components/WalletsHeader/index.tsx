@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { useIntl } from 'react-intl';
+
 import { FilterInput } from '..';
 import { Wallet } from '../../../modules';
 

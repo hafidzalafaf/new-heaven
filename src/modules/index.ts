@@ -52,16 +52,15 @@ import { FeeGroupState, rootFeeGroupSaga } from './user/feeGroup';
 import { WithdrawLimitsState, rootWithdrawLimitsSaga } from './public/withdrawLimits';
 import { ConfirmationCodeState, rootConfirmationCodeSaga } from './user/emailVerificationCode';
 import { P2PFeedbackState, rootP2PFeedbackSaga } from './user/p2pFeedback';
-import { P2POrderState, rootP2POrderSaga } from './user/p2pOrder';
-import { P2POfferState, rootP2POfferSaga } from './user/p2pOffer';
+import { P2POrdersState, rootP2POrdersSaga } from './user/p2pOrders';
+import { P2POffersState, rootP2POffersSaga } from './user/p2pOffers';
 import { P2POfferAvailableState, rootP2PAvailableOfferSaga } from './user/p2pAvailableOffer';
 import { P2PProfileState, rootP2PProfileSaga } from './user/p2pProfile';
 import { rootP2PPaymentUserSaga, P2PPaymentUserState } from './user/p2pPaymentUser';
 import { GroupMemberState, rootMemberGroupSaga } from './user/memberGroup';
 import { P2PUserOfferState, rootP2PUserOfferSaga } from './user/p2pUserOffer';
 import { P2PUserOfferDetailState, rootP2PUserOfferDetailSaga } from './user/p2pUserOfferDetail';
-import {GetLatestVersionState, rootGetLatestVersionSaga } from './public/latestVersion';
-
+import { GetLatestVersionState, rootGetLatestVersionSaga } from './public/latestVersion';
 
 export * from './admin/config';
 export * from './admin/markets';
@@ -109,13 +108,13 @@ export * from './user/p2pTransfers';
 export * from './user/emailVerificationCode';
 export * from './user/memberGroup';
 export * from './user/p2pFeedback';
-export * from './user/p2pOrder';
-export * from './user/p2pOffer';
+export * from './user/p2pOrders';
+export * from './user/p2pOffers';
 export * from './user/p2pAvailableOffer';
-export * from './user/p2pProfile';
-export * from './user/p2pPaymentUser';
-export * from './user/p2pUserOffer'
-export * from './user/p2pUserOfferDetail';
+// export * from './user/p2pProfile';
+// export * from './user/p2pPaymentUser';
+// export * from './user/p2pUserOffer';
+// export * from './user/p2pUserOfferDetail';
 
 export interface RootState {
     public: {
@@ -172,13 +171,13 @@ export interface RootState {
         confirmationCode: ConfirmationCodeState;
         memberGroup: GroupMemberState;
         p2pFeedback: P2PFeedbackState;
-        p2pOrder: P2POrderState;
-        p2pOffer: P2POfferState;
+        p2pOrders: P2POrdersState;
+        p2pOffers: P2POffersState;
         p2pOfferAvailable: P2POfferAvailableState;
-        p2pProfile: P2PProfileState;
-        p2pPaymentUser: P2PPaymentUserState;
-        p2pUserOffer : P2PUserOfferState;
-        p2pUserOfferDetail: P2PUserOfferDetailState;
+        // p2pProfile: P2PProfileState;
+        // p2pPaymentUser: P2PPaymentUserState;
+        // p2pUserOffer: P2PUserOfferState;
+        // p2pUserOfferDetail: P2PUserOfferDetailState;
     };
     admin: {
         configUpdate: ConfigUpdateState;
@@ -238,13 +237,13 @@ export function* rootSaga() {
         call(rootConfirmationCodeSaga),
         call(rootMemberGroupSaga),
         call(rootP2PFeedbackSaga),
-        call(rootP2POrderSaga),
-        call(rootP2POfferSaga),
+        call(rootP2POrdersSaga),
+        call(rootP2POffersSaga),
         call(rootP2PAvailableOfferSaga),
-        call(rootP2PProfileSaga),
-        call(rootP2PPaymentUserSaga),
-        call(rootP2PUserOfferSaga),
-        call(rootP2PUserOfferDetailSaga),
-        call(rootGetLatestVersionSaga)
+        // call(rootP2PProfileSaga),
+        // call(rootP2PPaymentUserSaga),
+        // call(rootP2PUserOfferSaga),
+        // call(rootP2PUserOfferDetailSaga),
+        call(rootGetLatestVersionSaga),
     ]);
 }

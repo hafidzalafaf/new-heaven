@@ -45,15 +45,15 @@ import { p2pReducer } from './public/p2p';
 import { p2pTransfersReducer } from './user/p2pTransfers';
 import { feeGroupReducer } from './user/feeGroup';
 import { p2pFeedbackReducer } from './user/p2pFeedback';
-import { p2pOrderReducer } from './user/p2pOrder';
+import { p2pOrdersReducer } from './user/p2pOrders';
 import { groupMemberReducer } from './user/memberGroup';
-import { p2pOfferReducer } from './user/p2pOffer';
+import { p2pOffersReducer } from './user/p2pOffers';
 import { p2pOfferAvailableReducer } from './user/p2pAvailableOffer';
 import { p2pProfileReducer } from './user/p2pProfile';
 import { p2pPaymentUserReducer } from './user/p2pPaymentUser/reducer';
 import { p2pUserOfferReducer } from './user/p2pUserOffer';
 import { p2pUserOfferDetailReducer } from './user/p2pUserOfferDetail';
-import { getLatestVersionReducer} from './public/latestVersion'
+import { getLatestVersionReducer } from './public/latestVersion';
 
 export const publicReducer = combineReducers({
     alerts: alertReducer,
@@ -78,7 +78,7 @@ export const publicReducer = combineReducers({
     p2p: p2pReducer,
     withdrawLimits: withdrawLimitsReducer,
     maxWithdrawLimit: maxWithdrawLimitReducer,
-    latestVersion: getLatestVersionReducer
+    latestVersion: getLatestVersionReducer,
 });
 
 export const userReducer = combineReducers({
@@ -110,13 +110,13 @@ export const userReducer = combineReducers({
     confirmationCode: confirmationCodeReducer,
     memberGroup: groupMemberReducer,
     p2pFeedback: p2pFeedbackReducer,
-    p2pOrder: p2pOrderReducer,
-    p2pOffer: p2pOfferReducer,
+    p2pOrders: p2pOrdersReducer,
+    p2pOffers: p2pOffersReducer,
     p2pOfferAvailable: p2pOfferAvailableReducer,
-    p2pProfile: p2pProfileReducer,
-    p2pPaymentUser: p2pPaymentUserReducer,
-    p2pUserOffer: p2pUserOfferReducer,
-    p2pUserOfferDetail: p2pUserOfferDetailReducer
+    // p2pProfile: p2pProfileReducer,
+    // p2pPaymentUser: p2pPaymentUserReducer,
+    // p2pUserOffer: p2pUserOfferReducer,
+    // p2pUserOfferDetail: p2pUserOfferDetailReducer,
 });
 
 export const adminReducer = combineReducers({

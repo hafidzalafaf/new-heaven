@@ -10,7 +10,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { BgCardSmall } from '../../assets/BackgroundCard';
 import { Table } from '../../../components';
 import { ArrowRight } from '../../assets/Arrow';
 import { ChartLandingMobile } from 'src/mobile/components';
@@ -165,8 +164,9 @@ const HomeMobileScreen: React.FC = () => {
                 />
             </>,
             <p
-                className={`badge white-text font-bold ${item.price_change_percent?.includes('-') ? 'badge-danger' : 'badge-plus'
-                    }`}>
+                className={`badge white-text font-bold ${
+                    item.price_change_percent?.includes('-') ? 'badge-danger' : 'badge-plus'
+                }`}>
                 {item && item.price_change_percent}
             </p>,
         ]);
@@ -225,12 +225,6 @@ const HomeMobileScreen: React.FC = () => {
                             className="d-flex flex-column align-items-center justify-content-center gap-4 cursor-pointer">
                             <img src="/img/earn.svg" alt="earn" height={32} width={32} />
                             <p className="m-0 p-0 grey-text-accent text-xxs font-normal">Earn</p>
-                        </Link>
-                        <Link
-                            to={`/p2p`}
-                            className="d-flex flex-column align-items-center justify-content-center gap-4 cursor-pointer">
-                            <img src="/img/p2p.svg" alt="p2p" height={32} width={32} />
-                            <p className="m-0 p-0 grey-text-accent text-xxs font-normal">P2P</p>
                         </Link>
                         <Link
                             to={`/faq`}
