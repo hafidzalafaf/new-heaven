@@ -26,6 +26,7 @@ import {
     selectSignInLoading,
     selectCaptchaDataObjectLoading,
 } from '../../../modules';
+import { Image } from 'react-bootstrap';
 
 export const SignInScreen: React.FC = () => {
     const dispatch = useDispatch();
@@ -200,78 +201,95 @@ export const SignInScreen: React.FC = () => {
 
     return (
         <React.Fragment>
-            <div className="row sign-in-screen">
-                <div className="col-md-5 dark-bg-accent min-h-full px-0">
-                    <div className="bg-auth" style={{ backgroundImage: `url('img/bg-auth2.png')` }}></div>
-                </div>
-                <div className="col-md-7 dark-bg-main min-h-full position-relative">
-                    <div className="text-to-signin">
-                        <div className="mt-4">{renderRegister}</div>
+            <div className="sign-in-screen">
+                <div className="row">
+                    <div className="w-45 d-flex justify-content-center align-items-center min-h-full px-0 py-4">
+                        <div className="">
+                            <div className="d-flex justify-content-center">
+                                <Image className="w-70" src="/img/pexbank/auth-image-2.webp" />
+                            </div>
+                            <h6 className="text-center gradient-text font-extrabold text-title-2 mt-4 mb-3">
+                                PexBank Exchange
+                            </h6>
+                            <div className="w-70 mx-auto">
+                                <p className="text-white text-center text-ms">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.{' '}
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div className="main-wrapper d-flex align-items-center">
-                        <div className="main-form position-relative">
-                            {require2FA ? (
-                                <React.Fragment>
-                                    <h2 className="title-2 white-text font-semibold">Two Factor Autentication</h2>
-                                    <p className="text-sm grey-text mb-24">
-                                        {formatMessage({ id: 'page.password2fa.message' })}
-                                    </p>
+                    <div className="w-55 min-h-full position-relative d-flex justify-content-center align-items-center">
+                        <div className="d-flex align-items-center justify-content-center">
+                            <div className="main-form position-relative">
+                                {require2FA ? (
+                                    <React.Fragment>
+                                        <h2 className="title-2 white-text font-semibold">Two Factor Autentication</h2>
+                                        <p className="text-sm grey-text mb-24">
+                                            {formatMessage({ id: 'page.password2fa.message' })}
+                                        </p>
 
-                                    <TwoFactorAuth
-                                        isMobile={isMobileDevice}
-                                        isLoading={loading}
-                                        signInLoading={signInLoading}
-                                        onSubmit={handle2FASignIn}
-                                        title={formatMessage({ id: 'page.password2fa' })}
-                                        buttonLabel={formatMessage({ id: 'page.header.signIn' })}
-                                        message={formatMessage({ id: 'page.password2fa.message' })}
-                                        otpCode={otpCode}
-                                        handleOtpCodeChange={handleChangeOtpCode}
-                                        handleClose2fa={handleClose}
-                                    />
-                                </React.Fragment>
-                            ) : (
-                                <React.Fragment>
-                                    <h2 className="title-2 white-text font-semibold">Sign In</h2>
-                                    <SignInComponent
-                                        email={email}
-                                        emailError={emailError}
-                                        emailFocused={emailFocused}
-                                        emailPlaceholder={formatMessage({ id: 'page.header.signIn.email' })}
-                                        password={password}
-                                        passwordError={passwordError}
-                                        passwordFocused={passwordFocused}
-                                        passwordPlaceholder={formatMessage({ id: 'page.header.signIn.password' })}
-                                        labelSignIn={formatMessage({ id: 'page.header.signIn' })}
-                                        labelSignUp={formatMessage({ id: 'page.header.signUp' })}
-                                        emailLabel={formatMessage({ id: 'page.header.signIn.email' })}
-                                        passwordLabel={formatMessage({ id: 'page.header.signIn.password' })}
-                                        receiveConfirmationLabel={formatMessage({
-                                            id: 'page.header.signIn.receiveConfirmation',
-                                        })}
-                                        forgotPasswordLabel={formatMessage({
-                                            id: 'page.header.signIn.forgotPassword',
-                                        })}
-                                        isLoading={loading}
-                                        onForgotPassword={forgotPassword}
-                                        onSignUp={handleSignUp}
-                                        onSignIn={handleSignIn}
-                                        handleChangeFocusField={handleFieldFocus}
-                                        isFormValid={validateForm}
-                                        refreshError={refreshError}
-                                        changeEmail={handleChangeEmailValue}
-                                        changePassword={handleChangePasswordValue}
-                                        renderCaptcha={renderCaptcha}
-                                        reCaptchaSuccess={reCaptchaSuccess}
-                                        geetestCaptchaSuccess={geetestCaptchaSuccess}
-                                        captcha_response={captcha_response}
-                                        classNameEmail={emailClassname}
-                                        classNamePassword={passwordClassname}
-                                        signInLoading={signInLoading}
-                                        // captchaLoading={captchaLoading}
-                                    />
-                                </React.Fragment>
-                            )}
+                                        <TwoFactorAuth
+                                            isMobile={isMobileDevice}
+                                            isLoading={loading}
+                                            signInLoading={signInLoading}
+                                            onSubmit={handle2FASignIn}
+                                            title={formatMessage({ id: 'page.password2fa' })}
+                                            buttonLabel={formatMessage({ id: 'page.header.signIn' })}
+                                            message={formatMessage({ id: 'page.password2fa.message' })}
+                                            otpCode={otpCode}
+                                            handleOtpCodeChange={handleChangeOtpCode}
+                                            handleClose2fa={handleClose}
+                                        />
+                                    </React.Fragment>
+                                ) : (
+                                    <React.Fragment>
+                                        <h2 className="title-2 mb-3 white-text font-semibold">Login Account</h2>
+                                        <p className="text-sm grey-text-accent mb-44">
+                                            Join PexBank today and start trading cryptocurrencies with ease and
+                                            convenience
+                                        </p>
+                                        <SignInComponent
+                                            email={email}
+                                            emailError={emailError}
+                                            emailFocused={emailFocused}
+                                            emailPlaceholder={formatMessage({ id: 'page.header.signIn.email' })}
+                                            password={password}
+                                            passwordError={passwordError}
+                                            passwordFocused={passwordFocused}
+                                            passwordPlaceholder={formatMessage({ id: 'page.header.signIn.password' })}
+                                            labelSignIn={formatMessage({ id: 'page.header.signIn.continue' })}
+                                            labelSignUp={formatMessage({ id: 'page.header.signUp' })}
+                                            emailLabel={formatMessage({ id: 'page.header.signIn.email' })}
+                                            passwordLabel={formatMessage({ id: 'page.header.signIn.password' })}
+                                            receiveConfirmationLabel={formatMessage({
+                                                id: 'page.header.signIn.receiveConfirmation',
+                                            })}
+                                            forgotPasswordLabel={formatMessage({
+                                                id: 'page.header.signIn.forgotPassword',
+                                            })}
+                                            isLoading={loading}
+                                            onForgotPassword={forgotPassword}
+                                            onSignUp={handleSignUp}
+                                            onSignIn={handleSignIn}
+                                            handleChangeFocusField={handleFieldFocus}
+                                            isFormValid={validateForm}
+                                            refreshError={refreshError}
+                                            changeEmail={handleChangeEmailValue}
+                                            changePassword={handleChangePasswordValue}
+                                            renderCaptcha={renderCaptcha}
+                                            reCaptchaSuccess={reCaptchaSuccess}
+                                            geetestCaptchaSuccess={geetestCaptchaSuccess}
+                                            captcha_response={captcha_response}
+                                            classNameEmail={emailClassname}
+                                            classNamePassword={passwordClassname}
+                                            signInLoading={signInLoading}
+                                            // captchaLoading={captchaLoading}
+                                        />
+                                    </React.Fragment>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

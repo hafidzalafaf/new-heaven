@@ -9,6 +9,7 @@ import { captchaLogin } from '../../../api';
 import { EMAIL_REGEX } from '../../../helpers';
 import { GeetestCaptchaResponse } from '../../../modules';
 import { selectMobileDeviceState } from '../../../modules/public/globalSettings';
+import { Link } from 'react-router-dom';
 
 export interface SignInProps {
     labelSignIn?: string;
@@ -168,7 +169,7 @@ const SignIn: React.FC<SignInProps> = ({
 
     return (
         <React.Fragment>
-            <div>
+            <div className="mb-24">
                 <CustomInput
                     type="email"
                     label={emailLabel || 'Email'}
@@ -177,7 +178,7 @@ const SignIn: React.FC<SignInProps> = ({
                     handleChangeInput={handleChangeEmail}
                     inputValue={email}
                     handleFocusInput={() => handleFieldFocus('email')}
-                    classNameLabel="form-label white-text text-sm"
+                    classNameLabel="form-label white-text text-sm font-semibold"
                     autoFocus={!isMobileDevice}
                     labelVisible
                     classNameInput={classNameEmail}
@@ -202,8 +203,11 @@ const SignIn: React.FC<SignInProps> = ({
                 {passwordError && <div className={'invalid-feedback'}>{passwordError}</div>}
             </div>
 
-            <div className="mt-2 mb-2">{captchaLogin() && renderCaptcha}</div>
-            <div className="mt-4">
+            <div className="mt-2 mb-44">{captchaLogin() && renderCaptcha}</div>
+            <div className="position-relative mt-2  d-flex justify-content-end">
+                <div className="text-xs gradient-text cursor-pointer">{renderForgotButton}</div>
+            </div>
+            <div className="mt-3">
                 <Button
                     block={true}
                     type="button"
@@ -211,12 +215,17 @@ const SignIn: React.FC<SignInProps> = ({
                     onClick={handleClick as any}
                     size="lg"
                     variant="primary">
-                    {isLoading ? 'Loading...' : labelSignIn ? labelSignIn : 'Sign in'}
+                    {isLoading ? 'Loading...' : labelSignIn ? labelSignIn : 'Continue'}
                 </Button>
             </div>
-            <div className="position-relative mt-2">
-                <div className="text-xs grey-text position-absolute right-position cursor-pointer">
-                    {renderForgotButton}
+            <div className="mt-3">
+                <div className="">
+                    <p className="text-center text-xs grey-text-accent">
+                        Don’t have an account?{' '}
+                        <Link to={'/signup'} className="gradient-text text-xs cursor-pointer">
+                            Sign Up
+                        </Link>
+                    </p>
                 </div>
             </div>
         </React.Fragment>

@@ -724,6 +724,7 @@ export const en = {
     'page.footer.faq': 'FAQ',
 
     'page.header.signIn': 'Sign In',
+    'page.header.signIn.continue': 'Continue',
     'page.header.signIn.email': 'Email',
     'page.header.signIn.password': 'Password',
     'page.header.signIn.password.message.error': 'Password is invalid',

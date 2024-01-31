@@ -733,6 +733,7 @@ export const ru: LangType = {
     'page.footer.faq': 'Помощь',
 
     'page.header.signIn': 'Войти',
+    'page.header.signIn.continue': 'Продолжать',
     'page.header.signIn.email': 'Почта',
     'page.header.signIn.password': 'Пароль',
     'page.header.signIn.password.message.error': 'Неправильный пароль',
