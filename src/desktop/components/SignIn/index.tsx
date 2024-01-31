@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+
 import { CustomInput } from '../../components';
 import { captchaLogin } from '../../../api';
 import { EMAIL_REGEX } from '../../../helpers';
