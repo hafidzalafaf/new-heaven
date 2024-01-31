@@ -1,7 +1,7 @@
 <div align="center">
 
 <img src="./public//logo.png" alt="Logo" width="70" height="auto" />
-<h1>Heaven Exchange</h1>
+<h1>PexBank Exchange</h1>
 
 </div>
 
@@ -10,7 +10,7 @@
 From your command line, clone and run this project:
 
 ```sh
-git clone https://github.com/heaven-projects/frontend-platform-user.git
+git clone https://github.com/pexbank-projects/frontend-platform-user
 cd frontend-platform-user
 ```
 
@@ -21,10 +21,10 @@ cd frontend-platform-user
 ```sh
 -> open terminal
 -> sudo nano /etc/hosts
--> Add new line and write "127.0.0.1    dev.heavenexchange.io"
+-> Add new line and write "127.0.0.1    dev.pexbankexchange.io"
 -> Save "ctrl + x -> Y -> Enter"
 
-note: dev.heavenexchange.io is a example host, you can use url than has been added to avoid CORS errors.
+note: dev.pexbankexchange.io is a example host, you can use url than has been added to avoid CORS errors.
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -41,6 +41,7 @@ yarn install
 
 ```sh
 yarn start
+sudo yarn start (for macOS)
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -49,7 +50,7 @@ yarn start
 
 ```sh
 -> Open browser
--> access url "dev.heavenexchange.io"
+-> access url "dev.pexbankexchange.io"
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
