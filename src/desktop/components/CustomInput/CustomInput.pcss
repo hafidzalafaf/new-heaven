@@ -2,13 +2,13 @@
     position: relative;
     .form-control {
         height: 48px !important;
-        border-radius: 6px !important;
+        border-radius: 16px !important;
         padding: 12px 16px 12px 16px;
         font-size: 14px;
         font-weight: 400;
         line-height: 15px;
         color: var(--input-color);
-        background: var(--input-background-color);
+        background: var(--body-background-color);
         border: 1px solid var(--input-border-color);
 
         &.input-mobile {
@@ -16,9 +16,10 @@
         }
 
         &:focus-visible {
-            border-color: var(--input-focus-border-color);
+            border-color: var(--input-border-color);
             outline: 0;
             box-shadow: 0 0 0 0;
+            background: var(--body-background-color);
         }
 
         &.error {

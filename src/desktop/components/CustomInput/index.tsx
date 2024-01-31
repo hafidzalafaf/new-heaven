@@ -91,7 +91,7 @@ class CustomInput extends React.Component<Props, State> {
                             autoComplete={'off'}
                             name={name}
                             maxLength={this.props.maxLength}
-                            className={classNameInput}
+                            className={`${classNameInput}`}
                         />
 
                         {type == 'password' ? (

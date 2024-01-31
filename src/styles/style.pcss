@@ -16,6 +16,7 @@
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 p,
 a,
@@ -33,7 +34,7 @@ nav,
 ul,
 li,
 body {
-    font-family: "Roboto", sans-serif !important;
+    font-family: "Poppins", sans-serif !important;
 }
 
 .pg-loader-container {
@@ -104,53 +105,56 @@ input:-webkit-autofill {
 /* end background color */
 
 /* text color variable */
+.text-roboto {
+    font-family: "Roboto", sans-serif !important;
+}
 .white-text {
     color: var(--text-primary-color) !important;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
 }
 
 .grey-text {
     color: var(--text-grey-color) !important;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
 }
 
 .grey-text-accent {
     color: var(--text-secondary-color) !important;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
 }
 
 .contrast-text {
     color: var(--text-contrast-color) !important;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
 }
 
 .green-text {
     color: var(--text-success-color) !important;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
 }
 
 .gradient-text {
     background: var(--text-gradient-color) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
     /* background-clip: text !important;
     text-fill-color: transparent !important; */
 }
 
 .danger-text {
     color: var(--text-danger-color) !important;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
 }
 
 .warning-text {
     color: var(--text-warning-color) !important;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
 }
 
 .blue-text {
     color: var(--text-blue-color) !important;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
 }
 /* end text color variable */
 
@@ -204,9 +208,9 @@ input:-webkit-autofill {
 }
 
 .text-title-2 {
-    font-size: 38px;
+    font-size: 32px;
     font-weight: 500;
-    line-height: 57px;
+    line-height: 42px;
 }
 
 .text-title-1 {
@@ -249,10 +253,10 @@ input:-webkit-autofill {
 .btn-primary {
     background: var(--button-primary-color) !important;
     color: var(--text-primary-color) !important;
-    padding: 12px 16px;
-    border-radius: 4px;
+    padding: 16px 16px;
+    border-radius: 16px;
     border: 0;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
     transition: 0.3s;
     &.btn-outline {
@@ -645,6 +649,14 @@ button[disabled] {
 
 .w-50 {
     width: 50% !important;
+}
+
+.w-55 {
+    width: 55% !important;
+}
+
+.w-45 {
+    width: 45% !important;
 }
 
 .w-49 {
