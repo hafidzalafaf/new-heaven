@@ -48,6 +48,7 @@
         "react-ga": "^2.6.0",
         "react-google-recaptcha": "^1.0.4",
         "react-intl": "^5.8.8",
+        "react-loading-skeleton": "^3.3.1",
         "react-maskinput": "^1.0.1",
         "react-perfect-scrollbar": "^1.5.8",
         "react-phone-input-2": "^2.15.1",

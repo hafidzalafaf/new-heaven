@@ -10,3 +10,4 @@ export * from './Loading';
 export * from './CombinedOrderBook';
 export * from './OrderBook';
 export * from './UpdateAppModal';
+export * from './Skeleton';
