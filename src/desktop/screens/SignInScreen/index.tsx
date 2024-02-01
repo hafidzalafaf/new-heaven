@@ -4,6 +4,8 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 
+import { Image } from 'react-bootstrap';
+
 import { captchaType, captchaLogin } from '../../../api';
 import { Captcha } from '../../../components';
 import { SignInComponent, TwoFactorAuth } from '../../components';
@@ -26,7 +28,6 @@ import {
     selectSignInLoading,
     selectCaptchaDataObjectLoading,
 } from '../../../modules';
-import { Image } from 'react-bootstrap';
 
 export const SignInScreen: React.FC = () => {
     const dispatch = useDispatch();

@@ -2,9 +2,10 @@ import React, { FC, ReactElement, useMemo, useCallback, useState } from 'react';
 import { useHistory, useParams, Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { useDepthFetch, useOpenOrdersFetch } from '../../../hooks';
 import { Decimal } from '../../../components';
-import { localeDate, setTradeColor } from '../../../helpers';
+import { localeDate, setTradeColor, getTotalPrice, getAmount } from '../../../helpers';
 import {
     selectCurrentMarket,
     openOrdersCancelFetch,
@@ -37,7 +38,7 @@ import { incrementalOrderBook } from '../../../api';
 import { OpenOrders, OrderBook, MarketListTrade, RecentTrades, OrderForm, TradingChart } from '../../containers';
 import { OrderCommon, OrderSide } from '../../../modules/types';
 import { getTriggerSign } from './helpers';
-import { getTotalPrice, getAmount } from '../../../helpers';
+
 import { CloseIconTrade } from '../../../assets/images/CloseIcon';
 import { Modal } from '../../../desktop/components';
 import { CircleCloseDangerLargeIcon } from 'src/assets/images/CircleCloseIcon';

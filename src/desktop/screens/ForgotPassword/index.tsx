@@ -4,6 +4,7 @@ import { connect, MapDispatchToPropsFunction, MapStateToProps } from 'react-redu
 import { RouterProps } from 'react-router';
 import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'redux';
+
 import { captchaType } from '../../../api/config';
 import { Captcha } from '../../../components';
 import { EmailForm } from '../../components';
