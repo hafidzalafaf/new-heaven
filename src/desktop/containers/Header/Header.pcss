@@ -8,7 +8,7 @@
 
     .navbar-brand {
         padding-right: 72px;
-        border-right: 1px solid var(--border-color);
+        /* border-right: 1px solid var(--border-color); */
     }
 
     .humberger-icon {
@@ -18,12 +18,14 @@
     .navbar-nav {
         .nav-item {
             .nav-link {
-                color: var(--text-secondary-color);
+                color: var(--text-grey-color-2);
             }
 
             &.active {
                 .nav-link {
-                    color: var(--text-primary-color);
+                    background: var(--text-gradient-color) !important;
+                    -webkit-background-clip: text !important;
+                    -webkit-text-fill-color: transparent !important;
                 }
             }
         }
