@@ -746,6 +746,7 @@ export const ru: LangType = {
     'page.header.signIn.resetPassword.error': 'Поля пустые или не совпадают',
 
     'page.header.signUp': 'Регистрация',
+    'page.header.signUp.continue': 'Продолжать',
     'page.header.signUp.username.minLength.error':
         'Пожалуйста, введите больше символов. Минимальное колисчество символов - 4',
     'page.header.signUp.username.maxLength.error':

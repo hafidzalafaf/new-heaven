@@ -737,6 +737,7 @@ export const en = {
     'page.header.signIn.resetPassword.error': 'Fields are empty or don`t matches',
 
     'page.header.signUp': 'Sign Up',
+    'page.header.signUp.continue': 'Continue',
     'page.header.signUp.username.minLength.error': 'Please, enter more characters. Min number of characters is 4',
     'page.header.signUp.username.maxLength.error': 'Please, enter fewer characters. Maximum number of characters is 12',
     'page.header.signUp.username.uniqueness.error': 'This username is already taken',

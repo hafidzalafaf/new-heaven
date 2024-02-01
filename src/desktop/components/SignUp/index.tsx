@@ -17,6 +17,7 @@ import { ArrowDownIcon } from 'src/assets/images/ArrowDownIcon';
 import { ArrowUpIcon } from 'src/assets/images/ArrowUpIcon';
 import './SignUp.pcss';
 import 'react-phone-input-2/lib/style.css';
+import { Link } from 'react-router-dom';
 
 export interface SignUpFormProps {
     isLoading?: boolean;
@@ -176,7 +177,7 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
 
     const renderPasswordInput = React.useCallback(() => {
         return (
-            <div>
+            <div className="mb-24">
                 <CustomInput
                     type="password"
                     label={passwordLabel || 'Password'}
@@ -273,7 +274,7 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
 
     return (
         <React.Fragment>
-            <div className="field">
+            <div className="field mb-24">
                 <CustomInput
                     type="text"
                     label={usernameLabel || 'Username'}
@@ -294,7 +295,7 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
                 )}
             </div>
 
-            <div className="field">
+            <div className="field mb-24">
                 <CustomInput
                     type="email"
                     label={emailLabel || 'Email'}
@@ -315,7 +316,7 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
 
             {renderPasswordInput()}
 
-            <div className="field">
+            <div className="field mb-24">
                 <CustomInput
                     type="password"
                     label={confirmPasswordLabel || 'Confirm Password'}
@@ -336,32 +337,21 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
                 )}
             </div>
 
-            <div
-                onClick={() => setExpand(!expand)}
-                className={`label-referral cursor-pointer text-sm mb-8 ${expand ? 'white-text' : 'grey-text'}`}>
-                Referral ID (Optional){' '}
-                {expand ? (
-                    <ArrowUpIcon fillColor={'#F2F0FF'} />
-                ) : (
-                    <ArrowDownIcon className={''} strokeColor={'#6f6f6f'} />
-                )}
-            </div>
-
-            {expand && (
+            <div className="mb-24">
                 <CustomInput
                     type="text"
-                    label={''}
-                    labelVisible={false}
+                    label={'Referral ID (Optional)'}
                     placeholder={referalCodeLabel || 'Referral code'}
-                    defaultLabel=""
+                    defaultLabel="Referral ID (Optional)"
                     handleChangeInput={handleChangeRefId}
                     inputValue={refId}
                     handleFocusInput={handleFocusRefId}
-                    classNameLabel="d-none"
+                    classNameLabel="white-text text-sm"
                     classNameInput="m-0"
                     autoFocus={false}
+                    labelVisible
                 />
-            )}
+            </div>
 
             <div className="mt-4 mb-24">{renderCaptcha}</div>
 
@@ -373,8 +363,19 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
                 size="lg"
                 className="button registration__button"
                 variant="primary">
-                {isLoading ? 'Loading...' : labelSignUp ? labelSignUp : 'Sign up'}
+                {isLoading ? 'Loading...' : labelSignUp ? labelSignUp : 'Continue'}
             </Button>
+
+            <div className="mt-3">
+                <div className="">
+                    <p className="text-center text-xs grey-text-accent">
+                        Already have an account{' '}
+                        <Link to={'/signin'} className="gradient-text text-xs cursor-pointer">
+                            Sign In
+                        </Link>
+                    </p>
+                </div>
+            </div>
 
             <Modal show={show} onHide={handleClose} className="w-100">
                 <Modal.Header className="rounded-top-10 border-none">
@@ -390,14 +391,14 @@ const SignUpFormComponent: React.FC<SignUpFormProps> = ({
                         referred to as the "HEAVEN EXCHANGE Platform"). hereinafter referred to as the "HEAVEN EXCHANGE
                         Platform") to the extent not specifically regulated as set out in the HEAVEN EXCHANGE Account
                         registration section which is made on the day and date listed in the Account registration
-                        section https://www.heavenexchange.io, constitutes an integral and inseparable unity and approval of
-                        this GTC. By registering to become Member/Verified Member, you declare that you have READ,
-                        UNDERSTAND, AGREE and FOLLOW the Terms and Conditions below. You are advised to read all terms
-                        and conditions carefully before using the HEAVEN EXCHANGE platform services or any services that
-                        are provided, and together with this you agree and bind yourself to all activities in this GTC
-                        with the terms and conditions as follows in this GTC with the following terms and conditions:
-                        DEFINITIONS as long as the context sentence does not determine otherwise, the terms or
-                        definitions in the GTC have the following meanings :
+                        section https://www.heavenexchange.io, constitutes an integral and inseparable unity and
+                        approval of this GTC. By registering to become Member/Verified Member, you declare that you have
+                        READ, UNDERSTAND, AGREE and FOLLOW the Terms and Conditions below. You are advised to read all
+                        terms and conditions carefully before using the HEAVEN EXCHANGE platform services or any
+                        services that are provided, and together with this you agree and bind yourself to all activities
+                        in this GTC with the terms and conditions as follows in this GTC with the following terms and
+                        conditions: DEFINITIONS as long as the context sentence does not determine otherwise, the terms
+                        or definitions in the GTC have the following meanings :
                     </p>
                     <p className="grey-text-accent">
                         Website refers to an online site with the address https://www.heavenexchange.io. This website is
