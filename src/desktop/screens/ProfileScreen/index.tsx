@@ -439,7 +439,7 @@ export const ProfileScreen: FC = (): ReactElement => {
 
     return (
         <React.Fragment>
-            <div className="profile-screen">
+            <div className="profile-screen container">
                 <div
                     className="content-wrapper dark-bg-accent pb-5"
                     style={{ backgroundImage: `url('img/background-landing.png')` }}>
