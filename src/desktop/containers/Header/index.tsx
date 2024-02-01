@@ -10,6 +10,8 @@ import { compose } from 'redux';
 
 import { Dropdown } from 'react-bootstrap';
 
+import { FilterInput } from 'src/desktop/components';
+
 import { IntlProps } from '../../../';
 import { Decimal } from 'src/components';
 import '../../../styles/colors.pcss';
@@ -140,18 +142,18 @@ class Head extends React.Component<Props, HeaderState> {
             },
         ];
 
-        const LanguageDropdown = [
-            {
-                flag: <img src="/img/en.png" alt="en" className="mr-2" />,
-                name: 'English',
-                code: 'en',
-            },
-            {
-                flag: <img src="/img/ru.png" alt="ru" className="mr-2" />,
-                name: 'Russian',
-                code: 'ru',
-            },
-        ];
+        // const LanguageDropdown = [
+        //     {
+        //         flag: <img src="/img/en.png" alt="en" className="mr-2" />,
+        //         name: 'English',
+        //         code: 'en',
+        //     },
+        //     {
+        //         flag: <img src="/img/ru.png" alt="ru" className="mr-2" />,
+        //         name: 'Russian',
+        //         code: 'ru',
+        //     },
+        // ];
 
         // const currencyItem: Currency | any =
         //     this.props.currencies &&
@@ -246,6 +248,17 @@ class Head extends React.Component<Props, HeaderState> {
                                             </Link>
                                         </li>
                                         <li
+                                            className={`nav-item ${
+                                                location.pathname?.includes('/markets/trading') && 'active'
+                                            }`}
+                                            onClick={() => this.setState({ showHeader: false })}>
+                                            <Link
+                                                to={`/markets/trading/${this?.props?.currentMarket?.id}`}
+                                                className="nav-link px-3 text-sm font-semibold">
+                                                {this.translate('page.header.navbar.trade')}
+                                            </Link>
+                                        </li>
+                                        <li
                                             className={`nav-item ${location.pathname == '/markets' && 'active'}`}
                                             onClick={() => this.setState({ showHeader: false })}>
                                             <Link to={'/markets'} className="nav-link px-3 text-sm font-semibold">
@@ -253,17 +266,17 @@ class Head extends React.Component<Props, HeaderState> {
                                             </Link>
                                         </li>
                                         <li
-                                            className={`nav-item ${location.pathname == '/faq' && 'active'}`}
+                                            className={`nav-item ${location.pathname == '/markets-open' && 'active'}`}
                                             onClick={() => this.setState({ showHeader: false })}>
-                                            <Link to={'/faq'} className="nav-link px-3 text-sm font-semibold">
-                                                {this.translate('page.header.navbar.support')}
+                                            <Link to={'/markets-open'} className="nav-link px-3 text-sm font-semibold">
+                                                {this.translate('page.header.navbar.order')}
                                             </Link>
                                         </li>
                                         <li
-                                            className={`nav-item ${location.pathname == '/announcement' && 'active'}`}
+                                            className={`nav-item ${location.pathname == '/faq' && 'active'}`}
                                             onClick={() => this.setState({ showHeader: false })}>
-                                            <Link to={'/announcement'} className="nav-link px-3 text-sm font-semibold">
-                                                {this.translate('page.header.navbar.announcement')}
+                                            <Link to={'/faq'} className="nav-link px-3 text-sm font-semibold">
+                                                {this.translate('page.header.navbar.help')}
                                             </Link>
                                         </li>
                                     </ul>
@@ -420,6 +433,8 @@ class Head extends React.Component<Props, HeaderState> {
                                     Warna
                                 </button>
                             </li> */}
+
+                            <FilterInput placeholder={'Search'} className="search-asset" />
 
                             {isLoggedIn ? (
                                 <li className="nav-item dropdown avatar px-3">

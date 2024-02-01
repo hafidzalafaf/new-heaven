@@ -15,8 +15,8 @@ export const en = {
     'page.header.navbar.p2p': 'P2P',
     'page.header.navbar.home': 'Home',
     'page.header.navbar.market': 'Market',
-    'page.header.navbar.support': 'Support',
-    'page.header.navbar.announcement': 'Announcement',
+    'page.header.navbar.help': 'Help',
+    'page.header.navbar.order': 'Order',
 
     'page.header.navbar.profile': 'Profile',
     'page.header.navbar.logout': 'Logout',

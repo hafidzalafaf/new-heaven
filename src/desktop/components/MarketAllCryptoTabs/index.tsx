@@ -1,12 +1,14 @@
 import React, { FC, ReactElement } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+
+import { Link, useHistory } from 'react-router-dom';
+
 import { selectCurrencies, selectMarkets, selectMarketTickers, setCurrentMarket, Market } from '../../../modules';
 import { useMarketsFetch, useMarketsTickersFetch } from '../../../hooks';
-import { Link, useHistory } from 'react-router-dom';
 import { Table, Decimal } from '../../../components';
 import './MarketAllCryptoTabs.pcss';
-import { NoData } from '../../components';
-import { FilterInput } from 'src/desktop/components';
+import { NoData, FilterInput } from '../../components';
+
 import { numberFormat } from '../../../helpers';
 
 const defaultTicker = {

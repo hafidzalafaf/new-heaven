@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 import * as React from 'react';
+
 // import SearchIcon from './Search.svg';
 import './FilterInput.pcss';
 import { SearchIcon } from '../../../assets/images/ProfileIcon';
