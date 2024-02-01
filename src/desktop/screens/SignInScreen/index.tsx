@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
 import { captchaType, captchaLogin } from '../../../api';
@@ -24,7 +24,7 @@ import {
     selectCaptchaResponse,
     resetCaptchaState,
     selectSignInLoading,
-    selectCaptchaDataObjectLoading,
+    // selectCaptchaDataObjectLoading,
 } from '../../../modules';
 import { Image } from 'react-bootstrap';
 
@@ -221,7 +221,7 @@ export const SignInScreen: React.FC = () => {
                         </div>
                     </div>
                     <div className="w-55 min-h-full position-relative d-flex justify-content-center align-items-center">
-                        <div className="d-flex align-items-center justify-content-center">
+                        <div className="d-flex align-items-center justify-content-center px-4">
                             <div className="main-form position-relative">
                                 {require2FA ? (
                                     <React.Fragment>

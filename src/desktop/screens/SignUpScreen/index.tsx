@@ -39,6 +39,7 @@ import {
     signUp,
 } from '../../../modules';
 import './SignUpScreen.pcss';
+import { Image } from 'react-bootstrap';
 
 interface ReduxProps {
     requireVerification?: boolean;
@@ -169,93 +170,101 @@ class SignUp extends React.Component<Props> {
 
         return (
             <React.Fragment>
-                <div className="row m-0 sign-up-screen">
-                    <div className="col-md-5 dark-bg-accent min-h-full px-0">
-                        <div className="bg-auth" style={{ backgroundImage: `url('img/bg-auth2.png')` }}></div>
-                    </div>
-                    <div className="col-md-7 dark-bg-main min-h-full position-relative">
-                        <div className="text-to-signup mb-24">
-                            <span>
-                                <p className="white-text font-bold">
-                                    Already have an account?
-                                    <Link to="/signin">
-                                        <span className="contrast-text ml-1 cursor-pointer">Sign In</span>{' '}
-                                    </Link>
-                                </p>
-                            </span>
+                <div className="sign-up-screen">
+                    <div className="row">
+                        <div className="w-45 d-flex justify-content-center align-items-center min-h-full px-0 py-4">
+                            <div className="">
+                                <div className="d-flex justify-content-center">
+                                    <Image className="w-70" src="/img/pexbank/auth-image-2.webp" />
+                                </div>
+                                <h6 className="text-center gradient-text font-extrabold text-title-2 mt-4 mb-3">
+                                    PexBank Exchange
+                                </h6>
+                                <div className="w-70 mx-auto">
+                                    <p className="text-white text-center text-ms">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.{' '}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <div className="main-wrapper d-flex align-items-center">
-                            <div className="main-form position-relative">
-                                <h2 className="title-2 mb-24 white-text font-semibold">Sign Up</h2>
-
-                                <div className="tab-content mb-8" id="myTabContent">
-                                    <div>
-                                        <SignUpForm
-                                            labelSignIn={this.props.intl.formatMessage({
-                                                id: 'page.header.signIn',
-                                            })}
-                                            labelSignUp={this.props.intl.formatMessage({
-                                                id: 'page.header.signUp',
-                                            })}
-                                            emailLabel={this.props.intl.formatMessage({
-                                                id: 'page.header.signUp.email',
-                                            })}
-                                            passwordLabel={this.props.intl.formatMessage({
-                                                id: 'page.header.signUp.password',
-                                            })}
-                                            confirmPasswordLabel={this.props.intl.formatMessage({
-                                                id: 'page.header.signUp.confirmPassword',
-                                            })}
-                                            referalCodeLabel={this.props.intl.formatMessage({
-                                                id: 'page.header.signUp.referalCode',
-                                            })}
-                                            termsMessage={this.props.intl.formatMessage({
-                                                id: 'page.header.signUp.terms',
-                                            })}
-                                            refId={refId}
-                                            handleChangeRefId={this.handleChangeRefId}
-                                            isLoading={loading}
-                                            signUpLoading={this.props.signUpLoading}
-                                            onSignIn={this.handleSignIn}
-                                            onSignUp={this.handleSignUp}
-                                            username={username}
-                                            handleChangeUsername={this.handleChangeUsername}
-                                            email={email}
-                                            type={this.state.selectedTabs}
-                                            handleChangeEmail={this.handleChangeEmail}
-                                            password={password}
-                                            handleChangePassword={this.handleChangePassword}
-                                            confirmPassword={confirmPassword}
-                                            handleChangeConfirmPassword={this.handleChangeConfirmPassword}
-                                            hasConfirmed={hasConfirmed}
-                                            clickCheckBox={this.handleCheckboxClick}
-                                            validateForm={this.handleValidateForm}
-                                            emailError={emailError}
-                                            passwordError={passwordError}
-                                            confirmationError={confirmationError}
-                                            confirmPasswordFocused={confirmPasswordFocused}
-                                            refIdFocused={refIdFocused}
-                                            usernameFocused={usernameFocused}
-                                            emailFocused={emailFocused}
-                                            passwordFocused={passwordFocused}
-                                            handleFocusUsername={this.handleFocusUsername}
-                                            handleFocusEmail={this.handleFocusEmail}
-                                            handleFocusPassword={this.handleFocusPassword}
-                                            handleFocusConfirmPassword={this.handleFocusConfirmPassword}
-                                            handleFocusRefId={this.handleFocusRefId}
-                                            renderCaptcha={this.renderCaptcha()}
-                                            reCaptchaSuccess={reCaptchaSuccess}
-                                            geetestCaptchaSuccess={geetestCaptchaSuccess}
-                                            captcha_response={captcha_response}
-                                            currentPasswordEntropy={currentPasswordEntropy}
-                                            passwordErrorFirstSolved={passwordErrorFirstSolved}
-                                            passwordErrorSecondSolved={passwordErrorSecondSolved}
-                                            passwordErrorThirdSolved={passwordErrorThirdSolved}
-                                            passwordPopUp={passwordPopUp}
-                                            myRef={this.myRef}
-                                            passwordWrapper={this.passwordWrapper}
-                                            translate={this.translate}
-                                        />
+                        <div className="w-55 min-h-full position-relative d-flex justify-content-center align-items-center">
+                            <div className="d-flex align-items-center justify-content-center px-5">
+                                <div className="main-form position-relative">
+                                    <h2 className="title-2 mb-3 white-text font-semibold">Create Account</h2>
+                                    <p className="text-sm grey-text-accent mb-44">
+                                        Join PexBank today and start trading cryptocurrencies with ease and convenience
+                                    </p>
+                                    <div className="tab-content mb-8" id="myTabContent">
+                                        <div>
+                                            <SignUpForm
+                                                labelSignIn={this.props.intl.formatMessage({
+                                                    id: 'page.header.signIn',
+                                                })}
+                                                labelSignUp={this.props.intl.formatMessage({
+                                                    id: 'page.header.signUp.continue',
+                                                })}
+                                                emailLabel={this.props.intl.formatMessage({
+                                                    id: 'page.header.signUp.email',
+                                                })}
+                                                passwordLabel={this.props.intl.formatMessage({
+                                                    id: 'page.header.signUp.password',
+                                                })}
+                                                confirmPasswordLabel={this.props.intl.formatMessage({
+                                                    id: 'page.header.signUp.confirmPassword',
+                                                })}
+                                                referalCodeLabel={this.props.intl.formatMessage({
+                                                    id: 'page.header.signUp.referalCode',
+                                                })}
+                                                termsMessage={this.props.intl.formatMessage({
+                                                    id: 'page.header.signUp.terms',
+                                                })}
+                                                refId={refId}
+                                                handleChangeRefId={this.handleChangeRefId}
+                                                isLoading={loading}
+                                                signUpLoading={this.props.signUpLoading}
+                                                onSignIn={this.handleSignIn}
+                                                onSignUp={this.handleSignUp}
+                                                username={username}
+                                                handleChangeUsername={this.handleChangeUsername}
+                                                email={email}
+                                                type={this.state.selectedTabs}
+                                                handleChangeEmail={this.handleChangeEmail}
+                                                password={password}
+                                                handleChangePassword={this.handleChangePassword}
+                                                confirmPassword={confirmPassword}
+                                                handleChangeConfirmPassword={this.handleChangeConfirmPassword}
+                                                hasConfirmed={hasConfirmed}
+                                                clickCheckBox={this.handleCheckboxClick}
+                                                validateForm={this.handleValidateForm}
+                                                emailError={emailError}
+                                                passwordError={passwordError}
+                                                confirmationError={confirmationError}
+                                                confirmPasswordFocused={confirmPasswordFocused}
+                                                refIdFocused={refIdFocused}
+                                                usernameFocused={usernameFocused}
+                                                emailFocused={emailFocused}
+                                                passwordFocused={passwordFocused}
+                                                handleFocusUsername={this.handleFocusUsername}
+                                                handleFocusEmail={this.handleFocusEmail}
+                                                handleFocusPassword={this.handleFocusPassword}
+                                                handleFocusConfirmPassword={this.handleFocusConfirmPassword}
+                                                handleFocusRefId={this.handleFocusRefId}
+                                                renderCaptcha={this.renderCaptcha()}
+                                                reCaptchaSuccess={reCaptchaSuccess}
+                                                geetestCaptchaSuccess={geetestCaptchaSuccess}
+                                                captcha_response={captcha_response}
+                                                currentPasswordEntropy={currentPasswordEntropy}
+                                                passwordErrorFirstSolved={passwordErrorFirstSolved}
+                                                passwordErrorSecondSolved={passwordErrorSecondSolved}
+                                                passwordErrorThirdSolved={passwordErrorThirdSolved}
+                                                passwordPopUp={passwordPopUp}
+                                                myRef={this.myRef}
+                                                passwordWrapper={this.passwordWrapper}
+                                                translate={this.translate}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
