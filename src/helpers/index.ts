@@ -23,6 +23,7 @@ export * from './getUserAgent';
 export * from './getVerificationStep';
 export * from './handleCCYPrecision';
 export * from './handleIncrementalUpdate';
+export * from './hideEmail';
 export * from './historyTableUtils';
 export * from './localeDate';
 export * from './passwordValidation';
