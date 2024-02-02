@@ -156,10 +156,10 @@ export const en = {
 
     'page.body.landing.register.item.title': 'No matter your experience level',
     'page.body.landing.register.item.text':
-        'Heaven Exchange offers an intuitive interface with real time orderbooks, charting tools, trade history, and a simple order process so you can trade from day one.',
+        'PexBank Exchange offers an intuitive interface with real time orderbooks, charting tools, trade history, and a simple order process so you can trade from day one.',
     'page.body.landing.register.item.button': 'register',
 
-    'page.body.landing.features.title': 'Heaven Exchange platform features',
+    'page.body.landing.features.title': 'PexBank Exchange platform features',
     'page.body.landing.features.features.item1.title': 'Exchange',
     'page.body.landing.features.features.item2.title': 'Order Types',
     'page.body.landing.features.features.item3.title': 'Customizable Interface',
@@ -167,9 +167,9 @@ export const en = {
     'page.body.landing.features.features.item5.title': 'Community',
     'page.body.landing.features.features.item6.title': 'Industry leading API',
     'page.body.landing.features.features.item1.text':
-        'Heaven Exchange offers the most liquid order book in the world, allowing users to easily exchange Bitcoin, Ethereum, EOS, Litecoin, Ripple, NEO and many other digital assets with minimal slippage.',
+        'PexBank Exchange offers the most liquid order book in the world, allowing users to easily exchange Bitcoin, Ethereum, EOS, Litecoin, Ripple, NEO and many other digital assets with minimal slippage.',
     'page.body.landing.features.features.item2.text':
-        'Heaven Exchange offers a suite of order types to give traders the tools they need for every scenario. Discover more about our most advanced Algorithmic orders types.',
+        'PexBank Exchange offers a suite of order types to give traders the tools they need for every scenario. Discover more about our most advanced Algorithmic orders types.',
     'page.body.landing.features.features.item3.text':
         'Organize your workspace according to your needs: compose your layout, choose between themes, set up notifications and data preferences.',
     'page.body.landing.features.features.item4.text':
@@ -182,7 +182,7 @@ export const en = {
     'page.body.landing.tradeOnTheGo.item.text1': 'Our platform is optimized for trading on any device.',
     'page.body.landing.tradeOnTheGo.item.text2': 'And you don’t need to download any additional applications.',
     'page.body.landing.tradeOnTheGo.item.text3':
-        'All the power of Heaven Exchange cryptocurrency exchange, in the palm of your hand.',
+        'All the power of PexBank Exchange cryptocurrency exchange, in the palm of your hand.',
     'page.body.landing.tradeOnTheGo.item.button': 'let’s try',
 
     'page.body.landing.startTrading.title': 'Start trading now',
@@ -215,7 +215,7 @@ export const en = {
     'page.body.landing.footer.about': 'About us',
     'page.body.landing.footer.community': 'Community',
     'page.body.landing.footer.info': 'Info',
-    'page.body.landing.footer.rights': 'Heaven Exchange © All rights reserved.',
+    'page.body.landing.footer.rights': 'PexBank Exchange © All rights reserved.',
 
     'page.body.landing.footer.email': 'We don’t sell your email and spam',
 
@@ -255,6 +255,9 @@ export const en = {
         'Currently, that currency can’t be deposited as no blockchain network was configured or enabled. Please, use another currency to make a deposit.',
     'page.body.wallets.warning.deposit.kyc.hint': `Your current verification level doesn't allow you to make a deposit. Please, submit the required KYC information to get deposit permission.`,
     'page.body.wallets.warning.deposit.verification.button': 'Verify Your Account',
+    'page.body.wallets.tabs.deposit.min.deposit': 'Min. deposit:',
+    'page.body.wallets.tabs.deposit.min.amount.tip':
+        'To create a deposit request the amount should be ≥ the minimum deposit amount',
 
     'page.body.wallets.tabs.deposit.fiat.message1': 'Deposit using bank transfer',
     'page.body.wallets.tabs.deposit.fiat.message2':
@@ -267,9 +270,6 @@ export const en = {
     'page.body.wallets.table.pending': 'Pending',
     'page.body.wallets.table.rejected': 'Rejected',
     'page.body.wallets.tabs.deposit.fiat.admin': ' To initiate a fiat withdrawal, please contact administrator!',
-    'page.body.wallets.tabs.deposit.min.deposit': 'Min. deposit:',
-    'page.body.wallets.tabs.deposit.min.amount.tip':
-        'To create a deposit request the amount should be ≥ the minimum deposit amount',
 
     'page.body.wallets.tabs.withdraw': 'Withdraw',
     'page.body.wallets.tabs.withdraw.content.amount': 'Withdrawal Amount',
@@ -456,13 +456,12 @@ export const en = {
     'page.body.history.transfer.header.status': 'Status',
     'page.body.history.transfer.content.status.completed': 'Completed',
 
-    'page.body.profile.header.account': 'Profile',
-
     'page.body.profile.tabs.security': 'Security',
     'page.body.profile.tabs.api_keys': 'API Keys',
     'page.body.profile.tabs.payment': 'Payment',
     'page.body.profile.tabs.referral': 'Referral',
 
+    'page.body.profile.header.account': 'Profile',
     'page.body.profile.header.account.username': 'Nickname',
     'page.body.profile.header.account.content.password': 'Password',
     'page.body.profile.header.account.content.password.button.change': 'Change',
@@ -990,7 +989,6 @@ export const en = {
     'identity.session.invalid_params': 'Invalid Email or Password',
     'identity.session.missing_otp': 'The account has enabled 2FA but OTP code is missing',
     'identity.session.invalid_otp': 'OTP code is invalid',
-
     'username.taken': 'This username is already taken',
     'first_name.invalid': 'First name is invalid',
     'last_name.invalid': 'Last name is invalid',

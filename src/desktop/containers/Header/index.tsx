@@ -151,9 +151,9 @@ class Head extends React.Component<Props, HeaderState> {
         //         code: 'en',
         //     },
         //     {
-        //         flag: <img src="/img/ru.png" alt="ru" className="mr-2" />,
-        //         name: 'Russian',
-        //         code: 'ru',
+        //         flag: <img src="/img/ru.png" alt="ina" className="mr-2" />,
+        //         name: 'Indonesia',
+        //         code: 'ina',
         //     },
         // ];
 
