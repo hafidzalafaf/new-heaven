@@ -31,7 +31,7 @@ const FAQMobileScreen: React.FC = () => {
             </div>
 
             <div style={{ backgroundImage: `url('img/background-landing.png')` }}>
-                <h5 className="text-white text-center mt-5">Heaven Exchange FAQ</h5>
+                <h5 className="text-white text-center mt-5">PexBank Exchange FAQ</h5>
                 <div className="d-flex justify-content-center align-content-center mt-3 gap-8">
                     <a
                         href="https://t.me/heavenexchange"

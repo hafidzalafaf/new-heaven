@@ -1,6 +1,8 @@
 import React, { FC, ReactElement } from 'react';
+
 import { useDocumentTitle, useBlogsFetch } from 'src/hooks';
 import { selectBlogs } from 'src/modules';
+
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useSelector } from 'react-redux';
@@ -46,7 +48,7 @@ export const AnnouncementScreen: FC = (): ReactElement => {
                                                         className="w-100 rounded-lg announcement-img"
                                                         alt={item.title}
                                                     />
-                                                    <p className="blue-text mb-12">Heaven Exchange</p>
+                                                    <p className="blue-text mb-12">PexBank Exchange</p>
                                                     <h6 className="title mb-24">
                                                         <a
                                                             href={item.url}

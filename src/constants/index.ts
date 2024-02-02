@@ -2,7 +2,7 @@ import { AbilitiesInterface, Wallet } from 'src/modules';
 import { API_URL } from '../config';
 import { primaryCurrency } from '../api';
 
-export const PG_TITLE_PREFIX = 'Heaven Exchange';
+export const PG_TITLE_PREFIX = 'PexBank Exchange';
 
 export const pgRoutes = (isLoggedIn: boolean, abilities: AbilitiesInterface, isLight?: boolean): string[][] => {
     const routes = [

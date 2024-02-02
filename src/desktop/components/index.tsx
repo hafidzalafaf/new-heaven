@@ -39,3 +39,4 @@ export * from './OfferForm';
 export * from './ModalUserLevel';
 export * from './ModalOptionPayment';
 export * from './CardPrivacy';
+export * from './ComingSoon';

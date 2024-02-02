@@ -3,6 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect, MapDispatchToPropsFunction, MapStateToProps } from 'react-redux';
 import { Link, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
+
 import { IntlProps } from '../../../';
 import { MarketsTable } from '../../containers';
 import { toggleColorTheme } from '../../../helpers';
@@ -99,7 +100,7 @@ class Landing extends React.Component<Props> {
                                         <p className="mb-0 ml-2 text-ms white-text">Safe & Secure Trading Platform</p>
                                     </div>
                                     <p className="mb-0 text-ms grey-text-accent">
-                                        Buy & Sell Assets with no worries with Heaven Exchange
+                                        Buy & Sell Assets with no worries with PexBank Exchange
                                     </p>
                                 </div>
                                 <div className="col-lg-4 col-sm-6 mb-24">

@@ -1,21 +1,19 @@
-import * as React from 'react';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import React from 'react';
+
 import { EmptyData } from '../../../assets/images/NoData';
 
-export interface noData {
+interface NoDataProps {
     text: string;
 }
 
-export class NoData extends React.Component<noData> {
-    constructor(props: noData) {
-        super(props);
-    }
-
-    public render() {
-        return (
-            <div className="d-flex justify-content-center flex-column align-items-center mt-4">
-                <EmptyData />
-                <p className="grey-text-accent font-normal mt-2 text-sm">{this.props.text}</p>
-            </div>
-        );
-    }
-}
+export const NoData: React.FC<NoDataProps> = ({ text }) => {
+    return (
+        <div className="d-flex justify-content-center flex-column align-items-center mt-4">
+            <EmptyData />
+            <p className="white-text font-extrabold mt-4 mb-0 text-md">NO DATA</p>
+            <p className="grey-text-accent font-normal mt-2 mb-0 text-sm">Empty Data</p>
+            <p className="grey-text-accent font-normal mb-0 text-sm">{text}</p>
+        </div>
+    );
+};

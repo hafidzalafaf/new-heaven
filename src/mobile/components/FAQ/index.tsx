@@ -108,7 +108,7 @@ const FAQMobileScreen: React.FC = () => {
                                             <div className="login-user d-flex flex-column">
                                                 <h1 className="gradient-text text-md font-bold">Login</h1>
                                                 <h3 className="grey-text text-sm font-normal">
-                                                    Welcome to Heaven Exchange
+                                                    Welcome to PexBank Exchange
                                                 </h3>
                                             </div>
                                         </div>

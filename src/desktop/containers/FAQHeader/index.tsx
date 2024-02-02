@@ -7,7 +7,7 @@ export const FAQHeader: FC = (): ReactElement => {
                 className="overflow-auto py-lg-5 background"
                 style={{ backgroundImage: `url('img/background-landing.png')` }}>
                 <div className="d-flex flex-column justify-content-center align-items-center py-5">
-                    <h3 className="title-1 white-text font-bold mb-24">Heaven Exchange FAQ</h3>
+                    <h3 className="title-1 white-text font-bold mb-24">PexBank Exchange FAQ</h3>
 
                     <div className="d-flex justify-content-center align-content-center gap-8">
                         <a

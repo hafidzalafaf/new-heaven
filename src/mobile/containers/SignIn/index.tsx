@@ -191,7 +191,7 @@ const SignInMobile: React.FC<SignInProps> = ({
             <Link to={''}>
                 <ArrowLeft className={'back'} />
             </Link>
-            <h1 className="mt-4 font-extrabold text-md grey-text-accent mb-3">Heaven Exchange Login</h1>
+            <h1 className="mt-4 font-extrabold text-md grey-text-accent mb-3">PexBank Exchange Login</h1>
             {/* <div className="d-flex justify-content-start align-items-center mb-4">
                 <UnlockIcon className={'mr-2'} />
                 <p className="text-xs grey-text font-bold mb-0">https://www.heavenexchange.io/signin</p>
@@ -255,7 +255,7 @@ const SignInMobile: React.FC<SignInProps> = ({
                 </button>
 
                 <p className="create-account text-xs text-center font-semibold grey-text-accent mt-3">
-                    Create Heaven Exchange account?{' '}
+                    Create PexBank Exchange account?{' '}
                     <Link to={'/signup'} className="contrast-text">
                         Sign up
                     </Link>

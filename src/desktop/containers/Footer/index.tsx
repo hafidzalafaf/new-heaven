@@ -4,6 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import { RouteProps, withRouter, Link } from 'react-router-dom';
 import { compose } from 'redux';
+
 import { IntlProps } from '../../../';
 import {
     changeLanguage,
@@ -73,7 +74,7 @@ class FooterContainer extends React.Component<Props, State> {
     public render() {
         const { isLoggedIn, lang, currentMarket } = this.props;
         const date = new Date();
-        let year = date.getFullYear();
+        const year = date.getFullYear();
         const thisHiddenFooter = hiddenFooter.some((r) => location.pathname.includes(r)) && location.pathname !== '/';
 
         if (!thisHiddenFooter) {
@@ -155,7 +156,7 @@ class FooterContainer extends React.Component<Props, State> {
                                     </a>
                                 </div>
                                 <p className="text-sm font-normal white-text mb-0">
-                                    Copyright @ {year} Heaven Exchange
+                                    Copyright @ {year} PexBank Exchange
                                 </p>
                                 <div className="d-flex">
                                     <a

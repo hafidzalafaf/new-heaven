@@ -181,7 +181,7 @@ const WalletDepositMobileScreen: React.FC = () => {
                         </span>
                     </div>
                     <div className="d-flex justify-content-between cursor-pointer mb-3 align-items-start pb-1 text-sm">
-                        <span>How do i deposit crypto into Heaven Exchange account</span>
+                        <span>How do i deposit crypto into PexBank Exchange account</span>
                         <span>
                             <ArrowRight className={''} />
                         </span>
@@ -330,9 +330,9 @@ const WalletDepositMobileScreen: React.FC = () => {
                                         value={
                                             currency == 'xrp' || currency === 'xlm'
                                                 ? depositAddress?.address?.slice(
-                                                    0,
-                                                    depositAddress?.address?.indexOf('?')
-                                                )
+                                                      0,
+                                                      depositAddress?.address?.indexOf('?')
+                                                  )
                                                 : depositAddress?.address
                                         }
                                     />
@@ -341,8 +341,8 @@ const WalletDepositMobileScreen: React.FC = () => {
                                     <img
                                         src={
                                             currencyItem?.icon_url !== '-' &&
-                                                currencyItem?.icon_url !== null &&
-                                                currencyItem?.icon_url !== 'null'
+                                            currencyItem?.icon_url !== null &&
+                                            currencyItem?.icon_url !== 'null'
                                                 ? currencyItem?.icon_url
                                                 : '/img/dummycoin.png'
                                         }
@@ -450,8 +450,8 @@ const WalletDepositMobileScreen: React.FC = () => {
                                     <img
                                         src={
                                             currencyItem?.icon_url !== '-' &&
-                                                currencyItem?.icon_url !== null &&
-                                                currencyItem?.icon_url !== 'null'
+                                            currencyItem?.icon_url !== null &&
+                                            currencyItem?.icon_url !== 'null'
                                                 ? currencyItem?.icon_url
                                                 : '/img/dummycoin.png'
                                         }
@@ -594,8 +594,9 @@ const WalletDepositMobileScreen: React.FC = () => {
                                         <div
                                             onClick={() => handleSelectChangeNetwork(item)}
                                             key={i}
-                                            className={`${protocol === item.protocol ? `border border-info` : `border border-dark`
-                                                } rounded-lg cursor-pointer mb-8 p-2`}>
+                                            className={`${
+                                                protocol === item.protocol ? `border border-info` : `border border-dark`
+                                            } rounded-lg cursor-pointer mb-8 p-2`}>
                                             <h3 className="p-0 m-0 text-ms grey-text-accent">
                                                 {item && item.protocol}
                                             </h3>

@@ -1,13 +1,14 @@
 import React, { FC, ReactElement, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+
+import { Link, useHistory } from 'react-router-dom';
+
 import { selectCurrencies, selectMarkets, selectMarketTickers, setCurrentMarket, Market } from 'src/modules';
 import { useMarketsFetch, useMarketsTickersFetch } from 'src/hooks';
-import { Link, useHistory } from 'react-router-dom';
 import { Table, Decimal } from '../../../components';
 import { Favorite } from '../../../assets/images/Favorite';
 import './MarketFuturesTabs.pcss';
-import { NoData } from '../../components';
-import { FilterInput } from 'src/desktop/components';
+import { NoData, FilterInput } from '../../components';
 
 const defaultTicker = {
     amount: '0.0',
