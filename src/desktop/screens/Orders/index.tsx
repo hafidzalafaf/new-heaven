@@ -1,8 +1,15 @@
-import React, { FC, ReactElement } from 'react';
-import { useIntl } from 'react-intl';
+import React, { FC, ReactElement, useState, useEffect, Fragment } from 'react';
+// import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDocumentTitle, useWalletsFetch, useUserOrdersHistoryFetch, useMarketsFetch } from '../../../hooks';
+import { useParams } from 'react-router-dom';
+
+import { Tabs, Tab } from 'react-bootstrap';
+
+import Select from 'react-select';
+
+import moment from 'moment';
+
+import { useDocumentTitle, useWalletsFetch, useMarketsFetch } from '../../../hooks';
 import {
     selectCurrencies,
     Currency,
@@ -15,42 +22,39 @@ import {
     selectOrdersLastElemIndex,
     selectOrdersNextPageExists,
     selectShouldFetchCancelAll,
-    selectShouldFetchCancelSingle,
+    // selectShouldFetchCancelSingle,
     selectOrdersHistoryLoading,
     Market,
     userOpenOrdersFetch,
     userOrdersHistoryFetch,
 } from '../../../modules';
 import { Table, Loading } from '../../../components';
-import { CustomStylesSelect, Modal } from '../../../desktop/components';
-import { Tabs, Tab } from 'react-bootstrap';
+import { CustomStylesSelect, Modal, NoData, Pagination } from '../../components';
 import { ModalCloseIcon } from '../../../assets/images/CloseIcon';
-import Select from 'react-select';
-import { NoData, Pagination } from '../../components';
-import moment from 'moment';
+
 import { OrderCommon } from 'src/modules/types';
 
 const DEFAULT_LIMIT = 20;
-export const MarketOpen: FC = (): ReactElement => {
+export const OrdersScreen: FC = (): ReactElement => {
     const dispatch = useDispatch();
-    const intl = useIntl();
+    // const intl = useIntl();
     const { currency = '' } = useParams<{ currency?: string }>();
 
-    const [tab, setTab] = React.useState('open');
-    const [currentPageIndex, setPageIndex] = React.useState(0);
-    const [startDate, setStartDate] = React.useState<string | number>();
-    const [endDate, setEndDate] = React.useState<string | number>();
-    const [data, setData] = React.useState([]);
-    const [status, setStatus] = React.useState('');
-    const [market, setMarket] = React.useState('');
-    const [loading, setLoading] = React.useState(false);
-    const [showModalCancel, setShowModalCancel] = React.useState(false);
-    const [showModalCancelAll, setShowModalCancelAll] = React.useState(false);
-    const [deleteRow, setDeleteRow] = React.useState<OrderCommon>();
+    const [tab, setTab] = useState('open');
+    const [currentPageIndex, setPageIndex] = useState(0);
+    const [startDate, setStartDate] = useState<string | number>();
+    const [endDate, setEndDate] = useState<string | number>();
+    const [data, setData] = useState([]);
+    const [status, setStatus] = useState('');
+    const [market, setMarket] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showModalCancel, setShowModalCancel] = useState(false);
+    const [showModalCancelAll, setShowModalCancelAll] = useState(false);
+    const [deleteRow, setDeleteRow] = useState<OrderCommon>();
 
     const orders = useSelector(selectOrdersHistory);
     const shouldFetchCancelAll = useSelector(selectShouldFetchCancelAll);
-    const shouldFetchCancelSingle = useSelector(selectShouldFetchCancelSingle);
+    // const shouldFetchCancelSingle = useSelector(selectShouldFetchCancelSingle);
     const firstElemIndex = useSelector((state: RootState) => selectOrdersFirstElemIndex(state, 20));
     const lastElemIndex = useSelector((state: RootState) => selectOrdersLastElemIndex(state, 20));
     const ordersNextPageExists = useSelector(selectOrdersNextPageExists);
@@ -67,7 +71,7 @@ export const MarketOpen: FC = (): ReactElement => {
     const time_from = Math.floor(new Date(startDate).getTime() / 1000).toString();
     const time_to = Math.floor(new Date(endDate).getTime() / 1000).toString();
 
-    React.useEffect(() => {
+    useEffect(() => {
         const defaultPayload = {
             type: tab,
             group: tab,
@@ -161,11 +165,11 @@ export const MarketOpen: FC = (): ReactElement => {
         );
     }, [startDate, endDate, market, currentPageIndex, status, tab]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setData(orders);
     }, [orders, tab]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setLoading(true);
         if (!historyLoading) {
             setLoading(false);
@@ -194,7 +198,7 @@ export const MarketOpen: FC = (): ReactElement => {
         }, 1000);
     };
 
-    let currentBidUnitMarkets = markets;
+    const currentBidUnitMarkets = markets;
     const formattedMarkets = currentBidUnitMarkets.length
         ? currentBidUnitMarkets.map((market) => ({
               ...market,
@@ -215,20 +219,30 @@ export const MarketOpen: FC = (): ReactElement => {
     };
 
     const getTableData = (data) => {
-        return data.map((item) => [
-            <p className="m-0 text-sm white-text">
+        return data.map((item, i) => [
+            <p key={i} className="m-0 text-sm white-text">
                 {!item.maker_fee
                     ? moment(item.updated_at * 1000).format('DD-MM-YYYY HH:mm:ss')
                     : moment(item.updated_at).format('DD-MM-YYYY HH:mm:ss')}
             </p>,
-            <p className="m-0 text-sm white-text">{item.market.toUpperCase()}</p>,
-            <p className={`m-0 text-sm ${item.side == 'buy' ? 'green-text' : 'danger-text'}`}>
+            <p key={item.market} className="m-0 text-sm white-text">
+                {item.market.toUpperCase()}
+            </p>,
+            <p key={item.side} className={`m-0 text-sm ${item.side == 'buy' ? 'green-text' : 'danger-text'}`}>
                 {item.side === 'buy' ? 'Buy' : 'Sell'}
             </p>,
-            <p className="m-0 text-sm white-text">{item.ord_type === 'market' ? item.avg_price : item.price}</p>,
-            <p className="m-0 text-sm white-text text-italic">{item.origin_volume}</p>,
-            <p className="m-0 text-sm white-text text-italic">{item.executed_volume}</p>,
-            <p className="m-0 text-sm white-text text-italic">{item.remaining_volume}</p>,
+            <p key={item.ord_type} className="m-0 text-sm white-text">
+                {item.ord_type === 'market' ? item.avg_price : item.price}
+            </p>,
+            <p key={item.origin_volume} className="m-0 text-sm white-text text-italic">
+                {item.origin_volume}
+            </p>,
+            <p key={item.executed_volume} className="m-0 text-sm white-text text-italic">
+                {item.executed_volume}
+            </p>,
+            <p key={item.remaining_volume} className="m-0 text-sm white-text text-italic">
+                {item.remaining_volume}
+            </p>,
             <>
                 {tab === 'open' ? (
                     <button
@@ -278,7 +292,7 @@ export const MarketOpen: FC = (): ReactElement => {
     });
 
     const renderModalContentCancel = () => (
-        <React.Fragment>
+        <Fragment>
             <h6 className="text-md white-text font-semibold mb-24  text-center">Are you sure to Cancel Orders?</h6>
             <p className="text-sm grey-text-accent m-0 p-0 mb-24  text-center">
                 The order you made for this transaction will be canceled and you will have to repeat the transaction
@@ -292,11 +306,11 @@ export const MarketOpen: FC = (): ReactElement => {
                     Confirm
                 </button>
             </div>
-        </React.Fragment>
+        </Fragment>
     );
 
     const renderModalContentCancelAll = () => (
-        <React.Fragment>
+        <Fragment>
             <h6 className="text-md white-text font-semibold mb-24">Are you sure to Cancel All your Orders?</h6>
             <p className="text-sm grey-text-accent m-0 p-0 mb-24">
                 All order transactions that you make will be cancelled, are you sure to cancel all orders?
@@ -309,7 +323,7 @@ export const MarketOpen: FC = (): ReactElement => {
                     Confirm
                 </button>
             </div>
-        </React.Fragment>
+        </Fragment>
     );
 
     const renderFilter = () => {
@@ -375,7 +389,7 @@ export const MarketOpen: FC = (): ReactElement => {
     };
 
     return (
-        <React.Fragment>
+        <Fragment>
             <div className="market-order-screen content-wrapper dark-bg-main">
                 <div className="px-24 pt-4 pb-4 dark-bg-main">
                     <h1 className="m-0 white-text text-xl">Market Orders</h1>
@@ -454,6 +468,6 @@ export const MarketOpen: FC = (): ReactElement => {
                 {<Modal show={showModalCancel} content={renderModalContentCancel()} />}
                 {<Modal show={showModalCancelAll} content={renderModalContentCancelAll()} />}
             </div>
-        </React.Fragment>
+        </Fragment>
     );
 };

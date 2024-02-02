@@ -18,7 +18,7 @@ export * from './MarketListScreen';
 export * from './HistoryTransactionScreen';
 export * from './ProfileSecurityScreen';
 export * from './MarketDetailScreen';
-export * from './MarketOpen';
+export * from './Orders';
 export * from './TradingFutureScreen';
 export * from './TradingScreen';
 export * from './HistoryTrade';
