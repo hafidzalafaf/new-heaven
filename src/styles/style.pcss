@@ -14,6 +14,7 @@
     position: relative;
     min-height: 100vh;
     background: var(--root-background-color);
+    position: relative;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
@@ -602,8 +603,16 @@ button[disabled] {
     border-bottom: 1px solid var(--border-color);
 }
 
+.border-b-0 {
+    border-bottom: 0 !important;
+}
+
 .border-1 {
     border: 1px solid var(--border-color);
+}
+
+.border-r-1 {
+    border-right: 1px solid var(--border-color);
 }
 /* end border variable */
 
@@ -946,6 +955,12 @@ button[disabled] {
 
 .rotate-180 {
     transform: rotate(180deg);
+    transition: ease-in-out all 0.2s;
+}
+
+.rotate-0 {
+    transform: rotate(0deg);
+    transition: ease-in-out all 0.2s;
 }
 
 .alert-success-mobile {

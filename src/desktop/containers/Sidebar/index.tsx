@@ -60,7 +60,7 @@ const sidebarProfile = [
     '/profile',
     '/profile/referral',
     '/profile/api-key',
-    '/markets-open',
+    '/orders',
     '/security/2fa',
     '/wallets',
     '/history-transaction',
@@ -105,7 +105,7 @@ class Side extends React.Component<Props, SidebarState> {
                 },
                 {
                     name: 'Market Order',
-                    path: '/markets-open',
+                    path: '/orders',
                     comingsoon: false,
                     submenu: [],
                 },
@@ -167,11 +167,10 @@ class Side extends React.Component<Props, SidebarState> {
         return (
             <React.Fragment>
                 {thisSidebarProfile && (
-                    <div className="sidebar dark-bg-accent">
+                    <div className="sidebar dark-bg-accent border-r-1">
                         <div className="sticky-sidebar">
-                            <div className="mb-36"></div>
-                            <ul>
-                                {this.state.dataProfile.slice(0, 5).map((el, i) => (
+                            <ul className="border-b-0">
+                                {this.state.dataProfile.map((el, i) => (
                                     <React.Fragment>
                                         <li
                                             key={i}
@@ -187,14 +186,14 @@ class Side extends React.Component<Props, SidebarState> {
                                                     this.props.history.push(el.path);
                                                 }
                                             }}
-                                            className="d-flex align-items-center cursor-pointer ml-20 mt-8 mb-8">
+                                            className="d-flex align-items-center cursor-pointer ">
                                             <div className="mr-8">
                                                 {el.name === 'Dashboard' ? (
                                                     <UserIcon
                                                         strokeColor={
                                                             location.pathname == '/profile' ||
                                                             location.pathname == '/profile/kyc'
-                                                                ? 'var(--text-primary-color)'
+                                                                ? 'var(--sicebar-active-color)'
                                                                 : 'var(--text-secondary-color)'
                                                         }
                                                     />
@@ -202,15 +201,15 @@ class Side extends React.Component<Props, SidebarState> {
                                                     <WalletIcon
                                                         fillColor={
                                                             location.pathname.includes('wallets')
-                                                                ? 'var(--text-primary-color)'
+                                                                ? 'var(--sicebar-active-color)'
                                                                 : 'var(--text-secondary-color)'
                                                         }
                                                     />
                                                 ) : el.name === 'Market Order' ? (
                                                     <AnalysIcon
                                                         fillColor={
-                                                            location.pathname.includes('markets-open')
-                                                                ? 'var(--text-primary-color)'
+                                                            location.pathname.includes('orders')
+                                                                ? 'var(--sicebar-active-color)'
                                                                 : 'var(--text-secondary-color)'
                                                         }
                                                     />
@@ -218,7 +217,7 @@ class Side extends React.Component<Props, SidebarState> {
                                                     <TradeHistory
                                                         fillColor={
                                                             location.pathname.includes('trade-history')
-                                                                ? 'var(--text-primary-color)'
+                                                                ? 'var(--sicebar-active-color)'
                                                                 : 'var(--text-secondary-color)'
                                                         }
                                                     />
@@ -226,7 +225,55 @@ class Side extends React.Component<Props, SidebarState> {
                                                     <CalendarIcon
                                                         fillColor={
                                                             location.pathname.includes('history-transaction')
-                                                                ? 'var(--text-primary-color)'
+                                                                ? 'var(--sicebar-active-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'Profile Setting' ? (
+                                                    <SettingIcon
+                                                        fillColor={
+                                                            location.pathname.includes('setting')
+                                                                ? 'var(--sicebar-active-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'Security' ? (
+                                                    <SecurityIcon
+                                                        fillColor={
+                                                            location.pathname.includes('security')
+                                                                ? 'var(--sicebar-active-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'Referral' ? (
+                                                    <AddUserIcon
+                                                        fillColor={
+                                                            location.pathname.includes('referral')
+                                                                ? 'var(--sicebar-active-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'API Management' ? (
+                                                    <ApiIcon
+                                                        fillColor={
+                                                            location.pathname.includes('api')
+                                                                ? 'var(--sicebar-active-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'Announcement' ? (
+                                                    <AnnouncementIcon
+                                                        fillColor={
+                                                            location.pathname.includes('announcement')
+                                                                ? 'var(--sicebar-active-color)'
+                                                                : 'var(--text-secondary-color)'
+                                                        }
+                                                    />
+                                                ) : el.name === 'FAQ' ? (
+                                                    <FaqIcon
+                                                        fillColor={
+                                                            location.pathname.includes('faq')
+                                                                ? 'var(--sicebar-active-color)'
                                                                 : 'var(--text-secondary-color)'
                                                         }
                                                     />
@@ -235,22 +282,25 @@ class Side extends React.Component<Props, SidebarState> {
                                                 )}
                                             </div>
                                             <p
-                                                className={`font-bold text-sm mb-0 ${
+                                                className={`font-semibold text-sm mb-0 ${
                                                     (location.pathname == '/profile' ||
                                                         location.pathname == '/profile/kyc') &&
                                                     location.pathname.includes(el.path)
-                                                        ? 'white-text'
+                                                        ? 'gradient-text'
                                                         : el.path != '/profile' && location.pathname.includes(el.path)
-                                                        ? 'white-text'
+                                                        ? 'gradient-text'
                                                         : el.name === 'Wallet' && location.pathname.includes(el.path)
-                                                        ? 'white-text'
+                                                        ? 'gradient-text'
                                                         : 'grey-text'
                                                 }`}>
                                                 {el.name}
                                             </p>
 
                                             {el.name === 'Wallet' && (
-                                                <div className="ml-auto mr-3">
+                                                <div
+                                                    className={`ml-auto mr-0 ${
+                                                        this.state.expandWallet ? 'rotate-180' : 'rotate-0'
+                                                    }`}>
                                                     <DropdownIcon fillColor={'var(--text-secondary-color)'} />
                                                 </div>
                                             )}
@@ -259,36 +309,22 @@ class Side extends React.Component<Props, SidebarState> {
                                         {this.state.expandWallet &&
                                             el.name === 'Wallet' &&
                                             el.submenu.map((item, i) => (
-                                                <ul>
+                                                <ul className="border-b-0">
                                                     <li
                                                         key={i}
                                                         onClick={() => {
                                                             this.props.history.push(item.path);
                                                         }}
-                                                        className="d-flex align-items-center cursor-pointer ml-5 mt-8 mb-8">
-                                                        <div className="mr-8">
-                                                            <WalletIcon
-                                                                fillColor={
-                                                                    location.pathname.includes('/wallets') &&
-                                                                    item.path == '/wallets' &&
-                                                                    !location.pathname.includes('p2p/')
-                                                                        ? 'var(--text-primary-color)'
-                                                                        : location.pathname.includes('/p2p/wallets') &&
-                                                                          item.path == '/p2p/wallets'
-                                                                        ? 'var(--text-primary-color)'
-                                                                        : 'var(--text-secondary-color)'
-                                                                }
-                                                            />
-                                                        </div>
+                                                        className="d-flex align-items-center cursor-pointer border-b-0">
                                                         <p
                                                             className={`font-bold text-sm mb-0 ${
                                                                 location.pathname.includes('/wallets') &&
                                                                 item.path == '/wallets' &&
                                                                 !location.pathname.includes('p2p/')
-                                                                    ? 'white-text'
+                                                                    ? 'gradient-text'
                                                                     : location.pathname.includes('/p2p/wallets') &&
                                                                       item.path == '/p2p/wallets'
-                                                                    ? 'white-text'
+                                                                    ? 'gradient-text'
                                                                     : 'grey-text'
                                                             }`}>
                                                             {item.name}
@@ -299,8 +335,7 @@ class Side extends React.Component<Props, SidebarState> {
                                     </React.Fragment>
                                 ))}
                             </ul>
-                            <div className="devider"></div>
-                            <ul>
+                            {/* <ul>
                                 {this.state.dataProfile.slice(5).map((el, i) => (
                                     <li
                                         key={i}
@@ -311,13 +346,13 @@ class Side extends React.Component<Props, SidebarState> {
                                                 this.props.history.push(el.path);
                                             }
                                         }}
-                                        className="d-flex align-items-center cursor-pointer ml-20 mt-8 mb-8">
+                                        className="d-flex align-items-center cursor-pointer">
                                         <div className="mr-8">
                                             {el.name === 'Profile Setting' ? (
                                                 <SettingIcon
                                                     fillColor={
                                                         location.pathname.includes('setting')
-                                                            ? 'var(--text-primary-color)'
+                                                            ? 'var(--sicebar-active-color)'
                                                             : 'var(--text-secondary-color)'
                                                     }
                                                 />
@@ -325,7 +360,7 @@ class Side extends React.Component<Props, SidebarState> {
                                                 <SecurityIcon
                                                     fillColor={
                                                         location.pathname.includes('security')
-                                                            ? 'var(--text-primary-color)'
+                                                            ? 'var(--sicebar-active-color)'
                                                             : 'var(--text-secondary-color)'
                                                     }
                                                 />
@@ -333,7 +368,7 @@ class Side extends React.Component<Props, SidebarState> {
                                                 <AddUserIcon
                                                     fillColor={
                                                         location.pathname.includes('referral')
-                                                            ? 'var(--text-primary-color)'
+                                                            ? 'var(--sicebar-active-color)'
                                                             : 'var(--text-secondary-color)'
                                                     }
                                                 />
@@ -341,7 +376,7 @@ class Side extends React.Component<Props, SidebarState> {
                                                 <ApiIcon
                                                     fillColor={
                                                         location.pathname.includes('api')
-                                                            ? 'var(--text-primary-color)'
+                                                            ? 'var(--sicebar-active-color)'
                                                             : 'var(--text-secondary-color)'
                                                     }
                                                 />
@@ -349,7 +384,7 @@ class Side extends React.Component<Props, SidebarState> {
                                                 <AnnouncementIcon
                                                     fillColor={
                                                         location.pathname.includes('announcement')
-                                                            ? 'var(--text-primary-color)'
+                                                            ? 'var(--sicebar-active-color)'
                                                             : 'var(--text-secondary-color)'
                                                     }
                                                 />
@@ -357,7 +392,7 @@ class Side extends React.Component<Props, SidebarState> {
                                                 <FaqIcon
                                                     fillColor={
                                                         location.pathname.includes('faq')
-                                                            ? 'var(--text-primary-color)'
+                                                            ? 'var(--sicebar-active-color)'
                                                             : 'var(--text-secondary-color)'
                                                     }
                                                 />
@@ -367,13 +402,13 @@ class Side extends React.Component<Props, SidebarState> {
                                         </div>
                                         <p
                                             className={`font-bold text-sm mb-0 ${
-                                                location.pathname.includes(el.path) ? 'white-text' : 'grey-text'
+                                                location.pathname.includes(el.path) ? 'gradient-text' : 'grey-text'
                                             }`}>
                                             {el.name}
                                         </p>
                                     </li>
                                 ))}
-                            </ul>
+                            </ul> */}
                         </div>
                     </div>
                 )}
