@@ -4,7 +4,7 @@
     left: 0;
     top: 0px;
     z-index: 2;
-    width: 309px;
+    width: 369px;
     height: 100%;
     border-right: 1px solid var(--input-border-color);
     overflow: auto;
@@ -15,7 +15,17 @@
         padding-right: 60px;
         height: calc(100vh - 77px);
         padding-bottom: 36px;
-        padding-left: 24px;
+        padding-left: 60px;
+    }
+}
+
+@media (max-width: 1800px) {
+    .sidebar {
+        width: 280px;
+        .sticky-sidebar {
+            padding-right: 36px;
+            padding-left: 24px;
+        }
     }
 }
 

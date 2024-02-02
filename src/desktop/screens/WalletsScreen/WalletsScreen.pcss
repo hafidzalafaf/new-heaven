@@ -1,9 +1,18 @@
 .wallet-screen {
     &.content-wrapper {
         position: relative;
-        margin-left: 309px;
-        width: calc(100% - 309px);
+        margin-left: 369px;
+        width: calc(100% - 369px);
         padding-right: 24px;
         min-height: calc(100vh - 70px);
+    }
+}
+
+@media (max-width: 1800px) {
+    .wallet-screen {
+        &.content-wrapper {
+            margin-left: 281px;
+            width: calc(100% - 281px);
+        }
     }
 }

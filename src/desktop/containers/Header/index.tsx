@@ -166,7 +166,7 @@ class Head extends React.Component<Props, HeaderState> {
         if (!thisHiddenHeader) {
             return (
                 <React.Fragment>
-                    <div className="navbar">
+                    <div className="navbar mx-auto">
                         <div className="layout-container">
                             <nav className={`navbar navbar-expand-lg py-2 `}>
                                 <Link to="/" className="navbar-brand">
