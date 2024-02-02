@@ -34,7 +34,7 @@ class ProfileSettingComponent extends React.Component<Props, ProfileSettingState
         return (
             <React.Fragment>
                 <div className="profile-setting-screen dark-bg-accent pb-5">
-                    <div className="header dark-bg-main py-4 px-24 mb-24">
+                    <div className="header dark-bg-accent py-4 px-24 mb-24">
                         <h2 className="mb-0 text-xl white-text font-bold py-2">Profile Setting</h2>
                     </div>
                     <div className="px-24">

@@ -397,7 +397,7 @@ export const HistoryTransactionScreen: FC = (): ReactElement => {
     return (
         <React.Fragment>
             <div className="pg-history-transaction-screen dark-bg-main">
-                <div className="pg-history-transaction-screen__title dark-bg-main px-24 pb-4 pt-4">
+                <div className="pg-history-transaction-screen__title dark-bg-accent px-24 pb-4 pt-4">
                     <h1 className="m-0 white-text text-xl">Transaction History</h1>
                 </div>
                 <div className="pg-history-transaction-screen__content-wrapper dark-bg-accent">

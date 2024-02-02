@@ -53,6 +53,14 @@ const hiddenFooter = [
     '/password_reset',
     '/trading',
     '/wallets',
+    '/profile',
+    '/history-transaction',
+    '/orders',
+    '/profile/referral',
+    '/profile/security',
+    '/profile/api-key',
+    '/announcement',
+    '/faq',
 ];
 
 type Props = OwnProps & ReduxProps & RouteProps & DispatchProps & IntlProps;

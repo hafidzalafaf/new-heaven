@@ -94,7 +94,7 @@ class Side extends React.Component<Props, SidebarState> {
                 },
                 {
                     name: 'Wallet',
-                    path: '#',
+                    path: '/wallets',
                     comingsoon: false,
                     submenu: [
                         // {
@@ -136,11 +136,6 @@ class Side extends React.Component<Props, SidebarState> {
                     path: '#',
                     comingsoon: false,
                     submenu: [
-                        // {
-                        //     name: 'Overview',
-                        //     path: '/wallets',
-                        //     comingsoon: false,
-                        // },
                         {
                             name: 'Account & Security',
                             path: '/profile/security',
@@ -360,8 +355,8 @@ class Side extends React.Component<Props, SidebarState> {
                                                         className="d-flex align-items-center cursor-pointer border-b-0">
                                                         <p
                                                             className={`font-bold text-sm mb-0 ${
-                                                                location.pathname.includes('/Account') &&
-                                                                item.path == '/Account'
+                                                                location.pathname.includes('/profile/security') &&
+                                                                item.path == '/profile/security'
                                                                     ? 'gradient-text'
                                                                     : 'grey-text'
                                                             }`}>

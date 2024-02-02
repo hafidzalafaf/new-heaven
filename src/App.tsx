@@ -61,8 +61,10 @@ const RenderDeviceContainers = () => {
                 <HeaderContainer />
                 <AlertsContainer />
                 <div className="pg-container">
-                    <SidebarContainer />
-                    <LayoutContainer />
+                    <div className="layout-container">
+                        <SidebarContainer />
+                        <LayoutContainer />
+                    </div>
                 </div>
                 <FooterContainer />
             </React.Fragment>

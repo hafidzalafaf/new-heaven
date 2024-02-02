@@ -166,224 +166,241 @@ class Head extends React.Component<Props, HeaderState> {
         if (!thisHiddenHeader) {
             return (
                 <React.Fragment>
-                    <nav className={`navbar navbar-expand-lg py-2 px-24`}>
-                        <Link to="/" className="navbar-brand">
-                            <Logo />
-                        </Link>
-                        <div className="d-flex align-items-center">
-                            {this.state.showHeader && isLoggedIn && (
-                                <li className="nav-item dropdown avatar profile-menu px-3">
-                                    <Dropdown>
-                                        <Dropdown.Toggle
-                                            variant=""
-                                            id="dropdown-basic"
-                                            className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm">
-                                            <img src="/img/avatar.png" className="avatar-image" alt="ava" />
-                                        </Dropdown.Toggle>
+                    <div className="navbar">
+                        <div className="layout-container">
+                            <nav className={`navbar navbar-expand-lg py-2 `}>
+                                <Link to="/" className="navbar-brand">
+                                    <Logo />
+                                </Link>
+                                <div className="d-flex align-items-center">
+                                    {this.state.showHeader && isLoggedIn && (
+                                        <li className="nav-item dropdown avatar profile-menu px-3">
+                                            <Dropdown>
+                                                <Dropdown.Toggle
+                                                    variant=""
+                                                    id="dropdown-basic"
+                                                    className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm">
+                                                    <img src="/img/avatar.png" className="avatar-image" alt="ava" />
+                                                </Dropdown.Toggle>
 
-                                        <Dropdown.Menu className="dropdown-profile">
-                                            {ProfileDropdown.map((item, index) => (
-                                                <Dropdown.Item
-                                                    key={index}
-                                                    className="dark-bg-accent p-3 dropdown-profile">
-                                                    <Link to={item.url} className="d-flex">
-                                                        {item.icon}
-                                                        <div className="pl-3">
-                                                            <p className="mb-0 text-sm font-semibold white-text">
-                                                                {item.name}
-                                                            </p>
-                                                            <span className="text-xs grey-text-accent font-normal">
-                                                                {item.desc}
-                                                            </span>
+                                                <Dropdown.Menu className="dropdown-profile">
+                                                    {ProfileDropdown.map((item, index) => (
+                                                        <Dropdown.Item
+                                                            key={index}
+                                                            className="dark-bg-accent p-3 dropdown-profile">
+                                                            <Link to={item.url} className="d-flex">
+                                                                {item.icon}
+                                                                <div className="pl-3">
+                                                                    <p className="mb-0 text-sm font-semibold white-text">
+                                                                        {item.name}
+                                                                    </p>
+                                                                    <span className="text-xs grey-text-accent font-normal">
+                                                                        {item.desc}
+                                                                    </span>
+                                                                </div>
+                                                            </Link>
+                                                        </Dropdown.Item>
+                                                    ))}
+                                                    <Dropdown.Item className="dark-bg-accent p-3 dropdown-profile cursor-pointer">
+                                                        <div className="dark-bg-accent p-3 dropdown-profile cursor-pointer">
+                                                            <div className="d-flex" onClick={logoutButton}>
+                                                                <Logout />
+                                                                <div className="pl-3">
+                                                                    <p className="mb-0 text-sm font-semibold white-text">
+                                                                        {this.translate('page.header.navbar.logout')}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </Link>
-                                                </Dropdown.Item>
-                                            ))}
-                                            <Dropdown.Item className="dark-bg-accent p-3 dropdown-profile cursor-pointer">
-                                                <div className="dark-bg-accent p-3 dropdown-profile cursor-pointer">
-                                                    <div className="d-flex" onClick={logoutButton}>
-                                                        <Logout />
-                                                        <div className="pl-3">
-                                                            <p className="mb-0 text-sm font-semibold white-text">
-                                                                {this.translate('page.header.navbar.logout')}
+                                                    </Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                        </li>
+                                    )}
+                                    <button
+                                        className="navbar-toggler"
+                                        type="button"
+                                        data-toggle="collapse"
+                                        data-target="#navbarNavDropdown"
+                                        aria-controls="navbarNavDropdown"
+                                        aria-expanded="false"
+                                        aria-label="Toggle navigation">
+                                        <span className="navbar-toggler-icon">
+                                            <img
+                                                src={
+                                                    this.state.showHeader
+                                                        ? '/img/humburger-show.png'
+                                                        : '/img/humburger.png'
+                                                }
+                                                className="icon"
+                                                alt="icon"
+                                                onClick={() => this.setState({ showHeader: !this.state.showHeader })}
+                                            />
+                                        </span>
+                                    </button>
+                                </div>
+                                <div
+                                    className={`collapse ${
+                                        this.state.showHeader && 'show'
+                                    } navbar-collapse justify-content-between`}
+                                    id="navbarNavDropdown">
+                                    <div>
+                                        {!thisAuthHeader ? (
+                                            <React.Fragment>
+                                                <ul className="navbar-nav main-navbar">
+                                                    <li
+                                                        className={`nav-item ${
+                                                            (location.pathname == '/profile' ||
+                                                                location.pathname == '/') &&
+                                                            'active'
+                                                        }`}
+                                                        onClick={() => this.setState({ showHeader: false })}>
+                                                        <Link to={'/'} className="nav-link px-3 text-sm font-semibold">
+                                                            {this.translate('page.header.navbar.home')}
+                                                        </Link>
+                                                    </li>
+                                                    <li
+                                                        className={`nav-item ${
+                                                            location.pathname?.includes('/markets/trading') && 'active'
+                                                        }`}
+                                                        onClick={() => this.setState({ showHeader: false })}>
+                                                        <Link
+                                                            to={`/markets/trading/${this?.props?.currentMarket?.id}`}
+                                                            className="nav-link px-3 text-sm font-semibold">
+                                                            {this.translate('page.header.navbar.trade')}
+                                                        </Link>
+                                                    </li>
+                                                    <li
+                                                        className={`nav-item ${
+                                                            location.pathname == '/markets' && 'active'
+                                                        }`}
+                                                        onClick={() => this.setState({ showHeader: false })}>
+                                                        <Link
+                                                            to={'/markets'}
+                                                            className="nav-link px-3 text-sm font-semibold">
+                                                            {this.translate('page.header.navbar.market')}
+                                                        </Link>
+                                                    </li>
+                                                    <li
+                                                        className={`nav-item ${
+                                                            location.pathname == '/markets-open' && 'active'
+                                                        }`}
+                                                        onClick={() => this.setState({ showHeader: false })}>
+                                                        <Link
+                                                            to={'/markets-open'}
+                                                            className="nav-link px-3 text-sm font-semibold">
+                                                            {this.translate('page.header.navbar.order')}
+                                                        </Link>
+                                                    </li>
+                                                    <li
+                                                        className={`nav-item ${
+                                                            location.pathname == '/faq' && 'active'
+                                                        }`}
+                                                        onClick={() => this.setState({ showHeader: false })}>
+                                                        <Link
+                                                            to={'/faq'}
+                                                            className="nav-link px-3 text-sm font-semibold">
+                                                            {this.translate('page.header.navbar.help')}
+                                                        </Link>
+                                                    </li>
+                                                </ul>
+                                            </React.Fragment>
+                                        ) : thisTradingHeader ? (
+                                            <React.Fragment>
+                                                <ul className="navbar-nav main-navbar trading-header align-items-center">
+                                                    <li className="nav-item dropdown market-dropdown ">
+                                                        <div className="d-flex align-items-center">
+                                                            <img
+                                                                src={this.props.currentMarket?.logo_url}
+                                                                alt="coin"
+                                                                className="small-coin-icon mr-8"
+                                                            />
+                                                            <h2 className="white-text text-md m-0 p-0">
+                                                                {this.props.currentMarket?.name}
+                                                            </h2>
+                                                        </div>
+                                                    </li>
+                                                    <li className="nav-item nav-large-display">
+                                                        <div className="nav-link px-12">
+                                                            <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
+                                                                {this.translate('page.header.navbar.trade.24change')}
+                                                            </p>
+                                                            <p
+                                                                className={`font-semibold mb-0 text-sm ${
+                                                                    ticker?.price_change_percent.includes('+')
+                                                                        ? 'contrast-text'
+                                                                        : 'danger-text'
+                                                                }`}>
+                                                                {ticker?.price_change_percent}
                                                             </p>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                </li>
-                            )}
-                            <button
-                                className="navbar-toggler"
-                                type="button"
-                                data-toggle="collapse"
-                                data-target="#navbarNavDropdown"
-                                aria-controls="navbarNavDropdown"
-                                aria-expanded="false"
-                                aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon">
-                                    <img
-                                        src={this.state.showHeader ? '/img/humburger-show.png' : '/img/humburger.png'}
-                                        className="icon"
-                                        alt="icon"
-                                        onClick={() => this.setState({ showHeader: !this.state.showHeader })}
-                                    />
-                                </span>
-                            </button>
-                        </div>
-                        <div
-                            className={`collapse ${
-                                this.state.showHeader && 'show'
-                            } navbar-collapse justify-content-between`}
-                            id="navbarNavDropdown">
-                            <div>
-                                {!thisAuthHeader ? (
-                                    <React.Fragment>
-                                        <ul className="navbar-nav main-navbar">
-                                            <li
-                                                className={`nav-item ${
-                                                    (location.pathname == '/profile' || location.pathname == '/') &&
-                                                    'active'
-                                                }`}
-                                                onClick={() => this.setState({ showHeader: false })}>
-                                                <Link to={'/'} className="nav-link px-3 text-sm font-semibold">
-                                                    {this.translate('page.header.navbar.home')}
-                                                </Link>
-                                            </li>
-                                            <li
-                                                className={`nav-item ${
-                                                    location.pathname?.includes('/markets/trading') && 'active'
-                                                }`}
-                                                onClick={() => this.setState({ showHeader: false })}>
-                                                <Link
-                                                    to={`/markets/trading/${this?.props?.currentMarket?.id}`}
-                                                    className="nav-link px-3 text-sm font-semibold">
-                                                    {this.translate('page.header.navbar.trade')}
-                                                </Link>
-                                            </li>
-                                            <li
-                                                className={`nav-item ${location.pathname == '/markets' && 'active'}`}
-                                                onClick={() => this.setState({ showHeader: false })}>
-                                                <Link to={'/markets'} className="nav-link px-3 text-sm font-semibold">
-                                                    {this.translate('page.header.navbar.market')}
-                                                </Link>
-                                            </li>
-                                            <li
-                                                className={`nav-item ${
-                                                    location.pathname == '/markets-open' && 'active'
-                                                }`}
-                                                onClick={() => this.setState({ showHeader: false })}>
-                                                <Link
-                                                    to={'/markets-open'}
-                                                    className="nav-link px-3 text-sm font-semibold">
-                                                    {this.translate('page.header.navbar.order')}
-                                                </Link>
-                                            </li>
-                                            <li
-                                                className={`nav-item ${location.pathname == '/faq' && 'active'}`}
-                                                onClick={() => this.setState({ showHeader: false })}>
-                                                <Link to={'/faq'} className="nav-link px-3 text-sm font-semibold">
-                                                    {this.translate('page.header.navbar.help')}
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </React.Fragment>
-                                ) : thisTradingHeader ? (
-                                    <React.Fragment>
-                                        <ul className="navbar-nav main-navbar trading-header align-items-center">
-                                            <li className="nav-item dropdown market-dropdown ">
-                                                <div className="d-flex align-items-center">
-                                                    <img
-                                                        src={this.props.currentMarket?.logo_url}
-                                                        alt="coin"
-                                                        className="small-coin-icon mr-8"
-                                                    />
-                                                    <h2 className="white-text text-md m-0 p-0">
-                                                        {this.props.currentMarket?.name}
-                                                    </h2>
-                                                </div>
-                                            </li>
-                                            <li className="nav-item nav-large-display">
-                                                <div className="nav-link px-12">
-                                                    <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
-                                                        {this.translate('page.header.navbar.trade.24change')}
-                                                    </p>
-                                                    <p
-                                                        className={`font-semibold mb-0 text-sm ${
-                                                            ticker?.price_change_percent.includes('+')
-                                                                ? 'contrast-text'
-                                                                : 'danger-text'
-                                                        }`}>
-                                                        {ticker?.price_change_percent}
-                                                    </p>
-                                                </div>
-                                            </li>
-                                            <li className="nav-item nav-large-display">
-                                                <div className="nav-link px-12">
-                                                    <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
-                                                        Price
-                                                    </p>
-                                                    <p className=" font-semibold mb-0 white-text text-sm">
-                                                        {Decimal.format(
-                                                            +ticker?.last,
-                                                            this.props.currentMarket?.price_precision,
-                                                            this.props.currentMarket?.quote_unit == 'idr' ? ',' : '.'
-                                                        )}
-                                                    </p>
-                                                </div>
-                                            </li>
-                                            <li className="nav-item nav-large-display">
-                                                <div className="nav-link px-12">
-                                                    <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
-                                                        {this.translate('page.header.navbar.trade.24high')}
-                                                    </p>
-                                                    <p className=" font-semibold mb-0 white-text text-sm">
-                                                        {Decimal.format(
-                                                            +ticker?.high,
-                                                            this.props.currentMarket?.price_precision
-                                                        )}
-                                                    </p>
-                                                </div>
-                                            </li>
-                                            <li className="nav-item nav-large-display">
-                                                <div className="nav-link px-12">
-                                                    <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
-                                                        {this.translate('page.header.navbar.trade.24low')}
-                                                    </p>
-                                                    <p className=" font-semibold mb-0 white-text text-sm">
-                                                        {Decimal.format(
-                                                            +ticker?.low,
-                                                            this.props.currentMarket?.price_precision
-                                                        )}
-                                                    </p>
-                                                </div>
-                                            </li>
-                                            <li className="nav-item nav-large-display">
-                                                <div className="nav-link px-12">
-                                                    <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
-                                                        {this.translate('page.header.navbar.trade.24volume')}
-                                                    </p>
-                                                    <p className=" font-semibold mb-0 white-text text-sm">
-                                                        {Decimal.format(
-                                                            +ticker?.volume,
-                                                            this.props.currentMarket?.amount_precision
-                                                        )}
-                                                    </p>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </React.Fragment>
-                                ) : (
-                                    ''
-                                )}
-                            </div>
+                                                    </li>
+                                                    <li className="nav-item nav-large-display">
+                                                        <div className="nav-link px-12">
+                                                            <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
+                                                                Price
+                                                            </p>
+                                                            <p className=" font-semibold mb-0 white-text text-sm">
+                                                                {Decimal.format(
+                                                                    +ticker?.last,
+                                                                    this.props.currentMarket?.price_precision,
+                                                                    this.props.currentMarket?.quote_unit == 'idr'
+                                                                        ? ','
+                                                                        : '.'
+                                                                )}
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li className="nav-item nav-large-display">
+                                                        <div className="nav-link px-12">
+                                                            <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
+                                                                {this.translate('page.header.navbar.trade.24high')}
+                                                            </p>
+                                                            <p className=" font-semibold mb-0 white-text text-sm">
+                                                                {Decimal.format(
+                                                                    +ticker?.high,
+                                                                    this.props.currentMarket?.price_precision
+                                                                )}
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li className="nav-item nav-large-display">
+                                                        <div className="nav-link px-12">
+                                                            <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
+                                                                {this.translate('page.header.navbar.trade.24low')}
+                                                            </p>
+                                                            <p className=" font-semibold mb-0 white-text text-sm">
+                                                                {Decimal.format(
+                                                                    +ticker?.low,
+                                                                    this.props.currentMarket?.price_precision
+                                                                )}
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                    <li className="nav-item nav-large-display">
+                                                        <div className="nav-link px-12">
+                                                            <p className="mb-0 text-xs mb-1 font-semibold grey-text-accent">
+                                                                {this.translate('page.header.navbar.trade.24volume')}
+                                                            </p>
+                                                            <p className=" font-semibold mb-0 white-text text-sm">
+                                                                {Decimal.format(
+                                                                    +ticker?.volume,
+                                                                    this.props.currentMarket?.amount_precision
+                                                                )}
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </React.Fragment>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </div>
 
-                            {/* right navbar */}
-                            {this.state.showHeader && <div className="devider"></div>}
-                            <ul className="navbar-nav align-items-center">
-                                {/* <li className="nav-item dropdown px-3">
+                                    {/* right navbar */}
+                                    {this.state.showHeader && <div className="devider"></div>}
+                                    <ul className="navbar-nav align-items-center">
+                                        {/* <li className="nav-item dropdown px-3">
                                     <Dropdown>
                                         <Dropdown.Toggle
                                             variant=""
@@ -432,7 +449,7 @@ class Head extends React.Component<Props, HeaderState> {
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </li> */}
-                                {/* <li>
+                                        {/* <li>
                                     <button
                                         onClick={(e) =>
                                             this.handleChangeCurrentStyleMode(
@@ -443,91 +460,97 @@ class Head extends React.Component<Props, HeaderState> {
                                     </button>
                                 </li> */}
 
-                                <FilterInput placeholder={'Search'} className="search-asset" />
+                                        <FilterInput placeholder={'Search'} className="search-asset" />
 
-                                {isLoggedIn ? (
-                                    <li className="nav-item dropdown avatar px-3">
-                                        <Dropdown>
-                                            <Dropdown.Toggle
-                                                variant=""
-                                                id="dropdown-basic"
-                                                className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm">
-                                                <img src="/img/avatar.png" className="avatar-image" alt="ava" />
-                                            </Dropdown.Toggle>
+                                        {isLoggedIn ? (
+                                            <li className="nav-item dropdown avatar px-3">
+                                                <Dropdown>
+                                                    <Dropdown.Toggle
+                                                        variant=""
+                                                        id="dropdown-basic"
+                                                        className="nav-link cursor-pointer dropdown-toggle grey-text-accent text-sm">
+                                                        <img src="/img/avatar.png" className="avatar-image" alt="ava" />
+                                                    </Dropdown.Toggle>
 
-                                            <Dropdown.Menu className="dropdown-profile">
-                                                {ProfileDropdown.map((item, index) => (
-                                                    <Dropdown.Item key={index} className="dark-bg-accent p-3">
-                                                        <Link to={item.url} className="d-flex">
-                                                            {item.icon}
-                                                            <div className="pl-3">
-                                                                <p className="mb-0 text-sm font-semibold white-text">
-                                                                    {item.name}
-                                                                </p>
-                                                                <span className="text-xs grey-text-accent font-normal">
-                                                                    {item.desc}
-                                                                </span>
+                                                    <Dropdown.Menu className="dropdown-profile">
+                                                        {ProfileDropdown.map((item, index) => (
+                                                            <Dropdown.Item key={index} className="dark-bg-accent p-3">
+                                                                <Link to={item.url} className="d-flex">
+                                                                    {item.icon}
+                                                                    <div className="pl-3">
+                                                                        <p className="mb-0 text-sm font-semibold white-text">
+                                                                            {item.name}
+                                                                        </p>
+                                                                        <span className="text-xs grey-text-accent font-normal">
+                                                                            {item.desc}
+                                                                        </span>
+                                                                    </div>
+                                                                </Link>
+                                                            </Dropdown.Item>
+                                                        ))}
+                                                        <Dropdown.Item className="dark-bg-accent p-3 cursor-pointer border-none">
+                                                            <div className="dark-bg-accent p-3 cursor-pointer">
+                                                                <div className="d-flex" onClick={logoutButton}>
+                                                                    <Logout />
+                                                                    <div className="pl-3">
+                                                                        <p className="mb-0 text-sm font-semibold white-text">
+                                                                            {this.translate(
+                                                                                'page.header.navbar.logout'
+                                                                            )}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </Link>
-                                                    </Dropdown.Item>
-                                                ))}
-                                                <Dropdown.Item className="dark-bg-accent p-3 cursor-pointer border-none">
-                                                    <div className="dark-bg-accent p-3 cursor-pointer">
-                                                        <div className="d-flex" onClick={logoutButton}>
-                                                            <Logout />
-                                                            <div className="pl-3">
-                                                                <p className="mb-0 text-sm font-semibold white-text">
-                                                                    {this.translate('page.header.navbar.logout')}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                    </li>
-                                ) : (
-                                    <React.Fragment>
-                                        <li className="nav-item dropdown avatar px-3">
-                                            <Link to={'/signin'} className="gradient-text text-sm font-semibold mr-3">
+                                                        </Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </li>
+                                        ) : (
+                                            <React.Fragment>
+                                                <li className="nav-item dropdown avatar px-3">
+                                                    <Link
+                                                        to={'/signin'}
+                                                        className="gradient-text text-sm font-semibold mr-3">
+                                                        {this.translate('page.header.navbar.signIn')}
+                                                    </Link>
+                                                </li>
+                                                <li className="nav-item dropdown avatar px-3">
+                                                    <Link to={'/signup'} className="btn btn-primary">
+                                                        {this.translate('page.header.navbar.signUp')}
+                                                    </Link>
+                                                </li>
+                                            </React.Fragment>
+                                        )}
+                                    </ul>
+
+                                    {this.state.showHeader && !isLoggedIn && (
+                                        <div
+                                            className="d-flex align-items-center px-24 w-100 justify-content-between"
+                                            onClick={() => this.setState({ showHeader: false })}>
+                                            <Link to={'/signin'} className="btn btn-primary mx-2 btn-sm btn-block">
                                                 {this.translate('page.header.navbar.signIn')}
                                             </Link>
-                                        </li>
-                                        <li className="nav-item dropdown avatar px-3">
-                                            <Link to={'/signup'} className="btn btn-primary">
+                                            <Link
+                                                to={'/signup'}
+                                                className="btn btn-primary mx-2 my-0 btn-outline btn-sm btn-block">
                                                 {this.translate('page.header.navbar.signUp')}
                                             </Link>
-                                        </li>
-                                    </React.Fragment>
-                                )}
-                            </ul>
+                                        </div>
+                                    )}
 
-                            {this.state.showHeader && !isLoggedIn && (
-                                <div
-                                    className="d-flex align-items-center px-24 w-100 justify-content-between"
-                                    onClick={() => this.setState({ showHeader: false })}>
-                                    <Link to={'/signin'} className="btn btn-primary mx-2 btn-sm btn-block">
-                                        {this.translate('page.header.navbar.signIn')}
-                                    </Link>
-                                    <Link
-                                        to={'/signup'}
-                                        className="btn btn-primary mx-2 my-0 btn-outline btn-sm btn-block">
-                                        {this.translate('page.header.navbar.signUp')}
-                                    </Link>
+                                    {isLoggedIn && this.state.showHeader && (
+                                        <div className="logout" onClick={() => this.setState({ showHeader: false })}>
+                                            <p
+                                                className="nav-link px-3 text-sm white-text font-semibold"
+                                                onClick={logoutButton}>
+                                                <Logout /> {this.translate('page.header.navbar.logout')}
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-
-                            {isLoggedIn && this.state.showHeader && (
-                                <div className="logout" onClick={() => this.setState({ showHeader: false })}>
-                                    <p
-                                        className="nav-link px-3 text-sm white-text font-semibold"
-                                        onClick={logoutButton}>
-                                        <Logout /> {this.translate('page.header.navbar.logout')}
-                                    </p>
-                                </div>
-                            )}
+                            </nav>
                         </div>
-                    </nav>
+                    </div>
                 </React.Fragment>
             );
         } else {
