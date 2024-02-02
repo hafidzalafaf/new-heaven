@@ -91,7 +91,7 @@ import {
     HistoryTransactionScreen,
     Security,
     MarketDetailScreen,
-    MarketOpen,
+    OrdersScreen,
     TradingFutureScreen,
     TradingScreen,
     HistoryTrade,
@@ -652,12 +652,7 @@ class LayoutComponent extends React.Component<LayoutProps, LayoutState> {
                     />
                     <PublicRoute loading={userLoading} path="/markets/trading/:currency" component={TradingScreen} />
 
-                    <PrivateRoute
-                        loading={userLoading}
-                        isLogged={isLoggedIn}
-                        path="/markets-open"
-                        component={MarketOpen}
-                    />
+                    <PrivateRoute loading={userLoading} isLogged={isLoggedIn} path="/orders" component={OrdersScreen} />
 
                     <PublicRoute loading={userLoading} path="/markets" component={MarketListScreen} />
 
