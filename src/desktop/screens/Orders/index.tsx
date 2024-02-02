@@ -391,7 +391,7 @@ export const OrdersScreen: FC = (): ReactElement => {
     return (
         <Fragment>
             <div className="market-order-screen content-wrapper dark-bg-main">
-                <div className="px-24 pt-4 pb-4 dark-bg-main">
+                <div className="px-24 pt-4 pb-4 dark-bg-accent">
                     <h1 className="m-0 white-text text-xl">Market Orders</h1>
                 </div>
                 <div className="pg-history-transaction-screen__content-wrapper dark-bg-accent">

@@ -17,7 +17,7 @@
 
     --text-primary-color: rgb(var(--rgb-text-primary-color));
     --text-secondary-color: rgb(var(--rgb-text-secondary-color));
-    --text-grey-color: rgb(var(--rgb-text-grey-color));
+    --text-grey-color: rgb(var(--rgb-system-grey-2));
     --text-non-active-color: rgb(var(--rgb-system-grey));
     --text-contrast-color: rgb(var(--rgb-text-contrast-color));
     --text-contart-secondary-color: rgb(var(--rgb-text-contrast-secondary-color));
@@ -33,6 +33,7 @@
     --button-danger-color: rgb(var(--rgb-system-red));
 
     --border-color: rgb(var(--rgb-divider-color));
+    --border-sidebar-color: rgba(var(--rgb-divider-color), 0.4);
     --border-grey-color: rgb(var(--rgb-cta-secondary-color));
     --border-table-color: rgb(var(--rgb-cta-secondary-color));
 
@@ -40,4 +41,5 @@
     --mobile-notification-warning-background: rgba(var(--rgb-mobile-warning), 0.2);
 
     --green-system-color: rgba(var(--rgb-system-green), 0.2);
+    --sidebar-active-color: rgb(var(--rgb-system-sidebar-active));
 }

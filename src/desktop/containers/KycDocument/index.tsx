@@ -162,7 +162,7 @@ class KycDocumentComponent extends React.Component<Props, DocumentsState> {
 
         return (
             <React.Fragment>
-                <div className="header dark-bg-main py-4 px-24 mb-24">
+                <div className="header dark-bg-accent py-4 px-24 mb-24">
                     <h2 className="mb-0 text-xl white-text font-bold pt-2">Document Verification</h2>
                 </div>
                 <div className="px-24 kyc-document-screen">

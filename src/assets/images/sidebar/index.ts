@@ -13,3 +13,6 @@ export * from './InternalTransferIcon';
 export * from './Withdrawlcon';
 export * from './OverviewIcon';
 export * from './DropdownIcon';
+export * from './TransactionHistoryIcon';
+export * from './AccountIcon';
+export * from './Supporticon';

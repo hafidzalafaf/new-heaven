@@ -14,10 +14,25 @@
 .container-fluid {
     &.pg-layout {
         min-height: 600px;
-        background: var(--body-background-color);
+        background: var(--main-background-color);
         max-width: 1920px;
         margin: 0 auto;
+        position: relative;
     }
+}
+
+.pg-container {
+    max-width: 1920px;
+    margin: 0 auto;
+    position: relative;
+    background: var(--body-background-color);
+}
+
+.layout-container {
+    max-width: 1800px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
 }
 
 @media (min-width: 2440px) {

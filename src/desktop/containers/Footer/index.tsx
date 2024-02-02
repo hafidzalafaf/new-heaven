@@ -45,6 +45,24 @@ interface OwnProps {
     changeUserDataFetch: typeof changeUserDataFetch;
 }
 
+const hiddenFooter = [
+    '/signin',
+    '/signup',
+    '/email-verification',
+    '/forgot_password',
+    '/password_reset',
+    '/trading',
+    '/wallets',
+    '/profile',
+    '/history-transaction',
+    '/orders',
+    '/profile/referral',
+    '/profile/security',
+    '/profile/api-key',
+    '/announcement',
+    '/faq',
+];
+
 type Props = OwnProps & ReduxProps & RouteProps & DispatchProps & IntlProps;
 
 class FooterContainer extends React.Component<Props, State> {
@@ -56,105 +74,112 @@ class FooterContainer extends React.Component<Props, State> {
         const { isLoggedIn, lang, currentMarket } = this.props;
         const date = new Date();
         let year = date.getFullYear();
+        const thisHiddenFooter = hiddenFooter.some((r) => location.pathname.includes(r)) && location.pathname !== '/';
 
-        return (
-            <React.Fragment>
-                <footer className=" pt-5">
-                    <div className="container pb-5">
-                        <div className="d-flex justify-content-between flex-wrap">
-                            <Link to={`/`} className="name px-3">
-                                <Logo className="mb-3" />
-                            </Link>
-                            <div className="link px-3">
-                                <p className="text-lg gradient-text mb-36">
-                                    {this.translate('page.body.landing.footer.links').toUpperCase()}
-                                </p>
+        if (!thisHiddenFooter) {
+            return (
+                <React.Fragment>
+                    <footer className=" pt-5">
+                        <div className="container pb-5">
+                            <div className="d-flex justify-content-between flex-wrap">
+                                <Link to={`/`} className="name px-3">
+                                    <Logo className="mb-3" />
+                                </Link>
+                                <div className="link px-3">
+                                    <p className="text-lg gradient-text mb-36">
+                                        {this.translate('page.body.landing.footer.links').toUpperCase()}
+                                    </p>
 
-                                <Link
-                                    to={`/markets/trading/${currentMarket?.id}`}
-                                    className="mb-8 d-block text-ms grey-text-accent">
-                                    Trade
-                                </Link>
-                                <Link to="/markets" className="mb-8 d-block text-ms grey-text-accent">
-                                    Markets
-                                </Link>
-                                <Link to="/markets" className="mb-8 d-block text-ms grey-text-accent">
-                                    Futures
-                                </Link>
-                                <Link to="/announcement" className="mb-8 d-block text-ms grey-text-accent">
-                                    Announcement
-                                </Link>
-                            </div>
-                            <div className="legal px-3">
-                                <p className="text-lg gradient-text mb-36">SUPPORT</p>
-
-                                <a
-                                    href="https://t.me/heavenexchange"
-                                    target="__blank"
-                                    rel="noopener noreferrer"
-                                    className="mb-8 d-block text-ms grey-text-accent">
-                                    Help Center
-                                </a>
-                                <Link to="/faq" className="mb-8 d-block text-ms grey-text-accent">
-                                    FAQ
-                                </Link>
-                                <Link to="/privacy" className="mb-8 d-block text-ms grey-text-accent">
-                                    Privacy Policy
-                                </Link>
-                            </div>
-                            <div className="newsletter px-3">
-                                <p className="text-lg gradient-text mb-36">
-                                    {this.translate('page.body.landing.footer.newsletter').toUpperCase()}
-                                </p>
-                                <p className="mb-12 text-ms d-block grey-text">Over 25000 people have subscribed</p>
-                                <div className="input-group mb-0">
-                                    <input
-                                        type="text"
-                                        className="form-control newsletter-input footer-input"
-                                        placeholder="Enter Your Email"
-                                    />
-                                    <label htmlFor="newslatter" className=" newsletter-input-label">
-                                        {this.translate('page.body.landing.footer.subscribe')}
-                                    </label>
+                                    <Link
+                                        to={`/markets/trading/${currentMarket?.id}`}
+                                        className="mb-8 d-block text-ms grey-text-accent">
+                                        Trade
+                                    </Link>
+                                    <Link to="/markets" className="mb-8 d-block text-ms grey-text-accent">
+                                        Markets
+                                    </Link>
+                                    <Link to="/markets" className="mb-8 d-block text-ms grey-text-accent">
+                                        Futures
+                                    </Link>
+                                    <Link to="/announcement" className="mb-8 d-block text-ms grey-text-accent">
+                                        Announcement
+                                    </Link>
                                 </div>
-                                <span className=" text-sm grey-text-accent">
-                                    {this.translate('page.body.landing.footer.email')}
-                                </span>
+                                <div className="legal px-3">
+                                    <p className="text-lg gradient-text mb-36">SUPPORT</p>
+
+                                    <a
+                                        href="https://t.me/heavenexchange"
+                                        target="__blank"
+                                        rel="noopener noreferrer"
+                                        className="mb-8 d-block text-ms grey-text-accent">
+                                        Help Center
+                                    </a>
+                                    <Link to="/faq" className="mb-8 d-block text-ms grey-text-accent">
+                                        FAQ
+                                    </Link>
+                                    <Link to="/privacy" className="mb-8 d-block text-ms grey-text-accent">
+                                        Privacy Policy
+                                    </Link>
+                                </div>
+                                <div className="newsletter px-3">
+                                    <p className="text-lg gradient-text mb-36">
+                                        {this.translate('page.body.landing.footer.newsletter').toUpperCase()}
+                                    </p>
+                                    <p className="mb-12 text-ms d-block grey-text">Over 25000 people have subscribed</p>
+                                    <div className="input-group mb-0">
+                                        <input
+                                            type="text"
+                                            className="form-control newsletter-input footer-input"
+                                            placeholder="Enter Your Email"
+                                        />
+                                        <label htmlFor="newslatter" className=" newsletter-input-label">
+                                            {this.translate('page.body.landing.footer.subscribe')}
+                                        </label>
+                                    </div>
+                                    <span className=" text-sm grey-text-accent">
+                                        {this.translate('page.body.landing.footer.email')}
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="container pb-5">
-                        <div className="d-flex justify-content-between align-items-center">
-                            <div className="mr-2">
-                                <a
-                                    href="https://t.me/heavenexchange"
-                                    target="__blank"
-                                    rel="noopener noreferrer"
-                                    className="text-sm font-normal white-text">
-                                    Privacy &amp; Terms Contact
-                                </a>
-                            </div>
-                            <p className="text-sm font-normal white-text mb-0">Copyright @ {year} Heaven Exchange</p>
-                            <div className="d-flex">
-                                <a
-                                    href="https://twitter.com/heaven_exchange"
-                                    target="__blank"
-                                    rel="noopener noreferrer">
-                                    <div className="mx-1">
-                                        <Twitter />
-                                    </div>
-                                </a>
-                                <a href="https://t.me/heavenexchange" target="__blank" rel="noopener noreferrer">
-                                    <div className="mx-1">
-                                        <Telegram />
-                                    </div>
-                                </a>
+                        <div className="container pb-5">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="mr-2">
+                                    <a
+                                        href="https://t.me/heavenexchange"
+                                        target="__blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm font-normal white-text">
+                                        Privacy &amp; Terms Contact
+                                    </a>
+                                </div>
+                                <p className="text-sm font-normal white-text mb-0">
+                                    Copyright @ {year} Heaven Exchange
+                                </p>
+                                <div className="d-flex">
+                                    <a
+                                        href="https://twitter.com/heaven_exchange"
+                                        target="__blank"
+                                        rel="noopener noreferrer">
+                                        <div className="mx-1">
+                                            <Twitter />
+                                        </div>
+                                    </a>
+                                    <a href="https://t.me/heavenexchange" target="__blank" rel="noopener noreferrer">
+                                        <div className="mx-1">
+                                            <Telegram />
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </footer>
-            </React.Fragment>
-        );
+                    </footer>
+                </React.Fragment>
+            );
+        } else {
+            return null;
+        }
     }
 
     private handleClick = () => {

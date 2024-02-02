@@ -53,21 +53,20 @@ const getTranslations = (lang: string, isMobileDevice: boolean) => {
     return languageMap[lang];
 };
 
-const hiddenHeader = ['/signin', '/signup', '/email-verification', '/forgot_password', '/password_reset', '/trading'];
-const hiddenFooter = ['/signin', '/signup', '/email-verification', '/forgot_password', '/password_reset', '/trading'];
-const thisHiddenHeader = hiddenHeader.some((r) => location.pathname.includes(r)) && location.pathname !== '/';
-const thisHiddenFooter = hiddenFooter.some((r) => location.pathname.includes(r)) && location.pathname !== '/';
-
 const RenderDeviceContainers = () => {
     const isMobileDevice = useSelector(selectMobileDeviceState);
     if (!isMobileDevice) {
         return (
             <React.Fragment>
-                {!thisHiddenHeader && <HeaderContainer />}
+                <HeaderContainer />
                 <AlertsContainer />
-                <SidebarContainer />
-                <LayoutContainer />
-                {!thisHiddenFooter && <FooterContainer />}
+                <div className="pg-container">
+                    <div className="layout-container">
+                        <SidebarContainer />
+                        <LayoutContainer />
+                    </div>
+                </div>
+                <FooterContainer />
             </React.Fragment>
         );
     }
