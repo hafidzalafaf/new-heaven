@@ -439,9 +439,9 @@ export const ProfileScreen: FC = (): ReactElement => {
 
     return (
         <React.Fragment>
-            <div className="profile-screen container">
+            <div className="profile-screen ">
                 <div
-                    className="content-wrapper dark-bg-accent pb-5"
+                    className="profile-screen content-wrapper dark-bg-accent"
                     style={{ backgroundImage: `url('img/background-landing.png')` }}>
                     <ProfileAuthDetails />
 
