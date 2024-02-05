@@ -37,6 +37,7 @@ import {
 } from '../../../modules';
 import { Logo } from '../../../assets/images/Logo';
 import { Api, Dashboard, Logout, Referral, Security, Wallet } from '../../../assets/images/ProfileDropdown';
+import { DarkIcon } from 'src/assets/images/DarkIcon';
 
 interface ReduxProps {
     currentMarket: Market | undefined;
@@ -449,21 +450,27 @@ class Head extends React.Component<Props, HeaderState> {
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </li> */}
-                                        {/* <li>
-                                    <button
-                                        onClick={(e) =>
-                                            this.handleChangeCurrentStyleMode(
-                                                this.props.colorTheme === 'light' ? 'dark' : 'light'
-                                            )
-                                        }>
-                                        Warna
-                                    </button>
-                                </li> */}
 
                                         <FilterInput placeholder={'Search'} className="search-asset" />
-
+                                        <li className="pl-3 pr-2">
+                                            <span
+                                                className="cursor-pointer"
+                                                onClick={(e) =>
+                                                    this.handleChangeCurrentStyleMode(
+                                                        this.props.colorTheme === 'light' ? 'dark' : 'light'
+                                                    )
+                                                }>
+                                                <DarkIcon
+                                                    fillColor={
+                                                        this.props.colorTheme === 'light'
+                                                            ? 'var(--text-primary-color)'
+                                                            : 'var(--text-secondary-color)'
+                                                    }
+                                                />
+                                            </span>
+                                        </li>
                                         {isLoggedIn ? (
-                                            <li className="nav-item dropdown avatar px-3">
+                                            <li className="nav-item dropdown avatar">
                                                 <Dropdown>
                                                     <Dropdown.Toggle
                                                         variant=""
